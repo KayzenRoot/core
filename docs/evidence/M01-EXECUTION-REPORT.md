@@ -1,6 +1,6 @@
 # CORE-WO-M01-001 correction execution report
 
-Status: `BLOCKED` (correction candidate is implemented locally; publication, CI and independent review gates are not yet complete)
+Status: `BLOCKED` (correction is published and required CI is green; independent PRB and governed-review gates remain)
 Date: 2026-09-19
 Correction source: `CORE-M01-CODEX-CORRECTION-PROMPT-002.pdf`
 Code correction HEAD: `1719f900a753b110fdf7de7031f67f0f03667382`
@@ -41,7 +41,7 @@ The code correction commit is the exact basis for the local results below. A lat
 - `cargo clippy --workspace --all-targets --locked -- -D warnings`: PASS.
 - `cargo test --workspace --all-targets --locked`: PASS; 26 tests passed, 0 failed, 0 skipped.
 - New registry tests: exact rollback, retained old generation, monotonic expiry: PASS.
-- New Windows native named-pipe round trip test: PASS on this Windows host. Unix-domain implementation is cfg-gated and awaits Ubuntu CI execution.
+- New Windows native named-pipe round trip test: PASS on this Windows host. Unix-domain implementation is cfg-gated and passed in Ubuntu CI.
 - CLI `version`, `validate`, `doctor`, `start`: prior exact-head PASS; `start` is zero-LLM and `ReadyEligible`.
 - `cargo deny 0.20.2 check`: PASS; advisories, bans, licenses and sources all passed.
 - `cargo audit 0.22.2`: PASS; 65 locked crate dependencies scanned with no reported vulnerability.
@@ -54,18 +54,18 @@ The code correction commit is the exact basis for the local results below. A lat
 
 PR: [#8](https://github.com/KayzenRoot/core/pull/8)
 
-- Workflow run `35451871888`: completed successfully at the pushed report head `c7e774400abef99a41db1294b62ad33772cf573e`.
-- Governance job `105920325439`: SUCCESS.
-- M01 Ubuntu job `105920325443`: SUCCESS, including governance, fmt, clippy, tests, cargo-deny, cargo-audit, SBOM and soak.
-- M01 Windows job `105920325390`: SUCCESS, including named-pipe tests, governance, fmt, clippy, tests, cargo-deny, cargo-audit, SBOM and soak.
-- M01 fuzz job `105920325465`: SUCCESS; all four targets ran for the bounded 1,000-iteration campaign on Ubuntu.
+- Workflow run `35452640152`: completed successfully for the pushed correction branch; its checked-out code matches the correction HEAD recorded above.
+- Governance job `105922353466`: SUCCESS.
+- M01 Ubuntu job `105922353591`: SUCCESS, including governance, fmt, clippy, tests, cargo-deny, cargo-audit, SBOM and soak.
+- M01 Windows job `105922353336`: SUCCESS, including named-pipe tests, governance, fmt, clippy, tests, cargo-deny, cargo-audit, SBOM and soak.
+- M01 fuzz job `105922353562`: SUCCESS; all four targets ran for the bounded 1,000-iteration campaign on Ubuntu.
 - No HIGH/CRITICAL advisory or forbidden-license finding was reported by the independent jobs.
 
 ## Fuzz evidence
 
 - Four targets compile with `cargo check` in the independent `fuzz` workspace: `ipc_frames`, `config_toml`, `compatibility`, `journal_records`.
 - The real Windows execution attempt failed with `STATUS_DLL_NOT_FOUND`, then `STATUS_ENTRYPOINT_NOT_FOUND`; `libfuzzer-sys` documents Linux-only support for this version. This is recorded as a blocked local execution, not a fuzz pass.
-- The required Ubuntu CI job runs all four targets for 1,000 iterations each. No GitHub workflow result exists yet for this correction HEAD.
+- The required Ubuntu CI job runs all four targets for 1,000 iterations each; run `35452640152` completed successfully.
 
 ## Acceptance criteria mapping
 
@@ -82,7 +82,7 @@ PR: [#8](https://github.com/KayzenRoot/core/pull/8)
 11. PASS - quality-floor fallback blocking remains tested.
 12. PASS - health delta/probe coalescing tests pass.
 13. PASS - native Unix/Windows adapters, bounded framing, platform tests and the real bounded fuzz campaign passed in the independent CI matrix.
-14. PASS locally - cargo-deny, cargo-audit, SBOM checksum and unsafe inventory pass; independent CI confirmation is pending.
+14. PASS - cargo-deny, cargo-audit, SBOM checksum and unsafe inventory pass locally and in the independent CI matrix.
 15. PASS - unit/property-style/failure-injection tests, platform integration tests and the real bounded fuzz campaign passed locally/independently.
 16. PASS - local and independent Ubuntu/Windows 16-cycle soak runs passed with bounded process-handle growth.
 17. PARTIAL - reproducible PRB/WNF benchmark exists, but the current sample is not independently accepted against the historical baseline.
