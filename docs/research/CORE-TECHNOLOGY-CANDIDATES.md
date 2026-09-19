@@ -103,3 +103,11 @@ HIVE retains authority over durable knowledge promotion. CORE retains authority 
 - **IES — Idempotency Envelope Standard:** common safety carrier for later side-effecting operations.
 - **QVM — Quiescence Verification Matrix:** machine-verifiable shutdown obligations.
 - **CFS — Crash Fingerprint Suppression:** deduplicates equivalent crash diagnosis and avoids repeated LLM/token spend.
+
+
+## M01 performance/security candidates
+- **PRB — Performance Regression Budget:** baseline-bound hot-path regression governance.
+- **WNF — Work Normalization Fingerprint:** prevents invalid benchmark comparisons across different workloads.
+- **CEE — Cache Efficiency Envelope:** normalized token/cache economics carrier for future LLM modules.
+- **TCBM — Trusted Computing Base Map:** machine-readable security-critical code/dependency boundary.
+- **SAF — Security-Aware Fingerprint:** invalidates assurance/evidence when security-relevant dependencies/policies change.

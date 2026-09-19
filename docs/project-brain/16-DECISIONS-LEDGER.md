@@ -144,3 +144,20 @@ Status: `ACTIVE`
 ## CORE-D-034 - Canonical identity is explicit
 **Decision:** safety/cache/evidence fingerprints use CORE DCS rules rather than serializer-default byte output.
 **State:** ACCEPTED
+
+
+## CORE-D-035 - Performance is promotion evidence
+**Decision:** CORE performance claims require reproducible benchmark evidence. Material regression beyond accepted PRB policy blocks promotion unless explicitly governed by an evidence-backed exception.
+**State:** ACCEPTED
+
+## CORE-D-036 - LLM/cache economics are measured
+**Decision:** LLM-facing modules must expose token/cache efficiency metrics sufficient to identify repeated uncached work, reuse and invalidation. Token savings never override quality/safety floors.
+**State:** ACCEPTED
+
+## CORE-D-037 - Safe Rust default
+**Decision:** first-party CORE code defaults to safe Rust. Unsafe code requires a localized documented safety invariant, tests and evidence that a safe alternative would not meet accepted requirements.
+**State:** ACCEPTED
+
+## CORE-D-038 - Security-sensitive changes affect evidence validity
+**Decision:** security-policy, TCB and relevant dependency changes participate in evidence/cache validity even when public functional APIs are unchanged.
+**State:** ACCEPTED

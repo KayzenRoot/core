@@ -1182,3 +1182,127 @@ Public M01 CLI: `core start`, `core status --json`, `core validate --json`, `cor
 The executor implements versioned contracts before orchestration: RuntimeGeneration, ModuleManifest, CapabilityRequirement, CapabilityProviderDescriptor, CapabilityLease, TransitionReceipt, BootstrapSafetyReceipt, HealthSnapshot, RuntimeJournalRecord and IdempotencyEnvelope.
 
 Identity rules: DCS owns canonical bytes; identity maps are sorted; wall-clock metadata is excluded from fingerprints by default; durations use integer units; floating point is forbidden from safety/cache identity unless explicitly normalized; unknown security-critical fields fail closed. Persisted/exchanged records carry schema versions. Required semantic changes require major contract bumps.
+
+
+## Round 9 - Performance, cache and regression governance
+
+### Benchmark philosophy
+M01 performance is a governed product property. Benchmarks produce versioned evidence bound to commit/build/hardware class/configuration. Absolute targets are calibrated from reproducible baselines; relative regressions can block promotion before absolute targets are finalized.
+
+### Benchmark suites
+- BOOT: cold/warm bootstrap, validation, synchronization-disabled startup;
+- REG: module graph admission, capability lookup, binding/substitution, SIR computation;
+- ID: DCS serialization, DIF/RSG/BSR fingerprint generation, content-handle operations;
+- JRN: append/flush/sync, recovery scan, corruption detection, compaction;
+- IPC: frame encode/decode, local round trip, throughput, large-handle reference path;
+- HLT: health aggregation, DCM derivation, PHC coalescing, ODF generation;
+- CAN: cancellation propagation and deadline enforcement;
+- SDN: clean drain, forced shutdown and QVM evaluation;
+- MEM: idle memory, per-module/per-capability growth, leak/soak slope;
+- CPU: idle CPU and sustained control-plane overhead.
+
+### Synthetic scale classes
+Benchmark graphs at 10, 100, 1,000 and 10,000 modules/capabilities where the tested structure supports that scale. Results report p50/p95/p99 where latency distributions matter.
+
+### Regression policy
+A benchmark result is compared only with a compatible baseline fingerprint. Material regression thresholds are stored as policy, not hard-coded into test logic. A regression above the accepted budget blocks promotion unless accompanied by an approved evidence-backed exception/ADR.
+
+### New technology - PRB
+**PRB - Performance Regression Budget** binds each hot path to a baseline, allowed regression envelope and hardware class. Improvements can accumulate performance credit, but credit cannot justify violating safety/quality constraints.
+
+### New technology - WNF
+**WNF - Work Normalization Fingerprint** fingerprints benchmark workload shape so two measurements are compared only when dataset/graph/config/workload semantics are equivalent.
+
+### New technology - CEE
+**CEE - Cache Efficiency Envelope** captures cache economics for later LLM-facing modules: stable-prefix ratio, exact/evidence/semantic/provider-cache hit classes, invalidation rate, avoidable token repetition, lookup overhead and stale-reuse rejection. M01 defines the metric carrier and identity hooks; later modules populate LLM-specific measurements.
+
+### Token/cache regression rules
+For LLM-facing future modules, promotion evidence must eventually report at least:
+- total input tokens;
+- stable/cache-eligible input tokens;
+- uncached delta tokens;
+- output tokens;
+- retry/escalation tokens;
+- tokens avoided by exact/evidence/semantic reuse;
+- cache hit/miss/bypass/invalidation counts;
+- PSM stable-prefix ratio.
+A change that materially increases repeated uncached tokens without a documented quality/correctness benefit is a regression candidate.
+
+### Benchmark correctness
+Benchmarks MUST NOT disable integrity/security checks merely to obtain attractive numbers unless the benchmark is explicitly labeled microbenchmark-only. Production-path benchmark profiles preserve production safety semantics.
+
+### CI tiers
+- FAST: deterministic unit/property smoke + selected microbench regression signals;
+- STANDARD: integration + representative benchmarks + leak checks;
+- DEEP: large graphs, fuzz campaigns, soak, crash/failure injection, cross-platform IPC;
+- RELEASE: exact-head evidence, supply-chain checks, reproducible benchmark corpus and accepted PRB status.
+
+### Hardware normalization
+Evidence records CPU architecture/model class, cores, RAM, OS/kernel, storage class, Rust/toolchain and power mode when available. Results from incompatible hardware are not compared as if equivalent.
+
+### Performance anti-patterns forbidden
+- LLM calls in M01 hot paths;
+- full graph recomputation for local changes when incremental correctness is possible;
+- full snapshot serialization when a stable handle/delta suffices;
+- polling loops when event/notification semantics are available;
+- unbounded queues;
+- unbounded retries;
+- copying large immutable payloads across components without need;
+- synchronous blocking I/O on Tokio executor threads.
+
+## Round 10 - Supply-chain and runtime security baseline
+
+### Rust dependency policy
+Dependencies require an explicit purpose and must minimize feature sets. Direct dependencies are preferred only when they remove meaningful implementation/security risk. No dependency is added solely to avoid writing a small deterministic primitive.
+
+### Supply-chain gates
+- lockfile committed;
+- dependency license policy;
+- vulnerability/advisory scan;
+- banned/duplicate dependency policy where justified;
+- source/provenance review for critical crates;
+- feature minimization;
+- unsafe-code inventory;
+- reproducible toolchain pin;
+- SBOM generation at release;
+- artifact checksum/provenance evidence.
+
+### Unsafe Rust policy
+Safe Rust is default. Any `unsafe` block in first-party M01 code requires:
+- localized boundary;
+- written safety invariant;
+- dedicated tests;
+- reviewer-visible evidence;
+- no equivalent safe implementation with acceptable measured cost.
+
+### New technology - TCBM
+**TCBM - Trusted Computing Base Map** produces a machine-readable map of crates/modules that can affect lifecycle safety, capability authority, canonical identity, journal integrity or IPC trust boundaries. Security review focuses deeply on this smaller TCB rather than treating every file equally.
+
+### New technology - SAF
+**SAF - Security-Aware Fingerprint** extends dependency/cache impact metadata so a security-policy or TCB-relevant dependency change invalidates affected assurance/evidence even when functional APIs appear unchanged.
+
+### Runtime hardening requirements
+- deny-by-default authority;
+- bounded frame/message sizes;
+- parser/resource limits before allocation;
+- no shell interpolation for process execution contracts;
+- path normalization and traversal defenses at future file boundaries;
+- child environment allowlisting/redaction;
+- secret zeroization where practical for owned buffers;
+- crash/error messages must not leak secrets;
+- IPC peer identity/authentication hooks;
+- journal permissions/integrity validation;
+- symlink/race-aware file operations where safety-relevant;
+- no network listener in M01 by default.
+
+### Security testing
+- fuzz all untrusted parsers/frames/config records;
+- malformed length-prefix and allocation-bomb tests;
+- path/config injection tests;
+- environment secret-canary tests;
+- stale/forged epoch and binding receipt tests;
+- journal tamper/truncation/reordering tests;
+- IPC peer spoofing tests where platform permits;
+- dependency/feature drift checks;
+- unsafe-code audit gate;
+- privilege/authority escalation property tests.

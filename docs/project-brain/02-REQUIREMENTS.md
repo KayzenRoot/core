@@ -39,3 +39,9 @@ These are foundation requirements only. Product-functional requirements will be 
 - **CORE-R-023 Multi-dimensional health:** health MUST expose capability/impact degradation rather than a single boolean.
 - **CORE-R-024 Probe coalescing:** equivalent concurrent external health probes SHOULD be coalesced when correctness/freshness permit.
 - **CORE-R-025 Delta observability:** repeated runtime/health telemetry SHOULD support stable-baseline + delta representation to reduce redundant storage/context.
+
+- **CORE-R-026 Performance evidence:** promotion MUST detect material regressions against compatible benchmark baselines.
+- **CORE-R-027 Bounded resources:** runtime queues, retries, frames and safety-relevant allocations MUST be bounded by policy.
+- **CORE-R-028 Supply-chain evidence:** release evidence MUST include dependency/advisory/license/provenance checks and SBOM.
+- **CORE-R-029 Unsafe Rust:** first-party unsafe code MUST be exceptional, localized, documented and independently reviewable.
+- **CORE-R-030 Cache economics:** future LLM-facing execution MUST expose stable/cache-eligible versus uncached/retried token economics.
