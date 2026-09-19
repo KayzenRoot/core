@@ -29,3 +29,12 @@ To be classified during governed discovery. No future capability is admitted mer
 - Replacing Git as canonical source history.
 - Claiming autonomous production behavior before architecture and verification are frozen.
 - Selecting a final application stack before product architecture requires it.
+
+
+## ACCEPTED DISCOVERY CONSTRAINTS
+
+- CORE is a headless action/execution plane; dashboard/cockpit/web UI are OUT OF SCOPE.
+- CORE must remain usable without HIVE.
+- When compatible HIVE is available, CORE consumes HIVE-owned intelligence through contracts instead of duplicating HIVE subsystems.
+- Default delivery granularity is one complete planned module per bounded Codex Work Order when safe.
+- Product planning must provide executor-ready file maps, contracts, invariants and tests before implementation.

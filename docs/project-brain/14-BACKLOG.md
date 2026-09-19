@@ -2,15 +2,43 @@
 
 Status: `ACTIVE`
 
-## Immediate
+## Discovery program
 
-- CORE-DISC-001: product mission and operational boundary discovery.
-- CORE-DISC-002: map responsibilities between HIVE and CORE.
-- CORE-DISC-003: define users, executors, integrations and primary workflows.
-- CORE-DISC-004: freeze initial product Scope, Requirements, Architecture and DoD.
-- CORE-GOV-001: configure repository ruleset/required checks when supported by the connected administration surface.
-- CORE-HIVE-001: run local HIVE bootstrap against the user's installed HIVE instance and capture project id/index/corpus evidence.
+Canonical module map: `docs/modules/00-MASTER-MODULE-MAP.md`.
 
-## Deferred until discovery
+- M01 Core Runtime & Lifecycle — IN PROGRESS.
+- M02 Project / Workspace Adapter.
+- M03 Work Order Engine.
+- M04 Run / Attempt / Step Engine.
+- M05 Host Adapter Fabric.
+- M06 Capability Negotiation.
+- M07 Specialist Registry.
+- M08 Sequential Agent Orchestrator.
+- M09 Model & Effort Router.
+- M10 Execution Policy Engine.
+- M11 Capability Lease & Sandbox.
+- M12 Tool / Command Execution Fabric.
+- M13 Change & Mutation Engine.
+- M14 Verification Planner.
+- M15 Evidence & Proof Engine.
+- M16 Review & Assurance Engine.
+- M17 Defect / Correction Engine.
+- M18 Recovery & Resume Engine.
+- M19 Resource / Cost / Quota Governor.
+- M20 Git / GitHub Delivery Engine.
+- M21 CI/CD & Release Engine.
+- M22 Security / Supply-Chain Engine.
+- M23 HIVE Sync & Federation Protocol.
+- M24 Headless Event & Telemetry Spine.
 
-All feature ideas remain unadmitted until classified as NECESSARY, IMPORTANT, FUTURE or OUT OF SCOPE.
+## Research candidates
+ACS, TSS, EOF, ENS, PCE and NSP are candidates, not implementation claims.
+
+## External bootstrap follow-up
+- CORE-GOV-001: activate main ruleset when admin mutation is available.
+- CORE-HIVE-001: validate against the user's live local HIVE v1.0.0 runtime.
+
+## Explicitly excluded
+- dashboard/cockpit/web UI;
+- duplicate HIVE RAG/memory/repository-intelligence engines;
+- shared HIVE/CORE database coupling.

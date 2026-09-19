@@ -20,3 +20,10 @@ Bootstrap is complete only when:
 `PENDING DISCOVERY`
 
 No product-completion percentage or production-readiness claim may be derived from the bootstrap DoD.
+
+
+## M01 - Core Runtime & Lifecycle DoD
+
+M01 completion requires the accepted Rust/Tokio runtime, versioned contracts, deterministic identity, typed config, module/capability registries, runtime journal, local IPC, health/degradation engine, lifecycle/supervisor and CLI to satisfy the module-specific DoD in `docs/modules/M01-CORE-RUNTIME-LIFECYCLE.md`.
+
+No M01 completion claim is valid without exact-head tests, security/supply-chain evidence, failure-injection/fuzz/property coverage, compatible performance-regression evidence, zero-LLM lifecycle proof and independent governed review. HIGH/CRITICAL unresolved defects block completion.

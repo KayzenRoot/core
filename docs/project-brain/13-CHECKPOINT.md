@@ -1,51 +1,63 @@
 # CORE Checkpoint
 
 ## STATUS
-BOOTSTRAP FOUNDATION INSTALLED / PRODUCT PLANNING NOT STARTED
+PRODUCT DISCOVERY ACTIVE / M01 PLANNING FROZEN / EXECUTION READY
 
 ## VERSION
-CORE V0.0 - Bootstrap Baseline
+CORE V0.0 - Discovery Baseline
 
 ## PHASE
-0 - Bootstrap and Discovery Entry
+1 - Modular Product Discovery
 
 ## OBJECTIVE
-Establish CORE as a HIVE-native, GEF-governed NexLabs project before product planning and implementation.
+Plan CORE as the headless NexLabs action plane that operates standalone and synchronizes deeply with HIVE without duplicating HIVE-owned intelligence.
 
 ## IN PROGRESS
-- None.
+- M01 implementation handoff via CORE-WO-M01-001.
+- M02-M24 remain discovery-only.
 
 ## COMPLETED
-- Repository initialized.
-- CORE-WO-0001 approved and squash-merged through PR #1.
-- GEF Bootstrap v1.0.0 target-project governance materialized.
-- Complete bootstrap Source Pack materialized.
-- HIVE v1.0.0 canonical governance paths materialized.
-- HIVE registration/index/corpus bootstrap tooling added.
-- Project-scoped Codex -> HIVE MCP bridge added and fail-closed.
-- Deterministic governance validation and hosted GitHub workflow added.
-- Executor, review, evidence, Context Lock and Work Order scaffolding added.
-- Exact-head audit approved candidate `342404099665f9302454f22b48241d3ec0a844fd`.
-- Bootstrap merge promoted as `e669498558e6f129efd8a8f2e20679f28e8326a7`.
+- Repository/bootstrap foundation approved and promoted.
+- GEF v1.0.0 and HIVE v1.0.0 integration baseline installed.
+- HIVE intelligence plane / CORE action plane boundary accepted.
+- Headless-only CORE constraint accepted.
+- Standalone + HIVE-enhanced operating model accepted.
+- 24-module discovery baseline recorded.
+- Modular delivery rule accepted: architecture/orchestration here, heavy implementation in Codex.
+- Default implementation granularity: one complete module per large bounded Work Order when safe.
+- ACS, TSS, EOF, ENS, PCE and NSP recorded as research candidates.
+- M01 initial executor-ready target file map recorded.
 
 ## PENDING
-- Product discovery.
-- CORE functional scope freeze.
-- Product architecture freeze.
-- Product requirements and production DoD.
-- First product implementation Work Order.
-- Live registration/index/corpus bootstrap against the user's local HIVE instance.
-- GitHub main ruleset activation when an authorized administration write surface is available.
+- Plan M02 through M24 in dependency order.
+- Freeze product Requirements/Architecture/DoD as discovery matures.
+- Live local HIVE bootstrap evidence.
+- GitHub main ruleset activation when authorized admin mutation is available.
 
 ## BLOCKERS
-- None for planning.
-- Product coding remains gated until planning sources for the first implementation increment are frozen.
+- None for M01 executor handoff.
+- M02-M24 product implementation remains gated until each target module plan is frozen.
 
 ## NEXT STEP
-Begin governed CORE discovery and define the relationship, responsibilities and boundaries between HIVE and CORE before any product implementation.
+Execute CORE-WO-M01-001 in Codex using Packets A-H, collect exact-head evidence, then run governed review before promotion.
 
 ## EVIDENCE
-- `.engineering/evidence/CORE-WO-0001.json`
-- PR #1
-- Governance run #9 / `35441163753` / SUCCESS
-- Semantic review `5255641959` / APPROVED
+- `docs/engineering/CORE-MODULAR-DELIVERY-MODEL.md`
+- `docs/modules/00-MASTER-MODULE-MAP.md`
+- `docs/research/CORE-TECHNOLOGY-CANDIDATES.md`
+- `docs/modules/M01-CORE-RUNTIME-LIFECYCLE.md`
+
+
+## Current M01 checkpoint delta
+M01 deep discovery now covers runtime stack, lifecycle, configuration, module/capability fabric, HIVE substitution seam, cache/token primitives, crash recovery, shutdown, health/degradation, exact crate boundaries, contracts, performance governance, supply-chain security, verification, DoD and technology consolidation.
+
+Current phase: M01 PLANNING FROZEN. Product implementation is authorized ONLY for CORE-WO-M01-001 after executor handoff. Other modules remain discovery-only.
+
+Next legal action: compile final file-level executor notes and governed M01 Work Order/STOP CONDITION, then freeze the planning basis before Codex implementation.
+
+
+## M01 freeze record
+Frozen Work Order: `docs/work-orders/CORE-WO-M01-001.md`
+Freeze basis commit: `d3a5772f0cb427bd8a9d7ff0c5182243e64cd6d7`
+Execution scope: M01 only.
+Next legal action: hand CORE-WO-M01-001 to Codex, execute Packets A-H, collect exact-head evidence, then perform governed review before any completion/promotion claim.

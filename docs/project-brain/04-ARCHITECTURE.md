@@ -38,3 +38,39 @@ CORE MUST consume stable HIVE capabilities instead of reimplementing HIVE contex
 ## Product architecture gate
 
 No runtime framework, database, queue, agent topology or deployment architecture is frozen by this bootstrap. Those decisions require discovery, requirements, threat/failure analysis and ADRs.
+
+
+## Discovery architecture direction
+
+```text
+HIVE = intelligence plane
+CORE = action plane
+GEF  = governance protocol
+Git/GitHub = source history + governed delivery transport
+```
+
+CORE is headless. CLI, APIs, MCP and structured events may be admitted by module planning; visual control surfaces are not part of CORE.
+
+CORE standalone behavior uses only bounded fallback capabilities needed for safe operation. When HIVE is compatible/available, Adaptive Capability Substitution is the candidate pattern for replacing those fallbacks with HIVE-owned intelligence.
+
+HIVE and CORE must not share canonical database tables. Candidate synchronization uses versioned envelopes, fingerprints and events.
+
+Canonical discovery map: `docs/modules/00-MASTER-MODULE-MAP.md`.
+Planning/execution protocol: `docs/engineering/CORE-MODULAR-DELIVERY-MODEL.md`.
+
+
+## Runtime technology baseline
+
+CORE product runtime is Rust-first:
+- Rust stable;
+- Tokio async runtime;
+- one headless supervisor;
+- trusted in-process modules plus selectively isolated workers;
+- local OS IPC for first-party local worker boundaries;
+- hierarchical cancellation;
+- minimal append-only M01 runtime journal;
+- TOML human configuration;
+- canonical typed machine contracts;
+- no arbitrary dynamic-library plugins.
+
+HIVE remains independently implemented/deployed. CORE communicates with HIVE through versioned external contracts rather than sharing language/runtime/database internals.

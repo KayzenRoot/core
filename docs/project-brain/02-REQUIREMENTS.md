@@ -19,4 +19,29 @@ These are foundation requirements only. Product-functional requirements will be 
 
 ## Product requirements
 
-`PENDING DISCOVERY`
+- **CORE-R-011 Headless:** no dashboard/cockpit/web UI.
+- **CORE-R-012 Standalone:** CORE remains safely usable without HIVE.
+- **CORE-R-013 HIVE substitution:** compatible HIVE capabilities replace bounded fallbacks through contracts.
+- **CORE-R-014 Complete-product commitment:** ACCEPTED_REQUIRED capabilities must be built; there is no MVP tier.
+- **CORE-R-015 LLM economics:** LLM-facing modules optimize tokens/retries/reusable evidence without lowering quality.
+- **CORE-R-016 Cache-first:** LLM-facing contracts preserve stable material, deterministic identity and explicit invalidation.
+- **CORE-R-017 Zero-LLM lifecycle:** M01 bootstrap/lifecycle/health/shutdown uses no inference.
+- **CORE-R-018 Cache evidence:** reuse exposes class, hit/miss/bypass reason, identity/provenance and invalidation basis where applicable.
+
+
+
+## M01 production requirements
+
+- **CORE-R-019 Crash ambiguity:** restart MUST NOT infer success for an ambiguous external side effect.
+- **CORE-R-020 Epoch safety:** stale prior-epoch runtime messages/leases MUST NOT mutate current runtime state.
+- **CORE-R-021 Graceful shutdown:** shutdown MUST verify quiescence or explicitly record residual/incomplete obligations.
+- **CORE-R-022 Quality-floor failover:** provider/fallback substitution MUST NOT reduce an operation below its declared quality/policy floor.
+- **CORE-R-023 Multi-dimensional health:** health MUST expose capability/impact degradation rather than a single boolean.
+- **CORE-R-024 Probe coalescing:** equivalent concurrent external health probes SHOULD be coalesced when correctness/freshness permit.
+- **CORE-R-025 Delta observability:** repeated runtime/health telemetry SHOULD support stable-baseline + delta representation to reduce redundant storage/context.
+
+- **CORE-R-026 Performance evidence:** promotion MUST detect material regressions against compatible benchmark baselines.
+- **CORE-R-027 Bounded resources:** runtime queues, retries, frames and safety-relevant allocations MUST be bounded by policy.
+- **CORE-R-028 Supply-chain evidence:** release evidence MUST include dependency/advisory/license/provenance checks and SBOM.
+- **CORE-R-029 Unsafe Rust:** first-party unsafe code MUST be exceptional, localized, documented and independently reviewable.
+- **CORE-R-030 Cache economics:** future LLM-facing execution MUST expose stable/cache-eligible versus uncached/retried token economics.
