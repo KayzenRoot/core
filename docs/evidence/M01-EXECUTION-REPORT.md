@@ -46,6 +46,15 @@ Run [35473364862](https://github.com/KayzenRoot/core/actions/runs/35473364862) c
 - [M01 Windows job 105978253317](https://github.com/KayzenRoot/core/actions/runs/35473364862/job/105978253317): SUCCESS, including native IPC, supply-chain/advisory, SBOM, soak and PRB.
 - [M01 fuzz campaign 105978253162](https://github.com/KayzenRoot/core/actions/runs/35473364862/job/105978253162): SUCCESS.
 
+Documentation-only report commit [5a0b820](https://github.com/KayzenRoot/core/commit/5a0b8204426251c0e68cea4025712be73150e985) was then validated independently by run [35474239100](https://github.com/KayzenRoot/core/actions/runs/35474239100), whose head was exactly `5a0b8204426251c0e68cea4025712be73150e985`:
+
+- [Governance job 105980602426](https://github.com/KayzenRoot/core/actions/runs/35474239100/job/105980602426): SUCCESS.
+- [M01 Ubuntu job 105980602446](https://github.com/KayzenRoot/core/actions/runs/35474239100/job/105980602446): SUCCESS.
+- [M01 Windows job 105980602311](https://github.com/KayzenRoot/core/actions/runs/35474239100/job/105980602311): SUCCESS, including supply-chain/advisory, SBOM, soak and PRB.
+- [M01 fuzz campaign 105980602453](https://github.com/KayzenRoot/core/actions/runs/35474239100/job/105980602453): SUCCESS.
+
+The implementation evidence remains bound to `e0ad23d`; the second run proves the report packet and its exact documented evidence also pass at its own pushed head.
+
 ## Canonical acceptance criteria
 
 1. **All M01-required crates/contracts/mechanisms exist at governed boundaries — PASS.** Evidence: `crates/core-contracts`, `core-config`, `core-registry`, `core-runtime`, `core-journal`, `core-ipc`, `core-health`, `core-identity` and CLI sources; workspace check/tests and Governance job passed.
