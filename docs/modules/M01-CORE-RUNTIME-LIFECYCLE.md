@@ -1403,3 +1403,71 @@ M01 is complete only when:
 
 ## M01 planning status after Round 12
 The architecture is close to planning freeze. Remaining tasks are final technology disposition, exact benchmark-policy seed values after first baseline, executor file-by-file implementation notes, and Work Order/STOP CONDITION compilation.
+
+
+## Round 13 - Technology disposition and consolidation
+
+### PROMOTED_TO_M01_REQUIRED
+These mechanisms are distinct, measurable and belong in M01:
+- RLC — Runtime Lifecycle Calculus;
+- CPG — Capability Provenance Graph;
+- RSG — Runtime Safety Genome;
+- QDS — Quiescence-Driven Shutdown;
+- DCM — Degraded Capability Matrix;
+- BSR — Bootstrap Safety Receipt;
+- GCL — Generation Coherence Layer;
+- DCS — Deterministic Canonical Serialization;
+- CAL — Capability Atomic Leasing;
+- SIR — Substitution Impact Radius;
+- CBR — Capability Binding Receipt;
+- FCH — Fallback Capability Harness;
+- SBR — Safe Boot Reconciliation;
+- EEB — Execution Epoch Barrier;
+- IES — Idempotency Envelope Standard (contract only in M01; effect execution later);
+- QVM — Quiescence Verification Matrix;
+- CFS — Crash Fingerprint Suppression;
+- QFC — Quality Floor Continuity;
+- HCC — Health Causality Compression;
+- ODF — Observability Delta Frames (M01 control/health subset);
+- PHC — Probe Herd Coalescing;
+- PRB — Performance Regression Budget;
+- WNF — Work Normalization Fingerprint;
+- TCBM — Trusted Computing Base Map;
+- SAF — Security-Aware Fingerprint.
+
+### PROMOTED_AS_CROSS_MODULE_PRIMITIVE
+M01 implements the primitive/contract seam; later modules own full product behavior:
+- SCP — Stable Context Partitioning;
+- CAG — Cache Affinity Graph hooks/dependency identity;
+- DIF — Deterministic Input Fingerprint;
+- TEB — Token Economics Budget carrier;
+- ZCP — immutable content-handle contract/local primitive;
+- CEE — Cache Efficiency Envelope carrier/metrics schema.
+
+### DEFERRED_IMPLEMENTATION_WITH_REQUIRED_SEAM
+These remain accepted CORE technologies but their active engine does not belong in M01:
+- LCR — LLM Call Reuse Gate: active decision engine belongs with LLM execution/routing/cache modules;
+- PSM — Prompt Stability Meter: active measurement belongs with prompt/context compilation.
+
+M01 MUST preserve the stable partition/fingerprint/generation/metric hooks they require.
+
+### CONSOLIDATION RULES
+- DIF uses DCS; it is not a second serializer.
+- RSG uses DCS + SAF-relevant inputs; it is not a second dependency graph.
+- BSR references RSG/generations/health; it does not duplicate them.
+- CBR is the receipt produced by capability binding; CAL is the lease consumed afterward.
+- SIR consumes CPG/GCL/CAG hooks; it does not maintain a parallel graph.
+- ODF compresses observation transport; HCC compresses causal representation. They remain distinct.
+- QDS consumes QVM; QVM is the proof matrix, QDS is the shutdown algorithm.
+- SBR consumes journal + EEB + generations; it is not a second journal.
+- CEE measures cache economics; TEB constrains budget. They are not interchangeable.
+
+### Rejection rule
+No candidate is kept merely because its acronym exists. If implementation evidence shows a promoted mechanism has no independent measurable value, it MUST be merged/narrowed/rejected through an ADR rather than preserved for branding.
+
+## M01 technology count after consolidation
+- 25 M01-required mechanisms;
+- 6 cross-module primitives seeded by M01;
+- 2 accepted later engines with mandatory M01 seams.
+
+This is a responsibility map, not a claim of patents or external novelty.

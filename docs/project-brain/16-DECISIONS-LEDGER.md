@@ -161,3 +161,12 @@ Status: `ACTIVE`
 ## CORE-D-038 - Security-sensitive changes affect evidence validity
 **Decision:** security-policy, TCB and relevant dependency changes participate in evidence/cache validity even when public functional APIs are unchanged.
 **State:** ACCEPTED
+
+
+## CORE-D-039 - M01 technology consolidation
+**Decision:** M01 technology candidates are consolidated into required M01 mechanisms, cross-module primitives seeded by M01, and later engines with required M01 seams. Overlapping implementations are forbidden where one canonical primitive can serve multiple technologies.
+**State:** ACCEPTED
+
+## CORE-D-040 - Technology names do not override evidence
+**Decision:** NexLabs technology branding does not protect a mechanism from narrowing, merging or rejection. Independent measurable value and production evidence govern final retention.
+**State:** ACCEPTED

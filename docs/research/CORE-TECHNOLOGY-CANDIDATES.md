@@ -115,3 +115,13 @@ HIVE retains authority over durable knowledge promotion. CORE retains authority 
 
 ## M01 technology promotion checkpoint
 The following are now architecture-integrated candidates and MUST receive implementation evidence before final product-technology promotion: RLC, CPG, RSG, QDS, DCM, BSR, SCP, CAG, DIF, LCR, PSM, TEB, ZCP, GCL, DCS, CAL, SIR, CBR, FCH, SBR, EEB, IES, QVM, CFS, QFC, HCC, ODF, PHC, PRB, WNF, CEE, TCBM and SAF. A name is never sufficient evidence; each must demonstrate its claimed mechanism/benefit or be narrowed/rejected.
+
+
+## M01 Round 13 disposition
+**M01 required:** RLC, CPG, RSG, QDS, DCM, BSR, GCL, DCS, CAL, SIR, CBR, FCH, SBR, EEB, IES-contract, QVM, CFS, QFC, HCC, ODF-M01, PHC, PRB, WNF, TCBM, SAF.
+
+**Cross-module primitives seeded in M01:** SCP, CAG hooks, DIF, TEB carrier, ZCP primitive, CEE carrier.
+
+**Later active engines, M01 seam required:** LCR and PSM.
+
+All promotions remain subject to implementation/benchmark evidence; nomenclature is not evidence of novelty or value.
