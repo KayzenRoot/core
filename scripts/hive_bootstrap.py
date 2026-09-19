@@ -29,6 +29,32 @@ def request(base_url: str, method: str, path: str, payload: dict[str, Any] | Non
         raise RuntimeError(f"HIVE unavailable at {base_url}: {exc.reason}") from exc
 
 
+def resolve_registered_project(
+    projects: list[dict[str, Any]], *, name: str, relative_path: str
+) -> dict[str, Any] | None:
+    exact = next(
+        (item for item in projects if item.get("relative_path") == relative_path),
+        None,
+    )
+    if exact is not None:
+        return exact
+
+    name_collisions = [
+        item
+        for item in projects
+        if item.get("name") == name and item.get("relative_path") != relative_path
+    ]
+    if name_collisions:
+        collision_paths = ", ".join(
+            sorted(str(item.get("relative_path")) for item in name_collisions)
+        )
+        raise RuntimeError(
+            f'HIVE already has project name "{name}" at a different path: '
+            f"{collision_paths}. Resolve the identity explicitly instead of guessing."
+        )
+    return None
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Register and prepare CORE in HIVE v1.0.0")
     parser.add_argument("--base-url", default=os.getenv("HIVE_API_URL", "http://localhost:8000"))
@@ -47,24 +73,12 @@ def main() -> int:
     if not isinstance(projects, list):
         raise RuntimeError("HIVE project list returned an unexpected payload")
 
-    target = next(
-        (item for item in projects if item.get("relative_path") == args.relative_path),
-        None,
+    target = resolve_registered_project(
+        projects,
+        name=args.name,
+        relative_path=args.relative_path,
     )
     if target is None:
-        name_collisions = [
-            item
-            for item in projects
-            if item.get("name") == args.name and item.get("relative_path") != args.relative_path
-        ]
-        if name_collisions:
-            collision_paths = ", ".join(
-                sorted(str(item.get("relative_path")) for item in name_collisions)
-            )
-            raise RuntimeError(
-                f'HIVE already has project name "{args.name}" at a different path: '
-                f"{collision_paths}. Resolve the identity explicitly instead of guessing."
-            )
         target = request(
             args.base_url,
             "POST",

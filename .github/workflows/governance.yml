@@ -20,5 +20,9 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Compile bootstrap tooling
+        run: python -m py_compile scripts/validate_governance.py scripts/hive_bootstrap.py
       - name: Validate CORE governance
         run: python scripts/validate_governance.py
+      - name: Test HIVE bootstrap identity rules
+        run: python -m unittest discover -s tests -p "test_*.py" -v
