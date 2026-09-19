@@ -88,3 +88,10 @@ HIVE retains authority over durable knowledge promotion. CORE retains authority 
 - **ZCP — Zero-Copy Context Handles:** immutable content-addressed handles reduce repeated payload copies/serialization across local components.
 - **GCL — Generation Coherence Layer:** coherent config/module/capability/policy generations support targeted revalidation and cache invalidation.
 - **DCS — Deterministic Canonical Serialization:** canonical bytes and golden vectors for fingerprints, receipts, cache keys and cross-language identities.
+
+
+## M01 capability-fabric candidates
+- **CAL — Capability Atomic Leasing:** immutable bounded leases keep provider/generation coherent across an operation.
+- **SIR — Substitution Impact Radius:** computes affected consumers/leases/caches/safety operations before provider substitution.
+- **CBR — Capability Binding Receipt:** canonical proof of provider selection/substitution.
+- **FCH — Fallback Capability Harness:** deliberately bounded standalone fallbacks with explicit quality ceiling and provenance.

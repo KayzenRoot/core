@@ -97,3 +97,20 @@ Status: `ACTIVE`
 ## CORE-D-023 - TOML configuration
 **Decision:** human-authored CORE repository configuration uses TOML with typed precedence; machine contracts/evidence use canonical schema-governed serialization with interoperable JSON representation.
 **State:** ACCEPTED
+
+
+## CORE-D-024 - Modules and capabilities are separate identities
+**Decision:** consumers depend on versioned capability contracts, not concrete module/provider identities by default. Modules are runtime participants; capabilities are behavior contracts.
+**State:** ACCEPTED
+
+## CORE-D-025 - Atomic capability substitution
+**Decision:** provider changes use prepared generation plus atomic binding publication and bounded leases. Active operations retain coherent provider identity until a safe boundary unless policy requires revocation.
+**State:** ACCEPTED
+
+## CORE-D-026 - No silent low-quality fallback
+**Decision:** HIVE/provider loss may activate a standalone fallback only when that fallback satisfies the operation's declared quality/policy floor. Otherwise the affected operation is blocked/degraded explicitly.
+**State:** ACCEPTED
+
+## CORE-D-027 - Targeted invalidation on provider change
+**Decision:** provider substitution does not globally invalidate caches/evidence. Only artifacts whose correctness identity depends on the changed provider/binding generation are invalidated.
+**State:** ACCEPTED
