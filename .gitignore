@@ -25,3 +25,6 @@ coverage/
 .hive-data/
 .hive-projects/
 tmp/
+# Local build/runtime artifacts
+/target/
+/.core/
