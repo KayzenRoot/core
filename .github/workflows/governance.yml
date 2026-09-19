@@ -64,6 +64,8 @@ jobs:
         run: python scripts/generate_sbom.py --output artifacts/m01-sbom.cdx.json
       - name: Bounded start/stop soak
         run: python scripts/m01_soak.py --iterations 16 --output artifacts/m01-soak.json
+      - name: PRB/WNF gate
+        run: python scripts/m01_prb.py --mode check --output artifacts/m01-prb.json
       - name: Upload evidence artifacts
         uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
         with:

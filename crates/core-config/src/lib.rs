@@ -271,6 +271,27 @@ impl CoreConfig {
         Ok(())
     }
 
+    pub fn reload_from_sources(
+        &self,
+        repository_toml: Option<&str>,
+        machine_toml: Option<&str>,
+        env: impl IntoIterator<Item = (String, String)>,
+        cli: &ConfigOverrides,
+    ) -> Result<Self, ConfigError> {
+        let mut reloaded = Self::from_sources(
+            repository_toml,
+            machine_toml,
+            env,
+            cli,
+            self.generation.boot_epoch,
+        )?;
+        reloaded.generation.config = self.generation.config.saturating_add(1);
+        reloaded.generation.module_graph = self.generation.module_graph;
+        reloaded.generation.capability_graph = self.generation.capability_graph;
+        reloaded.generation.policy = self.generation.policy;
+        Ok(reloaded)
+    }
+
     pub fn redacted_diagnostics(&self) -> serde_json::Value {
         serde_json::json!({
             "journal_path": self.journal_path,
@@ -343,5 +364,25 @@ mod tests {
         let text = config.redacted_diagnostics().to_string();
         assert!(!text.contains("vault/core"));
         assert!(text.contains("reference-present"));
+    }
+
+    #[test]
+    fn safe_reload_advances_only_configuration_generation() {
+        let config = CoreConfig::defaults(4);
+        let reloaded = config
+            .reload_from_sources(
+                Some("quality_floor = 80"),
+                None,
+                [],
+                &ConfigOverrides::default(),
+            )
+            .unwrap();
+        assert_eq!(reloaded.quality_floor, 80);
+        assert_eq!(reloaded.generation.boot_epoch, 4);
+        assert_eq!(reloaded.generation.config, 1);
+        assert_eq!(
+            reloaded.generation.module_graph,
+            config.generation.module_graph
+        );
     }
 }

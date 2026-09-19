@@ -165,12 +165,38 @@ pub enum IsolationClass {
     ExternalProvider,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, Default)]
+pub enum AssuranceClass {
+    Untrusted,
+    #[default]
+    Standard,
+    Verified,
+    Critical,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, Default)]
+pub enum ResourcePressure {
+    #[default]
+    Normal,
+    Pressured,
+    Critical,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct CapabilityRequirement {
     pub name: String,
     pub contract: SemVer,
     pub required_features: BTreeSet<String>,
     pub quality_floor: u8,
+    pub policy: String,
+    pub required_authorities: BTreeSet<String>,
+    pub minimum_assurance: AssuranceClass,
+    pub minimum_trust: u8,
+    pub preferred_origin: Option<ProviderOrigin>,
+    pub preferred_provider_class: Option<String>,
+    pub cache_affinity: String,
+    pub max_latency_micros: Option<u64>,
+    pub max_cost_milli: Option<u64>,
 }
 
 impl CapabilityRequirement {
@@ -180,11 +206,20 @@ impl CapabilityRequirement {
             contract,
             required_features: BTreeSet::new(),
             quality_floor: 0,
+            policy: String::new(),
+            required_authorities: BTreeSet::new(),
+            minimum_assurance: AssuranceClass::Standard,
+            minimum_trust: 0,
+            preferred_origin: None,
+            preferred_provider_class: None,
+            cache_affinity: String::new(),
+            max_latency_micros: None,
+            max_cost_milli: None,
         }
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 pub enum ProviderOrigin {
     CoreNative,
     CoreFallback,
@@ -213,6 +248,17 @@ pub struct CapabilityProviderDescriptor {
     pub trust: u8,
     pub activation_generation: u64,
     pub fingerprint: String,
+    pub policy: String,
+    pub authority_requirements: BTreeSet<String>,
+    pub assurance: AssuranceClass,
+    pub latency_micros: u64,
+    pub cost_milli: u64,
+    pub performance_score: u32,
+    pub provider_class: String,
+    pub cache_affinity: String,
+    pub dependency_capabilities: BTreeSet<String>,
+    pub readiness: bool,
+    pub quarantined: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -226,6 +272,16 @@ pub struct CapabilityBindingReceipt {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct CapabilityBindingIdentity {
+    pub capability: String,
+    pub provider_id: String,
+    pub provider_fingerprint: String,
+    pub provider_generation: u64,
+    pub binding_generation: u64,
+    pub active_leases: u64,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct CapabilityLease {
     pub schema: SchemaVersion,
     pub lease_id: String,
@@ -236,6 +292,10 @@ pub struct CapabilityLease {
     pub boot_epoch: u64,
     pub expires_at_monotonic_ms: u64,
     pub revoked: bool,
+    pub policy: String,
+    pub authority_requirements: BTreeSet<String>,
+    pub assurance: AssuranceClass,
+    pub cache_affinity: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -250,6 +310,14 @@ pub struct ModuleManifest {
     pub provided: BTreeSet<String>,
     pub startup_dependencies: BTreeSet<String>,
     pub critical: bool,
+    pub lifecycle_hooks: BTreeSet<String>,
+    pub health_contract: String,
+    pub startup_deadline_ms: u64,
+    pub shutdown_deadline_ms: u64,
+    pub config_namespace: String,
+    pub config_schema: SchemaVersion,
+    pub authority_requirements: BTreeSet<String>,
+    pub event_contract_versions: BTreeMap<String, SemVer>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -285,6 +353,11 @@ pub struct BootstrapSafetyReceipt {
     pub blocked_reasons: Vec<String>,
     pub unavailable_capabilities: Vec<String>,
     pub rsg_fingerprint: String,
+    pub module_graph_generation: u64,
+    pub capability_graph_generation: u64,
+    pub policy_generation: u64,
+    pub tcbm_fingerprint: String,
+    pub saf_fingerprint: String,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -314,6 +387,9 @@ pub struct HealthSignal {
     pub reason_code: String,
     pub generation: u64,
     pub impact: String,
+    pub observed_at_monotonic_ms: u64,
+    pub freshness_window_ms: u64,
+    pub evidence_fingerprint: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -322,6 +398,7 @@ pub struct HealthSnapshot {
     pub baseline_fingerprint: String,
     pub signals: BTreeMap<HealthDimension, HealthSignal>,
     pub delta: BTreeMap<String, String>,
+    pub pressure: ResourcePressure,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -362,6 +439,7 @@ pub struct ShutdownReceipt {
     pub final_phase: ShutdownPhase,
     pub items: Vec<QuiescenceItem>,
     pub residuals: Vec<String>,
+    pub quiescence_fingerprint: String,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -381,7 +459,13 @@ pub enum JournalRecordKind {
     WorkerSpawned,
     WorkerTerminated,
     DrainStarted,
+    AdmissionClosed,
+    LeaseDrainCompleted,
+    CooperativeCancelCompleted,
+    CleanupCompleted,
+    QuiescenceChecked,
     DrainCompleted,
+    ShutdownEscalated,
     ForcedTermination,
     IncompleteShutdown,
     RecoveryResult,

@@ -17,6 +17,7 @@ enum Command {
     Status,
     Validate,
     Doctor,
+    Exercise,
     Version,
 }
 
@@ -44,6 +45,16 @@ async fn run(cli: Cli) -> Result<(), String> {
         Command::Doctor => print_json(
             serde_json::json!({ "schema": SchemaVersion::CURRENT, "headless": true, "rust_runtime": "stable", "tokio": true, "hive_dependency": false, "llm_calls": 0 }),
         ),
+        Command::Exercise => {
+            let config = CoreConfig::from_sources(None, None, [], &ConfigOverrides::default(), 1)
+                .map_err(|e| e.to_string())?;
+            let mut supervisor = Supervisor::new(config).map_err(|e| e.to_string())?;
+            let evidence = supervisor
+                .exercise_frozen_cycle()
+                .await
+                .map_err(|e| e.to_string())?;
+            print_json(evidence)
+        }
         Command::Start => {
             let config = CoreConfig::from_sources(None, None, [], &ConfigOverrides::default(), 1)
                 .map_err(|e| e.to_string())?;

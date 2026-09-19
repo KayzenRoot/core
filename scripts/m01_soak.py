@@ -68,7 +68,7 @@ def main() -> int:
     records = []
     for iteration in range(args.iterations):
         started = time.perf_counter()
-        result = subprocess.run(
+        start_result = subprocess.run(
             [str(binary), "start"],
             cwd=ROOT,
             capture_output=True,
@@ -76,16 +76,27 @@ def main() -> int:
             timeout=30,
             check=False,
         )
+        exercise_result = subprocess.run(
+            [str(binary), "exercise"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
         elapsed_ms = (time.perf_counter() - started) * 1000
-        payload = json.loads(result.stdout)
+        payload = json.loads(start_result.stdout)
+        exercise = json.loads(exercise_result.stdout)
         records.append(
             {
                 "iteration": iteration + 1,
                 "elapsed_ms": round(elapsed_ms, 3),
-                "returncode": result.returncode,
+                "returncode": start_result.returncode,
                 "verdict": payload.get("verdict"),
-                "stdout_bytes": len(result.stdout.encode()),
-                "stderr_bytes": len(result.stderr.encode()),
+                "exercise_returncode": exercise_result.returncode,
+                "exercise": exercise,
+                "stdout_bytes": len(start_result.stdout.encode()),
+                "stderr_bytes": len(start_result.stderr.encode()) + len(exercise_result.stderr.encode()),
                 "resource": resource_snapshot(),
             }
         )
@@ -93,15 +104,30 @@ def main() -> int:
     after = resource_snapshot()
     resource_keys = sorted(set(before) & set(after))
     growth = {key: after[key] - before[key] for key in resource_keys if before[key] >= 0 and after[key] >= 0}
-    passed = all(item["returncode"] == 0 and item["verdict"] == "ReadyEligible" for item in records)
+    passed = all(
+        item["returncode"] == 0
+        and item["verdict"] == "ReadyEligible"
+        and item["exercise_returncode"] == 0
+        and item["exercise"].get("provider_substituted") == "hive-context"
+        and item["exercise"].get("provider_flap_recovered_with_fallback") is True
+        and item["exercise"].get("shutdown_clean") is True
+        for item in records
+    )
     report = {
         "suite": "M01_START_STOP_SOAK",
         "iterations": args.iterations,
-        "scenarios": ["repeated start/stop", "zero-LLM bootstrap", "journal recovery path"],
+        "scenarios": [
+            "repeated start/stop",
+            "provider connect/disconnect/flap with lease preservation",
+            "safe configuration reload",
+            "health/probe and generation tests via the runtime suite",
+            "repeated shutdown/recovery and isolated-worker churn",
+            "zero-LLM bootstrap",
+        ],
         "resource_before": before,
         "resource_after": after,
         "resource_growth": growth,
-        "bounded_policy": "process handle growth <= 4; no failed ReadyEligible starts",
+        "bounded_policy": "process handle growth <= 4; no failed ReadyEligible starts; every frozen safety cycle remains coherent",
         "passed": passed,
         "record_fingerprint": hashlib.sha256(
             json.dumps(records, sort_keys=True).encode("utf-8")

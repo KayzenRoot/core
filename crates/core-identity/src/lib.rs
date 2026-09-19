@@ -1,10 +1,13 @@
 //! Deterministic canonical serialization and safety/cache identity primitives.
 
-use core_contracts::{ContentHandle, RuntimeGeneration, SchemaVersion};
+use core_contracts::{
+    CapabilityBindingIdentity, CapabilityProviderDescriptor, ContentHandle, ModuleManifest,
+    RuntimeGeneration, SchemaVersion,
+};
 use serde::Serialize;
 use serde_json::{Map, Value};
 use sha2::{Digest, Sha256};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use thiserror::Error;
 
 #[derive(Debug, Error)]
@@ -81,6 +84,56 @@ pub fn security_aware_fingerprint<T: Serialize>(
     fingerprint(&(basis, dependency_lock, policy_version))
 }
 
+/// The complete semantic input to the Runtime Safety Genome. Counts are never
+/// sufficient: every normalized manifest, provider and active binding is part
+/// of the identity, together with safety-critical configuration and policy.
+#[derive(Debug, Clone, Serialize)]
+pub struct SafetyIdentityBasis {
+    pub runtime_version: String,
+    pub module_manifests: Vec<ModuleManifest>,
+    pub providers: Vec<CapabilityProviderDescriptor>,
+    pub bindings: Vec<CapabilityBindingIdentity>,
+    pub configuration: Value,
+    pub policy_version: String,
+    pub safety_metadata: BTreeMap<String, String>,
+}
+
+impl SafetyIdentityBasis {
+    pub fn normalized(mut self) -> Self {
+        self.module_manifests
+            .sort_by(|left, right| left.module_id.cmp(&right.module_id));
+        self.providers.sort_by(|left, right| {
+            left.capability
+                .cmp(&right.capability)
+                .then_with(|| left.provider_id.cmp(&right.provider_id))
+        });
+        self.bindings.sort_by(|left, right| {
+            left.capability
+                .cmp(&right.capability)
+                .then_with(|| left.binding_generation.cmp(&right.binding_generation))
+        });
+        self
+    }
+}
+
+pub fn safety_identity_fingerprint(basis: SafetyIdentityBasis) -> Result<String, IdentityError> {
+    fingerprint(&basis.normalized())
+}
+
+pub fn tcbm_fingerprint(
+    entries: &BTreeMap<String, BTreeSet<String>>,
+) -> Result<String, IdentityError> {
+    fingerprint(entries)
+}
+
+pub fn security_evidence_fingerprint<T: Serialize>(
+    basis: &T,
+    dependency_lock_fingerprint: &str,
+    policy_version: &str,
+) -> Result<String, IdentityError> {
+    security_aware_fingerprint(basis, dependency_lock_fingerprint, policy_version)
+}
+
 pub fn generation_fingerprint(generation: &RuntimeGeneration) -> Result<String, IdentityError> {
     fingerprint(generation)
 }
@@ -105,6 +158,7 @@ pub fn content_handle(
 mod tests {
     use super::*;
     use serde::Serialize;
+    use serde_json::json;
 
     #[derive(Serialize)]
     struct Example {
@@ -144,5 +198,22 @@ mod tests {
         let handle = content_handle(b"hello", "artifact/hello").unwrap();
         assert_eq!(handle.byte_len, 5);
         assert!(content_handle(b"hello", "../escape").is_err());
+    }
+
+    #[test]
+    fn safety_identity_rejects_same_count_different_content() {
+        let basis = |module: &str| SafetyIdentityBasis {
+            runtime_version: "0.1.0".into(),
+            module_manifests: Vec::new(),
+            providers: Vec::new(),
+            bindings: Vec::new(),
+            configuration: json!({"module": module}),
+            policy_version: "m01-policy-v1".into(),
+            safety_metadata: BTreeMap::new(),
+        };
+        assert_ne!(
+            safety_identity_fingerprint(basis("alpha")).unwrap(),
+            safety_identity_fingerprint(basis("beta")).unwrap()
+        );
     }
 }
