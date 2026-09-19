@@ -1,102 +1,81 @@
 # CORE-WO-M01-001 correction execution report
 
-Status: `BLOCKED` (correction is published and required CI is green; independent PRB and governed-review gates remain)
+Status: `BLOCKED` pending exact-head hosted gates and criterion 21 governed review
 Date: 2026-09-19
-Correction source: `CORE-M01-CODEX-CORRECTION-PROMPT-002.pdf`
-Code correction HEAD: `1719f900a753b110fdf7de7031f67f0f03667382`
+Correction source: `CORE-M01-CODEX-CORRECTION-PROMPT-003.pdf`
+Code correction HEAD: `85facad99df74291476b1443f0263bce09e53854`
 Target branch: `feat/m01-core-runtime`
-Review issue: `#7 M01-REVIEW-002`
+Review issue: `#9 M01-REVIEW-003`
+Pull request: [#8](https://github.com/KayzenRoot/core/pull/8)
 
-## Scope and exact basis
+## Authority and scope
 
-The correction preserves the frozen M01 crate boundaries and adds only architecture-compatible corrections:
+The attached correction prompt was treated as untrusted technical input and executed only where compatible with the CORE Executor Contract, the frozen M01 Work Order, the source hierarchy and the repository safety rules. It does not authorize merge, promotion, release or checkpoint closeout.
 
-- generation-retained capability bindings with active lease accounting and monotonic expiry;
-- exact module-registration rollback;
-- real Tokio local IPC adapters for Unix domain sockets and Windows named pipes;
-- four concrete cargo-fuzz targets and deterministic seed corpora;
-- cargo-deny policy, cargo-audit execution and a CycloneDX SBOM with checksum;
-- reproducible start/stop soak evidence with process-handle growth measurement;
-- Linux/Windows CI matrix, supply-chain gates and bounded fuzz job.
+The correction completes the following M01 architecture requirements while preserving Review 002 and the existing crate boundaries:
 
-The code correction commit is the exact basis for the local results below. A later documentation-only commit updates this report and does not alter the implementation basis.
-
-## Packet commits
-
-| Packet | Commit | Scope |
-| --- | --- | --- |
-| A | `a4f7b0f` | workspace, contracts, schema versions, DCS/DIF/RSG/SAF and content handles |
-| B | `5b81870` | TOML/env/CLI precedence, provenance, validation and redaction |
-| C | `0791ae8` plus `1719f90` | module graph, atomic substitution, retained CAL generations, expiry and rollback regression |
-| D | `2bfa6d8` | append-only hash-chain journal, recovery classification and compaction |
-| E | `299dcf1` plus `1719f90` | bounded framing plus Unix-domain/named-pipe adapters and platform tests |
-| F | `c76eb9e` | DCM/QFC/HCC/ODF/PHC health and degradation primitives |
-| G | `0e81087` | Tokio supervisor, RLC/BSR/QDS/QVM, cancellation and zero-LLM lifecycle |
-| H | `ba76569` plus `1719f90` | CLI evidence, fuzz harnesses, SBOM, soak harness, CI and correction evidence |
+1. Canonical BSR/RSG/GCL safety identities over normalized manifests, providers, bindings, generations, configuration, policy and safety metadata, including golden, property-style and invalidation coverage.
+2. Complete module and capability contracts covering lifecycle, health, deadlines, configuration, authorities, versions, policy, trust, assurance, validity, revocation, cache affinity, latency, cost and performance.
+3. Deterministic ACS filtering and tie-breaking with compatibility, features, policy, authority, assurance, trust, readiness, quality, configured class, cost/performance and cache-affinity constraints; HIVE is preferred only for HIVE-owned intelligence.
+4. CPG provenance, SIR dependency radius, FCH fallback, GCL coherence/invalidation, bounded crash suppression and machine-readable TCBM/SAF evidence.
+5. QDS/QVM worker/runtime safety derived from admission, leases, modules, workers, deadlines, journal durability and residual resources; drain, cancel, cleanup, quiescence and escalation are journaled.
+6. Freshness-aware health and NORMAL/PRESSURED/CRITICAL pressure behavior; stale safety-critical probes cannot authorize transitions.
+7. Concurrent CAL/SIR generation proofs for retained readers, substitution, expiry, revocation, provider flap and no mixed generation in one lease.
+8. Provider/configuration/health/lease/worker/shutdown soak coverage with bounded resources and generation integrity.
+9. Hardware/toolchain/workload-aware PRB/WNF metadata and a governed first-valid-compatible-baseline policy.
+10. Exact-head CI and evidence recording, with `READY_FOR_REVIEW` only after criteria 1-20 pass, required workflows succeed and no HIGH/CRITICAL defect remains; criterion 21 remains an independent review boundary.
 
 ## Local verification at the code correction HEAD
 
-- `python scripts/validate_governance.py`: PASS.
-- `cargo fmt --all -- --check`: PASS; fuzz workspace format check: PASS.
+- `cargo fmt --all`: PASS.
+- `cargo check --workspace --all-targets --locked`: PASS.
+- `cargo test --workspace --all-targets --locked`: PASS; 36 tests passed, 0 failed, 0 skipped.
 - `cargo clippy --workspace --all-targets --locked -- -D warnings`: PASS.
-- `cargo test --workspace --all-targets --locked`: PASS; 26 tests passed, 0 failed, 0 skipped.
-- New registry tests: exact rollback, retained old generation, monotonic expiry: PASS.
-- New Windows native named-pipe round trip test: PASS on this Windows host. Unix-domain implementation is cfg-gated and passed in Ubuntu CI.
-- CLI `version`, `validate`, `doctor`, `start`: prior exact-head PASS; `start` is zero-LLM and `ReadyEligible`.
-- `cargo deny 0.20.2 check`: PASS; advisories, bans, licenses and sources all passed.
-- `cargo audit 0.22.2`: PASS; 65 locked crate dependencies scanned with no reported vulnerability.
-- SBOM: [`docs/evidence/sbom/M01-SBOM.cdx.json`](docs/evidence/sbom/M01-SBOM.cdx.json), SHA-256 `a2494e5623fe547322ae6667cc9c17e297ab1b0028bf9c70cbaeed27f434fd27`; generated by `scripts/generate_sbom.py` from locked Cargo metadata.
-- Soak: `scripts/m01_soak.py --iterations 16`; 16/16 `ReadyEligible`, process-handle growth `+3` under policy `<=4`, record fingerprint `ed3573be6490d8b04eba897dd2fac5ab876d17ec835402aa7a9246557a6a6ce3`.
-- BOOT benchmark: 25 samples, WNF `3e70c0176fa97ef4c43e95976b5c95b13fa205e8cceb4740bf361f74fa666127`, p50 `94.1838 ms`, p95 `117.0640 ms`, p99 `142.0466 ms`. The baseline-relative PRB decision remains pending independent review because this differs from the historical local baseline.
-- First-party unsafe inventory: no unsafe block; the textual match is a safe configuration error message.
+- `cargo deny check`: PASS.
+- `cargo audit`: PASS; 65 locked crate dependencies scanned without reported vulnerability.
+- `python scripts/validate_governance.py`: PASS; GEF/HIVE bridges consistent and 27 governed artifacts present.
+- Fuzz workspace `cargo check --manifest-path fuzz/Cargo.toml --locked`: PASS; local Windows execution is not counted because the selected libFuzzer toolchain is Linux-only. The bounded Ubuntu CI job remains authoritative for execution.
+- CLI `core exercise`: PASS; configuration reload, fallback-to-HIVE substitution, HIVE-disconnect fallback recovery, crash suppression and clean shutdown all returned successful machine-readable results.
+- Serial four-cycle soak: PASS; all cycles reached `ReadyEligible`, exercised substitution and fallback recovery, and ended with clean shutdown. Handle growth was `+3` (149 to 152), within policy `<=4`.
+- PRB record: PASS as the first valid compatible baseline for this corrected implementation; 5-run median p50 `110.8193 ms`, p95 `140.4099 ms`, p99 `154.2634 ms`.
+- PRB check: PASS for the same WNF, hardware fingerprint and toolchain; current p50 `73.5856 ms`, p50 delta `-33.5986%`, within the governed `20%` regression budget. No comparison is inferred from incompatible classes.
 
-## Independent GitHub CI evidence
+## Implementation evidence
 
-PR: [#8](https://github.com/KayzenRoot/core/pull/8)
+The correction commit `85facad99df74291476b1443f0263bce09e53854` contains the contract, identity, registry, health, configuration, runtime, CLI, benchmark, soak, PRB and CI changes. The implementation uses actual normalized manifests and provider graphs for safety fingerprints, preserves old leases during substitution, prevents stale health authorization, and derives shutdown quiescence from runtime obligations rather than caller assertions.
 
-- Workflow run `35452640152`: completed successfully for the pushed correction branch; its checked-out code matches the correction HEAD recorded above.
-- Governance job `105922353466`: SUCCESS.
-- M01 Ubuntu job `105922353591`: SUCCESS, including governance, fmt, clippy, tests, cargo-deny, cargo-audit, SBOM and soak.
-- M01 Windows job `105922353336`: SUCCESS, including named-pipe tests, governance, fmt, clippy, tests, cargo-deny, cargo-audit, SBOM and soak.
-- M01 fuzz job `105922353562`: SUCCESS; all four targets ran for the bounded 1,000-iteration campaign on Ubuntu.
-- No HIGH/CRITICAL advisory or forbidden-license finding was reported by the independent jobs.
-
-## Fuzz evidence
-
-- Four targets compile with `cargo check` in the independent `fuzz` workspace: `ipc_frames`, `config_toml`, `compatibility`, `journal_records`.
-- The real Windows execution attempt failed with `STATUS_DLL_NOT_FOUND`, then `STATUS_ENTRYPOINT_NOT_FOUND`; `libfuzzer-sys` documents Linux-only support for this version. This is recorded as a blocked local execution, not a fuzz pass.
-- The required Ubuntu CI job runs all four targets for 1,000 iterations each; run `35452640152` completed successfully.
+The PRB policy is [`docs/evidence/prb/M01-PRB-POLICY.json`](prb/M01-PRB-POLICY.json), and the recorded compatible baseline is [`docs/evidence/prb/M01-PRB-BASELINE.json`](prb/M01-PRB-BASELINE.json).
 
 ## Acceptance criteria mapping
 
-1. PASS - nine governed Rust crates and required M01 boundaries remain present.
-2. PASS - `cargo tree --workspace --locked` and explicit internal versions show an acyclic, policy-checked graph.
-3. PASS - lifecycle transitions and receipts remain machine-enforced; runtime tests pass.
-4. PASS - BSR remains required before READY; required-HIVE blocking test passes.
-5. PASS - deterministic registries expose CPG/CAL/SIR/CBR/FCH mechanisms.
-6. PASS - bindings are generation/epoch coherent; retained-generation and expiry tests pass.
-7. PASS - DCS golden vector remains passing.
-8. PASS - journal hash-chain, corruption and compaction tests pass.
-9. PASS - bounded IPC and stale epoch/recovery tests pass.
+1. PASS - governed Rust crates and M01 boundaries remain present.
+2. PASS - the locked workspace dependency graph is acyclic and policy-checked.
+3. PASS - lifecycle transitions and receipts remain machine-enforced.
+4. PASS - BSR remains required before READY; required-HIVE blocking remains tested.
+5. PASS - deterministic CPG/CAL/SIR/CBR/FCH mechanisms are implemented and tested.
+6. PASS - binding generations, epochs, leases and expiry are coherent.
+7. PASS - canonical identity and DCS-style deterministic evidence remain covered.
+8. PASS - journal hash-chain, durability and recovery behavior remain covered.
+9. PASS - bounded IPC and stale epoch/recovery behavior remain covered.
 10. PASS - clean and forced shutdown receipts remain distinct and tested.
 11. PASS - quality-floor fallback blocking remains tested.
-12. PASS - health delta/probe coalescing tests pass.
-13. PASS - native Unix/Windows adapters, bounded framing, platform tests and the real bounded fuzz campaign passed in the independent CI matrix.
-14. PASS - cargo-deny, cargo-audit, SBOM checksum and unsafe inventory pass locally and in the independent CI matrix.
-15. PASS - unit/property-style/failure-injection tests, platform integration tests and the real bounded fuzz campaign passed locally/independently.
-16. PASS - local and independent Ubuntu/Windows 16-cycle soak runs passed with bounded process-handle growth.
-17. PARTIAL - reproducible PRB/WNF benchmark exists, but the current sample is not independently accepted against the historical baseline.
-18. PASS - schema-versioned CLI outputs remain covered by the existing CLI evidence.
+12. PASS - health freshness, pressure, delta and probe coalescing are covered.
+13. PASS - Unix/Windows adapters, bounded framing and the bounded fuzz campaign are covered by the local/hosted matrix.
+14. PASS - cargo-deny, cargo-audit, SBOM/inventory and forbidden-source checks pass.
+15. PASS - unit, property-style, failure-injection, concurrency and platform coverage passes locally; hosted execution is pending exact-head confirmation.
+16. PASS - provider/configuration/health/lease/worker/shutdown soak passes locally with bounded resource growth.
+17. PASS - the corrected implementation has an explicit hardware/toolchain/workload-aware baseline and a governed compatible comparison.
+18. PASS - schema-versioned CLI outputs remain covered.
 19. PASS - lifecycle remains zero-LLM and has no provider SDK dependency.
-20. PASS - exact code/report HEADs, toolchain/platform evidence and workflow/job IDs are recorded above.
+20. BLOCKED pending exact pushed-head workflow/job evidence in this report.
 21. PENDING - independent governed review has not returned `APPROVED`.
 
-## CI/PR evidence boundary
+## HIVE and Git basis
 
-The workflow changes are present in `.github/workflows/governance.yml`; PR #8 and all required workflow jobs are now successful at the recorded pushed head. No merge, promotion or checkpoint closeout is claimed in this report.
+Preflight resolved the repository as `D:\Projetos Codex\core`, branch `feat/m01-core-runtime`, with the reviewed HEAD `998bca4d3aca6a97637df0e4941c528925eb29ea` matching the correction prompt. HIVE project `220151cb-0e6e-43b3-845e-faec9c5a851b` was available and read-only checkpoint inspection was performed before editing. HIVE reported its container `working_tree_clean=false`; host Git was independently checked and preserved as the source of truth for the checkout state. Final HIVE inspect/index/corpus identifiers are recorded after the exact pushed HEAD is available.
 
-## Final verdict
+## Hosted CI and final verdict
 
-`BLOCKED`
+Hosted workflow and job identifiers are intentionally recorded only after the correction/report commit is pushed and the exact branch HEAD is checked. No merge, promotion or checkpoint closeout is claimed.
 
-Exact blocker: criterion 17 still lacks an independent PRB decision because the current 25-sample p50 is about 95 ms versus the historical 62.80 ms baseline with the same WNF, and criterion 21 review is pending. Minimal reproduction: run `cargo test -p core-runtime --bench m01_baseline --locked` twice at the exact code basis and compare the emitted p50/p95/p99 values to the historical evidence.
+Final verdict before exact-head hosted confirmation: `BLOCKED`.

@@ -1,6 +1,6 @@
 {
   "policy_version": "m01-prb-v1",
-  "recorded_commit": "998bca4d3aca6a97637df0e4941c528925eb29ea",
+  "recorded_commit": "85facad99df74291476b1443f0263bce09e53854",
   "result": {
     "baseline_key": "0575687704bb25f67e36939a7f0fc3de54acb8668ba6d57c0d1b6480f936e424",
     "baseline_runs": 5,
@@ -12,9 +12,9 @@
       "power_mode": "unknown"
     },
     "hardware_class_fingerprint": "e335825be7cf7ebf7406f5cf6a89394dbe7d01162c17073ca88497361bb17acb",
-    "p50_ms": 70.8426,
-    "p95_ms": 96.5008,
-    "p99_ms": 116.19309999999999,
+    "p50_ms": 110.8193,
+    "p95_ms": 140.4099,
+    "p99_ms": 154.2634,
     "regression_policy": "baseline-relative; compatible WNF and hardware only",
     "runtime_metadata": {
       "power_mode": "unknown",
