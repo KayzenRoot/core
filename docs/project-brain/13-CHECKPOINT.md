@@ -13,8 +13,8 @@ CORE V0.0 - Discovery Baseline
 Plan CORE as the headless NexLabs action plane that operates standalone and synchronizes deeply with HIVE without duplicating HIVE-owned intelligence.
 
 ## IN PROGRESS
-- M01 Core Runtime & Lifecycle planning.
-- Executor-ready file map and module contracts.
+- M01 implementation handoff via CORE-WO-M01-001.
+- M02-M24 remain discovery-only.
 
 ## COMPLETED
 - Repository/bootstrap foundation approved and promoted.
@@ -29,19 +29,17 @@ Plan CORE as the headless NexLabs action plane that operates standalone and sync
 - M01 initial executor-ready target file map recorded.
 
 ## PENDING
-- Complete and freeze M01.
 - Plan M02 through M24 in dependency order.
 - Freeze product Requirements/Architecture/DoD as discovery matures.
-- Compile first implementation Work Order only after M01 planning STOP CONDITION.
 - Live local HIVE bootstrap evidence.
 - GitHub main ruleset activation when authorized admin mutation is available.
 
 ## BLOCKERS
-- None for planning.
-- Product implementation remains gated until the target module plan is frozen.
+- None for M01 executor handoff.
+- M02-M24 product implementation remains gated until each target module plan is frozen.
 
 ## NEXT STEP
-Deep-plan M01: stack/runtime selection, exact lifecycle, contracts, failure model, file map, tests, benchmarks, DoD and explicit exclusions.
+Execute CORE-WO-M01-001 in Codex using Packets A-H, collect exact-head evidence, then run governed review before promotion.
 
 ## EVIDENCE
 - `docs/engineering/CORE-MODULAR-DELIVERY-MODEL.md`

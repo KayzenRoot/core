@@ -15,4 +15,4 @@ CORE V0.0 - Discovery Baseline
 1 - Modular Product Discovery
 
 ## NEXT STEP
-Deep-plan M01: stack/runtime selection, exact lifecycle, contracts, failure model, file map, tests, benchmarks, DoD and explicit exclusions.
+Execute CORE-WO-M01-001 in Codex using Packets A-H, collect exact-head evidence, then run governed review before promotion.

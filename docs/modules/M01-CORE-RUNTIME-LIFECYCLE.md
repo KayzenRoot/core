@@ -1,6 +1,6 @@
 # M01 - Core Runtime & Lifecycle
 
-Status: `DISCOVERY_IN_PROGRESS`
+Status: `PLANNING_FROZEN_EXECUTION_READY`
 
 ## Mission
 

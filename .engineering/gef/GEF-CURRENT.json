@@ -4,10 +4,12 @@
   "promptMode": "GEF_V1_HIVE_FIRST",
   "reviewMode": "DELTA_EXACT_HEAD",
   "assuranceMode": "STANDARD_PLUS",
-  "productStage": "DISCOVERY_READY",
-  "nextLegalAction": "GOVERNED_PRODUCT_DISCOVERY",
-  "productImplementationAuthorized": false,
+  "productStage": "M01_EXECUTION_READY",
+  "nextLegalAction": "EXECUTE_CORE_WO_M01_001",
+  "productImplementationAuthorized": true,
   "canonicalCheckpoint": "docs/project-brain/13-CHECKPOINT.md",
   "lastCompletedWorkOrder": "CORE-WO-0001",
-  "lastPromotedMerge": "e669498558e6f129efd8a8f2e20679f28e8326a7"
+  "lastPromotedMerge": "e669498558e6f129efd8a8f2e20679f28e8326a7",
+  "authorizedScope": "M01_ONLY",
+  "activeWorkOrder": "CORE-WO-M01-001"
 }
