@@ -26,3 +26,65 @@ jobs:
         run: python scripts/validate_governance.py
       - name: Test HIVE bootstrap and MCP bridge
         run: python -m unittest discover -s tests -p "test_*.py" -v
+
+  m01:
+    name: M01 (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.12"
+      - name: Validate governance
+        run: python scripts/validate_governance.py
+      - name: Rust toolchain
+        run: rustup show active-toolchain
+      - name: Format
+        run: cargo fmt --all -- --check
+      - name: Clippy
+        run: cargo clippy --workspace --all-targets --locked -- -D warnings
+      - name: Tests and platform IPC
+        run: cargo test --workspace --all-targets --locked
+      - name: Supply-chain tools
+        run: cargo install cargo-deny --locked
+      - name: Advisory tool
+        run: cargo install cargo-audit --locked
+      - name: Dependency policy
+        run: cargo deny check
+      - name: Advisory scan
+        run: cargo audit
+      - name: SBOM
+        shell: bash
+        run: python scripts/generate_sbom.py --output artifacts/m01-sbom.cdx.json
+      - name: Bounded start/stop soak
+        run: python scripts/m01_soak.py --iterations 16 --output artifacts/m01-soak.json
+      - name: Upload evidence artifacts
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
+        with:
+          name: m01-evidence-${{ matrix.os }}
+          path: artifacts/
+
+  m01-fuzz:
+    name: M01 fuzz campaign
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - name: Install nightly toolchain
+        run: rustup toolchain install nightly --profile minimal
+      - name: Install cargo-fuzz
+        run: cargo +nightly install cargo-fuzz --locked
+      - name: Run bounded fuzz targets
+        shell: bash
+        working-directory: fuzz
+        run: |
+          set -euo pipefail
+          for target in ipc_frames config_toml compatibility journal_records; do
+            cargo +nightly fuzz run "$target" -- -runs=1000
+          done

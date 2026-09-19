@@ -11,8 +11,8 @@ path = "src/main.rs"
 
 [dependencies]
 clap.workspace = true
-core-config = { path = "../core-config" }
-core-contracts = { path = "../core-contracts" }
-core-runtime = { path = "../core-runtime" }
+core-config = { path = "../core-config", version = "0.1.0" }
+core-contracts = { path = "../core-contracts", version = "0.1.0" }
+core-runtime = { path = "../core-runtime", version = "0.1.0" }
 serde_json.workspace = true
 tokio.workspace = true

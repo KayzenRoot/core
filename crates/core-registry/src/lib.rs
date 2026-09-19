@@ -7,6 +7,7 @@ use core_contracts::{
 use core_identity::fingerprint;
 use std::collections::{BTreeMap, BTreeSet};
 use std::sync::{Arc, RwLock};
+use std::time::Instant;
 use thiserror::Error;
 
 #[derive(Debug, Error)]
@@ -42,12 +43,10 @@ impl ModuleRegistry {
                 return Err(RegistryError::UnknownDependency(dependency.clone()));
             }
         }
-        self.modules.insert(manifest.module_id.clone(), manifest);
+        let module_id = manifest.module_id.clone();
+        self.modules.insert(module_id.clone(), manifest);
         if let Err(error) = self.validate_graph() {
-            let id = self.modules.keys().last().cloned();
-            if let Some(id) = id {
-                self.modules.remove(&id);
-            }
+            self.modules.remove(&module_id);
             return Err(error);
         }
         Ok(())
@@ -101,12 +100,15 @@ pub struct CapabilityRegistry {
     inner: Arc<RwLock<RegistryState>>,
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug)]
 struct RegistryState {
     providers: BTreeMap<String, Vec<CapabilityProviderDescriptor>>,
     bindings: BTreeMap<String, Binding>,
+    retired_bindings: BTreeMap<(String, u64), Binding>,
+    leases: BTreeMap<String, LeaseRecord>,
     next_generation: u64,
     next_lease: u64,
+    monotonic_origin: Instant,
 }
 
 #[derive(Debug, Clone)]
@@ -114,6 +116,89 @@ struct Binding {
     provider: CapabilityProviderDescriptor,
     generation: u64,
     active_leases: u64,
+}
+
+#[derive(Debug, Clone)]
+struct LeaseRecord {
+    capability: String,
+    binding_generation: u64,
+    expires_at_monotonic_ms: u64,
+    revoked: bool,
+}
+
+impl Default for RegistryState {
+    fn default() -> Self {
+        Self {
+            providers: BTreeMap::new(),
+            bindings: BTreeMap::new(),
+            retired_bindings: BTreeMap::new(),
+            leases: BTreeMap::new(),
+            next_generation: 0,
+            next_lease: 0,
+            monotonic_origin: Instant::now(),
+        }
+    }
+}
+
+impl RegistryState {
+    fn now_ms(&self) -> u64 {
+        self.monotonic_origin
+            .elapsed()
+            .as_millis()
+            .min(u128::from(u64::MAX)) as u64
+    }
+
+    fn binding(&self, capability: &str, generation: u64) -> Option<&Binding> {
+        self.bindings
+            .get(capability)
+            .filter(|binding| binding.generation == generation)
+            .or_else(|| {
+                self.retired_bindings
+                    .get(&(capability.to_owned(), generation))
+            })
+    }
+
+    fn decrement_lease(&mut self, capability: &str, generation: u64) {
+        if let Some(binding) = self.bindings.get_mut(capability) {
+            if binding.generation == generation {
+                binding.active_leases = binding.active_leases.saturating_sub(1);
+                return;
+            }
+        }
+
+        let key = (capability.to_owned(), generation);
+        let should_remove = self
+            .retired_bindings
+            .get_mut(&key)
+            .map(|binding| {
+                binding.active_leases = binding.active_leases.saturating_sub(1);
+                binding.active_leases == 0
+            })
+            .unwrap_or(false);
+        if should_remove {
+            self.retired_bindings.remove(&key);
+        }
+    }
+
+    fn prune_expired(&mut self) {
+        let now = self.now_ms();
+        let expired: Vec<_> = self
+            .leases
+            .iter()
+            .filter(|(_, lease)| lease.revoked || lease.expires_at_monotonic_ms <= now)
+            .map(|(lease_id, lease)| {
+                (
+                    lease_id.clone(),
+                    lease.capability.clone(),
+                    lease.binding_generation,
+                )
+            })
+            .collect();
+        for (lease_id, capability, generation) in expired {
+            self.leases.remove(&lease_id);
+            self.decrement_lease(&capability, generation);
+        }
+    }
 }
 
 impl Default for CapabilityRegistry {
@@ -203,9 +288,10 @@ impl CapabilityRegistry {
     ) -> Result<CapabilityBindingReceipt, RegistryError> {
         let provider = self.resolve(requirement)?;
         let mut state = self.inner.write().expect("registry lock poisoned");
+        state.prune_expired();
         let generation = state.next_generation;
         state.next_generation = state.next_generation.saturating_add(1);
-        state.bindings.insert(
+        let previous = state.bindings.insert(
             requirement.name.clone(),
             Binding {
                 provider: provider.clone(),
@@ -213,6 +299,13 @@ impl CapabilityRegistry {
                 active_leases: 0,
             },
         );
+        if let Some(previous) = previous {
+            if previous.active_leases > 0 {
+                state
+                    .retired_bindings
+                    .insert((requirement.name.clone(), previous.generation), previous);
+            }
+        }
         Ok(CapabilityBindingReceipt {
             schema: SchemaVersion::CURRENT,
             capability: requirement.name.clone(),
@@ -238,8 +331,10 @@ impl CapabilityRegistry {
         ttl_ms: u64,
     ) -> Result<CapabilityLease, RegistryError> {
         let mut state = self.inner.write().expect("registry lock poisoned");
+        state.prune_expired();
         let lease_id = format!("lease-{}", state.next_lease);
         state.next_lease = state.next_lease.saturating_add(1);
+        let expires_at_monotonic_ms = state.now_ms().saturating_add(ttl_ms);
         let (provider_id, provider_fingerprint, binding_generation) = {
             let binding = state
                 .bindings
@@ -255,6 +350,15 @@ impl CapabilityRegistry {
                 binding.generation,
             )
         };
+        state.leases.insert(
+            lease_id.clone(),
+            LeaseRecord {
+                capability: capability.to_owned(),
+                binding_generation,
+                expires_at_monotonic_ms,
+                revoked: false,
+            },
+        );
         Ok(CapabilityLease {
             schema: SchemaVersion::CURRENT,
             lease_id,
@@ -263,7 +367,7 @@ impl CapabilityRegistry {
             provider_fingerprint,
             binding_generation,
             boot_epoch,
-            expires_at_monotonic_ms: ttl_ms,
+            expires_at_monotonic_ms,
             revoked: false,
         })
     }
@@ -276,12 +380,25 @@ impl CapabilityRegistry {
         if lease.revoked || lease.boot_epoch != generation.boot_epoch {
             return Err(RegistryError::StaleLease);
         }
-        let state = self.inner.read().expect("registry lock poisoned");
-        let binding = state
-            .bindings
-            .get(&lease.capability)
+        let mut state = self.inner.write().expect("registry lock poisoned");
+        state.prune_expired();
+        let now = state.now_ms();
+        let record = state
+            .leases
+            .get(&lease.lease_id)
             .ok_or(RegistryError::StaleLease)?;
-        if binding.generation != lease.binding_generation
+        if record.capability != lease.capability
+            || record.binding_generation != lease.binding_generation
+            || record.expires_at_monotonic_ms != lease.expires_at_monotonic_ms
+            || record.revoked
+            || record.expires_at_monotonic_ms <= now
+        {
+            return Err(RegistryError::StaleLease);
+        }
+        let binding = state
+            .binding(&lease.capability, lease.binding_generation)
+            .ok_or(RegistryError::StaleLease)?;
+        if binding.provider.provider_id != lease.provider_id
             || binding.provider.fingerprint != lease.provider_fingerprint
         {
             return Err(RegistryError::StaleLease);
@@ -299,18 +416,46 @@ impl CapabilityRegistry {
 
     pub fn release_lease(&self, lease: &CapabilityLease) -> Result<(), RegistryError> {
         let mut state = self.inner.write().expect("registry lock poisoned");
-        let binding = state
-            .bindings
-            .get_mut(&lease.capability)
+        state.prune_expired();
+        let record = state
+            .leases
+            .get(&lease.lease_id)
+            .cloned()
             .ok_or(RegistryError::StaleLease)?;
-        if binding.generation != lease.binding_generation
+        let binding = state
+            .binding(&lease.capability, lease.binding_generation)
+            .ok_or(RegistryError::StaleLease)?;
+        if record.capability != lease.capability
+            || record.binding_generation != lease.binding_generation
+            || record.expires_at_monotonic_ms != lease.expires_at_monotonic_ms
+            || binding.provider.provider_id != lease.provider_id
             || binding.provider.fingerprint != lease.provider_fingerprint
             || lease.revoked
         {
             return Err(RegistryError::StaleLease);
         }
-        binding.active_leases = binding.active_leases.saturating_sub(1);
+        state.leases.remove(&lease.lease_id);
+        state.decrement_lease(&lease.capability, lease.binding_generation);
         Ok(())
+    }
+
+    pub fn revoke_lease(&self, lease_id: &str) -> Result<(), RegistryError> {
+        let mut state = self.inner.write().expect("registry lock poisoned");
+        state.prune_expired();
+        let record = state
+            .leases
+            .remove(lease_id)
+            .ok_or(RegistryError::StaleLease)?;
+        state.decrement_lease(&record.capability, record.binding_generation);
+        Ok(())
+    }
+
+    pub fn active_lease_count(&self, capability: &str, generation: u64) -> u64 {
+        let state = self.inner.read().expect("registry lock poisoned");
+        state
+            .binding(capability, generation)
+            .map(|binding| binding.active_leases)
+            .unwrap_or(0)
     }
 
     pub fn substitution_impact(&self, capability: &str) -> BTreeSet<String> {
@@ -391,6 +536,18 @@ mod tests {
     }
 
     #[test]
+    fn failed_registration_rolls_back_only_inserted_module() {
+        let mut registry = ModuleRegistry::default();
+        registry.register(manifest("z-valid", &[])).unwrap();
+        assert!(matches!(
+            registry.register(manifest("a-invalid", &["a-invalid"])),
+            Err(RegistryError::DependencyCycle(_))
+        ));
+        assert!(registry.get("z-valid").is_some());
+        assert!(registry.get("a-invalid").is_none());
+    }
+
+    #[test]
     fn hive_provider_wins_without_llm() {
         let registry = CapabilityRegistry::new();
         registry
@@ -435,6 +592,72 @@ mod tests {
         let lease = registry.acquire_lease("health", 4, 100).unwrap();
         assert!(matches!(
             registry.validate_lease(&lease, &RuntimeGeneration::new(5)),
+            Err(RegistryError::StaleLease)
+        ));
+    }
+
+    #[test]
+    fn old_generation_remains_valid_until_lease_release() {
+        let registry = CapabilityRegistry::new();
+        registry
+            .register_provider(provider(
+                "old",
+                "core",
+                "context",
+                ProviderOrigin::CoreNative,
+                90,
+            ))
+            .unwrap();
+        registry
+            .register_provider(provider(
+                "new",
+                "core",
+                "context",
+                ProviderOrigin::CoreNative,
+                95,
+            ))
+            .unwrap();
+        let req = CapabilityRequirement::new("context", SemVer::new(1, 0, 0));
+        let old_binding = registry.bind(&req, "initial").unwrap();
+        let lease = registry.acquire_lease("context", 4, 1_000).unwrap();
+        let new_binding = registry.substitute(&req, "rotation").unwrap();
+
+        assert_ne!(
+            old_binding.binding_generation,
+            new_binding.binding_generation
+        );
+        assert_eq!(registry.active_binding("context").unwrap().0, "new");
+        assert_eq!(
+            registry.active_lease_count("context", old_binding.binding_generation),
+            1
+        );
+        registry
+            .validate_lease(&lease, &RuntimeGeneration::new(4))
+            .unwrap();
+        registry.release_lease(&lease).unwrap();
+        assert_eq!(
+            registry.active_lease_count("context", old_binding.binding_generation),
+            0
+        );
+    }
+
+    #[test]
+    fn lease_expiration_is_monotonic_and_enforced() {
+        let registry = CapabilityRegistry::new();
+        registry
+            .register_provider(provider(
+                "native",
+                "core",
+                "health",
+                ProviderOrigin::CoreNative,
+                90,
+            ))
+            .unwrap();
+        let req = CapabilityRequirement::new("health", SemVer::new(1, 0, 0));
+        registry.bind(&req, "startup").unwrap();
+        let lease = registry.acquire_lease("health", 4, 0).unwrap();
+        assert!(matches!(
+            registry.validate_lease(&lease, &RuntimeGeneration::new(4)),
             Err(RegistryError::StaleLease)
         ));
     }

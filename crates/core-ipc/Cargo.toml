@@ -6,5 +6,6 @@ license.workspace = true
 rust-version.workspace = true
 
 [dependencies]
-core-contracts = { path = "../core-contracts" }
+core-contracts = { path = "../core-contracts", version = "0.1.0" }
 thiserror.workspace = true
+tokio.workspace = true

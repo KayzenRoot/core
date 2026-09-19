@@ -6,7 +6,7 @@ license.workspace = true
 rust-version.workspace = true
 
 [dependencies]
-core-contracts = { path = "../core-contracts" }
-core-identity = { path = "../core-identity" }
+core-contracts = { path = "../core-contracts", version = "0.1.0" }
+core-identity = { path = "../core-identity", version = "0.1.0" }
 serde.workspace = true
 thiserror.workspace = true
