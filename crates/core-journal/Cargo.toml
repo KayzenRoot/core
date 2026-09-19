@@ -1,0 +1,12 @@
+[package]
+name = "core-journal"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+core-contracts = { path = "../core-contracts" }
+core-identity = { path = "../core-identity" }
+serde_json.workspace = true
+thiserror.workspace = true
