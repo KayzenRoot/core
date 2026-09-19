@@ -1,51 +1,50 @@
 # CORE Checkpoint
 
 ## STATUS
-BOOTSTRAP FOUNDATION INSTALLED / PRODUCT PLANNING NOT STARTED
+PRODUCT DISCOVERY ACTIVE / M01 PLANNING IN PROGRESS
 
 ## VERSION
-CORE V0.0 - Bootstrap Baseline
+CORE V0.0 - Discovery Baseline
 
 ## PHASE
-0 - Bootstrap and Discovery Entry
+1 - Modular Product Discovery
 
 ## OBJECTIVE
-Establish CORE as a HIVE-native, GEF-governed NexLabs project before product planning and implementation.
+Plan CORE as the headless NexLabs action plane that operates standalone and synchronizes deeply with HIVE without duplicating HIVE-owned intelligence.
 
 ## IN PROGRESS
-- None.
+- M01 Core Runtime & Lifecycle planning.
+- Executor-ready file map and module contracts.
 
 ## COMPLETED
-- Repository initialized.
-- CORE-WO-0001 approved and squash-merged through PR #1.
-- GEF Bootstrap v1.0.0 target-project governance materialized.
-- Complete bootstrap Source Pack materialized.
-- HIVE v1.0.0 canonical governance paths materialized.
-- HIVE registration/index/corpus bootstrap tooling added.
-- Project-scoped Codex -> HIVE MCP bridge added and fail-closed.
-- Deterministic governance validation and hosted GitHub workflow added.
-- Executor, review, evidence, Context Lock and Work Order scaffolding added.
-- Exact-head audit approved candidate `342404099665f9302454f22b48241d3ec0a844fd`.
-- Bootstrap merge promoted as `e669498558e6f129efd8a8f2e20679f28e8326a7`.
+- Repository/bootstrap foundation approved and promoted.
+- GEF v1.0.0 and HIVE v1.0.0 integration baseline installed.
+- HIVE intelligence plane / CORE action plane boundary accepted.
+- Headless-only CORE constraint accepted.
+- Standalone + HIVE-enhanced operating model accepted.
+- 24-module discovery baseline recorded.
+- Modular delivery rule accepted: architecture/orchestration here, heavy implementation in Codex.
+- Default implementation granularity: one complete module per large bounded Work Order when safe.
+- ACS, TSS, EOF, ENS, PCE and NSP recorded as research candidates.
+- M01 initial executor-ready target file map recorded.
 
 ## PENDING
-- Product discovery.
-- CORE functional scope freeze.
-- Product architecture freeze.
-- Product requirements and production DoD.
-- First product implementation Work Order.
-- Live registration/index/corpus bootstrap against the user's local HIVE instance.
-- GitHub main ruleset activation when an authorized administration write surface is available.
+- Complete and freeze M01.
+- Plan M02 through M24 in dependency order.
+- Freeze product Requirements/Architecture/DoD as discovery matures.
+- Compile first implementation Work Order only after M01 planning STOP CONDITION.
+- Live local HIVE bootstrap evidence.
+- GitHub main ruleset activation when authorized admin mutation is available.
 
 ## BLOCKERS
 - None for planning.
-- Product coding remains gated until planning sources for the first implementation increment are frozen.
+- Product implementation remains gated until the target module plan is frozen.
 
 ## NEXT STEP
-Begin governed CORE discovery and define the relationship, responsibilities and boundaries between HIVE and CORE before any product implementation.
+Deep-plan M01: stack/runtime selection, exact lifecycle, contracts, failure model, file map, tests, benchmarks, DoD and explicit exclusions.
 
 ## EVIDENCE
-- `.engineering/evidence/CORE-WO-0001.json`
-- PR #1
-- Governance run #9 / `35441163753` / SUCCESS
-- Semantic review `5255641959` / APPROVED
+- `docs/engineering/CORE-MODULAR-DELIVERY-MODEL.md`
+- `docs/modules/00-MASTER-MODULE-MAP.md`
+- `docs/research/CORE-TECHNOLOGY-CANDIDATES.md`
+- `docs/modules/M01-CORE-RUNTIME-LIFECYCLE.md`

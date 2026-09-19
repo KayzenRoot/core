@@ -29,3 +29,24 @@ Status: `ACTIVE`
 ## CORE-D-007 - Evidence before progression
 **Decision:** exact-state evidence and audit, not activity or confidence, close governed work.
 **State:** ACCEPTED
+
+
+## CORE-D-008 - Headless CORE
+**Decision:** CORE contains no dashboard, cockpit or web UI. A future visual NexLabs product may consume HIVE + CORE externally.
+**State:** ACCEPTED
+
+## CORE-D-009 - Intelligence/action ownership
+**Decision:** HIVE owns durable intelligence/context/memory/retrieval/knowledge; CORE owns execution/orchestration/verification/delivery. Shared needs use contracts, not duplicate canonical engines.
+**State:** ACCEPTED
+
+## CORE-D-010 - Standalone plus HIVE-enhanced operation
+**Decision:** CORE operates safely without HIVE. Compatible HIVE substitutes HIVE-owned intelligence providers; fallback capability stays bounded and must not evolve into a second HIVE.
+**State:** ACCEPTED
+
+## CORE-D-011 - Modular implementation cadence
+**Decision:** ChatGPT performs architecture/orchestration and compiles executor-ready module plans. Codex performs heavy implementation. Default unit is one complete module per large bounded Work Order/prompt, followed by exact-head review and correction as needed.
+**State:** ACCEPTED
+
+## CORE-D-012 - Planning reduces executor rediscovery
+**Decision:** Before Codex implementation, planning records target files, responsibilities, contracts, invariants, forbidden dependencies, tests, acceptance criteria, DoD and stop conditions.
+**State:** ACCEPTED
