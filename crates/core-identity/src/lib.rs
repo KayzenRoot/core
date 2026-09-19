@@ -134,6 +134,18 @@ pub fn security_evidence_fingerprint<T: Serialize>(
     security_aware_fingerprint(basis, dependency_lock_fingerprint, policy_version)
 }
 
+pub fn dependency_lock_fingerprint(lock_contents: &str) -> String {
+    fingerprint_bytes(lock_contents.as_bytes())
+}
+
+pub fn tcbm_evidence_fingerprint<T: Serialize>(
+    tcbm: &T,
+    dependency_lock_fingerprint: &str,
+    policy_version: &str,
+) -> Result<String, IdentityError> {
+    security_aware_fingerprint(tcbm, dependency_lock_fingerprint, policy_version)
+}
+
 pub fn generation_fingerprint(generation: &RuntimeGeneration) -> Result<String, IdentityError> {
     fingerprint(generation)
 }
@@ -214,6 +226,26 @@ mod tests {
         assert_ne!(
             safety_identity_fingerprint(basis("alpha")).unwrap(),
             safety_identity_fingerprint(basis("beta")).unwrap()
+        );
+    }
+
+    #[test]
+    fn dependency_and_policy_changes_invalidate_security_evidence() {
+        let tcbm = ["core-runtime", "core-journal"];
+        let lock = dependency_lock_fingerprint("serde 1");
+        let changed_lock = dependency_lock_fingerprint("serde 2");
+        let first = tcbm_evidence_fingerprint(&tcbm, &lock, "policy-v1").unwrap();
+        assert_ne!(
+            first,
+            tcbm_evidence_fingerprint(&tcbm, &changed_lock, "policy-v1").unwrap()
+        );
+        assert_ne!(
+            first,
+            tcbm_evidence_fingerprint(&tcbm, &lock, "policy-v2").unwrap()
+        );
+        assert_eq!(
+            first,
+            tcbm_evidence_fingerprint(&tcbm, &lock, "policy-v1").unwrap()
         );
     }
 }

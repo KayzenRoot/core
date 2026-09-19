@@ -54,7 +54,7 @@ impl Default for SemVer {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Default)]
 pub struct RuntimeGeneration {
     pub boot_epoch: u64,
     pub config: u64,
@@ -107,6 +107,70 @@ pub enum TransitionVerdict {
     Allow,
     Deny,
     Defer,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum TransitionReason {
+    Allowed,
+    IllegalTransition,
+    InvariantViolation,
+    CapabilityUnavailable,
+    ActiveLeases,
+    DeadlineExhausted,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+pub enum TransitionCondition {
+    InvariantsSatisfied,
+    CapabilityFloorSatisfied,
+    NoActiveLeases,
+    DeadlineBudgetAvailable,
+    JournalIntentDurable,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct CapabilityDegradationState {
+    pub ready: bool,
+    pub degraded: bool,
+    pub unavailable: BTreeSet<String>,
+    pub quality_floor_satisfied: bool,
+}
+
+impl Default for CapabilityDegradationState {
+    fn default() -> Self {
+        Self {
+            ready: true,
+            degraded: false,
+            unavailable: BTreeSet::new(),
+            quality_floor_satisfied: true,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Default)]
+pub struct ActiveLeaseSummary {
+    pub total: u64,
+    pub safety_critical: u64,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct TransitionContext {
+    pub current_state: RuntimeState,
+    pub requested_transition: TransitionKind,
+    pub target_state: RuntimeState,
+    pub invariant_set: BTreeSet<String>,
+    pub generation: RuntimeGeneration,
+    pub capability_state: CapabilityDegradationState,
+    pub active_leases: ActiveLeaseSummary,
+    pub deadline_budget_ms: u64,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct TransitionDecision {
+    pub verdict: TransitionVerdict,
+    pub reason: TransitionReason,
+    pub conditions: BTreeSet<TransitionCondition>,
+    pub deadline_ms: Option<u64>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -192,8 +256,14 @@ pub struct CapabilityRequirement {
     pub required_authorities: BTreeSet<String>,
     pub minimum_assurance: AssuranceClass,
     pub minimum_trust: u8,
+    #[serde(default)]
+    pub required_origin: Option<ProviderOrigin>,
+    #[serde(default)]
+    pub required_provider_class: Option<String>,
     pub preferred_origin: Option<ProviderOrigin>,
     pub preferred_provider_class: Option<String>,
+    #[serde(default)]
+    pub ownership: CapabilityOwnership,
     pub cache_affinity: String,
     pub max_latency_micros: Option<u64>,
     pub max_cost_milli: Option<u64>,
@@ -210,8 +280,11 @@ impl CapabilityRequirement {
             required_authorities: BTreeSet::new(),
             minimum_assurance: AssuranceClass::Standard,
             minimum_trust: 0,
+            required_origin: None,
+            required_provider_class: None,
             preferred_origin: None,
             preferred_provider_class: None,
+            ownership: CapabilityOwnership::CoreOwned,
             cache_affinity: String::new(),
             max_latency_micros: None,
             max_cost_milli: None,
@@ -225,6 +298,13 @@ pub enum ProviderOrigin {
     CoreFallback,
     HiveExternal,
     OtherExternal,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+pub enum CapabilityOwnership {
+    #[default]
+    CoreOwned,
+    HiveOwnedIntelligence,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -257,6 +337,10 @@ pub struct CapabilityProviderDescriptor {
     pub provider_class: String,
     pub cache_affinity: String,
     pub dependency_capabilities: BTreeSet<String>,
+    #[serde(default)]
+    pub evidence_dependencies: BTreeSet<String>,
+    #[serde(default)]
+    pub safety_critical: bool,
     pub readiness: bool,
     pub quarantined: bool,
 }
@@ -279,6 +363,8 @@ pub struct CapabilityBindingIdentity {
     pub provider_generation: u64,
     pub binding_generation: u64,
     pub active_leases: u64,
+    #[serde(default)]
+    pub runtime_generation: RuntimeGeneration,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -290,6 +376,8 @@ pub struct CapabilityLease {
     pub provider_fingerprint: String,
     pub binding_generation: u64,
     pub boot_epoch: u64,
+    #[serde(default)]
+    pub runtime_generation: RuntimeGeneration,
     pub expires_at_monotonic_ms: u64,
     pub revoked: bool,
     pub policy: String,
@@ -358,6 +446,43 @@ pub struct BootstrapSafetyReceipt {
     pub policy_generation: u64,
     pub tcbm_fingerprint: String,
     pub saf_fingerprint: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct GenerationCoherenceBasis {
+    pub runtime: RuntimeGeneration,
+    pub binding_generation: u64,
+    pub provider_activation_generation: u64,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+pub enum GenerationDimension {
+    Boot,
+    Config,
+    Module,
+    Capability,
+    Policy,
+    Binding,
+    ProviderActivation,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct GenerationCoherenceReceipt {
+    pub schema: SchemaVersion,
+    pub capability: String,
+    pub coherent: bool,
+    pub basis: GenerationCoherenceBasis,
+    pub expected: GenerationCoherenceBasis,
+    pub mismatches: BTreeSet<GenerationDimension>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct TrustedComputingBaseMap {
+    pub schema: SchemaVersion,
+    pub policy_version: String,
+    pub dependency_lock_fingerprint: String,
+    pub safety_critical_components: BTreeSet<String>,
+    pub entries: Vec<String>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -460,14 +585,24 @@ pub enum JournalRecordKind {
     WorkerTerminated,
     DrainStarted,
     AdmissionClosed,
+    LeaseDrainStarted,
+    LeaseDrainAttempted,
+    LeaseDrainTimedOut,
     LeaseDrainCompleted,
+    CooperativeCancelStarted,
+    CooperativeCancelAttempted,
+    CooperativeCancelTimedOut,
     CooperativeCancelCompleted,
+    CleanupStarted,
+    CleanupAttempted,
+    CleanupTimedOut,
     CleanupCompleted,
     QuiescenceChecked,
     DrainCompleted,
     ShutdownEscalated,
     ForcedTermination,
     IncompleteShutdown,
+    WorkerSupervisionTransition,
     RecoveryResult,
 }
 

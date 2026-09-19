@@ -2,8 +2,9 @@
 
 use core_contracts::{
     AssuranceClass, CapabilityBindingIdentity, CapabilityBindingReceipt, CapabilityLease,
-    CapabilityProviderDescriptor, CapabilityRequirement, ModuleManifest, ProviderHealth,
-    ProviderOrigin, RuntimeGeneration, SchemaVersion, SemVer,
+    CapabilityOwnership, CapabilityProviderDescriptor, CapabilityRequirement,
+    GenerationCoherenceBasis, GenerationCoherenceReceipt, GenerationDimension, ModuleManifest,
+    ProviderHealth, ProviderOrigin, RuntimeGeneration, SchemaVersion, SemVer,
 };
 use core_identity::fingerprint;
 use serde::Serialize;
@@ -150,6 +151,7 @@ struct RegistryState {
 struct Binding {
     provider: CapabilityProviderDescriptor,
     generation: u64,
+    runtime_generation: Option<RuntimeGeneration>,
     active_leases: u64,
 }
 
@@ -176,6 +178,8 @@ pub struct SubstitutionImpact {
     pub active_leases: u64,
     pub affected_capabilities: BTreeSet<String>,
     pub cache_affinities: BTreeSet<String>,
+    pub evidence_dependencies: BTreeSet<String>,
+    pub safety_critical_dependents: BTreeSet<String>,
     pub requires_revalidation: bool,
 }
 
@@ -362,6 +366,24 @@ impl CapabilityRegistry {
         requirement: &CapabilityRequirement,
         reason: impl Into<String>,
     ) -> Result<CapabilityBindingReceipt, RegistryError> {
+        self.bind_internal(requirement, reason, None)
+    }
+
+    pub fn bind_with_generation(
+        &self,
+        requirement: &CapabilityRequirement,
+        reason: impl Into<String>,
+        runtime_generation: &RuntimeGeneration,
+    ) -> Result<CapabilityBindingReceipt, RegistryError> {
+        self.bind_internal(requirement, reason, Some(runtime_generation))
+    }
+
+    fn bind_internal(
+        &self,
+        requirement: &CapabilityRequirement,
+        reason: impl Into<String>,
+        runtime_generation: Option<&RuntimeGeneration>,
+    ) -> Result<CapabilityBindingReceipt, RegistryError> {
         let mut state = self.inner.write().expect("registry lock poisoned");
         state.prune_expired();
         let provider = resolve_from_state(&state, requirement)?;
@@ -372,6 +394,7 @@ impl CapabilityRegistry {
             Binding {
                 provider: provider.clone(),
                 generation,
+                runtime_generation: runtime_generation.cloned(),
                 active_leases: 0,
             },
         );
@@ -400,10 +423,28 @@ impl CapabilityRegistry {
         self.bind(requirement, reason)
     }
 
+    pub fn substitute_with_generation(
+        &self,
+        requirement: &CapabilityRequirement,
+        reason: impl Into<String>,
+        runtime_generation: &RuntimeGeneration,
+    ) -> Result<CapabilityBindingReceipt, RegistryError> {
+        self.bind_with_generation(requirement, reason, runtime_generation)
+    }
+
     pub fn acquire_lease(
         &self,
         capability: &str,
         boot_epoch: u64,
+        ttl_ms: u64,
+    ) -> Result<CapabilityLease, RegistryError> {
+        self.acquire_lease_with_generation(capability, &RuntimeGeneration::new(boot_epoch), ttl_ms)
+    }
+
+    pub fn acquire_lease_with_generation(
+        &self,
+        capability: &str,
+        runtime_generation: &RuntimeGeneration,
         ttl_ms: u64,
     ) -> Result<CapabilityLease, RegistryError> {
         let mut state = self.inner.write().expect("registry lock poisoned");
@@ -424,6 +465,13 @@ impl CapabilityRegistry {
                 .bindings
                 .get_mut(capability)
                 .ok_or_else(|| RegistryError::NoProvider(capability.to_owned()))?;
+            if binding
+                .runtime_generation
+                .as_ref()
+                .is_some_and(|expected| expected != runtime_generation)
+            {
+                return Err(RegistryError::StaleLease);
+            }
             if binding.provider.health != ProviderHealth::Healthy {
                 return Err(RegistryError::NoProvider(capability.to_owned()));
             }
@@ -454,7 +502,8 @@ impl CapabilityRegistry {
             provider_id,
             provider_fingerprint,
             binding_generation,
-            boot_epoch,
+            runtime_generation: runtime_generation.clone(),
+            boot_epoch: runtime_generation.boot_epoch,
             expires_at_monotonic_ms,
             revoked: false,
             policy,
@@ -470,6 +519,9 @@ impl CapabilityRegistry {
         generation: &RuntimeGeneration,
     ) -> Result<(), RegistryError> {
         if lease.revoked || lease.boot_epoch != generation.boot_epoch {
+            return Err(RegistryError::StaleLease);
+        }
+        if lease.runtime_generation != *generation {
             return Err(RegistryError::StaleLease);
         }
         let mut state = self.inner.write().expect("registry lock poisoned");
@@ -490,6 +542,13 @@ impl CapabilityRegistry {
         let binding = state
             .binding(&lease.capability, lease.binding_generation)
             .ok_or(RegistryError::StaleLease)?;
+        if binding
+            .runtime_generation
+            .as_ref()
+            .is_some_and(|expected| expected != generation)
+        {
+            return Err(RegistryError::StaleLease);
+        }
         if binding.provider.provider_id != lease.provider_id
             || binding.provider.fingerprint != lease.provider_fingerprint
         {
@@ -577,6 +636,10 @@ impl CapabilityRegistry {
                 provider_generation: binding.provider.activation_generation,
                 binding_generation: binding.generation,
                 active_leases: binding.active_leases,
+                runtime_generation: binding
+                    .runtime_generation
+                    .clone()
+                    .unwrap_or_else(|| RuntimeGeneration::new(0)),
             })
             .collect::<Vec<_>>();
         bindings.sort_by(|left, right| left.capability.cmp(&right.capability));
@@ -612,25 +675,78 @@ impl CapabilityRegistry {
         let binding = state
             .binding(capability, generation)
             .ok_or(RegistryError::StaleLease)?;
-        if binding.provider.activation_generation > generation {
+        if binding.provider.activation_generation == 0 {
             return Err(RegistryError::StaleLease);
         }
         Ok(())
     }
 
+    pub fn generation_coherence(
+        &self,
+        capability: &str,
+        basis: GenerationCoherenceBasis,
+    ) -> Result<GenerationCoherenceReceipt, RegistryError> {
+        let state = self.inner.read().expect("registry lock poisoned");
+        let binding = state
+            .binding(capability, basis.binding_generation)
+            .ok_or(RegistryError::StaleLease)?;
+        let expected = GenerationCoherenceBasis {
+            runtime: binding
+                .runtime_generation
+                .clone()
+                .unwrap_or_else(|| RuntimeGeneration::new(0)),
+            binding_generation: binding.generation,
+            provider_activation_generation: binding.provider.activation_generation,
+        };
+        let mut mismatches = BTreeSet::new();
+        if basis.runtime.boot_epoch != expected.runtime.boot_epoch {
+            mismatches.insert(GenerationDimension::Boot);
+        }
+        if basis.runtime.config != expected.runtime.config {
+            mismatches.insert(GenerationDimension::Config);
+        }
+        if basis.runtime.module_graph != expected.runtime.module_graph {
+            mismatches.insert(GenerationDimension::Module);
+        }
+        if basis.runtime.capability_graph != expected.runtime.capability_graph {
+            mismatches.insert(GenerationDimension::Capability);
+        }
+        if basis.runtime.policy != expected.runtime.policy {
+            mismatches.insert(GenerationDimension::Policy);
+        }
+        if basis.binding_generation != expected.binding_generation {
+            mismatches.insert(GenerationDimension::Binding);
+        }
+        if basis.provider_activation_generation != expected.provider_activation_generation {
+            mismatches.insert(GenerationDimension::ProviderActivation);
+        }
+        Ok(GenerationCoherenceReceipt {
+            schema: SchemaVersion::CURRENT,
+            capability: capability.to_owned(),
+            coherent: mismatches.is_empty(),
+            basis,
+            expected,
+            mismatches,
+        })
+    }
+
     pub fn substitution_impact_details(&self, capability: &str) -> SubstitutionImpact {
         let state = self.inner.read().expect("registry lock poisoned");
-        let Some(binding) = state.bindings.get(capability) else {
+        let Some(_binding) = state.bindings.get(capability) else {
             return SubstitutionImpact {
                 capability: capability.to_owned(),
                 active_leases: 0,
                 affected_capabilities: BTreeSet::new(),
                 cache_affinities: BTreeSet::new(),
+                evidence_dependencies: BTreeSet::new(),
+                safety_critical_dependents: BTreeSet::new(),
                 requires_revalidation: false,
             };
         };
         let mut affected_capabilities = BTreeSet::new();
         let mut cache_affinities = BTreeSet::new();
+        let mut evidence_dependencies = BTreeSet::new();
+        let mut safety_critical_dependents = BTreeSet::new();
         let mut pending = vec![capability.to_owned()];
         while let Some(current) = pending.pop() {
             if !affected_capabilities.insert(current.clone()) {
@@ -640,21 +756,54 @@ impl CapabilityRegistry {
                 if !current_binding.provider.cache_affinity.is_empty() {
                     cache_affinities.insert(current_binding.provider.cache_affinity.clone());
                 }
-                pending.extend(
+                evidence_dependencies.extend(
                     current_binding
                         .provider
-                        .dependency_capabilities
+                        .evidence_dependencies
                         .iter()
                         .cloned(),
                 );
+                if current_binding.provider.safety_critical {
+                    safety_critical_dependents.insert(current.clone());
+                }
+            }
+            for (dependent, dependent_binding) in &state.bindings {
+                let provider = &dependent_binding.provider;
+                if provider.dependency_capabilities.contains(&current)
+                    || provider.evidence_dependencies.contains(&current)
+                {
+                    pending.push(dependent.clone());
+                }
+                if !provider.cache_affinity.is_empty()
+                    && (provider.cache_affinity == current
+                        || provider.evidence_dependencies.contains(&current))
+                {
+                    cache_affinities.insert(provider.cache_affinity.clone());
+                }
+            }
+            if let Some(current_binding) = state.bindings.get(&current) {
+                if current_binding.active_leases > 0 {
+                    evidence_dependencies.insert(format!("active-leases:{current}"));
+                }
             }
         }
-        let requires_revalidation = binding.active_leases > 0 || affected_capabilities.len() > 1;
+        let active_leases = affected_capabilities
+            .iter()
+            .filter_map(|name| state.bindings.get(name))
+            .map(|item| item.active_leases)
+            .sum();
+        let requires_revalidation = active_leases > 0
+            || !cache_affinities.is_empty()
+            || !evidence_dependencies.is_empty()
+            || !safety_critical_dependents.is_empty()
+            || affected_capabilities.len() > 1;
         SubstitutionImpact {
             capability: capability.to_owned(),
-            active_leases: binding.active_leases,
+            active_leases,
             affected_capabilities,
             cache_affinities,
+            evidence_dependencies,
+            safety_critical_dependents,
             requires_revalidation,
         }
     }
@@ -678,12 +827,8 @@ impl CapabilityRegistry {
     }
 
     pub fn substitution_impact(&self, capability: &str) -> BTreeSet<String> {
-        let state = self.inner.read().expect("registry lock poisoned");
-        if state.bindings.contains_key(capability) {
-            [capability.to_owned()].into_iter().collect()
-        } else {
-            BTreeSet::new()
-        }
+        self.substitution_impact_details(capability)
+            .affected_capabilities
     }
 }
 
@@ -706,10 +851,10 @@ fn resolve_from_state(
                 && provider.assurance >= requirement.minimum_assurance
                 && provider.trust >= requirement.minimum_trust
                 && requirement
-                    .preferred_origin
+                    .required_origin
                     .is_none_or(|origin| provider.origin == origin)
                 && requirement
-                    .preferred_provider_class
+                    .required_provider_class
                     .as_deref()
                     .is_none_or(|class| provider.provider_class == class)
                 && (requirement.policy.is_empty() || provider.policy == requirement.policy)
@@ -740,7 +885,10 @@ fn resolve_from_state(
     eligible.sort_by(|left, right| {
         preferred_rank(right, requirement)
             .cmp(&preferred_rank(left, requirement))
-            .then_with(|| origin_rank(right.origin).cmp(&origin_rank(left.origin)))
+            .then_with(|| {
+                origin_rank(right.origin, requirement.ownership)
+                    .cmp(&origin_rank(left.origin, requirement.ownership))
+            })
             .then_with(|| right.quality.cmp(&left.quality))
             .then_with(|| right.trust.cmp(&left.trust))
             .then_with(|| right.performance_score.cmp(&left.performance_score))
@@ -751,12 +899,20 @@ fn resolve_from_state(
     Ok(eligible.remove(0))
 }
 
-fn origin_rank(origin: ProviderOrigin) -> u8 {
-    match origin {
-        ProviderOrigin::HiveExternal => 4,
-        ProviderOrigin::CoreNative => 3,
-        ProviderOrigin::OtherExternal => 2,
-        ProviderOrigin::CoreFallback => 1,
+fn origin_rank(origin: ProviderOrigin, ownership: CapabilityOwnership) -> u8 {
+    match ownership {
+        CapabilityOwnership::CoreOwned => match origin {
+            ProviderOrigin::CoreNative => 4,
+            ProviderOrigin::CoreFallback => 3,
+            ProviderOrigin::HiveExternal => 2,
+            ProviderOrigin::OtherExternal => 1,
+        },
+        CapabilityOwnership::HiveOwnedIntelligence => match origin {
+            ProviderOrigin::HiveExternal => 4,
+            ProviderOrigin::CoreFallback => 3,
+            ProviderOrigin::CoreNative => 2,
+            ProviderOrigin::OtherExternal => 1,
+        },
     }
 }
 
@@ -802,6 +958,8 @@ pub fn provider(
         provider_class: "default".into(),
         cache_affinity: String::new(),
         dependency_capabilities: BTreeSet::new(),
+        evidence_dependencies: BTreeSet::new(),
+        safety_critical: false,
         readiness: true,
         quarantined: false,
     }
@@ -887,6 +1045,8 @@ mod tests {
             ))
             .unwrap();
         let requirement = CapabilityRequirement::new("context", SemVer::new(1, 0, 0));
+        let mut requirement = requirement;
+        requirement.ownership = CapabilityOwnership::HiveOwnedIntelligence;
         assert_eq!(
             registry.bind(&requirement, "test").unwrap().provider_id,
             "hive"
@@ -1125,9 +1285,141 @@ mod tests {
                 "derived",
             )
             .unwrap();
-        let impact = registry.substitution_impact_details("derived.context");
-        assert!(impact.affected_capabilities.contains("context"));
+        let impact = registry.substitution_impact_details("context");
+        assert!(impact.affected_capabilities.contains("derived.context"));
         assert!(impact.requires_revalidation);
         assert!(impact.cache_affinities.contains("derived-v1"));
+    }
+
+    #[test]
+    fn preferred_provider_is_a_preference_and_can_fall_back() {
+        let registry = CapabilityRegistry::new();
+        let mut native = provider("native", "core", "context", ProviderOrigin::CoreNative, 90);
+        native.provider_class = "native".into();
+        let mut preferred = provider(
+            "preferred",
+            "core",
+            "context",
+            ProviderOrigin::CoreFallback,
+            90,
+        );
+        preferred.provider_class = "preferred".into();
+        preferred.health = ProviderHealth::Unavailable;
+        preferred.readiness = false;
+        registry.register_provider(native).unwrap();
+        registry.register_provider(preferred).unwrap();
+        let mut requirement = CapabilityRequirement::new("context", SemVer::new(1, 0, 0));
+        requirement.preferred_provider_class = Some("preferred".into());
+        assert_eq!(
+            registry.resolve(&requirement).unwrap().provider_id,
+            "native"
+        );
+    }
+
+    #[test]
+    fn generation_coherence_reports_each_dimension_without_scalar_comparison() {
+        let registry = CapabilityRegistry::new();
+        let mut registered = provider("native", "core", "health", ProviderOrigin::CoreNative, 90);
+        registered.activation_generation = 41;
+        registry.register_provider(registered).unwrap();
+        let requirement = CapabilityRequirement::new("health", SemVer::new(1, 0, 0));
+        let mut runtime = RuntimeGeneration::new(7);
+        runtime.config = 2;
+        runtime.module_graph = 3;
+        runtime.capability_graph = 4;
+        runtime.policy = 5;
+        let binding = registry
+            .bind_with_generation(&requirement, "coherent", &runtime)
+            .unwrap();
+        let receipt = registry
+            .generation_coherence(
+                "health",
+                GenerationCoherenceBasis {
+                    runtime: runtime.clone(),
+                    binding_generation: binding.binding_generation,
+                    provider_activation_generation: 41,
+                },
+            )
+            .unwrap();
+        assert!(receipt.coherent);
+        let mut stale = runtime;
+        stale.policy += 1;
+        let stale_receipt = registry
+            .generation_coherence(
+                "health",
+                GenerationCoherenceBasis {
+                    runtime: stale,
+                    binding_generation: binding.binding_generation,
+                    provider_activation_generation: 41,
+                },
+            )
+            .unwrap();
+        assert!(stale_receipt
+            .mismatches
+            .contains(&GenerationDimension::Policy));
+        for dimension in [
+            GenerationDimension::Boot,
+            GenerationDimension::Config,
+            GenerationDimension::Module,
+            GenerationDimension::Capability,
+            GenerationDimension::Policy,
+        ] {
+            let mut changed = registry
+                .generation_coherence(
+                    "health",
+                    GenerationCoherenceBasis {
+                        runtime: RuntimeGeneration {
+                            boot_epoch: 7,
+                            config: 2,
+                            module_graph: 3,
+                            capability_graph: 4,
+                            policy: 5,
+                        },
+                        binding_generation: binding.binding_generation,
+                        provider_activation_generation: 41,
+                    },
+                )
+                .unwrap()
+                .expected
+                .runtime;
+            match dimension {
+                GenerationDimension::Boot => changed.boot_epoch += 1,
+                GenerationDimension::Config => changed.config += 1,
+                GenerationDimension::Module => changed.module_graph += 1,
+                GenerationDimension::Capability => changed.capability_graph += 1,
+                GenerationDimension::Policy => changed.policy += 1,
+                GenerationDimension::Binding | GenerationDimension::ProviderActivation => {}
+            }
+            let result = registry
+                .generation_coherence(
+                    "health",
+                    GenerationCoherenceBasis {
+                        runtime: changed,
+                        binding_generation: binding.binding_generation,
+                        provider_activation_generation: 41,
+                    },
+                )
+                .unwrap();
+            assert!(result.mismatches.contains(&dimension));
+        }
+        let stale_provider = registry
+            .generation_coherence(
+                "health",
+                GenerationCoherenceBasis {
+                    runtime: RuntimeGeneration {
+                        boot_epoch: 7,
+                        config: 2,
+                        module_graph: 3,
+                        capability_graph: 4,
+                        policy: 5,
+                    },
+                    binding_generation: binding.binding_generation,
+                    provider_activation_generation: 40,
+                },
+            )
+            .unwrap();
+        assert!(stale_provider
+            .mismatches
+            .contains(&GenerationDimension::ProviderActivation));
     }
 }

@@ -110,6 +110,12 @@ def main() -> int:
         and item["exercise_returncode"] == 0
         and item["exercise"].get("provider_substituted") == "hive-context"
         and item["exercise"].get("provider_flap_recovered_with_fallback") is True
+        and item["exercise"].get("generation_coherent") is True
+        and item["exercise"].get("probe_coalesced") is True
+        and item["exercise"].get("probe_authorized") is True
+        and item["exercise"].get("stale_probe_authorized") is False
+        and item["exercise"].get("worker_crash_suppressed") is True
+        and item["exercise"].get("worker_quarantined") is True
         and item["exercise"].get("shutdown_clean") is True
         for item in records
     )

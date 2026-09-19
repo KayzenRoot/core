@@ -2,16 +2,18 @@
 
 use core_config::CoreConfig;
 use core_contracts::{
-    BootstrapSafetyReceipt, BootstrapVerdict, CapabilityRequirement, HealthDimension, HealthSignal,
-    HealthState, JournalDurability, JournalRecordKind, ProviderHealth, ProviderOrigin,
-    QuiescenceItem, RecoveryClassification, ResourcePressure, RuntimeGeneration, RuntimeState,
-    SchemaVersion, SemVer, ShutdownPhase, ShutdownReceipt, TransitionKind, TransitionReceipt,
-    TransitionVerdict,
+    ActiveLeaseSummary, BootstrapSafetyReceipt, BootstrapVerdict, CapabilityDegradationState,
+    CapabilityRequirement, GenerationCoherenceBasis, HealthDimension, HealthSignal, HealthState,
+    JournalDurability, JournalRecordKind, ProviderHealth, ProviderOrigin, QuiescenceItem,
+    RecoveryClassification, ResourcePressure, RuntimeGeneration, RuntimeState, SchemaVersion,
+    SemVer, ShutdownPhase, ShutdownReceipt, TransitionCondition, TransitionContext,
+    TransitionDecision, TransitionKind, TransitionReason, TransitionReceipt, TransitionVerdict,
+    TrustedComputingBaseMap,
 };
-use core_health::{DegradationMatrix, HealthAggregator};
+use core_health::{DegradationMatrix, HealthAggregator, ProbeCoalescer};
 use core_identity::{
-    fingerprint, safety_identity_fingerprint, security_evidence_fingerprint, tcbm_fingerprint,
-    SafetyIdentityBasis,
+    dependency_lock_fingerprint, fingerprint, safety_identity_fingerprint,
+    security_evidence_fingerprint, tcbm_evidence_fingerprint, SafetyIdentityBasis,
 };
 use core_journal::{JournalError, RuntimeJournal};
 use core_registry::{provider, CapabilityRegistry, ModuleRegistry};
@@ -19,6 +21,9 @@ use serde::Serialize;
 use std::collections::{BTreeMap, BTreeSet};
 use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use thiserror::Error;
+
+const CARGO_LOCK_CONTENTS: &str =
+    include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../Cargo.lock"));
 
 #[derive(Debug, Error)]
 pub enum RuntimeError {
@@ -61,16 +66,40 @@ pub struct TcbmEntry {
 
 #[derive(Debug, Clone, Serialize)]
 pub struct CrashObservation {
+    pub subject: String,
     pub fingerprint: String,
     pub occurrences: u32,
     pub suppress_diagnostics: bool,
     pub quarantined: bool,
+    pub state: WorkerSupervisionState,
+    pub restart_backoff_ms: u64,
+    pub next_restart_at_ms: u64,
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+pub enum WorkerSupervisionState {
+    Running,
+    RestartBackoff,
+    Stabilizing,
+    Quarantined,
+}
+
+#[derive(Debug, Clone)]
+struct CrashRecord {
+    fingerprint: String,
+    occurrences: u32,
+    last_seen_ms: u64,
+    state: WorkerSupervisionState,
+}
+
+#[derive(Debug)]
 pub struct CrashFingerprintSuppressor {
-    observations: BTreeMap<String, u32>,
+    observations: BTreeMap<String, CrashRecord>,
     quarantine_threshold: u32,
+    restart_window_ms: u64,
+    initial_backoff_ms: u64,
+    max_backoff_ms: u64,
+    clock: std::time::Instant,
 }
 
 impl CrashFingerprintSuppressor {
@@ -78,22 +107,74 @@ impl CrashFingerprintSuppressor {
         Self {
             observations: BTreeMap::new(),
             quarantine_threshold: quarantine_threshold.max(2),
+            restart_window_ms: 30_000,
+            initial_backoff_ms: 100,
+            max_backoff_ms: 30_000,
+            clock: std::time::Instant::now(),
         }
     }
 
     pub fn observe<T: Serialize>(&mut self, basis: &T) -> Result<CrashObservation, RuntimeError> {
-        let fingerprint = fingerprint(basis).map_err(|e| RuntimeError::Identity(e.to_string()))?;
-        let occurrences = self
+        self.observe_subject("runtime", basis)
+    }
+
+    pub fn observe_subject<T: Serialize>(
+        &mut self,
+        subject: &str,
+        basis: &T,
+    ) -> Result<CrashObservation, RuntimeError> {
+        let fingerprint =
+            fingerprint(&(subject, basis)).map_err(|e| RuntimeError::Identity(e.to_string()))?;
+        let now_ms = self.clock.elapsed().as_millis().min(u128::from(u64::MAX)) as u64;
+        let record = self
             .observations
-            .entry(fingerprint.clone())
-            .and_modify(|count| *count = count.saturating_add(1))
-            .or_insert(1);
+            .entry(subject.to_owned())
+            .or_insert_with(|| CrashRecord {
+                fingerprint: fingerprint.clone(),
+                occurrences: 0,
+                last_seen_ms: now_ms,
+                state: WorkerSupervisionState::Running,
+            });
+        if record.fingerprint != fingerprint
+            || now_ms.saturating_sub(record.last_seen_ms) > self.restart_window_ms
+        {
+            record.fingerprint = fingerprint.clone();
+            record.occurrences = 0;
+            record.state = WorkerSupervisionState::Running;
+        }
+        record.occurrences = record.occurrences.saturating_add(1);
+        record.last_seen_ms = now_ms;
+        let backoff = self
+            .initial_backoff_ms
+            .saturating_mul(1u64 << record.occurrences.saturating_sub(1).min(16))
+            .min(self.max_backoff_ms);
+        record.state = if record.occurrences >= self.quarantine_threshold {
+            WorkerSupervisionState::Quarantined
+        } else {
+            WorkerSupervisionState::RestartBackoff
+        };
+        let quarantined = record.state == WorkerSupervisionState::Quarantined;
         Ok(CrashObservation {
+            subject: subject.to_owned(),
             fingerprint,
-            occurrences: *occurrences,
-            suppress_diagnostics: *occurrences > 1,
-            quarantined: *occurrences >= self.quarantine_threshold,
+            occurrences: record.occurrences,
+            suppress_diagnostics: record.occurrences > 1,
+            quarantined,
+            state: record.state,
+            restart_backoff_ms: backoff,
+            next_restart_at_ms: now_ms.saturating_add(backoff),
         })
+    }
+
+    pub fn reset_subject(&mut self, subject: &str) {
+        if let Some(record) = self.observations.get_mut(subject) {
+            record.occurrences = 0;
+            record.state = WorkerSupervisionState::Stabilizing;
+        }
+    }
+
+    pub fn state(&self, subject: &str) -> Option<WorkerSupervisionState> {
+        self.observations.get(subject).map(|record| record.state)
     }
 }
 
@@ -119,36 +200,158 @@ impl Lifecycle {
         &self.generation
     }
 
+    pub fn decide(context: &TransitionContext) -> TransitionDecision {
+        let mut conditions = BTreeSet::new();
+        if !allowed(
+            context.current_state,
+            context.target_state,
+            context.requested_transition,
+        ) {
+            return TransitionDecision {
+                verdict: TransitionVerdict::Deny,
+                reason: TransitionReason::IllegalTransition,
+                conditions,
+                deadline_ms: None,
+            };
+        }
+        if context.invariant_set.iter().any(|item| item == "blocked") {
+            return TransitionDecision {
+                verdict: TransitionVerdict::Deny,
+                reason: TransitionReason::InvariantViolation,
+                conditions,
+                deadline_ms: None,
+            };
+        }
+        if matches!(context.target_state, RuntimeState::Ready)
+            && (!context.capability_state.ready
+                || !context.capability_state.quality_floor_satisfied)
+        {
+            let reason = if context.deadline_budget_ms == 0 {
+                TransitionReason::DeadlineExhausted
+            } else {
+                TransitionReason::CapabilityUnavailable
+            };
+            return TransitionDecision {
+                verdict: if context.deadline_budget_ms == 0 {
+                    TransitionVerdict::Deny
+                } else {
+                    TransitionVerdict::Defer
+                },
+                reason,
+                conditions,
+                deadline_ms: (context.deadline_budget_ms > 0).then_some(context.deadline_budget_ms),
+            };
+        }
+        if matches!(context.target_state, RuntimeState::Draining) && context.active_leases.total > 0
+        {
+            if context.deadline_budget_ms == 0 {
+                return TransitionDecision {
+                    verdict: TransitionVerdict::Deny,
+                    reason: TransitionReason::DeadlineExhausted,
+                    conditions,
+                    deadline_ms: None,
+                };
+            }
+            conditions.insert(TransitionCondition::DeadlineBudgetAvailable);
+            return TransitionDecision {
+                verdict: TransitionVerdict::Defer,
+                reason: TransitionReason::ActiveLeases,
+                conditions,
+                deadline_ms: Some(context.deadline_budget_ms),
+            };
+        }
+        conditions.insert(TransitionCondition::InvariantsSatisfied);
+        conditions.insert(TransitionCondition::CapabilityFloorSatisfied);
+        if context.active_leases.total == 0 {
+            conditions.insert(TransitionCondition::NoActiveLeases);
+        }
+        if context.deadline_budget_ms > 0 {
+            conditions.insert(TransitionCondition::DeadlineBudgetAvailable);
+        }
+        TransitionDecision {
+            verdict: TransitionVerdict::Allow,
+            reason: TransitionReason::Allowed,
+            conditions,
+            deadline_ms: (context.deadline_budget_ms > 0).then_some(context.deadline_budget_ms),
+        }
+    }
+
     pub fn transition(
         &mut self,
         intent: TransitionKind,
         target: RuntimeState,
         reason: impl Into<String>,
     ) -> Result<TransitionReceipt, RuntimeError> {
-        if !allowed(self.state, target, intent) {
-            return Err(RuntimeError::IllegalTransition {
-                from: self.state,
-                to: target,
-            });
-        }
+        let context = TransitionContext {
+            current_state: self.state,
+            requested_transition: intent,
+            target_state: target,
+            invariant_set: BTreeSet::new(),
+            generation: self.generation.clone(),
+            capability_state: CapabilityDegradationState::default(),
+            active_leases: ActiveLeaseSummary::default(),
+            deadline_budget_ms: u64::MAX,
+        };
+        self.transition_with_context(context, reason)
+    }
+
+    pub fn transition_with_context(
+        &mut self,
+        context: TransitionContext,
+        reason: impl Into<String>,
+    ) -> Result<TransitionReceipt, RuntimeError> {
+        let decision =
+            if context.current_state != self.state || context.generation != self.generation {
+                TransitionDecision {
+                    verdict: TransitionVerdict::Deny,
+                    reason: TransitionReason::InvariantViolation,
+                    conditions: BTreeSet::new(),
+                    deadline_ms: None,
+                }
+            } else {
+                Self::decide(&context)
+            };
         let reason = reason.into();
         self.journal.append(
             self.generation.boot_epoch,
             JournalRecordKind::TransitionIntent,
             JournalDurability::SyncRequired,
             [
-                ("from".into(), format!("{:?}", self.state)),
-                ("to".into(), format!("{target:?}")),
+                ("from".into(), format!("{:?}", context.current_state)),
+                ("to".into(), format!("{:?}", context.target_state)),
+                ("verdict".into(), format!("{:?}", decision.verdict)),
+                ("reason".into(), format!("{:?}", decision.reason)),
+                (
+                    "conditions".into(),
+                    decision
+                        .conditions
+                        .iter()
+                        .map(|condition| format!("{condition:?}"))
+                        .collect::<Vec<_>>()
+                        .join(","),
+                ),
+                (
+                    "deadline_ms".into(),
+                    decision
+                        .deadline_ms
+                        .map_or_else(String::new, |value| value.to_string()),
+                ),
             ],
         )?;
+        if decision.verdict != TransitionVerdict::Allow {
+            return Err(RuntimeError::Denied(format!(
+                "{:?}: {:?}",
+                decision.reason, decision.conditions
+            )));
+        }
         let from = self.state;
-        self.state = target;
+        self.state = context.target_state;
         let mut receipt = TransitionReceipt {
             schema: SchemaVersion::CURRENT,
             boot_epoch: self.generation.boot_epoch,
             from,
-            to: target,
-            intent,
+            to: context.target_state,
+            intent: context.requested_transition,
             verdict: TransitionVerdict::Allow,
             generation: self.generation.clone(),
             reason,
@@ -162,7 +365,7 @@ impl Lifecycle {
             JournalDurability::SyncRequired,
             [
                 ("from".into(), format!("{from:?}")),
-                ("to".into(), format!("{target:?}")),
+                ("to".into(), format!("{:?}", context.target_state)),
                 ("fingerprint".into(), receipt.fingerprint.clone()),
             ],
         )?;
@@ -221,8 +424,11 @@ pub struct Supervisor {
     admission_closed: AtomicBool,
     active_modules: BTreeSet<String>,
     isolated_workers: BTreeSet<String>,
+    quarantined_workers: BTreeSet<String>,
     residual_obligations: BTreeMap<String, String>,
     crash_suppression: CrashFingerprintSuppressor,
+    probe_coalescer: ProbeCoalescer<HealthSignal>,
+    cancellation: CancellationToken,
 }
 
 impl Supervisor {
@@ -252,8 +458,11 @@ impl Supervisor {
             admission_closed: AtomicBool::new(false),
             active_modules: BTreeSet::new(),
             isolated_workers: BTreeSet::new(),
+            quarantined_workers: BTreeSet::new(),
             residual_obligations: BTreeMap::new(),
             crash_suppression: CrashFingerprintSuppressor::new(3),
+            probe_coalescer: ProbeCoalescer::new(),
+            cancellation: CancellationToken::new(),
         })
     }
 
@@ -313,15 +522,12 @@ impl Supervisor {
             fingerprint(&module_manifests).map_err(|e| RuntimeError::Identity(e.to_string()))?;
         let capability_graph_fingerprint =
             fingerprint(&capability_snapshot).map_err(|e| RuntimeError::Identity(e.to_string()))?;
-        let tcbm = self.tcbm();
-        let tcbm_basis = tcbm
-            .iter()
-            .map(|entry| (entry.component.clone(), entry.safety_domains.clone()))
-            .collect::<BTreeMap<_, _>>();
-        let tcbm_fingerprint =
-            tcbm_fingerprint(&tcbm_basis).map_err(|e| RuntimeError::Identity(e.to_string()))?;
+        let dependency_lock = dependency_lock_fingerprint(CARGO_LOCK_CONTENTS);
+        let tcbm_map = self.tcbm_map();
+        let tcbm_fingerprint = tcbm_evidence_fingerprint(&tcbm_map, &dependency_lock, "m01-saf-v1")
+            .map_err(|e| RuntimeError::Identity(e.to_string()))?;
         let saf_fingerprint =
-            security_evidence_fingerprint(&tcbm_basis, &capability_graph_fingerprint, "m01-saf-v1")
+            security_evidence_fingerprint(&tcbm_map, &dependency_lock, "m01-saf-v1")
                 .map_err(|e| RuntimeError::Identity(e.to_string()))?;
         let rsg_fingerprint = safety_identity_fingerprint(SafetyIdentityBasis {
             runtime_version: env!("CARGO_PKG_VERSION").into(),
@@ -417,6 +623,14 @@ impl Supervisor {
     pub fn tcbm(&self) -> Vec<TcbmEntry> {
         [
             (
+                "core-contracts",
+                &["lifecycle-contracts", "capability-authority"] as &[&str],
+            ),
+            (
+                "core-config",
+                &["configuration-admission", "secret-redaction"] as &[&str],
+            ),
+            (
                 "core-runtime",
                 &["lifecycle", "shutdown", "epoch"] as &[&str],
             ),
@@ -433,14 +647,35 @@ impl Supervisor {
                 &["journal-integrity", "recovery"] as &[&str],
             ),
             ("core-ipc", &["ipc-trust-boundary", "epoch"] as &[&str]),
+            ("core-health", &["health-authority", "freshness"] as &[&str]),
         ]
         .into_iter()
         .map(|(component, domains)| TcbmEntry {
             component: component.into(),
             safety_domains: domains.iter().map(|domain| (*domain).to_owned()).collect(),
-            invalidation_basis: "m01-saf-v1|dependency-lock|policy-generation".into(),
+            invalidation_basis: format!(
+                "m01-saf-v1|cargo-lock:{}|policy-generation",
+                dependency_lock_fingerprint(CARGO_LOCK_CONTENTS)
+            ),
         })
         .collect()
+    }
+
+    pub fn tcbm_map(&self) -> TrustedComputingBaseMap {
+        let entries = self.tcbm();
+        TrustedComputingBaseMap {
+            schema: SchemaVersion::CURRENT,
+            policy_version: "m01-saf-v1".into(),
+            dependency_lock_fingerprint: dependency_lock_fingerprint(CARGO_LOCK_CONTENTS),
+            safety_critical_components: entries
+                .iter()
+                .map(|entry| entry.component.clone())
+                .collect(),
+            entries: entries
+                .iter()
+                .map(|entry| entry.component.clone())
+                .collect(),
+        }
     }
 
     pub fn observe_crash<T: Serialize>(
@@ -448,6 +683,50 @@ impl Supervisor {
         basis: &T,
     ) -> Result<CrashObservation, RuntimeError> {
         self.crash_suppression.observe(basis)
+    }
+
+    pub fn observe_worker_crash<T: Serialize>(
+        &mut self,
+        worker_id: &str,
+        basis: &T,
+    ) -> Result<CrashObservation, RuntimeError> {
+        let observation = self.crash_suppression.observe_subject(worker_id, basis)?;
+        self.lifecycle.journal_mut().append(
+            self.config.generation.boot_epoch,
+            JournalRecordKind::WorkerSupervisionTransition,
+            JournalDurability::SyncRequired,
+            [
+                ("subject".into(), worker_id.into()),
+                ("fingerprint".into(), observation.fingerprint.clone()),
+                ("state".into(), format!("{:?}", observation.state)),
+                ("occurrences".into(), observation.occurrences.to_string()),
+                (
+                    "restart_backoff_ms".into(),
+                    observation.restart_backoff_ms.to_string(),
+                ),
+            ],
+        )?;
+        if observation.quarantined {
+            self.quarantined_workers.insert(worker_id.into());
+            self.isolated_workers.remove(worker_id);
+        }
+        Ok(observation)
+    }
+
+    pub fn reset_worker_supervision(&mut self, worker_id: &str) -> Result<(), RuntimeError> {
+        self.crash_suppression.reset_subject(worker_id);
+        self.quarantined_workers.remove(worker_id);
+        self.lifecycle.journal_mut().append(
+            self.config.generation.boot_epoch,
+            JournalRecordKind::WorkerSupervisionTransition,
+            JournalDurability::SyncRequired,
+            [
+                ("subject".into(), worker_id.into()),
+                ("state".into(), "Stabilizing".into()),
+                ("reason".into(), "explicit-reset-re-entry".into()),
+            ],
+        )?;
+        Ok(())
     }
 
     pub fn reload_config(&mut self, next: CoreConfig) -> Result<(), RuntimeError> {
@@ -494,24 +773,36 @@ impl Supervisor {
         self.capabilities
             .register_provider(hive)
             .map_err(|error| RuntimeError::Denied(error.to_string()))?;
-        let requirement = CapabilityRequirement::new("context", SemVer::new(1, 0, 0));
+        let mut requirement = CapabilityRequirement::new("context", SemVer::new(1, 0, 0));
+        requirement.ownership = core_contracts::CapabilityOwnership::HiveOwnedIntelligence;
         let initial = self
             .capabilities
-            .bind(&requirement, "soak-fallback")
+            .bind_with_generation(&requirement, "soak-fallback", &self.config.generation)
             .map_err(|error| RuntimeError::Denied(error.to_string()))?;
         let lease = self
             .capabilities
-            .acquire_lease("context", self.config.generation.boot_epoch, 30_000)
+            .acquire_lease_with_generation("context", &self.config.generation, 30_000)
             .map_err(|error| RuntimeError::Denied(error.to_string()))?;
         self.capabilities
             .set_provider_health("hive-context", ProviderHealth::Healthy)
             .map_err(|error| RuntimeError::Denied(error.to_string()))?;
         let substituted = self
             .capabilities
-            .substitute(&requirement, "soak-hive-connect")
+            .substitute_with_generation(&requirement, "soak-hive-connect", &self.config.generation)
             .map_err(|error| RuntimeError::Denied(error.to_string()))?;
         self.capabilities
             .validate_lease(&lease, &self.config.generation)
+            .map_err(|error| RuntimeError::Denied(error.to_string()))?;
+        let coherence = self
+            .capabilities
+            .generation_coherence(
+                "context",
+                GenerationCoherenceBasis {
+                    runtime: self.config.generation.clone(),
+                    binding_generation: substituted.binding_generation,
+                    provider_activation_generation: 1,
+                },
+            )
             .map_err(|error| RuntimeError::Denied(error.to_string()))?;
         self.capabilities
             .release_lease(&lease)
@@ -521,7 +812,11 @@ impl Supervisor {
             .map_err(|error| RuntimeError::Denied(error.to_string()))?;
         let flap_recovered_with_fallback = self
             .capabilities
-            .substitute(&requirement, "soak-hive-disconnect")
+            .substitute_with_generation(
+                &requirement,
+                "soak-hive-disconnect",
+                &self.config.generation,
+            )
             .is_ok();
         self.capabilities
             .set_provider_health("hive-context", ProviderHealth::Healthy)
@@ -542,21 +837,83 @@ impl Supervisor {
         self.set_resource_pressure(ResourcePressure::Normal)?;
         let crash_first = self.observe_crash(&("soak-worker", "same-failure"))?;
         let crash_second = self.observe_crash(&("soak-worker", "same-failure"))?;
+        let probe_key = "hive-context-health";
+        let first_probe = self.probe_coalescer.get_or_probe_fresh(
+            probe_key,
+            self.health.now_ms(),
+            self.config.startup_timeout_ms,
+            || HealthSignal {
+                dimension: HealthDimension::ExternalDependency,
+                state: HealthState::Healthy,
+                reason_code: "hive-probe-ok".into(),
+                generation: self.config.generation.boot_epoch,
+                impact: "none".into(),
+                observed_at_monotonic_ms: 0,
+                freshness_window_ms: self.config.startup_timeout_ms,
+                evidence_fingerprint: "hive-probe-ok".into(),
+            },
+        );
+        let second_probe = self.probe_coalescer.get_or_probe_fresh(
+            probe_key,
+            self.health.now_ms(),
+            self.config.startup_timeout_ms,
+            || HealthSignal {
+                dimension: HealthDimension::ExternalDependency,
+                state: HealthState::Healthy,
+                reason_code: "hive-probe-refreshed".into(),
+                generation: self.config.generation.boot_epoch,
+                impact: "none".into(),
+                observed_at_monotonic_ms: 0,
+                freshness_window_ms: self.config.startup_timeout_ms,
+                evidence_fingerprint: "hive-probe-refreshed".into(),
+            },
+        );
+        self.health.set(first_probe.clone());
+        let probe_authorized = self.health.can_authorize(
+            HealthDimension::ExternalDependency,
+            self.config.generation.boot_epoch,
+        );
+        let stale_signal = HealthSignal {
+            observed_at_monotonic_ms: 0,
+            freshness_window_ms: 0,
+            ..first_probe.clone()
+        };
+        self.health.set(stale_signal);
+        let stale_probe_authorized = self.health.can_authorize(
+            HealthDimension::ExternalDependency,
+            self.config.generation.boot_epoch,
+        );
+        self.register_isolated_worker("soak-worker");
+        let worker_crash = self.observe_worker_crash("soak-worker", &"same-crash")?;
+        let worker_crash_repeat = self.observe_worker_crash("soak-worker", &"same-crash")?;
+        let worker_crash_quarantine = self.observe_worker_crash("soak-worker", &"same-crash")?;
+        self.reset_worker_supervision("soak-worker")?;
+        self.register_isolated_worker("soak-worker");
+        self.mark_worker_terminated("soak-worker");
         let shutdown = self.shutdown()?;
         Ok(serde_json::json!({
             "provider_initial": initial.provider_id,
             "provider_substituted": substituted.provider_id,
             "provider_flap_recovered_with_fallback": flap_recovered_with_fallback,
+            "generation_coherent": coherence.coherent,
             "config_generation": config_generation,
             "crash_suppression": crash_second.suppress_diagnostics,
             "crash_first_fingerprint": crash_first.fingerprint,
+            "probe_coalesced": first_probe.evidence_fingerprint == second_probe.evidence_fingerprint,
+            "probe_authorized": probe_authorized,
+            "stale_probe_authorized": stale_probe_authorized,
+            "worker_crash_suppressed": worker_crash_repeat.suppress_diagnostics,
+            "worker_quarantined": worker_crash_quarantine.quarantined,
+            "worker_initial_state": format!("{:?}", worker_crash.state),
             "shutdown_clean": shutdown.clean,
             "shutdown_fingerprint": shutdown.quiescence_fingerprint,
         }))
     }
 
     pub fn register_isolated_worker(&mut self, worker_id: impl Into<String>) {
-        self.isolated_workers.insert(worker_id.into());
+        let worker_id = worker_id.into();
+        self.quarantined_workers.remove(&worker_id);
+        self.isolated_workers.insert(worker_id);
     }
 
     pub fn mark_worker_terminated(&mut self, worker_id: &str) {
@@ -626,24 +983,87 @@ impl Supervisor {
             JournalDurability::SyncRequired,
             [],
         )?;
+        let active_leases = self.capabilities.total_active_leases();
         self.lifecycle.journal_mut().append(
             self.config.generation.boot_epoch,
-            JournalRecordKind::LeaseDrainCompleted,
+            JournalRecordKind::LeaseDrainStarted,
             JournalDurability::SyncRequired,
-            [(
-                "active_leases".into(),
-                self.capabilities.total_active_leases().to_string(),
-            )],
+            [
+                ("active_leases".into(), active_leases.to_string()),
+                (
+                    "deadline_ms".into(),
+                    self.config.shutdown_timeout_ms.to_string(),
+                ),
+            ],
         )?;
         self.lifecycle.journal_mut().append(
             self.config.generation.boot_epoch,
-            JournalRecordKind::CooperativeCancelCompleted,
+            JournalRecordKind::LeaseDrainAttempted,
+            JournalDurability::SyncRequired,
+            [("active_leases".into(), active_leases.to_string())],
+        )?;
+        if active_leases == 0 {
+            self.lifecycle.journal_mut().append(
+                self.config.generation.boot_epoch,
+                JournalRecordKind::LeaseDrainCompleted,
+                JournalDurability::SyncRequired,
+                [],
+            )?;
+        } else {
+            self.lifecycle.journal_mut().append(
+                self.config.generation.boot_epoch,
+                JournalRecordKind::LeaseDrainTimedOut,
+                JournalDurability::SyncRequired,
+                [("active_leases".into(), active_leases.to_string())],
+            )?;
+        }
+        self.lifecycle.journal_mut().append(
+            self.config.generation.boot_epoch,
+            JournalRecordKind::CooperativeCancelStarted,
+            JournalDurability::SyncRequired,
+            [],
+        )?;
+        self.cancellation.cancel();
+        let cancellation_complete =
+            self.active_modules.is_empty() && self.isolated_workers.is_empty();
+        self.lifecycle.journal_mut().append(
+            self.config.generation.boot_epoch,
+            JournalRecordKind::CooperativeCancelAttempted,
+            JournalDurability::SyncRequired,
+            [("cancel_requested".into(), "true".into())],
+        )?;
+        self.lifecycle.journal_mut().append(
+            self.config.generation.boot_epoch,
+            if cancellation_complete {
+                JournalRecordKind::CooperativeCancelCompleted
+            } else {
+                JournalRecordKind::CooperativeCancelTimedOut
+            },
             JournalDurability::SyncRequired,
             [],
         )?;
         self.lifecycle.journal_mut().append(
             self.config.generation.boot_epoch,
-            JournalRecordKind::CleanupCompleted,
+            JournalRecordKind::CleanupStarted,
+            JournalDurability::SyncRequired,
+            [],
+        )?;
+        let cleanup_complete = self.active_modules.is_empty()
+            && self.isolated_workers.is_empty()
+            && self.residual_obligations.is_empty();
+        self.lifecycle.journal_mut().append(
+            self.config.generation.boot_epoch,
+            JournalRecordKind::CleanupAttempted,
+            JournalDurability::SyncRequired,
+            [],
+        )?;
+        self.lifecycle.journal_mut().append(
+            self.config.generation.boot_epoch,
+            if cleanup_complete {
+                JournalRecordKind::CleanupCompleted
+            } else {
+                JournalRecordKind::CleanupTimedOut
+            },
             JournalDurability::SyncRequired,
             [],
         )?;
@@ -908,6 +1328,99 @@ mod tests {
             .items
             .iter()
             .any(|item| item.subject == "critical-capability-leases" && !item.satisfied));
+    }
+
+    #[test]
+    fn rlc_returns_typed_allow_deny_and_defer_without_mutation() {
+        let base = TransitionContext {
+            current_state: RuntimeState::Ready,
+            requested_transition: TransitionKind::Drain,
+            target_state: RuntimeState::Draining,
+            invariant_set: BTreeSet::new(),
+            generation: RuntimeGeneration::new(1),
+            capability_state: CapabilityDegradationState::default(),
+            active_leases: ActiveLeaseSummary::default(),
+            deadline_budget_ms: 100,
+        };
+        assert_eq!(Lifecycle::decide(&base).verdict, TransitionVerdict::Allow);
+        let mut deferred = base.clone();
+        deferred.active_leases.total = 1;
+        let decision = Lifecycle::decide(&deferred);
+        assert_eq!(decision.verdict, TransitionVerdict::Defer);
+        assert_eq!(decision.reason, TransitionReason::ActiveLeases);
+        let mut denied = base;
+        denied.invariant_set.insert("blocked".into());
+        let decision = Lifecycle::decide(&denied);
+        assert_eq!(decision.verdict, TransitionVerdict::Deny);
+        assert_eq!(decision.reason, TransitionReason::InvariantViolation);
+    }
+
+    #[tokio::test]
+    async fn shutdown_completion_records_follow_proof() {
+        let mut supervisor = Supervisor::new(config("causal-shutdown")).unwrap();
+        supervisor.bootstrap().await.unwrap();
+        supervisor
+            .capabilities()
+            .register_provider(provider(
+                "native",
+                "core",
+                "health",
+                ProviderOrigin::CoreNative,
+                90,
+            ))
+            .unwrap();
+        let requirement = CapabilityRequirement::new("health", SemVer::new(1, 0, 0));
+        supervisor
+            .capabilities()
+            .bind(&requirement, "test")
+            .unwrap();
+        supervisor
+            .capabilities()
+            .acquire_lease("health", 17, 30_000)
+            .unwrap();
+        supervisor.register_isolated_worker("hung-worker");
+        let receipt = supervisor.shutdown().unwrap();
+        assert!(!receipt.clean);
+        let records = supervisor.lifecycle.journal.read_validated().unwrap();
+        assert!(!records
+            .iter()
+            .any(|record| record.kind == JournalRecordKind::LeaseDrainCompleted));
+        assert!(!records
+            .iter()
+            .any(|record| record.kind == JournalRecordKind::CooperativeCancelCompleted));
+        assert!(!records
+            .iter()
+            .any(|record| record.kind == JournalRecordKind::CleanupCompleted));
+        assert!(records
+            .iter()
+            .any(|record| record.kind == JournalRecordKind::LeaseDrainTimedOut));
+    }
+
+    #[tokio::test]
+    async fn crash_loop_quarantines_and_explicit_reset_reenters_worker() {
+        let mut supervisor = Supervisor::new(config("crash-loop")).unwrap();
+        supervisor.bootstrap().await.unwrap();
+        supervisor.register_isolated_worker("worker-a");
+        let first = supervisor
+            .observe_worker_crash("worker-a", &"same-crash")
+            .unwrap();
+        let second = supervisor
+            .observe_worker_crash("worker-a", &"same-crash")
+            .unwrap();
+        let third = supervisor
+            .observe_worker_crash("worker-a", &"same-crash")
+            .unwrap();
+        assert_eq!(first.state, WorkerSupervisionState::RestartBackoff);
+        assert!(second.suppress_diagnostics);
+        assert!(third.quarantined);
+        supervisor.reset_worker_supervision("worker-a").unwrap();
+        supervisor.register_isolated_worker("worker-a");
+        assert_eq!(
+            supervisor.crash_suppression.state("worker-a"),
+            Some(WorkerSupervisionState::Stabilizing)
+        );
+        supervisor.mark_worker_terminated("worker-a");
+        supervisor.shutdown().unwrap();
     }
 
     #[test]

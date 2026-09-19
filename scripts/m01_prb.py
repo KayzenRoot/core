@@ -65,15 +65,11 @@ def main() -> int:
     args = parser.parse_args()
 
     policy = json.loads(POLICY_PATH.read_text(encoding="utf-8"))
-    runs = [run_benchmark()]
-    if args.mode == "record":
-        runs.extend(run_benchmark() for _ in range(4))
-    current = runs[0]
-    if len(runs) > 1:
-        current = dict(current)
-        for metric in ("p50_ms", "p95_ms", "p99_ms"):
-            current[metric] = statistics.median(float(run[metric]) for run in runs)
-        current["baseline_runs"] = len(runs)
+    runs = [run_benchmark() for _ in range(5)]
+    current = dict(runs[0])
+    for metric in ("p50_ms", "p95_ms", "p99_ms"):
+        current[metric] = statistics.median(float(run[metric]) for run in runs)
+    current["baseline_runs"] = len(runs)
     baseline = json.loads(BASELINE_PATH.read_text(encoding="utf-8")) if BASELINE_PATH.exists() else None
 
     if args.mode == "record" or baseline is None:
