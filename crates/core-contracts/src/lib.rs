@@ -1,0 +1,438 @@
+//! Versioned, dependency-light contracts shared by the M01 crates.
+
+use serde::{Deserialize, Serialize};
+use std::collections::{BTreeMap, BTreeSet};
+use thiserror::Error;
+
+pub const CONTRACT_SCHEMA_MAJOR: u16 = 1;
+pub const CONTRACT_SCHEMA_MINOR: u16 = 0;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+pub struct SchemaVersion {
+    pub major: u16,
+    pub minor: u16,
+}
+
+impl SchemaVersion {
+    pub const CURRENT: Self = Self {
+        major: CONTRACT_SCHEMA_MAJOR,
+        minor: CONTRACT_SCHEMA_MINOR,
+    };
+
+    pub const fn new(major: u16, minor: u16) -> Self {
+        Self { major, minor }
+    }
+
+    pub fn compatible_with(self, required: Self) -> bool {
+        self.major == required.major && self.minor >= required.minor
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
+pub struct SemVer {
+    pub major: u64,
+    pub minor: u64,
+    pub patch: u64,
+}
+
+impl SemVer {
+    pub const fn new(major: u64, minor: u64, patch: u64) -> Self {
+        Self {
+            major,
+            minor,
+            patch,
+        }
+    }
+    pub fn compatible_with(self, required: Self) -> bool {
+        self.major == required.major && self >= required
+    }
+}
+
+impl Default for SemVer {
+    fn default() -> Self {
+        Self::new(0, 1, 0)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct RuntimeGeneration {
+    pub boot_epoch: u64,
+    pub config: u64,
+    pub module_graph: u64,
+    pub capability_graph: u64,
+    pub policy: u64,
+}
+
+impl RuntimeGeneration {
+    pub fn new(boot_epoch: u64) -> Self {
+        Self {
+            boot_epoch,
+            config: 0,
+            module_graph: 0,
+            capability_graph: 0,
+            policy: 0,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum RuntimeState {
+    Created,
+    Validating,
+    Bootstrapping,
+    Synchronizing,
+    Ready,
+    Degraded,
+    Blocked,
+    Draining,
+    Stopped,
+    Failed,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum TransitionKind {
+    Validate,
+    Bootstrap,
+    Synchronize,
+    AdmitReady,
+    MarkDegraded,
+    Block,
+    Drain,
+    Stop,
+    Fail,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum TransitionVerdict {
+    Allow,
+    Deny,
+    Defer,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum Severity {
+    Info,
+    Warning,
+    Error,
+    Critical,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ErrorCode {
+    ConfigurationInvalid,
+    ModuleGraphInvalid,
+    CapabilityUnavailable,
+    CapabilityIncompatible,
+    ProviderDisconnected,
+    StartupTimeout,
+    StartupInvariantFailed,
+    ModuleStartFailed,
+    ModuleCrashed,
+    CancellationFailed,
+    DrainTimeout,
+    ShutdownForced,
+    InternalInvariantViolation,
+    StaleEpoch,
+    JournalCorrupt,
+    FrameTooLarge,
+    ProtocolMismatch,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ContractErrorInfo {
+    pub code: ErrorCode,
+    pub severity: Severity,
+    pub retryable: bool,
+    pub detail: String,
+}
+
+#[derive(Debug, Error)]
+pub enum ContractError {
+    #[error("invalid contract: {0}")]
+    Invalid(String),
+    #[error("incompatible schema {actual:?}; required {required:?}")]
+    IncompatibleSchema {
+        actual: SchemaVersion,
+        required: SchemaVersion,
+    },
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum IsolationClass {
+    InProcessTrusted,
+    ChildProcess,
+    SandboxRequired,
+    ExternalProvider,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct CapabilityRequirement {
+    pub name: String,
+    pub contract: SemVer,
+    pub required_features: BTreeSet<String>,
+    pub quality_floor: u8,
+}
+
+impl CapabilityRequirement {
+    pub fn new(name: impl Into<String>, contract: SemVer) -> Self {
+        Self {
+            name: name.into(),
+            contract,
+            required_features: BTreeSet::new(),
+            quality_floor: 0,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ProviderOrigin {
+    CoreNative,
+    CoreFallback,
+    HiveExternal,
+    OtherExternal,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ProviderHealth {
+    Healthy,
+    Degraded,
+    Unavailable,
+    Unknown,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct CapabilityProviderDescriptor {
+    pub provider_id: String,
+    pub module_id: String,
+    pub capability: String,
+    pub contract: SemVer,
+    pub origin: ProviderOrigin,
+    pub features: BTreeSet<String>,
+    pub quality: u8,
+    pub health: ProviderHealth,
+    pub trust: u8,
+    pub activation_generation: u64,
+    pub fingerprint: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct CapabilityBindingReceipt {
+    pub schema: SchemaVersion,
+    pub capability: String,
+    pub provider_id: String,
+    pub provider_fingerprint: String,
+    pub binding_generation: u64,
+    pub reason: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct CapabilityLease {
+    pub schema: SchemaVersion,
+    pub lease_id: String,
+    pub capability: String,
+    pub provider_id: String,
+    pub provider_fingerprint: String,
+    pub binding_generation: u64,
+    pub boot_epoch: u64,
+    pub expires_at_monotonic_ms: u64,
+    pub revoked: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ModuleManifest {
+    pub module_id: String,
+    pub contract: SemVer,
+    pub implementation: SemVer,
+    pub build_identity: String,
+    pub isolation: IsolationClass,
+    pub required: Vec<CapabilityRequirement>,
+    pub optional: Vec<CapabilityRequirement>,
+    pub provided: BTreeSet<String>,
+    pub startup_dependencies: BTreeSet<String>,
+    pub critical: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct TransitionReceipt {
+    pub schema: SchemaVersion,
+    pub boot_epoch: u64,
+    pub from: RuntimeState,
+    pub to: RuntimeState,
+    pub intent: TransitionKind,
+    pub verdict: TransitionVerdict,
+    pub generation: RuntimeGeneration,
+    pub reason: String,
+    pub fingerprint: String,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum BootstrapVerdict {
+    ReadyEligible,
+    DegradedEligible,
+    Blocked,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct BootstrapSafetyReceipt {
+    pub schema: SchemaVersion,
+    pub boot_epoch: u64,
+    pub runtime_identity: String,
+    pub config_fingerprint: String,
+    pub module_graph_fingerprint: String,
+    pub capability_graph_fingerprint: String,
+    pub recovery: RecoveryClassification,
+    pub verdict: BootstrapVerdict,
+    pub blocked_reasons: Vec<String>,
+    pub unavailable_capabilities: Vec<String>,
+    pub rsg_fingerprint: String,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum HealthState {
+    Healthy,
+    Degraded,
+    Unavailable,
+    Unknown,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+pub enum HealthDimension {
+    ProcessLiveness,
+    RuntimeReadiness,
+    ModuleGraph,
+    Capability,
+    JournalIntegrity,
+    ResourcePressure,
+    ExternalDependency,
+    ShutdownSafety,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct HealthSignal {
+    pub dimension: HealthDimension,
+    pub state: HealthState,
+    pub reason_code: String,
+    pub generation: u64,
+    pub impact: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct HealthSnapshot {
+    pub schema: SchemaVersion,
+    pub baseline_fingerprint: String,
+    pub signals: BTreeMap<HealthDimension, HealthSignal>,
+    pub delta: BTreeMap<String, String>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum RecoveryClassification {
+    CleanStop,
+    RecoverableInterruption,
+    OrphanedResource,
+    StaleExternalState,
+    AmbiguousEffect,
+    CorruptJournal,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ShutdownPhase {
+    DrainRequested,
+    AdmissionClosed,
+    LeaseDrain,
+    CooperativeCancel,
+    Cleanup,
+    QuiescenceCheck,
+    StopCommit,
+    Escalate,
+    ForceTerminate,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct QuiescenceItem {
+    pub subject: String,
+    pub satisfied: bool,
+    pub residual: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ShutdownReceipt {
+    pub schema: SchemaVersion,
+    pub boot_epoch: u64,
+    pub clean: bool,
+    pub final_phase: ShutdownPhase,
+    pub items: Vec<QuiescenceItem>,
+    pub residuals: Vec<String>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum JournalDurability {
+    MemoryOnlyDiagnostic,
+    FlushRequired,
+    SyncRequired,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum JournalRecordKind {
+    BootOpened,
+    BootClosed,
+    TransitionIntent,
+    TransitionCommit,
+    GenerationActivated,
+    WorkerSpawned,
+    WorkerTerminated,
+    DrainStarted,
+    DrainCompleted,
+    ForcedTermination,
+    IncompleteShutdown,
+    RecoveryResult,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct RuntimeJournalRecord {
+    pub schema: SchemaVersion,
+    pub sequence: u64,
+    pub boot_epoch: u64,
+    pub kind: JournalRecordKind,
+    pub durability: JournalDurability,
+    pub payload: BTreeMap<String, String>,
+    pub previous_hash: String,
+    pub hash: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct IdempotencyEnvelope {
+    pub schema: SchemaVersion,
+    pub operation_id: String,
+    pub intent_fingerprint: String,
+    pub idempotency_key: String,
+    pub generation: RuntimeGeneration,
+    pub precondition_fingerprint: String,
+    pub expected_postcondition: String,
+    pub reconciliation_method: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ContentHandle {
+    pub schema: SchemaVersion,
+    pub digest: String,
+    pub byte_len: u64,
+    pub locator: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct TokenEconomicsBudget {
+    pub input_limit: u64,
+    pub output_limit: u64,
+    pub retry_limit: u64,
+    pub quality_floor: u8,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct CacheEfficiencyEnvelope {
+    pub stable_prefix_ratio_milli: u16,
+    pub exact_hits: u64,
+    pub evidence_hits: u64,
+    pub semantic_hits: u64,
+    pub bypasses: u64,
+    pub invalidations: u64,
+}
