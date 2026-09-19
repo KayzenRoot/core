@@ -2,7 +2,7 @@
 
 Status: `READY_FOR_REVIEW` (local implementation/evidence complete; independent governed review and promotion remain separate gates)
 Date: 2026-09-19
-Implementation HEAD before this report-only commit: `ba76569` (`feat(m01): add CLI evidence and project execution rules`)
+Implementation HEAD before the report commits: `ba76569` (`feat(m01): add CLI evidence and project execution rules`). The first report commit was `1df00f0`; this refresh records the final observed integration state.
 
 ## Packet commits
 
@@ -31,7 +31,7 @@ Implementation HEAD before this report-only commit: `ba76569` (`feat(m01): add C
 
 ## HIVE evidence
 
-Observed HIVE v1.0.0 API health `status=ok`; CORE was inspected as `READY` at branch `feat/m01-core-runtime` and HEAD `45ba7c8848419d5768cd0bfdf524575a02959ca5`. The index completed for 67 files and the retrieval corpus reached `CURRENT` with 115 references. This is integration/preflight evidence only; M01 runtime code has no HIVE source or database dependency.
+Observed HIVE v1.0.0 API health `status=ok`; CORE was inspected as `READY` at branch `feat/m01-core-runtime` and final observed HEAD `1df00f05aa8f2022f122ad42f425ef50140c2db4`. Final index run `969ef2a7-f536-4c6d-9c92-a39048705515` completed at that HEAD with 92 discovered files, 27 indexed files, 65 reused files, 25 added files and 2 changed files. Final corpus run `7913b5dd-a2fb-4321-928d-5004b19c47bc` completed `CURRENT` with 177 references (108 repository sources). HIVE reported `working_tree_clean=false` inside its Linux container while the host Git command with `--untracked-files=no` was clean; this is retained as a truthful integration residual, not suppressed. This is integration/preflight evidence only; M01 runtime code has no HIVE source or database dependency.
 
 ## Acceptance criteria mapping
 
