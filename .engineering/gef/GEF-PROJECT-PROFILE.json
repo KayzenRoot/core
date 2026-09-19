@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "gef-project-profile-v1",
+  "gefVersion": "1.0.0",
+  "project": {
+    "repository": "KayzenRoot/core",
+    "repositoryId": 1377074441,
+    "defaultBranch": "main",
+    "mode": "NEW_PROJECT",
+    "bootstrapBaseHead": "bcd688dd7376644f3c19dc04f6f7566b03281ec2"
+  },
+  "sourceHierarchy": [
+    "docs/project-brain/13-CHECKPOINT.md",
+    "docs/project-brain/16-DECISIONS-LEDGER.md",
+    "docs/project-brain/03-SCOPE.md",
+    "docs/project-brain/15-DEFINITION-OF-DONE.md",
+    "docs/project-brain/04-ARCHITECTURE.md",
+    "docs/project-brain/02-REQUIREMENTS.md"
+  ],
+  "capabilities": {
+    "hiveFirst": true,
+    "exactHeadEvidence": true,
+    "workOrders": true,
+    "contextLocks": true,
+    "deltaReview": true,
+    "checkpointPromotion": true,
+    "proofCarryForwardAuthority": false
+  },
+  "taskClasses": ["T0", "T1", "T2", "T3"],
+  "contextRadii": ["C0", "C1", "C2", "C3", "C4"]
+}

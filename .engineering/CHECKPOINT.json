@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "core-gef-checkpoint-bridge-v1",
+  "viewStatus": "DERIVED_VIEW",
+  "canonicalCheckpoint": "docs/project-brain/13-CHECKPOINT.md",
+  "status": "BOOTSTRAP FOUNDATION INSTALLED / PRODUCT PLANNING NOT STARTED",
+  "version": "CORE V0.0 - Bootstrap Baseline",
+  "phase": "0 - Bootstrap and Discovery Entry",
+  "nextStep": "Begin governed CORE discovery and define the relationship, responsibilities and boundaries between HIVE and CORE before any product implementation."
+}

@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "core-context-lock-v1",
+  "workOrder": "CORE-WO-0001",
+  "status": "LOCKED",
+  "authorizedBase": "bcd688dd7376644f3c19dc04f6f7566b03281ec2",
+  "repository": "KayzenRoot/core",
+  "upstream": {
+    "gef": {
+      "version": "1.0.0",
+      "commit": "866fe3af8cccc65c929aaf6a47a924401fa448b3"
+    },
+    "hive": {
+      "version": "1.0.0",
+      "commit": "a53b5b9fcf55c32a5696180fb1b1ef80ccd1edcf"
+    }
+  },
+  "scopeClass": "BOOTSTRAP_FOUNDATION",
+  "productImplementationAuthorized": false,
+  "staleIf": [
+    "authorized base changes",
+    "GEF stable baseline changes",
+    "HIVE stable integration baseline changes",
+    "bootstrap scope expands into product implementation"
+  ]
+}

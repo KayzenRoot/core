@@ -1,0 +1,11 @@
+{
+  "schemaVersion": "gef-baseline-v1",
+  "project": "KayzenRoot/core",
+  "adoptionMode": "NEW_PROJECT",
+  "baseHead": "bcd688dd7376644f3c19dc04f6f7566b03281ec2",
+  "gefVersion": "1.0.0",
+  "hiveVersion": "1.0.0",
+  "productCodePresentAtBaseline": false,
+  "canonicalSourcePackPresentAtBaseline": false,
+  "note": "Baseline is the empty-repository initialization commit before governed bootstrap materialization."
+}

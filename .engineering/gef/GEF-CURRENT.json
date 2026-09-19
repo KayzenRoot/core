@@ -1,0 +1,11 @@
+{
+  "schemaVersion": "gef-current-v1",
+  "project": "KayzenRoot/core",
+  "promptMode": "GEF_V1_HIVE_FIRST",
+  "reviewMode": "DELTA_EXACT_HEAD",
+  "assuranceMode": "STANDARD_PLUS",
+  "productStage": "DISCOVERY_READY",
+  "nextLegalAction": "GOVERNED_PRODUCT_DISCOVERY",
+  "productImplementationAuthorized": false,
+  "canonicalCheckpoint": "docs/project-brain/13-CHECKPOINT.md"
+}

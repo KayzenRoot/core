@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "core-bootstrap-manifest-v1",
+  "project": "KayzenRoot/core",
+  "repositoryId": 1377074441,
+  "mode": "NEW_PROJECT",
+  "bootstrapBaseHead": "bcd688dd7376644f3c19dc04f6f7566b03281ec2",
+  "gef": {
+    "version": "1.0.0",
+    "repository": "KayzenRoot/gef-bootstrap",
+    "releaseCommit": "866fe3af8cccc65c929aaf6a47a924401fa448b3"
+  },
+  "hive": {
+    "version": "1.0.0",
+    "repository": "KayzenRoot/hive",
+    "releaseCommit": "a53b5b9fcf55c32a5696180fb1b1ef80ccd1edcf",
+    "integrationMode": "EXTERNAL_LOCAL_FIRST"
+  },
+  "canonicalRoot": "docs/project-brain",
+  "governanceRoot": ".engineering"
+}
