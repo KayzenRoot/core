@@ -1,0 +1,29 @@
+name: Defect
+description: Record a reproducible CORE defect
+title: "[BUG] "
+labels: []
+body:
+  - type: textarea
+    id: observed
+    attributes:
+      label: Observed behavior
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction / evidence
+    validations:
+      required: true
+  - type: input
+    id: head
+    attributes:
+      label: Git SHA / version
+    validations:
+      required: true
