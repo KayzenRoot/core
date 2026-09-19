@@ -1,7 +1,7 @@
 # CORE Checkpoint
 
 ## STATUS
-PRODUCT DISCOVERY ACTIVE / M01 PLANNING IN PROGRESS
+PRODUCT DISCOVERY ACTIVE / M01 PLANNING - PRE-FREEZE
 
 ## VERSION
 CORE V0.0 - Discovery Baseline
@@ -48,3 +48,11 @@ Deep-plan M01: stack/runtime selection, exact lifecycle, contracts, failure mode
 - `docs/modules/00-MASTER-MODULE-MAP.md`
 - `docs/research/CORE-TECHNOLOGY-CANDIDATES.md`
 - `docs/modules/M01-CORE-RUNTIME-LIFECYCLE.md`
+
+
+## Current M01 checkpoint delta
+M01 deep discovery now covers runtime stack, lifecycle, configuration, module/capability fabric, HIVE substitution seam, cache/token primitives, crash recovery, shutdown, health/degradation, exact crate boundaries, contracts, performance governance, supply-chain security, verification, DoD and technology consolidation.
+
+Current phase: PRE-FREEZE. No product implementation is authorized yet.
+
+Next legal action: compile final file-level executor notes and governed M01 Work Order/STOP CONDITION, then freeze the planning basis before Codex implementation.

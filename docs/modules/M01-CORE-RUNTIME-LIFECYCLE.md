@@ -1471,3 +1471,85 @@ No candidate is kept merely because its acronym exists. If implementation eviden
 - 2 accepted later engines with mandatory M01 seams.
 
 This is a responsibility map, not a claim of patents or external novelty.
+
+
+## Round 14 - Executor construction packets
+
+To minimize Codex rediscovery, M01 implementation is internally partitioned into construction packets while remaining ONE Work Order and ONE module delivery.
+
+### Packet A - Contracts and deterministic identity
+Owns: core-contracts + core-identity.
+Implement contract types, schema versions, DCS, DIF, generations, RSG/SAF inputs, ZCP handle primitive, canonical golden vectors.
+STOP-A: canonical identity/property tests pass.
+
+### Packet B - Configuration and admission
+Owns: core-config + module admission contracts.
+Implement TOML/env/CLI precedence, provenance, redaction, static/dynamic/secret-reference classification, generation creation, manifest validation.
+STOP-B: invalid/ambiguous safety config fails closed; secret canaries pass.
+
+### Packet C - Registries and substitution fabric
+Owns: core-registry.
+Implement dependency graph, CPG, compatibility, deterministic resolution, CAL, SIR, CBR, FCH and CAG hooks.
+STOP-C: concurrent atomic substitution/lease/property tests pass.
+
+### Packet D - Journal and recovery
+Owns: core-journal + SBR/EEB persistence primitives.
+Implement hash-chain records, durability classes, recovery classification, corruption handling, bounded compaction.
+STOP-D: interruption/corruption matrix passes.
+
+### Packet E - IPC and worker boundary
+Owns: core-ipc + worker protocol contracts.
+Implement bounded framed local IPC, handshake/version negotiation, epoch binding, platform transports and malformed-frame defenses.
+STOP-E: cross-platform protocol tests and fuzz targets pass.
+
+### Packet F - Health/degradation
+Owns: core-health.
+Implement DCM, QFC, HCC, PHC, ODF-M01, pressure state and freshness semantics.
+STOP-F: degradation/fallback/probe-herd/delta reconstruction tests pass.
+
+### Packet G - Runtime/lifecycle
+Owns: core-runtime.
+Implement RLC, supervisor, bootstrap, BSR, synchronization seam, cancellation tree, worker supervision, QDS/QVM, CFS and control events.
+STOP-G: bootstrap/crash/shutdown/failure-injection suites pass and lifecycle has zero LLM calls.
+
+### Packet H - CLI and production evidence
+Owns: core-cli + benches/fuzz/integration/release evidence wiring.
+Implement stable exit codes/JSON schemas, doctor/validate/status/version/start, PRB/WNF benchmark metadata, TCBM/supply-chain evidence hooks.
+STOP-H: full M01 DoD evidence is generated at exact head.
+
+## Executor rules
+- packets are sequencing aids, not separate architecture decisions;
+- one packet may not redesign an accepted earlier packet silently;
+- failures feed correction into the owning packet;
+- Codex should read only canonical M01 sources + required dependency contracts for each packet where possible;
+- stable packet instructions should remain byte-stable across corrections; corrections are appended as deltas;
+- no broad repository rediscovery between packets unless a fingerprint/generation proves the basis changed;
+- reuse test/build evidence when validity fingerprints still match.
+
+## Token-efficient executor context strategy
+Each packet context should be assembled as:
+```text
+STABLE PREFIX
+  product invariants
+  M01 accepted decisions
+  packet contract/file rules
+  security/quality floor
+
+DELTA
+  current packet task
+  changed files
+  failing evidence
+  correction requirements
+
+REFERENCES/HANDLES
+  large canonical docs/evidence not needed inline
+```
+
+This structure is mandatory input to future HIVE/CORE prompt-cache optimization.
+
+## M01 planning freeze readiness
+The module can enter PLANNING_FREEZE after:
+- exact file-level notes are attached to packets where needed;
+- initial benchmark policy is expressed as baseline-relative gates rather than fabricated absolute numbers;
+- Work Order acceptance/STOP is compiled;
+- canonical checkpoint points to the frozen M01 basis.
