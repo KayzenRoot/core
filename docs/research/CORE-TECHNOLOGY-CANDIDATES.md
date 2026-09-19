@@ -95,3 +95,11 @@ HIVE retains authority over durable knowledge promotion. CORE retains authority 
 - **SIR — Substitution Impact Radius:** computes affected consumers/leases/caches/safety operations before provider substitution.
 - **CBR — Capability Binding Receipt:** canonical proof of provider selection/substitution.
 - **FCH — Fallback Capability Harness:** deliberately bounded standalone fallbacks with explicit quality ceiling and provenance.
+
+
+## M01 lifecycle/recovery candidates
+- **SBR — Safe Boot Reconciliation:** deterministic restart classification without blind side-effect replay.
+- **EEB — Execution Epoch Barrier:** rejects stale prior-process messages/leases/state mutation.
+- **IES — Idempotency Envelope Standard:** common safety carrier for later side-effecting operations.
+- **QVM — Quiescence Verification Matrix:** machine-verifiable shutdown obligations.
+- **CFS — Crash Fingerprint Suppression:** deduplicates equivalent crash diagnosis and avoids repeated LLM/token spend.

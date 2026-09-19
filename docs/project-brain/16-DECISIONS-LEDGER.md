@@ -114,3 +114,20 @@ Status: `ACTIVE`
 ## CORE-D-027 - Targeted invalidation on provider change
 **Decision:** provider substitution does not globally invalidate caches/evidence. Only artifacts whose correctness identity depends on the changed provider/binding generation are invalidated.
 **State:** ACCEPTED
+
+
+## CORE-D-028 - Crash recovery never guesses success
+**Decision:** after restart, ambiguous external effects are not assumed successful and are not blindly replayed. M01 reconciles runtime safety only; effect-owning modules must prove/reconcile their operations.
+**State:** ACCEPTED
+
+## CORE-D-029 - Epoch-bound runtime state
+**Decision:** each supervisor lifetime has a boot epoch. Runtime leases, worker identities and safety receipts are epoch-bound so stale prior-process messages cannot mutate current state.
+**State:** ACCEPTED
+
+## CORE-D-030 - Quiescence-driven shutdown
+**Decision:** graceful shutdown closes admission, drains leases, cancels cooperatively, verifies quiescence and records residuals before termination. Forced shutdown cannot masquerade as clean shutdown.
+**State:** ACCEPTED
+
+## CORE-D-031 - Deterministic-first crash diagnosis
+**Decision:** restart/crash recovery uses journal/process/generation/fingerprint/evidence checks before any later LLM diagnosis. Equivalent crash bases may reuse verified diagnosis rather than repeatedly spending tokens.
+**State:** ACCEPTED

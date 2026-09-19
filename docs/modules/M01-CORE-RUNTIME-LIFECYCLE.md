@@ -777,3 +777,249 @@ Promote to ACCEPTED_REQUIRED after implementation evidence:
 - FCH.
 
 Keep CAG implementation depth coordinated with later cache/evidence modules, while M01 defines the dependency/invalidation hooks.
+
+
+## Round 5 - Lifecycle safety, crash recovery and shutdown
+
+## RLC formalization
+
+Runtime states:
+- CREATED;
+- VALIDATING;
+- BOOTSTRAPPING;
+- SYNCHRONIZING;
+- READY;
+- DEGRADED;
+- BLOCKED;
+- DRAINING;
+- STOPPED;
+- FAILED.
+
+Every transition is evaluated as:
+```text
+TransitionDecision =
+  current_state
+  + requested_transition
+  + invariant_set
+  + generation_tuple
+  + capability_matrix
+  + active_lease_summary
+  + deadline_budget
+  -> ALLOW | DENY | DEFER
+```
+
+ALLOW produces a TransitionReceipt. DENY produces a typed reason. DEFER identifies the condition/deadline required before reevaluation.
+
+No state mutation occurs before its journal intent is durably recorded when the transition is safety-relevant.
+
+## Transition classes
+
+### Pure transitions
+No external side effect; can be recomputed safely.
+
+### Reconciled transitions
+Depend on external/provider state and require current generation/fingerprint validation.
+
+### Destructive/terminal transitions
+Drain, forced cancellation, quarantine or shutdown. Require explicit receipt and journal record.
+
+## Runtime Journal record families
+
+M01 journal records only:
+- runtime boot epoch opened/closed;
+- transition intent/commit;
+- configuration generation activated;
+- module graph generation activated;
+- capability binding generation activated;
+- worker spawned/observed terminated;
+- drain started/completed;
+- forced termination marker;
+- incomplete prior shutdown marker;
+- recovery reconciliation result.
+
+It MUST NOT contain prompts, model outputs, source code payloads, Work/Run/Step business state or secrets.
+
+## Journal durability model
+
+Records are append-only, checksummed and sequence-numbered.
+
+Safety-relevant commit protocol:
+1. canonicalize record;
+2. checksum;
+3. append;
+4. flush according to durability class;
+5. only then expose committed transition/binding generation.
+
+Durability classes:
+- MEMORY_ONLY_DIAGNOSTIC;
+- FLUSH_REQUIRED;
+- SYNC_REQUIRED.
+
+Only state whose loss could cause unsafe replay/false readiness uses SYNC_REQUIRED.
+
+## New technology - SBR
+
+### SBR - Safe Boot Reconciliation
+On restart, CORE does not blindly replay previous actions. It reconstructs only runtime safety facts, inspects live OS/process/provider state, compares generations, and classifies prior state:
+- CLEAN_STOP;
+- RECOVERABLE_INTERRUPTION;
+- ORPHANED_RESOURCE;
+- STALE_EXTERNAL_STATE;
+- AMBIGUOUS_EFFECT;
+- CORRUPT_JOURNAL.
+
+Ambiguous external effects are never assumed successful. Later execution modules must reconcile them with their own evidence/idempotency contracts.
+
+## New technology - EEB
+
+### EEB - Execution Epoch Barrier
+Every supervisor lifetime receives a monotonic boot epoch. Runtime-owned leases, worker identities and transition receipts are epoch-bound.
+
+Artifacts from an older epoch cannot silently mutate current runtime state. They may be inspected as evidence but require explicit reconciliation before adoption.
+
+Benefits:
+- rejects late worker messages after restart;
+- prevents stale cancellation/health updates;
+- strengthens cache/evidence provenance;
+- simplifies crash recovery.
+
+## New technology - IES
+
+### IES - Idempotency Envelope Standard
+M01 defines a generic envelope for later side-effecting modules:
+- operation identity;
+- intent fingerprint;
+- idempotency key;
+- generation tuple;
+- precondition fingerprint;
+- expected postcondition;
+- reconciliation method.
+
+M01 does not execute business side effects. It standardizes the safety carrier so M12/M13/M20/M21 can avoid blind duplicate execution after crashes.
+
+## QDS formalization
+
+Shutdown phases:
+```text
+DRAIN_REQUESTED
+ -> ADMISSION_CLOSED
+ -> LEASE_DRAIN
+ -> COOPERATIVE_CANCEL
+ -> CLEANUP
+ -> QUIESCENCE_CHECK
+ -> STOP_COMMIT
+```
+
+If deadlines expire:
+```text
+... -> ESCALATE
+    -> FORCE_TERMINATE
+    -> INCOMPLETE_SHUTDOWN_RECEIPT
+    -> STOPPED_WITH_RESIDUALS
+```
+
+`STOPPED_WITH_RESIDUALS` is represented in the final shutdown receipt/recovery marker; externally the process is stopped, but the next boot must reconcile residuals before READY.
+
+## Quiescence definition
+
+A runtime is quiescent only when:
+- no new work/admission is accepted;
+- no active critical capability lease remains;
+- all in-process modules reached their declared safe boundary;
+- isolated workers exited or were explicitly force-terminated;
+- journal safety records are committed;
+- required cleanup obligations are either satisfied or recorded as residuals.
+
+## New technology - QVM
+
+### QVM - Quiescence Verification Matrix
+Machine-readable matrix of shutdown obligations per module/worker/capability. QDS computes shutdown completion from the matrix instead of relying on best-effort hooks.
+
+## BSR formalization
+
+Bootstrap Safety Receipt includes:
+- boot epoch;
+- runtime/build identity;
+- config generation/fingerprint;
+- module graph generation/fingerprint;
+- capability graph generation/fingerprint;
+- DCM summary;
+- journal recovery classification;
+- required invariant results;
+- blocked/degraded reasons;
+- timestamp as metadata only;
+- RSG fingerprint;
+- receipt schema version.
+
+READY requires BSR verdict READY_ELIGIBLE.
+DEGRADED requires BSR verdict DEGRADED_ELIGIBLE plus explicit unavailable capability set.
+BLOCKED never produces a success receipt.
+
+## Crash containment
+
+### In-process module panic
+Panic is caught at supervision boundaries where technically safe. A panic cannot be treated as a normal error. Critical module panic can transition runtime to FAILED/DRAINING by policy.
+
+### Child worker crash
+Supervisor records observed exit, revokes new leases, computes SIR, updates DCM, and either restarts under bounded policy or quarantines.
+
+### Crash-loop protection
+Worker restart policy has:
+- bounded retry window;
+- exponential backoff;
+- jitter only in scheduling metadata, never cache identity;
+- crash fingerprint grouping;
+- quarantine threshold;
+- manual/policy reset path.
+
+## New technology - CFS
+
+### CFS - Crash Fingerprint Suppression
+Repeated equivalent crashes are grouped by deterministic crash fingerprint. CORE avoids generating repetitive expensive diagnostics/LLM analysis for the same verified failure basis.
+
+A changed code/config/provider generation can invalidate the suppression key.
+
+Expected benefit: fewer repeated model calls, logs and diagnosis tokens during crash loops.
+
+## Recovery and LLM economics
+
+Recovery path is deterministic-first:
+1. journal integrity;
+2. OS/process inspection;
+3. generation comparison;
+4. known crash fingerprint lookup;
+5. existing evidence/cache lookup;
+6. targeted deterministic diagnostics;
+7. only later modules may request LLM diagnosis if uncertainty remains.
+
+No LLM call is permitted merely because CORE restarted after a crash.
+
+## Failure injection scenarios
+
+Required:
+- kill -9/TerminateProcess during each startup phase;
+- crash after journal intent but before transition commit;
+- crash after commit before external observer receives receipt;
+- truncated final journal record;
+- checksum corruption;
+- stale worker message from previous epoch;
+- worker crash loop;
+- HIVE disconnect during SYNCHRONIZING;
+- HIVE disconnect during active capability lease;
+- config generation changes during bootstrap;
+- shutdown with hung in-process task;
+- shutdown with unresponsive child worker;
+- process termination during QDS cleanup;
+- disk full/read-only journal path;
+- clock jumps forward/backward;
+- duplicate IPC frame delivery.
+
+## Time semantics
+
+Correctness uses monotonic clocks for durations/deadlines. Wall clock is diagnostic metadata only unless a higher module explicitly requires calendar semantics.
+
+No cache/fingerprint identity depends on wall-clock time by default.
+
+## M01 durability boundary reaffirmed
+
+M01 can determine whether runtime safety state is clean, interrupted or ambiguous. It MUST NOT infer that a higher-level Codex/Git/GitHub/tool operation succeeded after a crash. That proof belongs to the module that owns the effect.
