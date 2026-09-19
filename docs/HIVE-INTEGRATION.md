@@ -70,3 +70,27 @@ Configure the executor/MCP client so the command executes against the installed 
 Every implementation Work Order uses HIVE-first preflight. Start at checkpoint/project status, expand through relevant decisions/scope, then module/code/test evidence. Do not read the entire repository by default.
 
 HIVE memory and retrieved summaries are derived context. Tracked canonical files and Git remain authoritative.
+
+
+## Codex project-scoped MCP
+
+CORE includes `.codex/config.toml` with a required STDIO server named `hive`. The launcher is `scripts/hive_mcp.py`.
+
+The launcher resolves HIVE in this order:
+1. `HIVE_REPO_PATH`, when defined;
+2. a sibling checkout named `hive`;
+3. a sibling checkout named `Hive`.
+
+It then starts the stable HIVE MCP module through the already-running HIVE Docker Compose API service.
+
+This keeps machine-specific filesystem paths out of Git while making HIVE mandatory for normal Codex work in a trusted CORE checkout. If HIVE is absent or Docker is unavailable, startup fails explicitly rather than silently dropping the intelligence layer.
+
+After cloning CORE and HIVE side by side, the normal shape is:
+
+```text
+workspace/
+  hive/
+  core/
+```
+
+No project-local OpenAI credential or provider setting is committed.
