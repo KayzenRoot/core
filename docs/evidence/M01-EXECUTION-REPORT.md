@@ -50,6 +50,17 @@ The code correction commit is the exact basis for the local results below. A lat
 - BOOT benchmark: 25 samples, WNF `3e70c0176fa97ef4c43e95976b5c95b13fa205e8cceb4740bf361f74fa666127`, p50 `94.1838 ms`, p95 `117.0640 ms`, p99 `142.0466 ms`. The baseline-relative PRB decision remains pending independent review because this differs from the historical local baseline.
 - First-party unsafe inventory: no unsafe block; the textual match is a safe configuration error message.
 
+## Independent GitHub CI evidence
+
+PR: [#8](https://github.com/KayzenRoot/core/pull/8)
+
+- Workflow run `35451871888`: completed successfully at the pushed report head `c7e774400abef99a41db1294b62ad33772cf573e`.
+- Governance job `105920325439`: SUCCESS.
+- M01 Ubuntu job `105920325443`: SUCCESS, including governance, fmt, clippy, tests, cargo-deny, cargo-audit, SBOM and soak.
+- M01 Windows job `105920325390`: SUCCESS, including named-pipe tests, governance, fmt, clippy, tests, cargo-deny, cargo-audit, SBOM and soak.
+- M01 fuzz job `105920325465`: SUCCESS; all four targets ran for the bounded 1,000-iteration campaign on Ubuntu.
+- No HIGH/CRITICAL advisory or forbidden-license finding was reported by the independent jobs.
+
 ## Fuzz evidence
 
 - Four targets compile with `cargo check` in the independent `fuzz` workspace: `ipc_frames`, `config_toml`, `compatibility`, `journal_records`.
@@ -70,22 +81,22 @@ The code correction commit is the exact basis for the local results below. A lat
 10. PASS - clean and forced shutdown receipts remain distinct and tested.
 11. PASS - quality-floor fallback blocking remains tested.
 12. PASS - health delta/probe coalescing tests pass.
-13. PARTIAL - native Unix/Windows adapters and bounded fuzz harness exist; Windows adapter test passes locally, Unix CI and real fuzz execution are pending.
+13. PASS - native Unix/Windows adapters, bounded framing, platform tests and the real bounded fuzz campaign passed in the independent CI matrix.
 14. PASS locally - cargo-deny, cargo-audit, SBOM checksum and unsafe inventory pass; independent CI confirmation is pending.
-15. PARTIAL - 26 unit/property-style/failure-injection tests pass; real fuzz campaign and hosted integration evidence are pending.
-16. PARTIAL - 16-cycle local soak passes with bounded handle growth; longer hosted soak remains pending.
+15. PASS - unit/property-style/failure-injection tests, platform integration tests and the real bounded fuzz campaign passed locally/independently.
+16. PASS - local and independent Ubuntu/Windows 16-cycle soak runs passed with bounded process-handle growth.
 17. PARTIAL - reproducible PRB/WNF benchmark exists, but the current sample is not independently accepted against the historical baseline.
 18. PASS - schema-versioned CLI outputs remain covered by the existing CLI evidence.
 19. PASS - lifecycle remains zero-LLM and has no provider SDK dependency.
-20. PARTIAL - exact local code HEAD and tool evidence are recorded; pushed corrected HEAD and GitHub workflow run IDs are pending.
+20. PASS - exact code/report HEADs, toolchain/platform evidence and workflow/job IDs are recorded above.
 21. PENDING - independent governed review has not returned `APPROVED`.
 
 ## CI/PR evidence boundary
 
-The workflow changes are present in `.github/workflows/governance.yml` and require a pull request to produce independent GitHub run IDs. Local success is not substituted for CI evidence. No PR, workflow success, merge, promotion or checkpoint closeout is claimed in this report.
+The workflow changes are present in `.github/workflows/governance.yml`; PR #8 and all required workflow jobs are now successful at the recorded pushed head. No merge, promotion or checkpoint closeout is claimed in this report.
 
 ## Final verdict
 
 `BLOCKED`
 
-Exact blocker: criteria 13, 15, 16, 17 and 20 are not yet proven at one pushed exact head with successful GitHub workflows, and criterion 21 review is pending. Minimal reproduction: inspect the Windows fuzz command result (`STATUS_DLL_NOT_FOUND`/`STATUS_ENTRYPOINT_NOT_FOUND`) and the absence of a GitHub PR/workflow run for `1719f900a753b110fdf7de7031f67f0f03667382`.
+Exact blocker: criterion 17 still lacks an independent PRB decision because the current 25-sample p50 is about 95 ms versus the historical 62.80 ms baseline with the same WNF, and criterion 21 review is pending. Minimal reproduction: run `cargo test -p core-runtime --bench m01_baseline --locked` twice at the exact code basis and compare the emitted p50/p95/p99 values to the historical evidence.
