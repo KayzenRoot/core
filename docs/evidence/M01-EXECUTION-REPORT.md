@@ -1,8 +1,25 @@
-# CORE-WO-M01-001 execution report
+# CORE-WO-M01-001 correction execution report
 
-Status: `READY_FOR_REVIEW` (local implementation/evidence complete; independent governed review and promotion remain separate gates)
+Status: `BLOCKED` (correction candidate is implemented locally; publication, CI and independent review gates are not yet complete)
 Date: 2026-09-19
-Implementation HEAD before the report commits: `ba76569` (`feat(m01): add CLI evidence and project execution rules`). The first report commit was `1df00f0`; this refresh records the final observed integration state.
+Correction source: `CORE-M01-CODEX-CORRECTION-PROMPT-002.pdf`
+Code correction HEAD: `1719f900a753b110fdf7de7031f67f0f03667382`
+Target branch: `feat/m01-core-runtime`
+Review issue: `#7 M01-REVIEW-002`
+
+## Scope and exact basis
+
+The correction preserves the frozen M01 crate boundaries and adds only architecture-compatible corrections:
+
+- generation-retained capability bindings with active lease accounting and monotonic expiry;
+- exact module-registration rollback;
+- real Tokio local IPC adapters for Unix domain sockets and Windows named pipes;
+- four concrete cargo-fuzz targets and deterministic seed corpora;
+- cargo-deny policy, cargo-audit execution and a CycloneDX SBOM with checksum;
+- reproducible start/stop soak evidence with process-handle growth measurement;
+- Linux/Windows CI matrix, supply-chain gates and bounded fuzz job.
+
+The code correction commit is the exact basis for the local results below. A later documentation-only commit updates this report and does not alter the implementation basis.
 
 ## Packet commits
 
@@ -10,55 +27,65 @@ Implementation HEAD before the report commits: `ba76569` (`feat(m01): add CLI ev
 | --- | --- | --- |
 | A | `a4f7b0f` | workspace, contracts, schema versions, DCS/DIF/RSG/SAF and content handles |
 | B | `5b81870` | TOML/env/CLI precedence, provenance, validation and redaction |
-| C | `0791ae8` | module graph, capability resolution, CPG/CAL/SIR/CBR/FCH hooks |
+| C | `0791ae8` plus `1719f90` | module graph, atomic substitution, retained CAL generations, expiry and rollback regression |
 | D | `2bfa6d8` | append-only hash-chain journal, recovery classification and compaction |
-| E | `299dcf1` | bounded versioned local IPC framing, handshake and epoch barrier |
+| E | `299dcf1` plus `1719f90` | bounded framing plus Unix-domain/named-pipe adapters and platform tests |
 | F | `c76eb9e` | DCM/QFC/HCC/ODF/PHC health and degradation primitives |
 | G | `0e81087` | Tokio supervisor, RLC/BSR/QDS/QVM, cancellation and zero-LLM lifecycle |
-| H | `ba76569` | CLI JSON contracts, project-wide attachment rule, fuzz corpus and preflight evidence |
+| H | `ba76569` plus `1719f90` | CLI evidence, fuzz harnesses, SBOM, soak harness, CI and correction evidence |
 
-## Verification
+## Local verification at the code correction HEAD
 
 - `python scripts/validate_governance.py`: PASS.
-- `cargo fmt --all -- --check`: PASS.
+- `cargo fmt --all -- --check`: PASS; fuzz workspace format check: PASS.
 - `cargo clippy --workspace --all-targets --locked -- -D warnings`: PASS.
-- `cargo test --workspace --all-targets --locked`: PASS, 22 unit tests, 0 failed, 0 skipped.
-- CLI `version`, `validate`, `doctor`, `start`: PASS with schema-versioned JSON; `start` produced `ReadyEligible` and no LLM calls.
-- Release BOOT baseline: 25 samples, WNF `3e70c0176fa97ef4c43e95976b5c95b13fa205e8cceb4740bf361f74fa666127`, p50 62.80 ms, p95 85.23 ms, p99 94.35 ms on the current Windows host. PRB policy is baseline-relative and hardware/WNF-bound.
-- Adversarial/failure injection: bounded IPC allocation-bomb/truncation/epoch tests, config unknown-key/secret-canary tests, journal truncation/hash-chain/compaction tests, stale lease tests, forced shutdown residual tests and zero-LLM lifecycle tests pass.
-- `cargo tree --workspace --locked` and `cargo metadata --locked --no-deps`: PASS; dependency graph is acyclic and lockfile is committed.
-- Unsafe inventory: no first-party `unsafe` blocks. `cargo-audit` and `cargo-deny` are not installed on this host; vulnerability/license/advisory scanning is therefore an explicit follow-up gate, not claimed as passed.
+- `cargo test --workspace --all-targets --locked`: PASS; 26 tests passed, 0 failed, 0 skipped.
+- New registry tests: exact rollback, retained old generation, monotonic expiry: PASS.
+- New Windows native named-pipe round trip test: PASS on this Windows host. Unix-domain implementation is cfg-gated and awaits Ubuntu CI execution.
+- CLI `version`, `validate`, `doctor`, `start`: prior exact-head PASS; `start` is zero-LLM and `ReadyEligible`.
+- `cargo deny 0.20.2 check`: PASS; advisories, bans, licenses and sources all passed.
+- `cargo audit 0.22.2`: PASS; 65 locked crate dependencies scanned with no reported vulnerability.
+- SBOM: [`docs/evidence/sbom/M01-SBOM.cdx.json`](docs/evidence/sbom/M01-SBOM.cdx.json), SHA-256 `a2494e5623fe547322ae6667cc9c17e297ab1b0028bf9c70cbaeed27f434fd27`; generated by `scripts/generate_sbom.py` from locked Cargo metadata.
+- Soak: `scripts/m01_soak.py --iterations 16`; 16/16 `ReadyEligible`, process-handle growth `+3` under policy `<=4`, record fingerprint `ed3573be6490d8b04eba897dd2fac5ab876d17ec835402aa7a9246557a6a6ce3`.
+- BOOT benchmark: 25 samples, WNF `3e70c0176fa97ef4c43e95976b5c95b13fa205e8cceb4740bf361f74fa666127`, p50 `94.1838 ms`, p95 `117.0640 ms`, p99 `142.0466 ms`. The baseline-relative PRB decision remains pending independent review because this differs from the historical local baseline.
+- First-party unsafe inventory: no unsafe block; the textual match is a safe configuration error message.
 
-## HIVE evidence
+## Fuzz evidence
 
-Observed HIVE v1.0.0 API health `status=ok`; CORE was inspected as `READY` at branch `feat/m01-core-runtime` and final observed HEAD `1df00f05aa8f2022f122ad42f425ef50140c2db4`. Final index run `969ef2a7-f536-4c6d-9c92-a39048705515` completed at that HEAD with 92 discovered files, 27 indexed files, 65 reused files, 25 added files and 2 changed files. Final corpus run `7913b5dd-a2fb-4321-928d-5004b19c47bc` completed `CURRENT` with 177 references (108 repository sources). HIVE reported `working_tree_clean=false` inside its Linux container while the host Git command with `--untracked-files=no` was clean; this is retained as a truthful integration residual, not suppressed. This is integration/preflight evidence only; M01 runtime code has no HIVE source or database dependency.
+- Four targets compile with `cargo check` in the independent `fuzz` workspace: `ipc_frames`, `config_toml`, `compatibility`, `journal_records`.
+- The real Windows execution attempt failed with `STATUS_DLL_NOT_FOUND`, then `STATUS_ENTRYPOINT_NOT_FOUND`; `libfuzzer-sys` documents Linux-only support for this version. This is recorded as a blocked local execution, not a fuzz pass.
+- The required Ubuntu CI job runs all four targets for 1,000 iterations each. No GitHub workflow result exists yet for this correction HEAD.
 
 ## Acceptance criteria mapping
 
-1. PASS - nine governed Rust crates and required M01 contract/mechanism boundaries exist.
-2. PASS - workspace dependency graph is acyclic; forbidden runtime dependencies are absent.
-3. PASS - closed RLC transitions and typed transition receipts are machine-enforced.
-4. PASS - BSR is produced before `READY`; blocked required-HIVE bootstrap has no success receipt.
-5. PASS - deterministic module/capability registries expose leasing, impact and binding receipt primitives.
-6. PASS - binding generations and boot epochs are checked; stale leases are rejected.
-7. PASS - DCS canonical ordering and SHA-256 golden vector pass.
-8. PASS - journal is append-only, checksummed/hash-chained, corruption-detecting and bounded-compaction tested.
-9. PASS - IPC and capability lease paths reject stale epochs; journal recovery never assumes ambiguous success.
-10. PASS - clean and forced shutdown receipts distinguish quiescence from residual termination.
-11. PASS - quality-floor continuity blocks an unsafe fallback.
-12. PASS - multi-dimensional health, delta snapshots and single-flight probes are tested.
-13. PARTIAL - bounded/versioned/fuzz-defended protocol logic and adversarial mutation tests pass; a long-running cargo-fuzz campaign and cross-platform native transport run remain review/CI work.
-14. PARTIAL - lockfile, minimal dependency graph and empty unsafe inventory pass; cargo-audit/cargo-deny tooling is unavailable locally.
-15. PARTIAL - unit/property-style/adversarial/failure-injection coverage passes; full hosted integration/fuzz campaign remains an independent gate.
-16. PARTIAL - local 25-sample BOOT baseline passes; long soak/resource-growth evidence remains a release gate.
-17. PASS - reproducible WNF/PRB metadata and baseline-relative policy are emitted.
-18. PASS - CLI version/status/validate/doctor/start outputs are schema-versioned JSON.
-19. PASS - runtime lifecycle reports zero LLM calls and has no provider SDK dependency.
-20. PASS - exact commit/toolchain/host/lockfile/test/benchmark evidence is recorded in this report and preflight report.
-21. PENDING - independent governed review approval is intentionally not self-issued; no merge, promotion or checkpoint closeout was performed.
+1. PASS - nine governed Rust crates and required M01 boundaries remain present.
+2. PASS - `cargo tree --workspace --locked` and explicit internal versions show an acyclic, policy-checked graph.
+3. PASS - lifecycle transitions and receipts remain machine-enforced; runtime tests pass.
+4. PASS - BSR remains required before READY; required-HIVE blocking test passes.
+5. PASS - deterministic registries expose CPG/CAL/SIR/CBR/FCH mechanisms.
+6. PASS - bindings are generation/epoch coherent; retained-generation and expiry tests pass.
+7. PASS - DCS golden vector remains passing.
+8. PASS - journal hash-chain, corruption and compaction tests pass.
+9. PASS - bounded IPC and stale epoch/recovery tests pass.
+10. PASS - clean and forced shutdown receipts remain distinct and tested.
+11. PASS - quality-floor fallback blocking remains tested.
+12. PASS - health delta/probe coalescing tests pass.
+13. PARTIAL - native Unix/Windows adapters and bounded fuzz harness exist; Windows adapter test passes locally, Unix CI and real fuzz execution are pending.
+14. PASS locally - cargo-deny, cargo-audit, SBOM checksum and unsafe inventory pass; independent CI confirmation is pending.
+15. PARTIAL - 26 unit/property-style/failure-injection tests pass; real fuzz campaign and hosted integration evidence are pending.
+16. PARTIAL - 16-cycle local soak passes with bounded handle growth; longer hosted soak remains pending.
+17. PARTIAL - reproducible PRB/WNF benchmark exists, but the current sample is not independently accepted against the historical baseline.
+18. PASS - schema-versioned CLI outputs remain covered by the existing CLI evidence.
+19. PASS - lifecycle remains zero-LLM and has no provider SDK dependency.
+20. PARTIAL - exact local code HEAD and tool evidence are recorded; pushed corrected HEAD and GitHub workflow run IDs are pending.
+21. PENDING - independent governed review has not returned `APPROVED`.
 
-## Residual risks and next governed gates
+## CI/PR evidence boundary
 
-- Install/run the approved advisory, license and SBOM tooling in CI.
-- Run hosted Windows/Unix IPC, cargo-fuzz and deep failure-injection/soak tiers.
-- Perform independent exact-head review and record the verdict before any merge or checkpoint promotion.
+The workflow changes are present in `.github/workflows/governance.yml` and require a pull request to produce independent GitHub run IDs. Local success is not substituted for CI evidence. No PR, workflow success, merge, promotion or checkpoint closeout is claimed in this report.
+
+## Final verdict
+
+`BLOCKED`
+
+Exact blocker: criteria 13, 15, 16, 17 and 20 are not yet proven at one pushed exact head with successful GitHub workflows, and criterion 21 review is pending. Minimal reproduction: inspect the Windows fuzz command result (`STATUS_DLL_NOT_FOUND`/`STATUS_ENTRYPOINT_NOT_FOUND`) and the absence of a GitHub PR/workflow run for `1719f900a753b110fdf7de7031f67f0f03667382`.
