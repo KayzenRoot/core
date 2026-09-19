@@ -72,15 +72,21 @@ The PRB policy is [`docs/evidence/prb/M01-PRB-POLICY.json`](prb/M01-PRB-POLICY.j
 
 ## HIVE and Git basis
 
-Preflight resolved the repository as `D:\Projetos Codex\core`, branch `feat/m01-core-runtime`, with the reviewed HEAD `998bca4d3aca6a97637df0e4941c528925eb29ea` matching the correction prompt. HIVE project `220151cb-0e6e-43b3-845e-faec9c5a851b` was available and read-only checkpoint inspection was performed before editing. HIVE reported its container `working_tree_clean=false`; host Git was independently checked and preserved as the source of truth for the checkout state. Final HIVE inspect/index/corpus identifiers are recorded after the exact pushed HEAD is available.
+Preflight resolved the repository as `D:\Projetos Codex\core`, branch `feat/m01-core-runtime`, with the reviewed HEAD `998bca4d3aca6a97637df0e4941c528925eb29ea` matching the correction prompt. HIVE project `220151cb-0e6e-43b3-845e-faec9c5a851b` was available and read-only checkpoint inspection was performed before editing. HIVE reported its container `working_tree_clean=false`; host Git was independently checked and preserved as the source of truth for the checkout state.
+
+Final HIVE synchronization at branch HEAD `f0b3b42c9b15cab08a64b950ead567129b39b6b3` completed successfully:
+
+- Inspect: project state `READY`, `git_head_sha=f0b3b42c9b15cab08a64b950ead567129b39b6b3`, `working_tree_clean=false` as reported by the HIVE container.
+- Repository index: run `e7aa14a6-7890-4d01-8c52-a0d8ec429a52`, `COMPLETED`, 111 discovered files, 14 indexed, 97 reused.
+- Retrieval corpus: run `8113fd9b-43ef-4d69-bc45-ad13121c965f`, `COMPLETED`, 263 current references, 263 chunks, source fingerprint `46409e5c71ba5e8e00118b383edd9a67f6735a6c496178460948c20781a2d4e6`.
 
 ## Hosted CI and final verdict
 
-The exact pushed evidence HEAD for this report packet was `9bcd588`. All required workflows completed successfully in run [35457315319](https://github.com/KayzenRoot/core/actions/runs/35457315319):
+The exact pushed evidence HEAD for this report packet is `f0b3b42c9b15cab08a64b950ead567129b39b6b3`, whose implementation ancestor is the correction commit `85facad99df74291476b1443f0263bce09e53854`. All required workflows completed successfully in run [35457796401](https://github.com/KayzenRoot/core/actions/runs/35457796401):
 
-- Governance job `105934791246`: SUCCESS.
-- M01 Ubuntu job `105934791423`: SUCCESS, including format, clippy, tests, supply-chain, SBOM, soak and PRB/WNF.
-- M01 Windows job `105934791322`: SUCCESS, including native IPC, format, clippy, tests, supply-chain, SBOM, soak and PRB/WNF.
-- M01 fuzz campaign job `105934791461`: SUCCESS; all four targets completed the bounded 1,000-iteration campaign on Ubuntu.
+- Governance job `105936065028`: SUCCESS.
+- M01 Ubuntu job `105936065116`: SUCCESS, including format, clippy, tests, supply-chain, SBOM, soak and PRB/WNF.
+- M01 Windows job `105936065146`: SUCCESS, including native IPC, format, clippy, tests, supply-chain, SBOM, soak and PRB/WNF.
+- M01 fuzz campaign job `105936065181`: SUCCESS; all four targets completed the bounded 1,000-iteration campaign on Ubuntu.
 
 The report commit is documentation-only relative to the code correction; no implementation, merge, promotion or checkpoint closeout is claimed. The final verdict is `READY_FOR_REVIEW`: criteria 1-20 are evidenced as PASS and criterion 21 remains pending independent governed review.
