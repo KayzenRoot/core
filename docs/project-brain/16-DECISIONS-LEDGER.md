@@ -76,3 +76,24 @@ Status: `ACTIVE`
 ## CORE-D-018 - Cache cannot weaken correctness
 **Decision:** exact/provider/semantic/evidence caches are derived optimization layers. Reuse requires provenance and correctness-relevant invalidation; a cache miss must not change functional correctness.
 **State:** ACCEPTED
+
+
+## CORE-D-019 - Rust-first CORE runtime
+**Decision:** CORE runtime kernel and first-party runtime workers use Rust stable with Tokio. Python/TypeScript may be used at adapter/SDK edges when justified but are not mandatory runtime dependencies.
+**State:** ACCEPTED
+
+## CORE-D-020 - Selective process isolation
+**Decision:** trusted modules may run in-process; risky/external/sandboxed work uses explicit process/provider boundaries. Same-machine first-party IPC uses local OS IPC rather than TCP by default.
+**State:** ACCEPTED
+
+## CORE-D-021 - Minimal M01 durability
+**Decision:** M01 owns only an append-only runtime-safety journal. Durable Work/Run/Attempt/Step state belongs to M04.
+**State:** ACCEPTED
+
+## CORE-D-022 - Extensibility without arbitrary plugins
+**Decision:** arbitrary dynamic-library plugin loading is rejected. Extensibility uses versioned process/API/MCP/stdio/IPC adapters and capability contracts.
+**State:** ACCEPTED
+
+## CORE-D-023 - TOML configuration
+**Decision:** human-authored CORE repository configuration uses TOML with typed precedence; machine contracts/evidence use canonical schema-governed serialization with interoperable JSON representation.
+**State:** ACCEPTED

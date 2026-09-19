@@ -316,3 +316,228 @@ D. Rust kernel + TypeScript orchestration;
 E. TypeScript runtime + selective Rust performance/sandbox components.
 
 Hybrid complexity must prove its operational value.
+
+
+## Round 3 - Runtime stack decision
+
+### Decision
+CORE runtime kernel and first-party workers use **Rust stable**.
+
+Primary async runtime: **Tokio**.
+Serialization/contracts: **Serde** with canonical encoding rules owned by CORE.
+Error boundaries: typed domain errors; no panic-as-control-flow.
+CLI/headless entrypoint: Rust binary.
+Python/TypeScript are adapter/SDK languages only when an external integration justifies them; they are not required runtime dependencies.
+
+### Why Rust
+- predictable low idle/runtime overhead;
+- memory safety without GC pauses;
+- strong concurrency/process supervision primitives;
+- excellent fit for long-lived headless daemon/runtime;
+- static single-binary-oriented distribution;
+- strong type system for lifecycle/capability/evidence invariants;
+- mature property/fuzz testing ecosystem;
+- deterministic data structures/serialization can be enforced;
+- isolates HIVE language choice from CORE runtime;
+- avoids requiring Node/Python merely to keep CORE alive.
+
+### Why not Python as CORE kernel
+Python remains excellent for HIVE/data/AI integration but would duplicate HIVE's language/runtime coupling, has weaker isolation from blocking work and less predictable CPU/concurrency behavior for the action plane.
+
+### Why not Node/TypeScript as CORE kernel
+TypeScript has excellent orchestration ergonomics, but CORE's long-lived supervisor, process control, resource governance, sandbox preparation and low-overhead headless operation benefit more from Rust. TypeScript remains suitable for future SDKs/adapters.
+
+### Why not Rust + TypeScript mandatory split
+A mandatory dual-runtime architecture adds packaging, IPC, versioning, crash and observability tax before evidence shows a need. CORE will be Rust-first with polyglot edges, not polyglot at the center.
+
+## Process model
+
+```text
+core binary
+  |
+  +-- supervisor
+  |    +-- lifecycle
+  |    +-- config generations
+  |    +-- module graph
+  |    +-- capability graph
+  |    +-- health/DCM
+  |    +-- cancellation tree
+  |
+  +-- trusted in-process modules
+  |
+  +-- worker supervisor
+       +-- isolated first-party worker
+       +-- external host adapter process
+       +-- sandbox boundary (M11)
+```
+
+Isolation class is declared by module manifest:
+- IN_PROCESS_TRUSTED;
+- CHILD_PROCESS;
+- SANDBOX_REQUIRED;
+- EXTERNAL_PROVIDER.
+
+No module may self-upgrade its isolation/authority class at runtime.
+
+## Async and cancellation semantics
+
+Tokio task cancellation is wrapped by a CORE-owned hierarchical cancellation contract.
+
+Cancellation scopes:
+- RUNTIME;
+- MODULE;
+- WORKER;
+- future RUN;
+- future ATTEMPT;
+- future STEP.
+
+Parent cancellation propagates downward. Child failure does not automatically cancel siblings unless policy marks the child critical.
+
+Every cancellable operation declares:
+- cooperative cancellation support;
+- hard deadline;
+- cleanup deadline;
+- escalation action.
+
+## IPC decision
+
+First-party isolated local workers use **length-delimited framed messages over local OS IPC** with a versioned CORE protocol. Transport adapter:
+- Unix domain sockets on Unix-like systems;
+- named pipes on Windows.
+
+No localhost TCP by default for same-machine first-party workers.
+
+Payload contracts are versioned and canonicalized. Large binary/artifact payloads are referenced by content identity/path-safe artifact handles rather than copied repeatedly through control messages.
+
+## Persistence boundary
+
+M01 owns only a **small append-only Runtime Journal** for lifecycle safety, generation activation and incomplete shutdown/recovery markers.
+
+M01 MUST NOT become the durable Work/Run database. M04 owns durable execution state.
+
+Journal properties:
+- append-only records;
+- monotonic sequence;
+- checksum/integrity;
+- bounded retention/compaction;
+- crash-safe write discipline;
+- no secrets;
+- replay only for runtime safety reconciliation.
+
+## Configuration decision
+
+Human-authored repository configuration: **TOML**.
+Machine contracts/evidence: canonical structured serialization defined by schema; JSON representation is available for interoperability.
+Environment variables and CLI overrides are supported under explicit typed precedence.
+
+Config is divided into:
+- STATIC_RESTART_REQUIRED;
+- DYNAMIC_SAFE_RELOAD;
+- SECRET_REFERENCE.
+
+Secret values are resolved at runtime and never written back to config/evidence.
+
+## Plugin policy
+
+Arbitrary dynamic library loading is **REJECTED** for the product boundary.
+
+Extensibility uses:
+- versioned process adapters;
+- MCP/API/stdio/IPC host adapters;
+- capability contracts.
+
+Reason: process boundaries provide better crash/security/version isolation than loading unknown code into the CORE supervisor.
+
+## Compatibility policy
+
+Contracts use semantic compatibility ranges plus explicit capability feature flags.
+
+Rules:
+- major contract mismatch -> incompatible/fail closed;
+- required feature absent -> capability unavailable;
+- optional feature absent -> degraded path allowed;
+- unknown security-critical field/feature -> fail closed;
+- provider implementation version and contract version are distinct.
+
+## M01 / M24 event boundary
+
+M01 owns only the minimal internal control-event primitive required for lifecycle and supervision.
+M24 owns the full durable/observable Execution Nervous System event spine.
+
+M01 events are typed and designed so M24 can bridge them without changing M01 semantics.
+
+## Cache-aware Rust rules
+
+- stable prompt/cache material MUST NOT use nondeterministic HashMap iteration;
+- canonical maps use deterministic key ordering;
+- volatile runtime IDs stay outside stable-cache payload sections;
+- timestamps are metadata, not semantic identity unless a contract explicitly says otherwise;
+- fingerprints operate on canonical bytes;
+- serde schemas distinguish cache identity fields from diagnostic-only fields;
+- avoid cloning/serializing large stable payloads when content handles suffice.
+
+## New technology candidate - ZCP
+
+### ZCP - Zero-Copy Context Handles
+Large stable context/evidence artifacts can be addressed by immutable content handles and passed between local CORE components without repeatedly embedding/serializing the full payload.
+
+Goals:
+- lower RAM copies;
+- lower IPC volume;
+- preserve exact content identity;
+- improve LLM prompt assembly reuse;
+- make cache identity cheap.
+
+ZCP is not shared mutable memory. Handles reference immutable content with verified identity.
+
+## New technology candidate - GCL
+
+### GCL - Generation Coherence Layer
+Config, module graph, capability graph and policy bases carry generation IDs. A future run records the coherent generation tuple it used.
+
+If a safety-relevant generation changes mid-operation, policy can continue, revalidate or cancel based on dependency impact rather than globally restarting everything.
+
+This supports targeted cache invalidation and low-disruption production updates.
+
+## New technology candidate - DCS
+
+### DCS - Deterministic Canonical Serialization
+CORE-defined canonical byte representation for fingerprints, receipts, cache keys and cross-module identities.
+
+Properties:
+- deterministic field/key ordering;
+- explicit schema/version;
+- normalized numeric/string rules;
+- exclusion rules for diagnostic volatility;
+- golden-vector tests across versions/languages.
+
+DCS is foundational for DIF, RSG, BSR, TSS and cache correctness.
+
+## M01 accepted architecture after Round 3
+
+ACCEPTED_REQUIRED:
+- Rust stable kernel;
+- Tokio async runtime;
+- supervisor + selective worker isolation;
+- hierarchical cancellation;
+- local OS IPC for first-party workers;
+- minimal append-only runtime journal;
+- TOML human config;
+- typed/canonical machine contracts;
+- no arbitrary in-process plugins;
+- semantic contract compatibility;
+- minimal M01 control events;
+- cache-stable deterministic serialization discipline.
+
+RESEARCH_CANDIDATE:
+- RLC, CPG, RSG, QDS, DCM, BSR;
+- SCP, CAG, DIF, LCR, PSM, TEB;
+- ZCP, GCL, DCS.
+
+REJECTED:
+- Python as CORE kernel;
+- Node/TypeScript as CORE kernel;
+- mandatory dual-runtime kernel;
+- arbitrary dynamic-library plugins;
+- microservices-by-default;
+- network TCP for same-machine first-party IPC by default.

@@ -57,3 +57,20 @@ HIVE and CORE must not share canonical database tables. Candidate synchronizatio
 
 Canonical discovery map: `docs/modules/00-MASTER-MODULE-MAP.md`.
 Planning/execution protocol: `docs/engineering/CORE-MODULAR-DELIVERY-MODEL.md`.
+
+
+## Runtime technology baseline
+
+CORE product runtime is Rust-first:
+- Rust stable;
+- Tokio async runtime;
+- one headless supervisor;
+- trusted in-process modules plus selectively isolated workers;
+- local OS IPC for first-party local worker boundaries;
+- hierarchical cancellation;
+- minimal append-only M01 runtime journal;
+- TOML human configuration;
+- canonical typed machine contracts;
+- no arbitrary dynamic-library plugins.
+
+HIVE remains independently implemented/deployed. CORE communicates with HIVE through versioned external contracts rather than sharing language/runtime/database internals.

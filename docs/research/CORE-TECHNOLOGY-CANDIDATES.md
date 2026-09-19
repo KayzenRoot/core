@@ -82,3 +82,9 @@ HIVE retains authority over durable knowledge promotion. CORE retains authority 
 - **LCR — LLM Call Reuse Gate:** deterministic reuse/delta gate before token spend.
 - **PSM — Prompt Stability Meter:** prefix stability and cache-churn measurement.
 - **TEB — Token Economics Budget:** quality-aware token/cache/retry budget envelope.
+
+
+## M01 Round 3 candidates
+- **ZCP — Zero-Copy Context Handles:** immutable content-addressed handles reduce repeated payload copies/serialization across local components.
+- **GCL — Generation Coherence Layer:** coherent config/module/capability/policy generations support targeted revalidation and cache invalidation.
+- **DCS — Deterministic Canonical Serialization:** canonical bytes and golden vectors for fingerprints, receipts, cache keys and cross-language identities.
