@@ -258,3 +258,61 @@ Lifecycle property matrix; dependency-graph fuzzing; capability substitution rac
 8. M01/M24 event boundary.
 9. Contract-version compatibility.
 10. Benchmark corpus and reference hardware classes.
+
+
+## Round 2 - Production, performance and LLM economics
+
+Every technology/module decision is scored on reliability, quality, latency/throughput, CPU/RAM/I/O, input-token reduction, output/retry reduction, provider prompt-cache friendliness, semantic/evidence reuse, deterministic work avoided before inference, and invalidation correctness. Saving tokens may never lower the accepted quality floor.
+
+### Cache-first runtime principle
+M01 makes later LLM work cacheable by construction: stable versus volatile separation, canonical serialization, content fingerprints, stable ordering, immutable generations, delta propagation, complete cache keys and explainable invalidation/hit/miss/bypass evidence. M01 provides primitives, not the full provider cache engine.
+
+### SCP - Stable Context Partitioning
+Classifies reusable data as STABLE_PREFIX, SEMI_STABLE, DELTA or EPHEMERAL so later prompt compilers preserve byte-stable prefixes.
+
+### CAG - Cache Affinity Graph
+Tracks correctness-relevant dependencies of reusable results for targeted invalidation instead of global eviction.
+
+### DIF - Deterministic Input Fingerprint
+Canonical serialization plus cryptographic identity for correctness-relevant LLM/tool inputs, excluding irrelevant volatility.
+
+### LCR - LLM Call Reuse Gate
+Deterministic pre-call seam: exact reuse? verified evidence reuse? semantic reuse? delta-only call? invalid because authority changed?
+
+### PSM - Prompt Stability Meter
+Measures stable-prefix ratio, delta ratio, cache-key churn, avoidable volatile tokens and provider-cache-eligible prefix size.
+
+### TEB - Token Economics Budget
+Portable envelope for context/input, output, retry/escalation, cache preference, quality floor and evidence-reuse policy.
+
+## Runtime implications for cache/performance
+- canonical deterministic serialization;
+- immutable config/module/capability generations;
+- no LLM or repository scan on hot lifecycle/capability/health paths;
+- lazy expensive enrichment;
+- zero-LLM bootstrap/lifecycle/shutdown.
+
+## Cache correctness invariants
+- no hit without identity/provenance;
+- no reuse across incompatible authority generations;
+- failed/negative results have explicit invalidation/TTL semantics;
+- security/policy changes invalidate affected reuse;
+- provider cache artifacts are not provider-neutral evidence;
+- cache is never canonical truth;
+- cache miss cannot change correctness;
+- metrics distinguish exact, provider-prefix, semantic, evidence and bypass.
+
+## Added performance/evaluation tests
+Canonical serialization determinism; irrelevant-metadata fingerprint stability; relevant-change fingerprint mutation; targeted CAG invalidation; stable-prefix benchmark; generation-churn benchmark; capability lookup p50/p95/p99; bootstrap at 10/100/1000 synthetic modules; idle CPU/RAM; cancellation under load; cache-receipt overhead; proof that lifecycle performs zero LLM calls.
+
+## Stack evaluation matrix
+Rust, Python and TypeScript/Node will be scored for supervision/async cancellation, predictable performance/memory, safe concurrency, startup overhead, cross-platform packaging, IPC/streaming, schemas/serialization, adapter ergonomics, observability, fuzz/property testing, HIVE integration, Codex/CLI integration, implementation velocity, maintainability and deterministic/cache-stable representations.
+
+Architectures to compare:
+A. TypeScript/Node supervisor + workers;
+B. Python supervisor + workers;
+C. Rust supervisor + adapters/workers;
+D. Rust kernel + TypeScript orchestration;
+E. TypeScript runtime + selective Rust performance/sandbox components.
+
+Hybrid complexity must prove its operational value.

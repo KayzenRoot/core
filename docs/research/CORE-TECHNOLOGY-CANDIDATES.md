@@ -73,3 +73,12 @@ HIVE retains authority over durable knowledge promotion. CORE retains authority 
 - **QDS — Quiescence-Driven Shutdown:** evidence-aware safe drain/cancel shutdown.
 - **DCM — Degraded Capability Matrix:** partial safe operation by capability.
 - **BSR — Bootstrap Safety Receipt:** proof of the exact basis used to claim READY/DEGRADED.
+
+
+## Cross-cutting LLM/cache candidates
+- **SCP — Stable Context Partitioning:** stable/semi-stable/delta/ephemeral partitioning.
+- **CAG — Cache Affinity Graph:** targeted dependency-aware invalidation.
+- **DIF — Deterministic Input Fingerprint:** canonical reusable request identity.
+- **LCR — LLM Call Reuse Gate:** deterministic reuse/delta gate before token spend.
+- **PSM — Prompt Stability Meter:** prefix stability and cache-churn measurement.
+- **TEB — Token Economics Budget:** quality-aware token/cache/retry budget envelope.

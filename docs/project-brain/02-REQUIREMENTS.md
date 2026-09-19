@@ -19,4 +19,12 @@ These are foundation requirements only. Product-functional requirements will be 
 
 ## Product requirements
 
-`PENDING DISCOVERY`
+- **CORE-R-011 Headless:** no dashboard/cockpit/web UI.
+- **CORE-R-012 Standalone:** CORE remains safely usable without HIVE.
+- **CORE-R-013 HIVE substitution:** compatible HIVE capabilities replace bounded fallbacks through contracts.
+- **CORE-R-014 Complete-product commitment:** ACCEPTED_REQUIRED capabilities must be built; there is no MVP tier.
+- **CORE-R-015 LLM economics:** LLM-facing modules optimize tokens/retries/reusable evidence without lowering quality.
+- **CORE-R-016 Cache-first:** LLM-facing contracts preserve stable material, deterministic identity and explicit invalidation.
+- **CORE-R-017 Zero-LLM lifecycle:** M01 bootstrap/lifecycle/health/shutdown uses no inference.
+- **CORE-R-018 Cache evidence:** reuse exposes class, hit/miss/bypass reason, identity/provenance and invalidation basis where applicable.
+

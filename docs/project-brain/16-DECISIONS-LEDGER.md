@@ -63,3 +63,16 @@ Status: `ACTIVE`
 ## CORE-D-015 - M01 async-first, selective isolation direction
 **Decision:** M01 planning proceeds with an async-first headless supervisor and selectively isolatable worker architecture. This does not imply microservices or distributed deployment. Final stack/transport remain pending M01 evidence.
 **State:** ACCEPTED
+
+
+## CORE-D-016 - LLM economics and cache are architecture concerns
+**Decision:** token efficiency and LLM caching are cross-cutting architecture requirements, not late optimizations. Designs preserve stable prefixes, deterministic identities, delta reuse and correct invalidation.
+**State:** ACCEPTED
+
+## CORE-D-017 - Zero-LLM runtime lifecycle
+**Decision:** bootstrap, lifecycle, module/capability resolution, configuration validation, base health and shutdown require zero LLM calls.
+**State:** ACCEPTED
+
+## CORE-D-018 - Cache cannot weaken correctness
+**Decision:** exact/provider/semantic/evidence caches are derived optimization layers. Reuse requires provenance and correctness-relevant invalidation; a cache miss must not change functional correctness.
+**State:** ACCEPTED
