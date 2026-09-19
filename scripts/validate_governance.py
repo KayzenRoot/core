@@ -6,7 +6,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 REQUIRED = (
-    "AGENTS.md",\n    ".codex/config.toml",
+    "AGENTS.md",
+    ".codex/config.toml",
     ".engineering/SOURCE-HIERARCHY.md",
     ".engineering/PROJECT-OVERVIEW.md",
     ".engineering/CHECKPOINT.md",
@@ -30,7 +31,8 @@ REQUIRED = (
     "docs/project-brain/14-BACKLOG.md",
     "docs/project-brain/15-DEFINITION-OF-DONE.md",
     "docs/project-brain/16-DECISIONS-LEDGER.md",
-    "docs/HIVE-INTEGRATION.md",\n    "scripts/hive_mcp.py",
+    "docs/HIVE-INTEGRATION.md",
+    "scripts/hive_mcp.py",
 )
 
 HIVE_GOVERNANCE = (
