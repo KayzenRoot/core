@@ -48,14 +48,23 @@ def main() -> int:
         raise RuntimeError("HIVE project list returned an unexpected payload")
 
     target = next(
-        (
-            item
-            for item in projects
-            if item.get("relative_path") == args.relative_path or item.get("name") == args.name
-        ),
+        (item for item in projects if item.get("relative_path") == args.relative_path),
         None,
     )
     if target is None:
+        name_collisions = [
+            item
+            for item in projects
+            if item.get("name") == args.name and item.get("relative_path") != args.relative_path
+        ]
+        if name_collisions:
+            collision_paths = ", ".join(
+                sorted(str(item.get("relative_path")) for item in name_collisions)
+            )
+            raise RuntimeError(
+                f'HIVE already has project name "{args.name}" at a different path: '
+                f"{collision_paths}. Resolve the identity explicitly instead of guessing."
+            )
         target = request(
             args.base_url,
             "POST",
@@ -64,7 +73,7 @@ def main() -> int:
         )
         print("Registered CORE in HIVE.")
     else:
-        print("Resolved existing CORE registration.")
+        print("Resolved existing CORE registration by exact relative path.")
 
     project_id = target.get("project_id")
     if not project_id:
@@ -73,6 +82,11 @@ def main() -> int:
     inspected = request(args.base_url, "POST", f"/api/v1/projects/{project_id}/inspect")
     if inspected.get("state") != "READY":
         raise RuntimeError(f"CORE is not READY in HIVE: {inspected}")
+    if inspected.get("relative_path") != args.relative_path:
+        raise RuntimeError(
+            "HIVE inspection resolved a different canonical path; "
+            "refuse to prepare an ambiguous project identity."
+        )
     print("Inspection: READY", inspected.get("git_head_sha"))
 
     index = request(args.base_url, "POST", f"/api/v1/projects/{project_id}/index")
@@ -89,17 +103,19 @@ def main() -> int:
         raise RuntimeError(f"CORE retrieval corpus is not current: {corpus}")
     print("Retrieval corpus:", corpus.get("status"))
 
-    print(json.dumps(
-        {
-            "project_id": project_id,
-            "relative_path": inspected.get("relative_path"),
-            "git_head_sha": inspected.get("git_head_sha"),
-            "state": inspected.get("state"),
-            "index_status": index.get("status"),
-            "corpus_status": corpus.get("status"),
-        },
-        indent=2,
-    ))
+    print(
+        json.dumps(
+            {
+                "project_id": project_id,
+                "relative_path": inspected.get("relative_path"),
+                "git_head_sha": inspected.get("git_head_sha"),
+                "state": inspected.get("state"),
+                "index_status": index.get("status"),
+                "corpus_status": corpus.get("status"),
+            },
+            indent=2,
+        )
+    )
     return 0
 
 
