@@ -4,7 +4,7 @@ Status: `DISCOVERY_IN_PROGRESS`
 
 ## Mission
 
-Define the smallest durable headless runtime that all later CORE modules can depend on without embedding HIVE-owned intelligence or choosing unnecessary infrastructure early.
+Define the durable headless runtime substrate that all later CORE modules can depend on without embedding HIVE-owned intelligence. CORE is planned as one complete product rather than an MVP ladder; accepted M01 capabilities are construction commitments.
 
 ## Ownership
 
@@ -166,3 +166,95 @@ Stable machine-readable error taxonomy with causal wrapping and redaction.
 ## STOP CONDITION for M01 planning
 
 M01 planning is not frozen until stack/runtime choices, lifecycle transitions, contracts, exact file map, failure model, tests, benchmarks, DoD and OUT OF SCOPE are accepted and reflected in canonical sources. No M01 product implementation before that point.
+
+
+## Product completeness rule
+No MVP tier. ACCEPTED_REQUIRED is a construction commitment. RESEARCH_CANDIDATE requires proof before promotion; REJECTED is deliberately excluded. FUTURE is not a parking lot for accepted requirements.
+
+## Runtime architecture direction - Round 1
+
+### Async-first control plane
+M01 uses async-first lifecycle/control contracts for long-running tools, streams, cancellation, timeouts, agents and verification. Sync adapters may exist only at boundaries.
+
+### Supervisor + selectively isolatable workers
+A coherent local-first supervisor owns lifecycle, module/capability registries, configuration and health. Safe modules may run in-process; risky/resource-heavy/untrusted work can cross an isolated worker boundary. This is not a microservice mandate.
+
+### No distributed-system tax by default
+M01 does not require Kubernetes, service mesh, distributed consensus or RPC between every module.
+
+## New M01 technology candidates
+
+### RLC - Runtime Lifecycle Calculus
+Machine-verifiable transition rules combine current state, transition intent, blocking invariants, capability availability, active leases/work and shutdown budget. Every accepted transition emits a typed receipt.
+
+### CPG - Capability Provenance Graph
+Tracks contract/version, provider, origin (CORE_NATIVE | CORE_FALLBACK | HIVE_EXTERNAL | OTHER_EXTERNAL), compatibility, health, trust, activation generation and supersession.
+
+### RSG - Runtime Safety Genome
+Secret-free deterministic fingerprint over runtime version, module manifests, capability contracts, configuration schema and safety-critical policy versions.
+
+### QDS - Quiescence-Driven Shutdown
+Computes safe drain/cancel boundaries before shutdown. Forced termination emits explicit incomplete-work evidence.
+
+### DCM - Degraded Capability Matrix
+Represents partial safe operation per capability rather than one healthy/unhealthy bit.
+
+### BSR - Bootstrap Safety Receipt
+Machine-readable proof of configuration generation, module graph, capability resolution and safety checks used to enter READY/DEGRADED. No receipt, no READY claim.
+
+## Lifecycle refinement candidate
+```text
+CREATED -> VALIDATING -> BOOTSTRAPPING -> SYNCHRONIZING -> READY
+READY <-> DEGRADED
+startup stages -> BLOCKED
+READY/DEGRADED -> DRAINING -> STOPPED
+non-recoverable invariant violation -> FAILED
+```
+SYNCHRONIZING does not make HIVE mandatory. BLOCKED exposes diagnostics. DEGRADED enumerates capability loss through DCM.
+
+## Configuration direction
+Precedence: compiled safe defaults < repository config < machine/user config < environment < explicit process arguments.
+Typed schema, value provenance, immutable generation ID, secret tagging/redaction, fail-closed unknown safety keys, explicit reloadability, no silent coercion of security/resource values.
+
+## Module manifest candidate
+Stable module ID; contract version; implementation version; required/optional/provided capabilities; lifecycle hooks; isolation class; criticality; startup/shutdown timeouts; health probes; config namespace; event schemas; compatibility constraints.
+
+## Failure taxonomy candidate
+CONFIGURATION_INVALID; MODULE_GRAPH_INVALID; CAPABILITY_UNAVAILABLE; CAPABILITY_INCOMPATIBLE; PROVIDER_DISCONNECTED; STARTUP_TIMEOUT; STARTUP_INVARIANT_FAILED; MODULE_START_FAILED; MODULE_CRASHED; CANCELLATION_FAILED; DRAIN_TIMEOUT; SHUTDOWN_FORCED; INTERNAL_INVARIANT_VIOLATION.
+
+Every error carries stable code, causal chain, retryability, severity, affected module/capability, redacted detail and correlation identity.
+
+## Robustness requirements to freeze
+- deterministic dependency-graph startup;
+- cycle detection before activation;
+- idempotent lifecycle hooks where feasible;
+- bounded startup/shutdown;
+- no zombie worker after STOPPED;
+- isolated-worker crash containment;
+- provider disconnect cannot corrupt supervisor state;
+- monotonic config/capability generation IDs;
+- structured cancellation propagation;
+- backpressure seam;
+- replayable bootstrap diagnostics;
+- failure injection hooks in tests.
+
+## Performance/evaluation plan
+Measure cold/warm bootstrap, graph validation at scale, capability resolution, health aggregation, config validation/reload, cancellation propagation, graceful shutdown, worker crash detection, idle CPU/RAM and event/control seam throughput. Requirements will be set from recorded baselines rather than invented numbers.
+
+## Security direction
+Least authority; no implicit tool/network/filesystem authority from registration; secrets excluded from BSR/RSG/events; mandatory external-provider provenance; validated config injection; unsafe dynamic loading disabled by default; immutable module identity; worker boundary prepared for M11 sandboxing.
+
+## Expanded tests
+Lifecycle property matrix; dependency-graph fuzzing; capability substitution races; config precedence properties; malformed config fuzzing; crash injection at every bootstrap stage; provider disconnect/reconnect; concurrent health races; cancellation storms; hung shutdown; forced worker kill; secret canaries; deterministic RSG; reproducible BSR; start/stop soak; resource leak detection.
+
+## Round 1 open decisions
+1. Primary language/runtime.
+2. Same versus different worker runtime.
+3. Exact async/cancellation primitive.
+4. Minimal M01 journal versus all durable run state in M04.
+5. IPC transport.
+6. Config serialization.
+7. Dynamic module/plugin policy.
+8. M01/M24 event boundary.
+9. Contract-version compatibility.
+10. Benchmark corpus and reference hardware classes.

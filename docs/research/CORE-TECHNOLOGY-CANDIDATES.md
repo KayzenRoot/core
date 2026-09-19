@@ -64,3 +64,12 @@ CORE -> HIVE candidate Execution Proof Capsule:
 - checkpoint proposal.
 
 HIVE retains authority over durable knowledge promotion. CORE retains authority over execution state.
+
+
+## M01 candidates
+- **RLC — Runtime Lifecycle Calculus:** typed lifecycle rules + transition receipts.
+- **CPG — Capability Provenance Graph:** provider origin/compatibility/health/trust/generation graph.
+- **RSG — Runtime Safety Genome:** secret-free deterministic safety-basis fingerprint.
+- **QDS — Quiescence-Driven Shutdown:** evidence-aware safe drain/cancel shutdown.
+- **DCM — Degraded Capability Matrix:** partial safe operation by capability.
+- **BSR — Bootstrap Safety Receipt:** proof of the exact basis used to claim READY/DEGRADED.

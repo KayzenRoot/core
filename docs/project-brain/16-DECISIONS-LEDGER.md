@@ -50,3 +50,16 @@ Status: `ACTIVE`
 ## CORE-D-012 - Planning reduces executor rediscovery
 **Decision:** Before Codex implementation, planning records target files, responsibilities, contracts, invariants, forbidden dependencies, tests, acceptance criteria, DoD and stop conditions.
 **State:** ACCEPTED
+
+
+## CORE-D-013 - Single complete product planning
+**Decision:** CORE is not planned as an MVP ladder. ACCEPTED_REQUIRED capabilities are construction commitments. Research candidates require evidence before promotion and may be rejected rather than silently deferred.
+**State:** ACCEPTED
+
+## CORE-D-014 - Innovation must be falsifiable
+**Decision:** proprietary technology candidates require an explicit problem, mechanism, expected benefit, risks, benchmark/evaluation and promotion criterion. A coined name alone is not innovation evidence.
+**State:** ACCEPTED
+
+## CORE-D-015 - M01 async-first, selective isolation direction
+**Decision:** M01 planning proceeds with an async-first headless supervisor and selectively isolatable worker architecture. This does not imply microservices or distributed deployment. Final stack/transport remain pending M01 evidence.
+**State:** ACCEPTED
