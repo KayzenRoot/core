@@ -20,6 +20,7 @@ use core_registry::{provider, CapabilityRegistry, ModuleRegistry};
 use serde::Serialize;
 use std::collections::{BTreeMap, BTreeSet};
 use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
+use std::time::{Duration, Instant};
 use thiserror::Error;
 
 const CARGO_LOCK_CONTENTS: &str =
@@ -34,6 +35,10 @@ pub enum RuntimeError {
     },
     #[error("lifecycle transition denied: {0}")]
     Denied(String),
+    #[error("lifecycle transition denied with typed decision: {decision:?}")]
+    TransitionDenied { decision: TransitionDecision },
+    #[error("worker admission denied or deferred: {receipt:?}")]
+    WorkerAdmission { receipt: WorkerAdmissionReceipt },
     #[error("configuration: {0}")]
     Configuration(String),
     #[error("journal: {0}")]
@@ -84,12 +89,29 @@ pub enum WorkerSupervisionState {
     Quarantined,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+pub enum WorkerAdmissionDecision {
+    Allow,
+    Defer,
+    Deny,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+pub struct WorkerAdmissionReceipt {
+    pub worker_id: String,
+    pub decision: WorkerAdmissionDecision,
+    pub state: Option<WorkerSupervisionState>,
+    pub retry_after_ms: Option<u64>,
+    pub reason: String,
+}
+
 #[derive(Debug, Clone)]
 struct CrashRecord {
     fingerprint: String,
     occurrences: u32,
     last_seen_ms: u64,
     state: WorkerSupervisionState,
+    next_restart_at_ms: u64,
 }
 
 #[derive(Debug)]
@@ -99,7 +121,7 @@ pub struct CrashFingerprintSuppressor {
     restart_window_ms: u64,
     initial_backoff_ms: u64,
     max_backoff_ms: u64,
-    clock: std::time::Instant,
+    clock: Instant,
 }
 
 impl CrashFingerprintSuppressor {
@@ -110,7 +132,7 @@ impl CrashFingerprintSuppressor {
             restart_window_ms: 30_000,
             initial_backoff_ms: 100,
             max_backoff_ms: 30_000,
-            clock: std::time::Instant::now(),
+            clock: Instant::now(),
         }
     }
 
@@ -134,6 +156,7 @@ impl CrashFingerprintSuppressor {
                 occurrences: 0,
                 last_seen_ms: now_ms,
                 state: WorkerSupervisionState::Running,
+                next_restart_at_ms: 0,
             });
         if record.fingerprint != fingerprint
             || now_ms.saturating_sub(record.last_seen_ms) > self.restart_window_ms
@@ -153,6 +176,7 @@ impl CrashFingerprintSuppressor {
         } else {
             WorkerSupervisionState::RestartBackoff
         };
+        record.next_restart_at_ms = now_ms.saturating_add(backoff);
         let quarantined = record.state == WorkerSupervisionState::Quarantined;
         Ok(CrashObservation {
             subject: subject.to_owned(),
@@ -170,7 +194,59 @@ impl CrashFingerprintSuppressor {
         if let Some(record) = self.observations.get_mut(subject) {
             record.occurrences = 0;
             record.state = WorkerSupervisionState::Stabilizing;
+            record.next_restart_at_ms = self.clock.elapsed().as_millis() as u64;
         }
+    }
+
+    pub fn admission(&self, subject: &str) -> WorkerAdmissionReceipt {
+        let now_ms = self.clock.elapsed().as_millis() as u64;
+        let Some(record) = self.observations.get(subject) else {
+            return WorkerAdmissionReceipt {
+                worker_id: subject.to_owned(),
+                decision: WorkerAdmissionDecision::Allow,
+                state: None,
+                retry_after_ms: None,
+                reason: "no prior supervision failure".into(),
+            };
+        };
+        match record.state {
+            WorkerSupervisionState::Quarantined => WorkerAdmissionReceipt {
+                worker_id: subject.to_owned(),
+                decision: WorkerAdmissionDecision::Deny,
+                state: Some(record.state),
+                retry_after_ms: None,
+                reason: "worker is quarantined; explicit reset is required".into(),
+            },
+            WorkerSupervisionState::RestartBackoff if now_ms < record.next_restart_at_ms => {
+                WorkerAdmissionReceipt {
+                    worker_id: subject.to_owned(),
+                    decision: WorkerAdmissionDecision::Defer,
+                    state: Some(record.state),
+                    retry_after_ms: Some(record.next_restart_at_ms - now_ms),
+                    reason: "restart backoff has not expired".into(),
+                }
+            }
+            _ => WorkerAdmissionReceipt {
+                worker_id: subject.to_owned(),
+                decision: WorkerAdmissionDecision::Allow,
+                state: Some(record.state),
+                retry_after_ms: None,
+                reason: "supervision admission conditions satisfied".into(),
+            },
+        }
+    }
+
+    pub fn authorize_admission(&mut self, subject: &str) -> WorkerAdmissionReceipt {
+        let mut receipt = self.admission(subject);
+        if receipt.decision == WorkerAdmissionDecision::Allow {
+            if let Some(record) = self.observations.get_mut(subject) {
+                if record.state == WorkerSupervisionState::RestartBackoff {
+                    record.state = WorkerSupervisionState::Stabilizing;
+                    receipt.state = Some(record.state);
+                }
+            }
+        }
+        receipt
     }
 
     pub fn state(&self, subject: &str) -> Option<WorkerSupervisionState> {
@@ -222,6 +298,19 @@ impl Lifecycle {
                 deadline_ms: None,
             };
         }
+        if matches!(context.target_state, RuntimeState::Stopped)
+            && context.invariant_set.contains("quiescence-not-proven")
+            && !context
+                .invariant_set
+                .contains("forced-termination-authorized")
+        {
+            return TransitionDecision {
+                verdict: TransitionVerdict::Deny,
+                reason: TransitionReason::InvariantViolation,
+                conditions,
+                deadline_ms: None,
+            };
+        }
         if matches!(context.target_state, RuntimeState::Ready)
             && (!context.capability_state.ready
                 || !context.capability_state.quality_floor_satisfied)
@@ -244,21 +333,7 @@ impl Lifecycle {
         }
         if matches!(context.target_state, RuntimeState::Draining) && context.active_leases.total > 0
         {
-            if context.deadline_budget_ms == 0 {
-                return TransitionDecision {
-                    verdict: TransitionVerdict::Deny,
-                    reason: TransitionReason::DeadlineExhausted,
-                    conditions,
-                    deadline_ms: None,
-                };
-            }
             conditions.insert(TransitionCondition::DeadlineBudgetAvailable);
-            return TransitionDecision {
-                verdict: TransitionVerdict::Defer,
-                reason: TransitionReason::ActiveLeases,
-                conditions,
-                deadline_ms: Some(context.deadline_budget_ms),
-            };
         }
         conditions.insert(TransitionCondition::InvariantsSatisfied);
         conditions.insert(TransitionCondition::CapabilityFloorSatisfied);
@@ -339,10 +414,7 @@ impl Lifecycle {
             ],
         )?;
         if decision.verdict != TransitionVerdict::Allow {
-            return Err(RuntimeError::Denied(format!(
-                "{:?}: {:?}",
-                decision.reason, decision.conditions
-            )));
+            return Err(RuntimeError::TransitionDenied { decision });
         }
         let from = self.state;
         self.state = context.target_state;
@@ -429,6 +501,8 @@ pub struct Supervisor {
     crash_suppression: CrashFingerprintSuppressor,
     probe_coalescer: ProbeCoalescer<HealthSignal>,
     cancellation: CancellationToken,
+    worker_completion_delays_ms: BTreeMap<String, u64>,
+    quiescence_proven: bool,
 }
 
 impl Supervisor {
@@ -463,22 +537,98 @@ impl Supervisor {
             crash_suppression: CrashFingerprintSuppressor::new(3),
             probe_coalescer: ProbeCoalescer::new(),
             cancellation: CancellationToken::new(),
+            worker_completion_delays_ms: BTreeMap::new(),
+            quiescence_proven: false,
         })
     }
 
+    fn capability_degradation_state(&self) -> CapabilityDegradationState {
+        let unavailable = self
+            .degradation
+            .blocked()
+            .into_iter()
+            .collect::<BTreeSet<_>>();
+        let quality_floor_satisfied =
+            self.degradation.pressure() != ResourcePressure::Critical && unavailable.is_empty();
+        CapabilityDegradationState {
+            ready: quality_floor_satisfied,
+            degraded: self.degradation.pressure() != ResourcePressure::Normal
+                || !unavailable.is_empty(),
+            unavailable,
+            quality_floor_satisfied,
+        }
+    }
+
+    pub fn build_transition_context(
+        &self,
+        intent: TransitionKind,
+        target: RuntimeState,
+        deadline_budget_ms: u64,
+    ) -> TransitionContext {
+        let capability_state = self.capability_degradation_state();
+        let mut invariant_set = BTreeSet::new();
+        if matches!(self.lifecycle.state(), RuntimeState::Blocked)
+            || (matches!(target, RuntimeState::Ready) && !capability_state.ready)
+        {
+            invariant_set.insert("blocked".into());
+        }
+        if matches!(target, RuntimeState::Stopped) && !self.quiescence_proven {
+            invariant_set.insert("quiescence-not-proven".into());
+        }
+        let active_leases = self.capabilities.active_lease_summary();
+        if !self.active_modules.is_empty() {
+            invariant_set.insert("active-modules".into());
+        }
+        if !self.isolated_workers.is_empty() {
+            invariant_set.insert("active-workers".into());
+        }
+        TransitionContext {
+            current_state: self.lifecycle.state(),
+            requested_transition: intent,
+            target_state: target,
+            invariant_set,
+            generation: self.config.generation.clone(),
+            capability_state,
+            active_leases,
+            deadline_budget_ms,
+        }
+    }
+
+    fn transition_with_live_context(
+        &mut self,
+        intent: TransitionKind,
+        target: RuntimeState,
+        reason: impl Into<String>,
+        deadline_budget_ms: u64,
+        forced_termination: bool,
+    ) -> Result<TransitionReceipt, RuntimeError> {
+        let mut context = self.build_transition_context(intent, target, deadline_budget_ms);
+        if forced_termination && matches!(target, RuntimeState::Stopped) {
+            context.invariant_set.remove("quiescence-not-proven");
+            context
+                .invariant_set
+                .insert("forced-termination-authorized".into());
+        }
+        self.lifecycle.transition_with_context(context, reason)
+    }
+
     pub async fn bootstrap(&mut self) -> Result<BootstrapSafetyReceipt, RuntimeError> {
-        self.lifecycle.transition(
+        self.transition_with_live_context(
             TransitionKind::Validate,
             RuntimeState::Validating,
             "validate configuration and static contracts",
+            self.config.startup_timeout_ms,
+            false,
         )?;
         if let Err(error) = self.modules.validate_graph() {
             let reason = error.to_string();
             self.blocked_reasons.push(reason.clone());
-            self.lifecycle.transition(
+            self.transition_with_live_context(
                 TransitionKind::Block,
                 RuntimeState::Blocked,
                 reason.clone(),
+                self.config.startup_timeout_ms,
+                false,
             )?;
             return Err(RuntimeError::Blocked(reason));
         }
@@ -492,15 +642,19 @@ impl Supervisor {
             freshness_window_ms: self.config.startup_timeout_ms,
             evidence_fingerprint: "process-alive".into(),
         });
-        self.lifecycle.transition(
+        self.transition_with_live_context(
             TransitionKind::Bootstrap,
             RuntimeState::Bootstrapping,
             "construct supervisor and registries",
+            self.config.startup_timeout_ms,
+            false,
         )?;
-        self.lifecycle.transition(
+        self.transition_with_live_context(
             TransitionKind::Synchronize,
             RuntimeState::Synchronizing,
             "optional HIVE synchronization seam",
+            self.config.startup_timeout_ms,
+            false,
         )?;
         let recovery = self.lifecycle.recovery()?;
         let mut verdict = BootstrapVerdict::ReadyEligible;
@@ -563,17 +717,21 @@ impl Supervisor {
             saf_fingerprint,
         };
         if verdict == BootstrapVerdict::Blocked {
-            self.lifecycle.transition(
+            self.transition_with_live_context(
                 TransitionKind::Block,
                 RuntimeState::Blocked,
                 "required HIVE capability unavailable",
+                self.config.startup_timeout_ms,
+                false,
             )?;
             return Err(RuntimeError::Blocked(receipt.blocked_reasons.join("; ")));
         }
-        self.lifecycle.transition(
+        self.transition_with_live_context(
             TransitionKind::AdmitReady,
             RuntimeState::Ready,
             "bootstrap safety receipt is complete",
+            self.config.startup_timeout_ms,
+            false,
         )?;
         self.health.set(HealthSignal {
             dimension: HealthDimension::RuntimeReadiness,
@@ -832,7 +990,7 @@ impl Supervisor {
             .map_err(|error| RuntimeError::Configuration(error.to_string()))?;
         let config_generation = reloaded.generation.config;
         self.reload_config(reloaded)?;
-        self.register_isolated_worker("soak-worker");
+        self.register_isolated_worker("soak-worker")?;
         self.mark_worker_terminated("soak-worker");
         self.set_resource_pressure(ResourcePressure::Normal)?;
         let crash_first = self.observe_crash(&("soak-worker", "same-failure"))?;
@@ -883,12 +1041,12 @@ impl Supervisor {
             HealthDimension::ExternalDependency,
             self.config.generation.boot_epoch,
         );
-        self.register_isolated_worker("soak-worker");
+        self.register_isolated_worker("soak-worker")?;
         let worker_crash = self.observe_worker_crash("soak-worker", &"same-crash")?;
         let worker_crash_repeat = self.observe_worker_crash("soak-worker", &"same-crash")?;
         let worker_crash_quarantine = self.observe_worker_crash("soak-worker", &"same-crash")?;
         self.reset_worker_supervision("soak-worker")?;
-        self.register_isolated_worker("soak-worker");
+        self.register_isolated_worker("soak-worker")?;
         self.mark_worker_terminated("soak-worker");
         let shutdown = self.shutdown()?;
         Ok(serde_json::json!({
@@ -910,14 +1068,68 @@ impl Supervisor {
         }))
     }
 
-    pub fn register_isolated_worker(&mut self, worker_id: impl Into<String>) {
+    pub fn register_isolated_worker(
+        &mut self,
+        worker_id: impl Into<String>,
+    ) -> Result<WorkerAdmissionReceipt, RuntimeError> {
         let worker_id = worker_id.into();
-        self.quarantined_workers.remove(&worker_id);
+        if self.quarantined_workers.contains(&worker_id) {
+            return Err(RuntimeError::WorkerAdmission {
+                receipt: WorkerAdmissionReceipt {
+                    worker_id,
+                    decision: WorkerAdmissionDecision::Deny,
+                    state: Some(WorkerSupervisionState::Quarantined),
+                    retry_after_ms: None,
+                    reason: "worker is quarantined; explicit reset is required".into(),
+                },
+            });
+        }
+        let receipt = self.crash_suppression.authorize_admission(&worker_id);
+        if receipt.decision != WorkerAdmissionDecision::Allow {
+            return Err(RuntimeError::WorkerAdmission { receipt });
+        }
         self.isolated_workers.insert(worker_id);
+        Ok(receipt)
+    }
+
+    pub fn register_isolated_worker_with_completion_delay(
+        &mut self,
+        worker_id: impl Into<String>,
+        delay_after_cancel_ms: u64,
+    ) -> Result<WorkerAdmissionReceipt, RuntimeError> {
+        let worker_id = worker_id.into();
+        let receipt = self.register_isolated_worker(worker_id.clone())?;
+        self.worker_completion_delays_ms
+            .insert(worker_id, delay_after_cancel_ms);
+        Ok(receipt)
     }
 
     pub fn mark_worker_terminated(&mut self, worker_id: &str) {
         self.isolated_workers.remove(worker_id);
+        self.worker_completion_delays_ms.remove(worker_id);
+    }
+
+    fn complete_scheduled_workers(&mut self, elapsed_after_cancel_ms: u64) {
+        if !self.cancellation.is_cancelled() {
+            return;
+        }
+        let completed = self
+            .worker_completion_delays_ms
+            .iter()
+            .filter(|(_, delay)| **delay <= elapsed_after_cancel_ms)
+            .map(|(worker_id, _)| worker_id.clone())
+            .collect::<Vec<_>>();
+        for worker_id in completed {
+            self.worker_completion_delays_ms.remove(&worker_id);
+            self.isolated_workers.remove(&worker_id);
+        }
+    }
+
+    fn remaining_shutdown_budget(&self, deadline: Instant) -> u64 {
+        deadline
+            .saturating_duration_since(Instant::now())
+            .as_millis()
+            .min(u128::from(u64::MAX)) as u64
     }
 
     pub fn record_residual_obligation(
@@ -932,10 +1144,12 @@ impl Supervisor {
     pub fn mark_degraded(&mut self, reason: impl Into<String>) -> Result<(), RuntimeError> {
         let reason = reason.into();
         if self.lifecycle.state() == RuntimeState::Ready {
-            self.lifecycle.transition(
+            self.transition_with_live_context(
                 TransitionKind::MarkDegraded,
                 RuntimeState::Degraded,
                 reason.clone(),
+                self.config.startup_timeout_ms,
+                false,
             )?;
         }
         self.blocked_reasons.push(reason);
@@ -965,11 +1179,16 @@ impl Supervisor {
                 "shutdown requires READY or DEGRADED".into(),
             ));
         }
+        self.quiescence_proven = false;
         self.admission_closed.store(true, Ordering::Release);
-        self.lifecycle.transition(
+        let shutdown_deadline =
+            Instant::now() + Duration::from_millis(self.config.shutdown_timeout_ms);
+        self.transition_with_live_context(
             TransitionKind::Drain,
             RuntimeState::Draining,
             "close admission and drain leases",
+            self.remaining_shutdown_budget(shutdown_deadline),
+            false,
         )?;
         self.lifecycle.journal_mut().append(
             self.config.generation.boot_epoch,
@@ -1002,6 +1221,10 @@ impl Supervisor {
             JournalDurability::SyncRequired,
             [("active_leases".into(), active_leases.to_string())],
         )?;
+        while self.capabilities.total_active_leases() > 0 && Instant::now() < shutdown_deadline {
+            std::thread::sleep(Duration::from_millis(1));
+        }
+        let active_leases = self.capabilities.total_active_leases();
         if active_leases == 0 {
             self.lifecycle.journal_mut().append(
                 self.config.generation.boot_epoch,
@@ -1024,14 +1247,34 @@ impl Supervisor {
             [],
         )?;
         self.cancellation.cancel();
-        let cancellation_complete =
-            self.active_modules.is_empty() && self.isolated_workers.is_empty();
         self.lifecycle.journal_mut().append(
             self.config.generation.boot_epoch,
             JournalRecordKind::CooperativeCancelAttempted,
             JournalDurability::SyncRequired,
             [("cancel_requested".into(), "true".into())],
         )?;
+        let cancellation_started = Instant::now();
+        while (!self.active_modules.is_empty() || !self.isolated_workers.is_empty())
+            && Instant::now() < shutdown_deadline
+        {
+            self.complete_scheduled_workers(
+                cancellation_started
+                    .elapsed()
+                    .as_millis()
+                    .min(u128::from(u64::MAX)) as u64,
+            );
+            if !self.active_modules.is_empty() || !self.isolated_workers.is_empty() {
+                std::thread::sleep(Duration::from_millis(1));
+            }
+        }
+        self.complete_scheduled_workers(
+            cancellation_started
+                .elapsed()
+                .as_millis()
+                .min(u128::from(u64::MAX)) as u64,
+        );
+        let cancellation_complete =
+            self.active_modules.is_empty() && self.isolated_workers.is_empty();
         self.lifecycle.journal_mut().append(
             self.config.generation.boot_epoch,
             if cancellation_complete {
@@ -1048,6 +1291,24 @@ impl Supervisor {
             JournalDurability::SyncRequired,
             [],
         )?;
+        while (!self.active_modules.is_empty()
+            || !self.isolated_workers.is_empty()
+            || !self.residual_obligations.is_empty())
+            && Instant::now() < shutdown_deadline
+        {
+            self.complete_scheduled_workers(
+                cancellation_started
+                    .elapsed()
+                    .as_millis()
+                    .min(u128::from(u64::MAX)) as u64,
+            );
+            if !self.active_modules.is_empty()
+                || !self.isolated_workers.is_empty()
+                || !self.residual_obligations.is_empty()
+            {
+                std::thread::sleep(Duration::from_millis(1));
+            }
+        }
         let cleanup_complete = self.active_modules.is_empty()
             && self.isolated_workers.is_empty()
             && self.residual_obligations.is_empty();
@@ -1075,9 +1336,8 @@ impl Supervisor {
             },
             QuiescenceItem {
                 subject: "critical-capability-leases".into(),
-                satisfied: self.capabilities.total_active_leases() == 0,
-                residual: (self.capabilities.total_active_leases() > 0)
-                    .then(|| "active capability lease remains".into()),
+                satisfied: active_leases == 0,
+                residual: (active_leases > 0).then(|| "active capability lease remains".into()),
             },
             QuiescenceItem {
                 subject: "active-modules".into(),
@@ -1119,6 +1379,7 @@ impl Supervisor {
             },
         ];
         let quiescent = items.iter().all(|item| item.satisfied);
+        self.quiescence_proven = quiescent;
         let quiescence_fingerprint =
             fingerprint(&items).map_err(|e| RuntimeError::Identity(e.to_string()))?;
         self.lifecycle.journal_mut().append(
@@ -1137,10 +1398,12 @@ impl Supervisor {
                 JournalDurability::SyncRequired,
                 [],
             )?;
-            self.lifecycle.transition(
+            self.transition_with_live_context(
                 TransitionKind::Stop,
                 RuntimeState::Stopped,
                 "quiescence matrix satisfied",
+                self.remaining_shutdown_budget(shutdown_deadline),
+                false,
             )?;
             self.lifecycle.journal_mut().append(
                 self.config.generation.boot_epoch,
@@ -1176,10 +1439,12 @@ impl Supervisor {
                 JournalDurability::SyncRequired,
                 [("reason".into(), "quiescence deadline expired".into())],
             )?;
-            self.lifecycle.transition(
+            self.transition_with_live_context(
                 TransitionKind::Stop,
                 RuntimeState::Stopped,
                 "forced termination with explicit residuals",
+                self.remaining_shutdown_budget(shutdown_deadline),
+                true,
             )?;
             ShutdownReceipt {
                 schema: SchemaVersion::CURRENT,
@@ -1266,9 +1531,11 @@ mod tests {
 
     #[tokio::test]
     async fn forced_shutdown_records_residuals() {
-        let mut supervisor = Supervisor::new(config("forced")).unwrap();
+        let mut shutdown_config = config("forced");
+        shutdown_config.shutdown_timeout_ms = 5;
+        let mut supervisor = Supervisor::new(shutdown_config).unwrap();
         supervisor.bootstrap().await.unwrap();
-        supervisor.register_isolated_worker("hung-worker");
+        supervisor.register_isolated_worker("hung-worker").unwrap();
         let receipt = supervisor.shutdown().unwrap();
         assert!(!receipt.clean);
         assert_eq!(receipt.final_phase, ShutdownPhase::ForceTerminate);
@@ -1301,7 +1568,9 @@ mod tests {
 
     #[tokio::test]
     async fn qvm_detects_active_lease_without_caller_claim() {
-        let mut supervisor = Supervisor::new(config("lease-residual")).unwrap();
+        let mut shutdown_config = config("lease-residual");
+        shutdown_config.shutdown_timeout_ms = 5;
+        let mut supervisor = Supervisor::new(shutdown_config).unwrap();
         supervisor.bootstrap().await.unwrap();
         supervisor
             .capabilities()
@@ -1346,8 +1615,27 @@ mod tests {
         let mut deferred = base.clone();
         deferred.active_leases.total = 1;
         let decision = Lifecycle::decide(&deferred);
+        assert_eq!(decision.verdict, TransitionVerdict::Allow);
+        assert_eq!(decision.reason, TransitionReason::Allowed);
+        let mut capability_deferred = TransitionContext {
+            current_state: RuntimeState::Synchronizing,
+            requested_transition: TransitionKind::AdmitReady,
+            target_state: RuntimeState::Ready,
+            capability_state: CapabilityDegradationState {
+                ready: false,
+                degraded: true,
+                unavailable: ["context".into()].into_iter().collect(),
+                quality_floor_satisfied: false,
+            },
+            ..deferred
+        };
+        let decision = Lifecycle::decide(&capability_deferred);
         assert_eq!(decision.verdict, TransitionVerdict::Defer);
-        assert_eq!(decision.reason, TransitionReason::ActiveLeases);
+        assert_eq!(decision.reason, TransitionReason::CapabilityUnavailable);
+        capability_deferred.deadline_budget_ms = 0;
+        let decision = Lifecycle::decide(&capability_deferred);
+        assert_eq!(decision.verdict, TransitionVerdict::Deny);
+        assert_eq!(decision.reason, TransitionReason::DeadlineExhausted);
         let mut denied = base;
         denied.invariant_set.insert("blocked".into());
         let decision = Lifecycle::decide(&denied);
@@ -1357,7 +1645,9 @@ mod tests {
 
     #[tokio::test]
     async fn shutdown_completion_records_follow_proof() {
-        let mut supervisor = Supervisor::new(config("causal-shutdown")).unwrap();
+        let mut shutdown_config = config("causal-shutdown");
+        shutdown_config.shutdown_timeout_ms = 5;
+        let mut supervisor = Supervisor::new(shutdown_config).unwrap();
         supervisor.bootstrap().await.unwrap();
         supervisor
             .capabilities()
@@ -1378,7 +1668,7 @@ mod tests {
             .capabilities()
             .acquire_lease("health", 17, 30_000)
             .unwrap();
-        supervisor.register_isolated_worker("hung-worker");
+        supervisor.register_isolated_worker("hung-worker").unwrap();
         let receipt = supervisor.shutdown().unwrap();
         assert!(!receipt.clean);
         let records = supervisor.lifecycle.journal.read_validated().unwrap();
@@ -1400,7 +1690,7 @@ mod tests {
     async fn crash_loop_quarantines_and_explicit_reset_reenters_worker() {
         let mut supervisor = Supervisor::new(config("crash-loop")).unwrap();
         supervisor.bootstrap().await.unwrap();
-        supervisor.register_isolated_worker("worker-a");
+        supervisor.register_isolated_worker("worker-a").unwrap();
         let first = supervisor
             .observe_worker_crash("worker-a", &"same-crash")
             .unwrap();
@@ -1414,13 +1704,136 @@ mod tests {
         assert!(second.suppress_diagnostics);
         assert!(third.quarantined);
         supervisor.reset_worker_supervision("worker-a").unwrap();
-        supervisor.register_isolated_worker("worker-a");
+        supervisor.register_isolated_worker("worker-a").unwrap();
         assert_eq!(
             supervisor.crash_suppression.state("worker-a"),
             Some(WorkerSupervisionState::Stabilizing)
         );
         supervisor.mark_worker_terminated("worker-a");
         supervisor.shutdown().unwrap();
+    }
+
+    #[tokio::test]
+    async fn worker_admission_cannot_bypass_backoff_or_quarantine() {
+        let mut shutdown_config = config("worker-admission");
+        shutdown_config.shutdown_timeout_ms = 10;
+        let mut supervisor = Supervisor::new(shutdown_config).unwrap();
+        supervisor.bootstrap().await.unwrap();
+        supervisor.register_isolated_worker("worker-a").unwrap();
+        supervisor.mark_worker_terminated("worker-a");
+
+        supervisor
+            .observe_worker_crash("worker-a", &"same-crash")
+            .unwrap();
+        let deferred = supervisor
+            .register_isolated_worker("worker-a")
+            .expect_err("backoff must defer direct re-registration");
+        assert!(matches!(
+            deferred,
+            RuntimeError::WorkerAdmission { receipt }
+                if receipt.decision == WorkerAdmissionDecision::Defer
+        ));
+        supervisor
+            .observe_worker_crash("worker-a", &"same-crash")
+            .unwrap();
+        supervisor
+            .observe_worker_crash("worker-a", &"same-crash")
+            .unwrap();
+        let quarantined = supervisor
+            .register_isolated_worker("worker-a")
+            .expect_err("quarantine must deny direct re-registration");
+        assert!(matches!(
+            quarantined,
+            RuntimeError::WorkerAdmission { receipt }
+                if receipt.decision == WorkerAdmissionDecision::Deny
+        ));
+        supervisor.reset_worker_supervision("worker-a").unwrap();
+        supervisor.register_isolated_worker("worker-a").unwrap();
+        supervisor.mark_worker_terminated("worker-a");
+        supervisor.shutdown().unwrap();
+    }
+
+    #[tokio::test]
+    async fn lease_expiration_completes_before_shutdown_deadline() {
+        let mut shutdown_config = config("lease-before-deadline");
+        shutdown_config.shutdown_timeout_ms = 80;
+        let mut supervisor = Supervisor::new(shutdown_config).unwrap();
+        supervisor.bootstrap().await.unwrap();
+        supervisor
+            .capabilities()
+            .register_provider(provider(
+                "native",
+                "core",
+                "health",
+                ProviderOrigin::CoreNative,
+                90,
+            ))
+            .unwrap();
+        let requirement = CapabilityRequirement::new("health", SemVer::new(1, 0, 0));
+        let generation = supervisor.status().generation;
+        supervisor
+            .capabilities()
+            .bind_with_generation(&requirement, "deadline-test", &generation)
+            .unwrap();
+        supervisor
+            .capabilities()
+            .acquire_lease_with_generation("health", &generation, 10)
+            .unwrap();
+        let receipt = supervisor.shutdown().unwrap();
+        assert!(receipt.clean);
+        let records = supervisor.lifecycle.journal.read_validated().unwrap();
+        assert!(records
+            .iter()
+            .any(|record| record.kind == JournalRecordKind::LeaseDrainCompleted));
+        assert!(!records
+            .iter()
+            .any(|record| record.kind == JournalRecordKind::LeaseDrainTimedOut));
+    }
+
+    #[tokio::test]
+    async fn worker_finishes_after_cancel_before_shutdown_deadline() {
+        let mut shutdown_config = config("worker-before-deadline");
+        shutdown_config.shutdown_timeout_ms = 500;
+        let mut supervisor = Supervisor::new(shutdown_config).unwrap();
+        supervisor.bootstrap().await.unwrap();
+        supervisor
+            .register_isolated_worker_with_completion_delay("finishing-worker", 10)
+            .unwrap();
+        let receipt = supervisor.shutdown().unwrap();
+        assert!(receipt.clean);
+        let records = supervisor.lifecycle.journal.read_validated().unwrap();
+        assert!(records
+            .iter()
+            .any(|record| record.kind == JournalRecordKind::CooperativeCancelCompleted));
+        assert!(records
+            .iter()
+            .any(|record| record.kind == JournalRecordKind::CleanupCompleted));
+        assert!(!records
+            .iter()
+            .any(|record| record.kind == JournalRecordKind::CooperativeCancelTimedOut));
+    }
+
+    #[tokio::test]
+    async fn shutdown_timeout_escalates_only_after_deadline() {
+        let mut shutdown_config = config("deadline-timeout");
+        shutdown_config.shutdown_timeout_ms = 5;
+        let mut supervisor = Supervisor::new(shutdown_config).unwrap();
+        supervisor.bootstrap().await.unwrap();
+        supervisor.register_isolated_worker("hung-worker").unwrap();
+        let started = Instant::now();
+        let receipt = supervisor.shutdown().unwrap();
+        assert!(!receipt.clean);
+        assert!(started.elapsed() >= Duration::from_millis(5));
+        let records = supervisor.lifecycle.journal.read_validated().unwrap();
+        assert!(records
+            .iter()
+            .any(|record| record.kind == JournalRecordKind::CooperativeCancelTimedOut));
+        assert!(records
+            .iter()
+            .any(|record| record.kind == JournalRecordKind::CleanupTimedOut));
+        assert!(records
+            .iter()
+            .any(|record| record.kind == JournalRecordKind::ShutdownEscalated));
     }
 
     #[test]

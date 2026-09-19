@@ -1,8 +1,8 @@
 //! Deterministic module/capability admission and atomic substitution fabric.
 
 use core_contracts::{
-    AssuranceClass, CapabilityBindingIdentity, CapabilityBindingReceipt, CapabilityLease,
-    CapabilityOwnership, CapabilityProviderDescriptor, CapabilityRequirement,
+    ActiveLeaseSummary, AssuranceClass, CapabilityBindingIdentity, CapabilityBindingReceipt,
+    CapabilityLease, CapabilityOwnership, CapabilityProviderDescriptor, CapabilityRequirement,
     GenerationCoherenceBasis, GenerationCoherenceReceipt, GenerationDimension, ModuleManifest,
     ProviderHealth, ProviderOrigin, RuntimeGeneration, SchemaVersion, SemVer,
 };
@@ -197,6 +197,7 @@ struct LeaseRecord {
     binding_generation: u64,
     expires_at_monotonic_ms: u64,
     revoked: bool,
+    safety_critical: bool,
 }
 
 impl Default for RegistryState {
@@ -493,6 +494,7 @@ impl CapabilityRegistry {
                 binding_generation,
                 expires_at_monotonic_ms,
                 revoked: false,
+                safety_critical: assurance == AssuranceClass::Critical,
             },
         );
         Ok(CapabilityLease {
@@ -610,8 +612,22 @@ impl CapabilityRegistry {
     }
 
     pub fn total_active_leases(&self) -> u64 {
-        let state = self.inner.read().expect("registry lock poisoned");
+        let mut state = self.inner.write().expect("registry lock poisoned");
+        state.prune_expired();
         state.leases.len() as u64
+    }
+
+    pub fn active_lease_summary(&self) -> ActiveLeaseSummary {
+        let mut state = self.inner.write().expect("registry lock poisoned");
+        state.prune_expired();
+        ActiveLeaseSummary {
+            total: state.leases.len() as u64,
+            safety_critical: state
+                .leases
+                .values()
+                .filter(|lease| lease.safety_critical)
+                .count() as u64,
+        }
     }
 
     pub fn graph_snapshot(&self) -> CapabilityGraphSnapshot {
