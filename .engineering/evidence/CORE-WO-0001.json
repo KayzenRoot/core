@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "core-evidence-v1",
+  "workOrder": "CORE-WO-0001",
+  "verdict": "APPROVED",
+  "authorizedBase": "bcd688dd7376644f3c19dc04f6f7566b03281ec2",
+  "auditedHead": "342404099665f9302454f22b48241d3ec0a844fd",
+  "pullRequest": 1,
+  "workflow": {
+    "name": "Governance",
+    "runId": 35441163753,
+    "runNumber": 9,
+    "conclusion": "success"
+  },
+  "validation": {
+    "requiredArtifacts": 27,
+    "checkpointSourceBridge": "CONSISTENT",
+    "unitTestsPassed": 6,
+    "unitTestsFailed": 0,
+    "criticalFindings": 0,
+    "highFindings": 0,
+    "blockingMediumFindings": 0
+  },
+  "reviewId": 5255641959,
+  "mergeSha": "e669498558e6f129efd8a8f2e20679f28e8326a7",
+  "knownNonBlockingGaps": [
+    "GitHub main ruleset target is documented but not enforced because the connected administration surface exposes read-only ruleset access.",
+    "Live execution against the user's local HIVE runtime is separate operator evidence."
+  ],
+  "nextLegalAction": "GOVERNED_PRODUCT_DISCOVERY"
+}

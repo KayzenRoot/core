@@ -1,8 +1,10 @@
 {
   "schemaVersion": "core-context-lock-v1",
   "workOrder": "CORE-WO-0001",
-  "status": "LOCKED",
+  "status": "SATISFIED",
   "authorizedBase": "bcd688dd7376644f3c19dc04f6f7566b03281ec2",
+  "auditedHead": "342404099665f9302454f22b48241d3ec0a844fd",
+  "mergeSha": "e669498558e6f129efd8a8f2e20679f28e8326a7",
   "repository": "KayzenRoot/core",
   "upstream": {
     "gef": {
@@ -16,10 +18,6 @@
   },
   "scopeClass": "BOOTSTRAP_FOUNDATION",
   "productImplementationAuthorized": false,
-  "staleIf": [
-    "authorized base changes",
-    "GEF stable baseline changes",
-    "HIVE stable integration baseline changes",
-    "bootstrap scope expands into product implementation"
-  ]
+  "auditVerdict": "APPROVED",
+  "evidence": ".engineering/evidence/CORE-WO-0001.json"
 }

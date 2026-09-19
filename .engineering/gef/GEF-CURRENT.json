@@ -7,5 +7,7 @@
   "productStage": "DISCOVERY_READY",
   "nextLegalAction": "GOVERNED_PRODUCT_DISCOVERY",
   "productImplementationAuthorized": false,
-  "canonicalCheckpoint": "docs/project-brain/13-CHECKPOINT.md"
+  "canonicalCheckpoint": "docs/project-brain/13-CHECKPOINT.md",
+  "lastCompletedWorkOrder": "CORE-WO-0001",
+  "lastPromotedMerge": "e669498558e6f129efd8a8f2e20679f28e8326a7"
 }
