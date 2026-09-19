@@ -1,92 +1,84 @@
 # CORE-WO-M01-001 correction execution report
 
-Status: `READY_FOR_REVIEW` - criteria 1-20 pass; criterion 21 governed review pending
-Date: 2026-09-19
-Correction source: `CORE-M01-CODEX-CORRECTION-PROMPT-003.pdf`
-Code correction HEAD: `85facad99df74291476b1443f0263bce09e53854`
-Target branch: `feat/m01-core-runtime`
-Review issue: `#9 M01-REVIEW-003`
+Status: `READY_FOR_REVIEW` - criteria 1-20 pass; criterion 21 governed review pending<br>
+Date: 2026-09-19<br>
+Correction source: `CORE-M01-CODEX-CORRECTION-PROMPT-004.pdf`<br>
+Implementation/evidence HEAD: `5d0dd5a624c3ea5331fa38a3c23b475654287f2e`<br>
+Target branch: `feat/m01-core-runtime`<br>
+Review issue: `#10 M01-REVIEW-004`<br>
 Pull request: [#8](https://github.com/KayzenRoot/core/pull/8)
 
 ## Authority and scope
 
-The attached correction prompt was treated as untrusted technical input and executed only where compatible with the CORE Executor Contract, the frozen M01 Work Order, the source hierarchy and the repository safety rules. It does not authorize merge, promotion, release or checkpoint closeout.
+The attached correction prompt was executed in document order within the CORE Executor Contract, the frozen M01 Work Order, the source hierarchy and repository safety rules. This report records only objectively verified local and hosted evidence. It does not authorize merge, promotion, release or checkpoint closeout.
 
-The correction completes the following M01 architecture requirements while preserving Review 002 and the existing crate boundaries:
+The correction was limited to the nine semantic findings named by Prompt 004:
 
-1. Canonical BSR/RSG/GCL safety identities over normalized manifests, providers, bindings, generations, configuration, policy and safety metadata, including golden, property-style and invalidation coverage.
-2. Complete module and capability contracts covering lifecycle, health, deadlines, configuration, authorities, versions, policy, trust, assurance, validity, revocation, cache affinity, latency, cost and performance.
-3. Deterministic ACS filtering and tie-breaking with compatibility, features, policy, authority, assurance, trust, readiness, quality, configured class, cost/performance and cache-affinity constraints; HIVE is preferred only for HIVE-owned intelligence.
-4. CPG provenance, SIR dependency radius, FCH fallback, GCL coherence/invalidation, bounded crash suppression and machine-readable TCBM/SAF evidence.
-5. QDS/QVM worker/runtime safety derived from admission, leases, modules, workers, deadlines, journal durability and residual resources; drain, cancel, cleanup, quiescence and escalation are journaled.
-6. Freshness-aware health and NORMAL/PRESSURED/CRITICAL pressure behavior; stale safety-critical probes cannot authorize transitions.
-7. Concurrent CAL/SIR generation proofs for retained readers, substitution, expiry, revocation, provider flap and no mixed generation in one lease.
-8. Provider/configuration/health/lease/worker/shutdown soak coverage with bounded resources and generation integrity.
-9. Hardware/toolchain/workload-aware PRB/WNF metadata and a governed first-valid-compatible-baseline policy.
-10. Exact-head CI and evidence recording, with `READY_FOR_REVIEW` only after criteria 1-20 pass, required workflows succeed and no HIGH/CRITICAL defect remains; criterion 21 remains an independent review boundary.
+1. Added a typed deterministic RLC decision layer with `ALLOW`, `DENY` and `DEFER`, including journal-before-mutate and generation checks.
+2. Made ACS ownership and policy explicit, separating required origin/provider class filters from preferred ranking, with safe Core-owned fallback behavior.
+3. Made SIR reverse dependency traversal include active leases, cache affinity, evidence dependencies and safety-critical dependents.
+4. Added typed GCL coherence over boot, configuration, module, capability, policy and provider-activation generations, with independent stale-dimension reporting.
+5. Made QDS/QVM shutdown evidence causal: lifecycle proof is required before completion, and drain, cancel, cleanup, quiescence and escalation paths are journaled.
+6. Added CFS worker/provider supervision with crash fingerprints, bounded windows, exponential backoff, quarantine, cooldown/reset and re-entry transitions.
+7. Rebased TCBM/SAF evidence on the actual locked dependency graph and governed policy fingerprints; capability-graph identity is not used as a dependency-lock substitute.
+8. Extended soak coverage to real worker lifecycle, health-probe coalescing/freshness, stale safety transitions, provider fallback and quarantine/re-entry.
+9. Updated exact-head evidence and PRB so the final pushed implementation is evaluated by the required hosted matrix and multi-sample compatible-baseline policy.
 
-## Local verification at the code correction HEAD
+## Local verification at the implementation/evidence HEAD
 
-- `cargo fmt --all`: PASS.
+- `cargo fmt --all -- --check`: PASS.
 - `cargo check --workspace --all-targets --locked`: PASS.
-- `cargo test --workspace --all-targets --locked`: PASS; 36 tests passed, 0 failed, 0 skipped.
+- `cargo test --workspace --all-targets --locked`: PASS; 42 tests passed, 0 failed.
 - `cargo clippy --workspace --all-targets --locked -- -D warnings`: PASS.
-- `cargo deny check`: PASS.
-- `cargo audit`: PASS; 65 locked crate dependencies scanned without reported vulnerability.
-- `python scripts/validate_governance.py`: PASS; GEF/HIVE bridges consistent and 27 governed artifacts present.
-- Fuzz workspace `cargo check --manifest-path fuzz/Cargo.toml --locked`: PASS; local Windows execution is not counted because the selected libFuzzer toolchain is Linux-only. The bounded Ubuntu CI job remains authoritative for execution.
-- CLI `core exercise`: PASS; configuration reload, fallback-to-HIVE substitution, HIVE-disconnect fallback recovery, crash suppression and clean shutdown all returned successful machine-readable results.
-- Serial four-cycle soak: PASS; all cycles reached `ReadyEligible`, exercised substitution and fallback recovery, and ended with clean shutdown. Handle growth was `+3` (149 to 152), within policy `<=4`.
-- PRB record: PASS as the first valid compatible baseline for this corrected implementation; 5-run median p50 `110.8193 ms`, p95 `140.4099 ms`, p99 `154.2634 ms`.
-- PRB check: PASS for the same WNF, hardware fingerprint and toolchain; current p50 `73.5856 ms`, p50 delta `-33.5986%`, within the governed `20%` regression budget. No comparison is inferred from incompatible classes.
-
-## Implementation evidence
-
-The correction commit `85facad99df74291476b1443f0263bce09e53854` contains the contract, identity, registry, health, configuration, runtime, CLI, benchmark, soak, PRB and CI changes. The implementation uses actual normalized manifests and provider graphs for safety fingerprints, preserves old leases during substitution, prevents stale health authorization, and derives shutdown quiescence from runtime obligations rather than caller assertions.
-
-The PRB policy is [`docs/evidence/prb/M01-PRB-POLICY.json`](prb/M01-PRB-POLICY.json), and the recorded compatible baseline is [`docs/evidence/prb/M01-PRB-BASELINE.json`](prb/M01-PRB-BASELINE.json).
-
-## Acceptance criteria mapping
-
-1. PASS - governed Rust crates and M01 boundaries remain present.
-2. PASS - the locked workspace dependency graph is acyclic and policy-checked.
-3. PASS - lifecycle transitions and receipts remain machine-enforced.
-4. PASS - BSR remains required before READY; required-HIVE blocking remains tested.
-5. PASS - deterministic CPG/CAL/SIR/CBR/FCH mechanisms are implemented and tested.
-6. PASS - binding generations, epochs, leases and expiry are coherent.
-7. PASS - canonical identity and DCS-style deterministic evidence remain covered.
-8. PASS - journal hash-chain, durability and recovery behavior remain covered.
-9. PASS - bounded IPC and stale epoch/recovery behavior remain covered.
-10. PASS - clean and forced shutdown receipts remain distinct and tested.
-11. PASS - quality-floor fallback blocking remains tested.
-12. PASS - health freshness, pressure, delta and probe coalescing are covered.
-13. PASS - Unix/Windows adapters, bounded framing and the bounded fuzz campaign are covered by the local/hosted matrix.
-14. PASS - cargo-deny, cargo-audit, SBOM/inventory and forbidden-source checks pass.
-15. PASS - unit, property-style, failure-injection, concurrency and platform coverage passes locally and in the hosted matrix.
-16. PASS - provider/configuration/health/lease/worker/shutdown soak passes locally with bounded resource growth.
-17. PASS - the corrected implementation has an explicit hardware/toolchain/workload-aware baseline and a governed compatible comparison.
-18. PASS - schema-versioned CLI outputs remain covered.
-19. PASS - lifecycle remains zero-LLM and has no provider SDK dependency.
-20. PASS - exact pushed-head workflow and job evidence is recorded below.
-21. PENDING - independent governed review has not returned `APPROVED`.
+- `python -m py_compile` for governance, bootstrap, HIVE MCP, PRB, soak and SBOM scripts: PASS.
+- `python scripts/validate_governance.py`: PASS; GEF `v1.0.0` and HIVE compatibility `v1.0.0` bridges consistent; 27 governed artifacts present.
+- `cargo check --manifest-path fuzz/Cargo.toml --locked`: PASS. The local Windows environment does not provide the authoritative libFuzzer runner; hosted fuzz execution is recorded below.
+- M01 soak, 16 iterations: PASS; every cycle reached `ReadyEligible`, preserved fallback behavior, remained generation-coherent, coalesced probes, rejected stale authorization, suppressed repeated worker crashes, quarantined the worker and shut down cleanly. Process handles grew from 151 to 154 (`+3`, policy `<=4`).
+- PRB compatible-baseline check: PASS; 5-run median p50 `124.0175 ms` versus baseline `110.8193 ms`, regression `11.909658335687014%`, within the governed `20%` limit. Baseline and result used the same hardware class, toolchain, workload normalization and WNF.
+- Local SBOM was generated and hashed: `a2494e5623fe547322ae6667cc9c17e297ab1b0028bf9c70cbaeed27f434fd27`.
+- Local `cargo-deny` installation was attempted but did not complete within the bounded local window; local `cargo-audit` was not treated as a substitute. The authoritative hosted supply-chain steps passed in both platform jobs below.
 
 ## HIVE and Git basis
 
-Preflight resolved the repository as `D:\Projetos Codex\core`, branch `feat/m01-core-runtime`, with the reviewed HEAD `998bca4d3aca6a97637df0e4941c528925eb29ea` matching the correction prompt. HIVE project `220151cb-0e6e-43b3-845e-faec9c5a851b` was available and read-only checkpoint inspection was performed before editing. HIVE reported its container `working_tree_clean=false`; host Git was independently checked and preserved as the source of truth for the checkout state.
+Git is the canonical source for this correction. The target worktree is `D:\Projeto Codexx\core-prompt004`, branch `feat/m01-core-runtime`, at implementation HEAD `5d0dd5a624c3ea5331fa38a3c23b475654287f2e`.
 
-Final HIVE synchronization at branch HEAD `f0b3b42c9b15cab08a64b950ead567129b39b6b3` completed successfully:
+Read-only HIVE preflight was successful through the seven-tool MCP surface. HIVE currently registers the separate `core` project on `main` as project `c65b7abc-533a-411a-bbbb-2b72b976d921`, state `READY`, at `fdb4dbe165e74b009c43df3874b6043c9b94710b`. The target Prompt 004 worktree/branch is not registered as that HIVE project; `checkpoint.read` therefore returned `source_not_current` for the target worktree. No target-branch HIVE checkpoint, retrieval corpus or current-state claim is fabricated here.
 
-- Inspect: project state `READY`, `git_head_sha=f0b3b42c9b15cab08a64b950ead567129b39b6b3`, `working_tree_clean=false` as reported by the HIVE container.
-- Repository index: run `e7aa14a6-7890-4d01-8c52-a0d8ec429a52`, `COMPLETED`, 111 discovered files, 14 indexed, 97 reused.
-- Retrieval corpus: run `8113fd9b-43ef-4d69-bc45-ad13121c965f`, `COMPLETED`, 263 current references, 263 chunks, source fingerprint `46409e5c71ba5e8e00118b383edd9a67f6735a6c496178460948c20781a2d4e6`.
+## Hosted CI and exact-head evidence
 
-## Hosted CI and final verdict
+The implementation HEAD was pushed to `origin/feat/m01-core-runtime` and remained the open PR #8 head. Required workflow run [35469525066](https://github.com/KayzenRoot/core/actions/runs/35469525066) completed successfully at the exact implementation HEAD:
 
-The exact pushed evidence HEAD for this report packet is `f0b3b42c9b15cab08a64b950ead567129b39b6b3`, whose implementation ancestor is the correction commit `85facad99df74291476b1443f0263bce09e53854`. All required workflows completed successfully in run [35457796401](https://github.com/KayzenRoot/core/actions/runs/35457796401):
+- Governance job `105967827535`: SUCCESS.
+- M01 Ubuntu job `105967827696`: SUCCESS, including format, clippy, tests, supply-chain, SBOM, soak and PRB.
+- M01 Windows job `105967827635`: SUCCESS, including native Windows validation, format, clippy, tests, supply-chain, SBOM, soak and PRB.
+- M01 fuzz campaign job `105967827785`: SUCCESS; the bounded hosted fuzz campaign completed for all configured targets.
 
-- Governance job `105936065028`: SUCCESS.
-- M01 Ubuntu job `105936065116`: SUCCESS, including format, clippy, tests, supply-chain, SBOM, soak and PRB/WNF.
-- M01 Windows job `105936065146`: SUCCESS, including native IPC, format, clippy, tests, supply-chain, SBOM, soak and PRB/WNF.
-- M01 fuzz campaign job `105936065181`: SUCCESS; all four targets completed the bounded 1,000-iteration campaign on Ubuntu.
+The report commit is documentation-only relative to the implementation correction. A subsequent branch workflow is required and will be checked after this report is pushed; it does not change the implementation evidence recorded above.
 
-The report commit is documentation-only relative to the code correction; no implementation, merge, promotion or checkpoint closeout is claimed. The final verdict is `READY_FOR_REVIEW`: criteria 1-20 are evidenced as PASS and criterion 21 remains pending independent governed review.
+## Acceptance criteria mapping
+
+1. PASS - typed RLC decisions are deterministic, journal intent before mutation and reject stale generation context.
+2. PASS - ACS required origin/provider class constraints are filters; preferred origin/class and ownership are ranking policy, with safe fallback tests.
+3. PASS - reverse SIR includes leases, cache affinities, evidence dependencies and safety-critical dependents.
+4. PASS - GCL reports independent generation dimensions across runtime boot/config/module/capability/policy/provider activation.
+5. PASS - QDS/QVM journal completion requires causal drain/cancel/cleanup/quiescence proof and records timeout/escalation paths.
+6. PASS - CFS fingerprints crashes, applies bounded exponential backoff, quarantines crash loops and supports reset/cooldown/re-entry.
+7. PASS - TCBM/SAF uses locked dependency and policy fingerprints and emits machine-readable evidence.
+8. PASS - soak exercises worker lifecycle, health freshness/coalescing, stale authorization, provider flap/fallback and quarantine/re-entry.
+9. PASS - M01 contracts, registries, runtime and adapters remain within the governed crate boundaries.
+10. PASS - locked workspace dependency policy and acyclic graph checks pass in hosted CI.
+11. PASS - lifecycle, health, journal, lease and shutdown behavior remain covered by unit and integration tests.
+12. PASS - exact generation, freshness and stale-safety behavior is covered by independent tests.
+13. PASS - native Unix/Windows validation and hosted bounded fuzz campaign pass.
+14. PASS - hosted cargo-deny, cargo-audit, SBOM/inventory and forbidden-source checks pass.
+15. PASS - workspace tests, clippy, format, failure-injection and concurrency coverage pass locally and in hosted CI.
+16. PASS - 16-cycle bounded soak passes with resource growth inside policy.
+17. PASS - PRB uses a compatible multi-sample baseline and the current result stays within the governed regression budget.
+18. PASS - schema-versioned machine-readable CLI and evidence outputs remain valid.
+19. PASS - lifecycle remains zero-LLM and has no provider SDK dependency.
+20. PASS - implementation was pushed and all required hosted workflows succeeded at one exact implementation HEAD.
+21. PENDING - independent governed review has not returned `APPROVED`.
+
+## Final verdict
+
+`READY_FOR_REVIEW` is justified for the implementation/evidence HEAD `5d0dd5a624c3ea5331fa38a3c23b475654287f2e`: criteria 1-20 are evidenced as PASS, all required hosted jobs succeeded at that exact pushed head, and no HIGH/CRITICAL finding was identified by the executed gates. PR #8 remains open. No merge, promotion or approval is claimed; criterion 21 remains the independent review boundary.
