@@ -1023,3 +1023,149 @@ No cache/fingerprint identity depends on wall-clock time by default.
 ## M01 durability boundary reaffirmed
 
 M01 can determine whether runtime safety state is clean, interrupted or ambiguous. It MUST NOT infer that a higher-level Codex/Git/GitHub/tool operation succeeded after a crash. That proof belongs to the module that owns the effect.
+
+
+## Round 6 - Health, degradation and production observability
+
+## Health model
+
+M01 health is multi-dimensional, not boolean.
+
+Dimensions:
+- PROCESS_LIVENESS;
+- RUNTIME_READINESS;
+- MODULE_GRAPH_HEALTH;
+- CAPABILITY_HEALTH;
+- JOURNAL_INTEGRITY;
+- RESOURCE_PRESSURE;
+- EXTERNAL_DEPENDENCY_HEALTH;
+- SHUTDOWN_SAFETY.
+
+Each dimension reports:
+- state: HEALTHY | DEGRADED | UNAVAILABLE | UNKNOWN;
+- reason code;
+- affected generation;
+- observed_at metadata;
+- evidence/reference;
+- impact class.
+
+## DCM formalization
+
+DCM maps unavailable/degraded capabilities to allowed operation classes.
+
+It answers:
+- what still works?
+- what is blocked?
+- what can use fallback?
+- what requires revalidation?
+- what quality floor is now achievable?
+
+Runtime-wide DEGRADED is derived from capability impact, not arbitrary warning count.
+
+## New technology - QFC
+
+### QFC - Quality Floor Continuity
+Every capability/provider advertises an assurance/quality envelope. Operations declare a minimum quality floor.
+
+Failover is permitted only if:
+```text
+fallback_effective_quality >= operation_required_quality
+```
+
+Quality includes contract features, assurance class and policy constraints, not a subjective model score.
+
+This prevents token/cost optimizers from selecting a cheaper fallback that invalidates correctness requirements.
+
+## New technology - HCC
+
+### HCC - Health Causality Compression
+Health aggregation stores a causal root plus affected dependents instead of repeating the same verbose diagnostic across every module.
+
+Example:
+```text
+ROOT: HIVE provider unavailable
+AFFECTS: context.full, memory.verified, decision.fabric
+DERIVED: M14 verification enrichment degraded
+```
+
+Benefits:
+- smaller telemetry/evidence;
+- smaller future LLM diagnostic context;
+- clearer root-cause analysis;
+- less duplicate token input.
+
+## New technology - ODF
+
+### ODF - Observability Delta Frames
+Health/runtime snapshots are emitted as a stable baseline fingerprint plus changed fields/events rather than full repeated snapshots.
+
+Full snapshot remains available on demand.
+
+Expected effect: lower event volume, storage and LLM/console context size.
+
+## Production resource pressure
+
+M01 monitors process-level pressure signals needed for runtime safety:
+- memory pressure;
+- CPU saturation trend;
+- file descriptor/handle exhaustion;
+- disk/journal write failure;
+- worker count;
+- event/control queue pressure.
+
+M19 will own full resource/cost governance. M01 only protects runtime safety.
+
+Pressure policy uses bounded states:
+NORMAL -> PRESSURED -> CRITICAL.
+
+CRITICAL can close new admission or trigger controlled degradation; it must not silently kill correctness-critical work.
+
+## Health cache policy
+
+Health probes have explicit freshness windows. Cached health is tagged with age/generation.
+
+A stale health result cannot authorize a safety-critical transition.
+
+Probe deduplication/coalescing prevents many consumers from simultaneously hitting the same external provider.
+
+## New technology - PHC
+
+### PHC - Probe Herd Coalescing
+Concurrent equivalent health/capability probes share one in-flight deterministic probe and fan out the result with provenance.
+
+Expected effect:
+- less network/CPU;
+- fewer HIVE/provider calls;
+- lower cascading load during incidents;
+- lower duplicated diagnostic work.
+
+## Observability privacy
+
+Diagnostics default to identifiers, fingerprints, codes and bounded metadata.
+Prompt bodies, secrets, source payloads and model outputs are not included in M01 health events.
+
+## Production tests
+
+- root failure affecting 1/100/1000 dependents;
+- DCM derivation correctness;
+- QFC failover acceptance/rejection;
+- stale health cannot authorize transition;
+- probe herd of 1/10/1000 concurrent consumers;
+- ODF delta reconstruction;
+- pressure transition hysteresis;
+- disk failure during health/journal operation;
+- memory pressure while draining;
+- health query during generation substitution;
+- diagnostic redaction/property tests.
+
+## Round 6 status
+
+M01 now has sufficient architectural direction for runtime, lifecycle, capability substitution, crash recovery, shutdown and health. Remaining deep-planning areas before freeze:
+1. exact Rust workspace/file map;
+2. concrete schemas/contracts;
+3. benchmark thresholds and regression policy;
+4. dependency/supply-chain policy;
+5. complete test/eval matrix;
+6. M01 Definition of Done;
+7. final technology promotion/rejection;
+8. executor Work Order compilation.
