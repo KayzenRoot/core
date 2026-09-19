@@ -19,9 +19,13 @@ REQUIRED = (
     ".engineering/gef/GEF-EXECUTION-PROTOCOL.md",
     ".engineering/gef/GEF-REVIEW-PROTOCOL.md",
     ".engineering/gef/GEF-EVIDENCE-SPEC.md",
+    "docs/project-brain/01-PROJECT-OVERVIEW.md",
     "docs/project-brain/02-REQUIREMENTS.md",
     "docs/project-brain/03-SCOPE.md",
     "docs/project-brain/04-ARCHITECTURE.md",
+    "docs/project-brain/10-SECURITY-GOVERNANCE.md",
+    "docs/project-brain/11-TEST-PLAN.md",
+    "docs/project-brain/12-LOCAL-DEPLOYMENT.md",
     "docs/project-brain/13-CHECKPOINT.md",
     "docs/project-brain/14-BACKLOG.md",
     "docs/project-brain/15-DEFINITION-OF-DONE.md",
@@ -129,6 +133,9 @@ for domain, relative in {
     "COMPLETION": "docs/project-brain/15-DEFINITION-OF-DONE.md",
     "ARCHITECTURE": "docs/project-brain/04-ARCHITECTURE.md",
     "REQUIREMENT": "docs/project-brain/02-REQUIREMENTS.md",
+    "SECURITY": "docs/project-brain/10-SECURITY-GOVERNANCE.md",
+    "VALIDATION": "docs/project-brain/11-TEST-PLAN.md",
+    "DEPLOYMENT": "docs/project-brain/12-LOCAL-DEPLOYMENT.md",
 }.items():
     if bridge_sources.get(domain) != relative:
         fail(f"GEF source bridge mismatch for {domain}")

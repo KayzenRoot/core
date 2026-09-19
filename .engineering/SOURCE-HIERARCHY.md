@@ -12,9 +12,11 @@ Authority is domain-specific. Derived summaries, HIVE indexes, memories and GEF 
 - **SCOPE:** `docs/project-brain/03-SCOPE.md`.
 - **REQUIREMENT:** `docs/project-brain/02-REQUIREMENTS.md`.
 - **ARCHITECTURE:** `docs/project-brain/04-ARCHITECTURE.md`.
+- **SECURITY:** `docs/project-brain/10-SECURITY-GOVERNANCE.md`.
 - **COMPLETION:** `docs/project-brain/15-DEFINITION-OF-DONE.md`.
 - **EXECUTION:** active admitted Work Order under `.engineering/work-orders/`.
-- **VALIDATION:** exact-head tests, CI, evidence bundles and audit results.
+- **VALIDATION:** `docs/project-brain/11-TEST-PLAN.md` plus exact-head tests, CI, evidence bundles and audit results.
+- **DEPLOYMENT:** `docs/project-brain/12-LOCAL-DEPLOYMENT.md`.
 - **FUTURE_WORK:** `docs/project-brain/14-BACKLOG.md`.
 - **CONVERSATION:** transient input only.
 
