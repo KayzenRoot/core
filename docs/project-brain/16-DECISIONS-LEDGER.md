@@ -131,3 +131,16 @@ Status: `ACTIVE`
 ## CORE-D-031 - Deterministic-first crash diagnosis
 **Decision:** restart/crash recovery uses journal/process/generation/fingerprint/evidence checks before any later LLM diagnosis. Equivalent crash bases may reuse verified diagnosis rather than repeatedly spending tokens.
 **State:** ACCEPTED
+
+
+## CORE-D-032 - M01 Rust workspace boundaries
+**Decision:** M01 separates contracts, identity, config, registry, journal, IPC, health, runtime and CLI into acyclic Rust crate boundaries.
+**State:** ACCEPTED
+
+## CORE-D-033 - Contracts before orchestration
+**Decision:** M01 implementation starts with versioned contracts and canonical identity vectors before supervisor behavior.
+**State:** ACCEPTED
+
+## CORE-D-034 - Canonical identity is explicit
+**Decision:** safety/cache/evidence fingerprints use CORE DCS rules rather than serializer-default byte output.
+**State:** ACCEPTED

@@ -1169,3 +1169,16 @@ M01 now has sufficient architectural direction for runtime, lifecycle, capabilit
 6. M01 Definition of Done;
 7. final technology promotion/rejection;
 8. executor Work Order compilation.
+
+
+## Round 7 - Construction boundaries
+
+M01 Rust workspace is frozen into nine responsibility boundaries: core-contracts, core-identity, core-config, core-registry, core-journal, core-ipc, core-health, core-runtime and core-cli. The dependency graph MUST remain acyclic, with contracts/identity below orchestration. No M01 crate may depend on HIVE source, LLM provider SDKs, GitHub SDKs, Redis/database servers, UI frameworks, Kubernetes or arbitrary dynamic plugin loaders.
+
+Public M01 CLI: `core start`, `core status --json`, `core validate --json`, `core doctor --json`, `core version --json`. Machine output is schema-versioned; human output is never canonical evidence.
+
+## Round 8 - Contract-first construction
+
+The executor implements versioned contracts before orchestration: RuntimeGeneration, ModuleManifest, CapabilityRequirement, CapabilityProviderDescriptor, CapabilityLease, TransitionReceipt, BootstrapSafetyReceipt, HealthSnapshot, RuntimeJournalRecord and IdempotencyEnvelope.
+
+Identity rules: DCS owns canonical bytes; identity maps are sorted; wall-clock metadata is excluded from fingerprints by default; durations use integer units; floating point is forbidden from safety/cache identity unless explicitly normalized; unknown security-critical fields fail closed. Persisted/exchanged records carry schema versions. Required semantic changes require major contract bumps.
