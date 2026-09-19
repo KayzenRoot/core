@@ -1306,3 +1306,100 @@ Safe Rust is default. Any `unsafe` block in first-party M01 code requires:
 - dependency/feature drift checks;
 - unsafe-code audit gate;
 - privilege/authority escalation property tests.
+
+
+## Round 11 - Complete verification matrix
+
+### Static/compile
+- rustfmt check;
+- clippy with governed deny policy;
+- warnings-as-errors for first-party M01 targets;
+- dependency graph cycle/forbidden-dependency validation;
+- schema/golden-vector compatibility checks;
+- unsafe inventory.
+
+### Unit/property
+- exhaustive legal/illegal RLC transitions;
+- DCS canonical equivalence/non-equivalence;
+- config precedence/provenance;
+- generation monotonicity;
+- semver/feature compatibility;
+- CPG/CAL/SIR binding properties;
+- QFC fallback rules;
+- DCM derivation;
+- journal hash chain/integrity;
+- QVM completeness.
+
+### Integration
+- clean bootstrap to READY;
+- valid degraded bootstrap;
+- blocked bootstrap;
+- HIVE absent standalone path;
+- external provider attach/detach simulation;
+- atomic substitution under concurrent readers;
+- active lease across provider change;
+- worker crash/restart/quarantine;
+- clean and forced shutdown;
+- journal restart reconciliation;
+- local IPC on Windows and Unix families.
+
+### Cache/token architecture
+- stable fields produce byte-identical canonical material;
+- volatile diagnostic changes do not churn semantic identity;
+- correctness-relevant changes always alter affected identity;
+- SIR/CAG hook invalidation scope is minimal and sufficient;
+- PSM/CEE carrier schemas are deterministic;
+- bootstrap/lifecycle execute zero LLM calls.
+
+### Adversarial/fuzz
+- config, manifest, IPC, journal, compatibility inputs;
+- malformed/truncated/oversized frames;
+- crash at transition boundaries;
+- stale epoch messages;
+- forged receipts;
+- concurrent substitution/cancellation/shutdown;
+- disk and permission failures.
+
+### Soak
+Repeated start/stop, worker churn, provider flap, config safe reload and health probing must show no unbounded resource growth or generation corruption.
+
+## Round 12 - M01 Definition of Done candidate
+
+M01 is complete only when:
+1. all accepted M01 crates/contracts are implemented;
+2. exact lifecycle/RLC transitions are machine-enforced;
+3. BSR prevents false READY;
+4. module/capability registries support deterministic atomic bindings and leases;
+5. standalone fallback/HIVE-external provenance is represented without HIVE source dependency;
+6. DCS/generation/fingerprint golden vectors pass;
+7. Runtime Journal survives tested interruption/corruption scenarios or fails closed;
+8. SBR/EEB prevent stale prior-epoch mutation and blind replay;
+9. QDS/QVM distinguish clean versus residual shutdown;
+10. DCM/QFC health degradation blocks unsafe low-quality fallback;
+11. M01 hot paths contain zero LLM inference;
+12. cache/token identity hooks are deterministic and observable;
+13. IPC is bounded/versioned and cross-platform tested;
+14. security/supply-chain gates pass with no unresolved HIGH/CRITICAL finding;
+15. fuzz/property/integration/failure-injection suites pass at accepted thresholds;
+16. PRB-compatible benchmarks show no unapproved material regression;
+17. idle/soak tests show no unbounded leak/growth;
+18. CLI machine outputs are versioned and tested;
+19. exact-head evidence bundle is complete;
+20. independent governed review returns APPROVED;
+21. canonical checkpoint is promoted only after accepted evidence.
+
+## M01 explicit OUT OF SCOPE
+- agent orchestration and specialist selection;
+- model/provider routing;
+- actual LLM invocation/cache provider implementation;
+- full context compiler/RAG/memory;
+- durable Run/Attempt/Step execution database;
+- tool/command business execution;
+- Git/GitHub delivery;
+- full ENS durable telemetry spine;
+- dashboard/TUI/web UI;
+- distributed cluster control plane;
+- arbitrary in-process plugin ecosystem.
+
+## M01 planning status after Round 12
+The architecture is close to planning freeze. Remaining tasks are final technology disposition, exact benchmark-policy seed values after first baseline, executor file-by-file implementation notes, and Work Order/STOP CONDITION compilation.

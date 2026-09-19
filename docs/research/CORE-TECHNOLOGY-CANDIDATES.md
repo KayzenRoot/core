@@ -111,3 +111,7 @@ HIVE retains authority over durable knowledge promotion. CORE retains authority 
 - **CEE — Cache Efficiency Envelope:** normalized token/cache economics carrier for future LLM modules.
 - **TCBM — Trusted Computing Base Map:** machine-readable security-critical code/dependency boundary.
 - **SAF — Security-Aware Fingerprint:** invalidates assurance/evidence when security-relevant dependencies/policies change.
+
+
+## M01 technology promotion checkpoint
+The following are now architecture-integrated candidates and MUST receive implementation evidence before final product-technology promotion: RLC, CPG, RSG, QDS, DCM, BSR, SCP, CAG, DIF, LCR, PSM, TEB, ZCP, GCL, DCS, CAL, SIR, CBR, FCH, SBR, EEB, IES, QVM, CFS, QFC, HCC, ODF, PHC, PRB, WNF, CEE, TCBM and SAF. A name is never sufficient evidence; each must demonstrate its claimed mechanism/benefit or be narrowed/rejected.
