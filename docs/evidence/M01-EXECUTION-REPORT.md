@@ -1,6 +1,6 @@
 # CORE-WO-M01-001 correction execution report
 
-Status: `BLOCKED` pending exact-head hosted gates and criterion 21 governed review
+Status: `READY_FOR_REVIEW` - criteria 1-20 pass; criterion 21 governed review pending
 Date: 2026-09-19
 Correction source: `CORE-M01-CODEX-CORRECTION-PROMPT-003.pdf`
 Code correction HEAD: `85facad99df74291476b1443f0263bce09e53854`
@@ -62,12 +62,12 @@ The PRB policy is [`docs/evidence/prb/M01-PRB-POLICY.json`](prb/M01-PRB-POLICY.j
 12. PASS - health freshness, pressure, delta and probe coalescing are covered.
 13. PASS - Unix/Windows adapters, bounded framing and the bounded fuzz campaign are covered by the local/hosted matrix.
 14. PASS - cargo-deny, cargo-audit, SBOM/inventory and forbidden-source checks pass.
-15. PASS - unit, property-style, failure-injection, concurrency and platform coverage passes locally; hosted execution is pending exact-head confirmation.
+15. PASS - unit, property-style, failure-injection, concurrency and platform coverage passes locally and in the hosted matrix.
 16. PASS - provider/configuration/health/lease/worker/shutdown soak passes locally with bounded resource growth.
 17. PASS - the corrected implementation has an explicit hardware/toolchain/workload-aware baseline and a governed compatible comparison.
 18. PASS - schema-versioned CLI outputs remain covered.
 19. PASS - lifecycle remains zero-LLM and has no provider SDK dependency.
-20. BLOCKED pending exact pushed-head workflow/job evidence in this report.
+20. PASS - exact pushed-head workflow and job evidence is recorded below.
 21. PENDING - independent governed review has not returned `APPROVED`.
 
 ## HIVE and Git basis
@@ -76,6 +76,11 @@ Preflight resolved the repository as `D:\Projetos Codex\core`, branch `feat/m01-
 
 ## Hosted CI and final verdict
 
-Hosted workflow and job identifiers are intentionally recorded only after the correction/report commit is pushed and the exact branch HEAD is checked. No merge, promotion or checkpoint closeout is claimed.
+The exact pushed evidence HEAD for this report packet was `9bcd588`. All required workflows completed successfully in run [35457315319](https://github.com/KayzenRoot/core/actions/runs/35457315319):
 
-Final verdict before exact-head hosted confirmation: `BLOCKED`.
+- Governance job `105934791246`: SUCCESS.
+- M01 Ubuntu job `105934791423`: SUCCESS, including format, clippy, tests, supply-chain, SBOM, soak and PRB/WNF.
+- M01 Windows job `105934791322`: SUCCESS, including native IPC, format, clippy, tests, supply-chain, SBOM, soak and PRB/WNF.
+- M01 fuzz campaign job `105934791461`: SUCCESS; all four targets completed the bounded 1,000-iteration campaign on Ubuntu.
+
+The report commit is documentation-only relative to the code correction; no implementation, merge, promotion or checkpoint closeout is claimed. The final verdict is `READY_FOR_REVIEW`: criteria 1-20 are evidenced as PASS and criterion 21 remains pending independent governed review.
