@@ -541,3 +541,239 @@ REJECTED:
 - arbitrary dynamic-library plugins;
 - microservices-by-default;
 - network TCP for same-machine first-party IPC by default.
+
+
+## Round 4 - Module/Capability Fabric
+
+### Separation invariant
+A **module** is a deployable/runtime participant. A **capability** is a versioned behavior contract. Consumers depend on capabilities, not provider module identities, unless an explicit policy requires a named provider.
+
+This separation is foundational for ACS, HIVE substitution, testing and cache-safe provider changes.
+
+## Module Registry
+
+Module identity tuple:
+- module_id;
+- contract_version;
+- implementation_version;
+- build_identity;
+- isolation_class.
+
+Module manifest additionally declares:
+- required capabilities + version/features;
+- optional capabilities;
+- provided capabilities;
+- startup dependencies;
+- criticality;
+- lifecycle hooks;
+- health contract;
+- startup/shutdown deadlines;
+- configuration namespace/schema;
+- authority requirements;
+- event contract versions.
+
+Registration phases:
+```text
+DISCOVERED -> VALIDATED -> ADMITTED -> ACTIVATING -> ACTIVE
+                                      -> BLOCKED
+ACTIVE -> DRAINING -> INACTIVE
+ACTIVE -> QUARANTINED
+```
+
+A discovered module has no authority merely because it exists on disk.
+
+## Capability Registry
+
+Capability identity is provider-independent:
+```text
+namespace.capability-name@contract-major
+```
+
+Provider binding contains:
+- provider_id/module_id;
+- origin;
+- contract version;
+- feature set;
+- health;
+- trust/assurance class;
+- authority requirements;
+- latency/cost metadata when applicable;
+- activation generation;
+- deterministic provider fingerprint.
+
+Consumers request a CapabilityRequirement, not a concrete provider.
+
+## ACS resolution algorithm candidate
+
+Deterministic ordering:
+1. filter contract compatibility;
+2. filter required features;
+3. filter policy/authority eligibility;
+4. filter health/readiness;
+5. apply quality floor;
+6. prefer configured provider class;
+7. apply deterministic cost/performance/cache-affinity tie-break;
+8. bind provider and emit CapabilityBindingReceipt.
+
+No LLM chooses a provider in M01.
+
+For HIVE-owned intelligence capability, default preference when HIVE is compatible and healthy:
+```text
+HIVE_EXTERNAL > CORE_FALLBACK
+```
+unless an explicit safety/policy constraint requires otherwise.
+
+## Atomic capability substitution
+
+Provider substitution uses prepare/commit semantics:
+```text
+candidate discovered
+ -> validate compatibility
+ -> health/provenance check
+ -> compute impact
+ -> PREPARED generation
+ -> atomically publish new binding generation
+ -> notify affected consumers
+ -> retire old binding after leases drain
+```
+
+Consumers already holding a capability lease keep a coherent binding until their safe boundary unless policy requires immediate revocation.
+
+## New technology - CAL
+
+### CAL - Capability Atomic Leasing
+Consumers receive a bounded immutable capability lease containing:
+- capability identity;
+- provider fingerprint;
+- binding generation;
+- validity/revocation policy;
+- relevant authority;
+- cache-affinity identity.
+
+This prevents a long operation from unknowingly using provider A for half the work and provider B for the rest.
+
+Expected benefits:
+- deterministic execution;
+- safer HIVE connect/disconnect;
+- cleaner cache identity;
+- reproducible evidence.
+
+## New technology - SIR
+
+### SIR - Substitution Impact Radius
+Before changing a capability binding, CORE computes the dependency radius:
+- directly bound consumers;
+- derived capabilities;
+- active leases;
+- cache/evidence dependencies;
+- safety-critical operations.
+
+The impact determines whether substitution can be live, requires revalidation, waits for quiescence or is blocked.
+
+SIR integrates with CAG and GCL.
+
+## New technology - CBR
+
+### CBR - Capability Binding Receipt
+Every binding/substitution produces a canonical receipt containing decision inputs and selected provider, without secrets.
+
+This gives later execution/evidence systems proof of which implementation actually supplied a behavior.
+
+## New technology - FCH
+
+### FCH - Fallback Capability Harness
+Standalone fallbacks are explicitly constrained implementations with:
+- declared quality/feature ceiling;
+- no hidden durable organizational memory;
+- no silent expansion into HIVE-owned responsibility;
+- test vectors shared with the full capability contract;
+- visible fallback provenance.
+
+Purpose: CORE remains useful standalone without accidentally rebuilding HIVE.
+
+## Cache-aware provider substitution
+
+Provider change does NOT automatically invalidate every cache.
+
+Cache identity distinguishes:
+- PROVIDER_INDEPENDENT evidence;
+- PROVIDER_BOUND output;
+- MODEL_BOUND output;
+- AUTHORITY_GENERATION_BOUND output.
+
+CAG + SIR determine affected entries. A provider substitution only invalidates dependencies whose correctness identity includes that provider/binding generation.
+
+## HIVE disconnect behavior
+
+Unexpected HIVE loss:
+1. mark affected provider bindings UNAVAILABLE;
+2. revoke or drain leases according to capability policy;
+3. compute SIR;
+4. bind eligible fallback atomically when quality/policy floor allows;
+5. mark DCM degradation;
+6. invalidate only affected cache/evidence;
+7. emit binding/degradation receipts.
+
+No silent fallback is allowed when fallback quality is below the operation's declared floor.
+
+## Anti-flapping policy
+
+Provider health changes must not cause rapid HIVE<->fallback oscillation.
+
+Candidate rules:
+- health hysteresis;
+- minimum healthy stabilization window before promotion;
+- exponential reconnect backoff;
+- substitution cooldown;
+- immediate failover only for capabilities whose policy permits it;
+- manual/policy pin supported for diagnosis.
+
+## Registry performance requirements
+
+- resolution is deterministic and local;
+- hot capability lookup requires no network and no LLM;
+- active binding reads use immutable snapshots/generations;
+- graph recomputation is incremental;
+- substitutions compute affected subgraph, not full system, when safe;
+- registry reads remain available during preparation of next generation.
+
+## Registry security requirements
+
+- module discovery grants zero authority;
+- provider cannot self-assert higher trust;
+- capability contract cannot grant tool/filesystem/network authority implicitly;
+- external/HIVE provider identity must be authenticated by later integration layer;
+- authority escalation requires policy decision;
+- quarantined providers cannot receive new leases;
+- manifest/config provenance included in admission evidence.
+
+## Registry test program
+
+Property/fuzz:
+- dependency cycles;
+- conflicting providers;
+- version-range boundaries;
+- feature-set combinations;
+- deterministic tie-break;
+- substitution races;
+- lease/revocation races;
+- HIVE disconnect during active lease;
+- provider flapping;
+- fallback below quality floor;
+- targeted cache invalidation;
+- generation monotonicity;
+- quarantine behavior;
+- 10/100/1,000/10,000 capability synthetic graphs.
+
+## Round 4 promotion proposal
+
+Promote to ACCEPTED_REQUIRED after implementation evidence:
+- CPG;
+- GCL;
+- DCS;
+- CAL;
+- SIR;
+- CBR;
+- FCH.
+
+Keep CAG implementation depth coordinated with later cache/evidence modules, while M01 defines the dependency/invalidation hooks.
