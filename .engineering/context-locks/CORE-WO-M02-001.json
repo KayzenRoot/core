@@ -1,9 +1,6 @@
 {
   "schemaVersion": "core-context-lock-v1",
-  "workOrder": {
-    "path": ".engineering/work-orders/CORE-WO-M02-001.md",
-    "blobSha": "7ecd057a9e5edac233f8fcbc37e3fbd28cc9177e"
-  },
+  "workOrder": "CORE-WO-M02-001",
   "status": "PENDING_PROMOTION",
   "repository": "KayzenRoot/core",
   "planningBase": "e84a2c678761fe9e357f490d42ea9a762630037b",
@@ -36,5 +33,9 @@
   "stalenessRule": "Any material change to authorized base, canonical sources, module plan, Work Order, or governing GEF policy makes this lock STALE and blocks execution until recompiled.",
   "promotionRule": "Final planning review must APPROVE and merge before authorizedBase is bound and productImplementationAuthorized may become true.",
   "freezeCandidateBranch": "planning/m02-final-freeze",
-  "freezeCandidateBasis": "candidate fingerprints compiled before final exact-head review; execution authorizedBase remains unset until promotion"
+  "freezeCandidateBasis": "candidate fingerprints compiled before final exact-head review; execution authorizedBase remains unset until promotion",
+  "workOrderSource": {
+    "path": ".engineering/work-orders/CORE-WO-M02-001.md",
+    "blobSha": "eaaa3f8275471cbe3ac77689f59e8ca40b49c265"
+  }
 }
