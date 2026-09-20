@@ -1,20 +1,20 @@
 # CORE Checkpoint
 
 ## STATUS
-PRODUCT DISCOVERY ACTIVE / M01 PLANNING FROZEN / EXECUTION READY
+M01 COMPLETE / M02 PLANNING READY
 
 ## VERSION
-CORE V0.0 - Discovery Baseline
+CORE V0.0 - Modular Construction
 
 ## PHASE
-1 - Modular Product Discovery
+2 - M02 Product Discovery
 
 ## OBJECTIVE
-Plan CORE as the headless NexLabs action plane that operates standalone and synchronizes deeply with HIVE without duplicating HIVE-owned intelligence.
+Continue building CORE as the headless NexLabs action plane that operates standalone and synchronizes deeply with HIVE without duplicating HIVE-owned intelligence.
 
 ## IN PROGRESS
-- M01 implementation handoff via CORE-WO-M01-001.
-- M02-M24 remain discovery-only.
+- M02 Project / Workspace Adapter deep planning.
+- M03-M24 remain discovery-only.
 
 ## COMPLETED
 - Repository/bootstrap foundation approved and promoted.
@@ -24,40 +24,45 @@ Plan CORE as the headless NexLabs action plane that operates standalone and sync
 - Standalone + HIVE-enhanced operating model accepted.
 - 24-module discovery baseline recorded.
 - Modular delivery rule accepted: architecture/orchestration here, heavy implementation in Codex.
-- Default implementation granularity: one complete module per large bounded Work Order when safe.
-- ACS, TSS, EOF, ENS, PCE and NSP recorded as research candidates.
-- M01 initial executor-ready target file map recorded.
+- M01 Core Runtime & Lifecycle implemented, corrected, exact-head reviewed and promoted.
+- CORE-WO-M01-001 completed with governed Review 011 APPROVED.
+- CAL admission close/acquire race fixed and proven under active QDS DRAINING.
+- M01 final evidence normalized and exact-head workflow validated.
 
 ## PENDING
-- Plan M02 through M24 in dependency order.
+- Deep-plan M02 through M24 in dependency order.
 - Freeze product Requirements/Architecture/DoD as discovery matures.
-- Live local HIVE bootstrap evidence.
+- Live local HIVE bootstrap evidence against current main.
 - GitHub main ruleset activation when authorized admin mutation is available.
 
 ## BLOCKERS
-- None for M01 executor handoff.
-- M02-M24 product implementation remains gated until each target module plan is frozen.
+- None for M02 planning.
+- M02 implementation remains gated until its plan and Work Order are frozen.
+- M03-M24 implementation remains gated by their respective planning freezes.
 
 ## NEXT STEP
-Execute CORE-WO-M01-001 in Codex using Packets A-H, collect exact-head evidence, then run governed review before promotion.
+Deep-plan M02 Project / Workspace Adapter using the same freeze-before-execution model. Do not authorize M02 product implementation until its plan, file map, contracts, tests, benchmarks, DoD, Work Order and STOP CONDITION are frozen.
 
 ## EVIDENCE
 - `docs/engineering/CORE-MODULAR-DELIVERY-MODEL.md`
 - `docs/modules/00-MASTER-MODULE-MAP.md`
-- `docs/research/CORE-TECHNOLOGY-CANDIDATES.md`
 - `docs/modules/M01-CORE-RUNTIME-LIFECYCLE.md`
+- `docs/work-orders/CORE-WO-M01-001.md`
+- `docs/evidence/M01-EXECUTION-REPORT.md`
+- Review 011 / Issue #20
+- Final reviewed PR #17
+- M01 correction merge `d70b4296afbba93e8849ab6160e9b1caf5281e7d`
 
+## M01 completion record
+Frozen Work Order: `CORE-WO-M01-001`
+Initial implementation promotion: PR #8 / merge `8f0820188130613caa6890c82d43225d9a317947`
+Final corrective PR: #17
+Final governed review head: `aac0f143ea576a11013e4346076b8b3b4bd24282`
+Final governed review: Review 011 / Issue #20 — APPROVED
+Final correction promotion merge: `d70b4296afbba93e8849ab6160e9b1caf5281e7d`
+Exact-head workflow: run #54 `35488781894` — Governance, Ubuntu, Windows and fuzz SUCCESS
+Result: M01 COMPLETE. No unresolved HIGH/CRITICAL finding recorded at final promotion.
 
-## Current M01 checkpoint delta
-M01 deep discovery now covers runtime stack, lifecycle, configuration, module/capability fabric, HIVE substitution seam, cache/token primitives, crash recovery, shutdown, health/degradation, exact crate boundaries, contracts, performance governance, supply-chain security, verification, DoD and technology consolidation.
-
-Current phase: M01 PLANNING FROZEN. Product implementation is authorized ONLY for CORE-WO-M01-001 after executor handoff. Other modules remain discovery-only.
-
-Next legal action: compile final file-level executor notes and governed M01 Work Order/STOP CONDITION, then freeze the planning basis before Codex implementation.
-
-
-## M01 freeze record
-Frozen Work Order: `docs/work-orders/CORE-WO-M01-001.md`
-Freeze basis commit: `d3a5772f0cb427bd8a9d7ff0c5182243e64cd6d7`
-Execution scope: M01 only.
-Next legal action: hand CORE-WO-M01-001 to Codex, execute Packets A-H, collect exact-head evidence, then perform governed review before any completion/promotion claim.
+## Historical M01 freeze record
+Planning freeze basis: `d3a5772f0cb427bd8a9d7ff0c5182243e64cd6d7`
+The former M01 execution-ready instructions are historical and no longer represent the legal next action.

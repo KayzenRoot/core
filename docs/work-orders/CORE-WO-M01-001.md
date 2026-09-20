@@ -1,10 +1,10 @@
 # CORE-WO-M01-001 — Core Runtime & Lifecycle
 
-Status: FROZEN_FOR_EXECUTION
+Status: COMPLETED_APPROVED
 Module: M01
 Executor: Codex
 Execution model: one Work Order, eight internal construction packets
-Product implementation authorization: M01 ONLY
+Product implementation authorization: CLOSED — WORK ORDER COMPLETED
 
 ## Mission
 Implement the production-grade Rust/Tokio CORE runtime substrate exactly from the frozen M01 planning basis. Do not redesign settled architecture. Preserve HIVE/CORE ownership boundaries and zero-LLM lifecycle.
@@ -96,3 +96,11 @@ STOP only when all packet STOPs and all 21 acceptance criteria are satisfied wit
 Do not claim completion from compilation alone.
 Do not claim completion with failing/skipped required tests.
 Do not claim completion with unresolved HIGH/CRITICAL findings.
+
+
+## Completion record
+Execution completed and was finally accepted by governed Review 011.
+Final reviewed head: `aac0f143ea576a11013e4346076b8b3b4bd24282`
+Final exact-head workflow: #54 `35488781894`
+Final correction promotion merge: `d70b4296afbba93e8849ab6160e9b1caf5281e7d`
+Result: COMPLETED_APPROVED. This Work Order is historical and grants no further implementation authority.

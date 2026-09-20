@@ -6,8 +6,8 @@ Status: `ACTIVE`
 
 Canonical module map: `docs/modules/00-MASTER-MODULE-MAP.md`.
 
-- M01 Core Runtime & Lifecycle — IN PROGRESS.
-- M02 Project / Workspace Adapter.
+- M01 Core Runtime & Lifecycle — COMPLETE / PROMOTED.
+- M02 Project / Workspace Adapter — NEXT FOR DEEP PLANNING.
 - M03 Work Order Engine.
 - M04 Run / Attempt / Step Engine.
 - M05 Host Adapter Fabric.

@@ -6,13 +6,13 @@ Canonical source: `docs/project-brain/13-CHECKPOINT.md`
 This file is a GEF continuity view. It is not a second source of product truth. Shared fields are validated deterministically against the canonical HIVE-compatible checkpoint.
 
 ## STATUS
-PRODUCT DISCOVERY ACTIVE / M01 PLANNING FROZEN / EXECUTION READY
+M01 COMPLETE / M02 PLANNING READY
 
 ## VERSION
-CORE V0.0 - Discovery Baseline
+CORE V0.0 - Modular Construction
 
 ## PHASE
-1 - Modular Product Discovery
+2 - M02 Product Discovery
 
 ## NEXT STEP
-Execute CORE-WO-M01-001 in Codex using Packets A-H, collect exact-head evidence, then run governed review before promotion.
+Deep-plan M02 Project / Workspace Adapter using the same freeze-before-execution model. Do not authorize M02 product implementation until its plan, file map, contracts, tests, benchmarks, DoD, Work Order and STOP CONDITION are frozen.

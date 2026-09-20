@@ -1,6 +1,6 @@
 # CORE Master Module Map
 
-Status: `DISCOVERY_BASELINE`
+Status: `M01_COMPLETE_M02_NEXT`
 
 ## Product boundary
 
@@ -83,3 +83,9 @@ Deep federation:
 M23 -> M24
 
 The order may be refined by dependency evidence, but a later module must not silently redefine an accepted earlier contract.
+
+
+## Current progression
+- M01 Core Runtime & Lifecycle — COMPLETE / PROMOTED.
+- M02 Project / Workspace Adapter — NEXT FOR DEEP PLANNING.
+- M03-M24 — discovery-only until their planning freezes.

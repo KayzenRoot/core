@@ -1,6 +1,6 @@
 # M01 - Core Runtime & Lifecycle
 
-Status: `PLANNING_FROZEN_EXECUTION_READY`
+Status: `COMPLETED_APPROVED`
 
 ## Mission
 
@@ -1553,3 +1553,7 @@ The module can enter PLANNING_FREEZE after:
 - initial benchmark policy is expressed as baseline-relative gates rather than fabricated absolute numbers;
 - Work Order acceptance/STOP is compiled;
 - canonical checkpoint points to the frozen M01 basis.
+
+
+## Completion record
+M01 was implemented under `CORE-WO-M01-001`, passed the final governed Review 011 at exact head `aac0f143ea576a11013e4346076b8b3b4bd24282`, and was promoted by PR #17 as merge `d70b4296afbba93e8849ab6160e9b1caf5281e7d`. The final evidence bundle is `docs/evidence/M01-EXECUTION-REPORT.md`. M01 is now a frozen upstream contract for later modules unless changed through a governed ADR/correction process.
