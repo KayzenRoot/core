@@ -1,7 +1,7 @@
 {
   "schemaVersion": "core-evidence-bundle-v1",
   "workOrder": "CORE-WO-M02-001",
-  "status": "READY_FOR_REVIEW",
+  "status": "BLOCKED_HOSTED_EXACT_HEAD",
   "authorizedBase": "bae47b2021a897396109dfcf42e8632dde13ec21",
   "candidateHead": "1cb2a73ac49113729d46ddd170cb8d8345672b31",
   "contextLock": ".engineering/context-locks/CORE-WO-M02-001.json",
@@ -63,7 +63,7 @@
     "property": "PASS by deterministic delta/invalidation fixtures",
     "adversarial": "PASS (3 M02 adversarial tests)",
     "fuzz": "PASS; hosted bounded M02 campaign completed",
-    "windows": "PASS; final exact-head M02 Windows job 106118050604 completed aggregate tests and all M02 supply-chain gates",
+    "windows": "BLOCKED; final exact evidence-head M02 Windows job 106120930499 failed at aggregate Workspace and M02 tests",
     "ubuntu": "PASS; hosted M02 workspace adapter job"
   },
   "security": {
@@ -253,6 +253,28 @@
       "m01UbuntuResult": "PASS",
       "m01FuzzResult": "PASS",
       "m01WindowsResult": "IN_PROGRESS_AT_RECORDING"
+    },
+    {
+      "runId": 35527050540,
+      "workflow": "CI",
+      "candidateProductHead": "1cb2a73ac49113729d46ddd170cb8d8345672b31",
+      "evidenceHead": "eb0ec043a0ba1cc786b5b582fa2c3b240b168e1b",
+      "governanceJob": 106120930478,
+      "m02UbuntuJob": 106120930483,
+      "m02WindowsJob": 106120930499,
+      "m02FuzzJob": 106120930493,
+      "m01UbuntuJob": 106120930477,
+      "m01WindowsJob": 106120930372,
+      "m01FuzzJob": 106120930455,
+      "m02Result": "BLOCKED_HOSTED_WINDOWS_AGGREGATE",
+      "m02UbuntuResult": "IN_PROGRESS_AT_RECORDING",
+      "m02WindowsResult": "FAIL_AGGREGATE_TEST_STEP",
+      "m02WindowsFailure": "GitHub job 106120930499 concluded failure at Workspace and M02 tests; detailed hosted log was unavailable because the GitHub connector token expired; the equivalent local workspace gate previously reproduced the legacy core-runtime active capability lease failure",
+      "m02FuzzResult": "PASS",
+      "governanceResult": "PASS",
+      "m01UbuntuResult": "IN_PROGRESS_AT_RECORDING",
+      "m01FuzzResult": "PASS",
+      "m01WindowsResult": "IN_PROGRESS_AT_RECORDING"
     }
   ],
   "failuresAndCorrections": [
@@ -263,11 +285,11 @@
   ],
   "residualRisks": [
     "HIVE index/checkpoint is stale for this execution checkout; canonical Git remains truth",
-    "Run 35525678221 exposed an unrelated legacy core-runtime M01 lease/timing flake; the subsequent exact final evidence-head run 35525969586 passed every M02 Ubuntu/Windows, governance, supply-chain, advisory, SBOM and fuzz gate",
+    "Run 35525678221 exposed an unrelated legacy core-runtime M01 lease/timing flake; run 35525969586 passed M02, but final evidence-head run 35527050540 again failed the required Windows aggregate step, so the final exact-head gate is not green",
     "Independent review and approval are not executor-controlled"
   ],
   "proposedCheckpointDelta": "Promote CORE-WO-M02-001 only after hosted Ubuntu/Windows, supply-chain/advisory/SBOM/fuzz gates and independent review are green at the exact implementation candidate; retain HIVE stale-currentness note.",
-  "executorVerdict": "READY_FOR_REVIEW",
+  "executorVerdict": "BLOCKED",
   "reviewerVerdict": null,
   "finalPlanningReview": {
     "issue": 35,
