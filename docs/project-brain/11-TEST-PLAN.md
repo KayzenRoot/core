@@ -34,13 +34,14 @@ Before Round 4 mechanisms can be promoted into an implementation Work Order, evi
 - bounded/coalesced hashing under cancellation and large files;
 - symlink/junction swap during hash/path proof;
 - deterministic repository-graph serialization and delta/full equivalence;
-- GitInspector differential fixtures against the Git semantic reference oracle;
+- hardened system-Git GitInspector fixtures against the Git semantic reference contract/oracle;
+- differential fixtures for any alternative GitInspector provider only if that provider is proposed for admission;
 - hostile Git config, secret canaries, no-network/no-mutation behavior;
 - Windows and Unix path/filesystem cases;
 - cold/warm/no-change/small-delta/large-delta benchmarks;
 - memory/concurrency ceilings under large status/hash workloads.
 
-Exact numeric resource defaults and production GitInspector provider selection remain blocked until this evidence exists. Historical M01 evidence does not substitute for M02-specific proof.
+Exact numeric resource defaults remain blocked until reproducible M02 calibration evidence exists. The Round 5 system-Git baseline must satisfy its semantic/security/resource gates; promotion of any alternative provider remains blocked until provider-specific differential evidence exists. Historical M01 evidence does not substitute for M02-specific proof.
 
 
 ## M02 Round 5 contract/file-map validation
