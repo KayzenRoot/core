@@ -3,7 +3,7 @@
 Work Order: `CORE-WO-M02-001`
 Authorized base: `bae47b2021a897396109dfcf42e8632dde13ec21`
 Execution branch: `feat/m02-project-workspace-adapter`
-Final implementation head: `1cb2a73ac49113729d46ddd170cb8d8345672b31` (the exact product/calibration head; latest qualified evidence head is `11e45647d3f0b9cf2f5a20e11d44de511e5b458c`).
+Final implementation head: `1cb2a73ac49113729d46ddd170cb8d8345672b31` (the exact product/calibration head; latest qualified evidence head is `c4b46ec9a5d27e11eb3b80d61d6eb67a4a033297`).
 Executor verdict: `READY_FOR_REVIEW`; the executor does not approve or merge.
 
 ## Packet commits
@@ -45,6 +45,7 @@ HIVE MCP was available and resolved CORE as project `c65b7abc-533a-411a-bbbb-2b7
 - Exact-head qualification run `35525097671` at PR head `f86156b5977c6e5fc20d3a6fe6b2c724fdce1261`: governance PASS; M02 Ubuntu PASS; M02 Windows PASS; M02 fuzz PASS; M01 Ubuntu PASS; M01 fuzz PASS. M02 Windows completed workspace tests, cargo-deny, cargo-audit, SBOM and evidence upload successfully. M01 Windows was still running when this record was captured and is outside the M02 verdict.
 - Final evidence-head run `35525678221` at PR head `f79418060ab0028c56bd8fa3581c8acf574f16b7`: governance PASS; M02 Ubuntu PASS; M02 fuzz PASS; M02 Windows failed at `Workspace and M02 tests`. The required aggregate command failed in legacy `core-runtime::multiple_leases_release_in_different_order_without_lost_notifications`; local Windows execution reproduced `active capability lease remains`. The failure is outside M02 source scope, but the hosted Windows gate remains red.
 - Subsequent exact-head run `35525969586` at PR head `11e45647d3f0b9cf2f5a20e11d44de511e5b458c`: governance PASS; M02 Ubuntu PASS; M02 Windows PASS; M02 fuzz PASS. M02 Windows completed aggregate tests, cargo-deny, cargo-audit, SBOM and evidence upload successfully. M01 Windows was still running when recorded and is outside the M02 verdict.
+- Exact-head run `35526522996` at PR head `c4b46ec9a5d27e11eb3b80d61d6eb67a4a033297`: governance PASS; M02 Ubuntu PASS; M02 Windows PASS; M02 fuzz PASS. M02 Windows completed aggregate tests, cargo-deny, cargo-audit, SBOM and evidence upload successfully. M01 Windows was still running when recorded and is outside the M02 verdict.
 
 ## Acceptance criteria 1–41
 
@@ -78,7 +79,7 @@ HIVE MCP was available and resolved CORE as project `c65b7abc-533a-411a-bbbb-2b7
 28. Typed resource exhaustion — budget validation/cache/hash tests.
 29. Unit/integration/property/adversarial suites — workspace test gate.
 30. Fuzz targets — `fuzz/fuzz_targets/m02_*.rs`, hosted bounded campaign.
-31. Ubuntu/Windows exact head — PASS in exact-head run `35525969586`; M02 Ubuntu job `106118050605` and M02 Windows job `106118050604` passed, including aggregate tests and Windows supply-chain gates. The intervening legacy M01 timing/lease flake was not reproduced in this M02 qualification run.
+31. Ubuntu/Windows exact head — PASS in exact-head run `35526522996`; M02 Ubuntu job `106119536339` and M02 Windows job `106119536282` passed, including aggregate tests and Windows supply-chain gates. The intervening legacy M01 timing/lease flake was not reproduced in this M02 qualification run.
 32. Supply chain/advisory/license/SBOM — deny/audit/SBOM workflow gates, PASS in hosted run `35523830976`.
 33. Zero LLM — `scripts/validate_m02.py` and deterministic code paths.
 34. Reproducible RCG — `M02-CALIBRATION-REPORT.md`, benchmark source.
