@@ -58,3 +58,23 @@ Planning freeze review must verify:
 - M02 DoD is traceable to requirements and the module plan.
 
 Implementation acceptance later must execute the fixture/fuzz/benchmark matrix described in the M02 module plan.
+
+
+## M02 Round 6 calibration protocol
+
+The M02 implementation Work Order must include a mandatory calibration stage before final acceptance.
+
+Evidence rules:
+- deterministic synthetic/local fixtures only;
+- no network;
+- at least five measured iterations per relevant scenario after warm-up where applicable;
+- cold and warm results reported separately;
+- semantic assertions run for every candidate resource profile;
+- cancellation/overflow/failure cases included;
+- unsupported top-scale fixture recorded as SKIPPED_RESOURCE_BOUND rather than inferred;
+- selected values and rejected candidate values are both recorded;
+- exact commands and environment versions are retained.
+
+Required calibration dimensions are defined in the M02 module plan. The complete suite must be rerun after the bounded Calibration Delta establishes final numeric defaults.
+
+DWS must prove delta/full recomputation equivalence. WMF is excluded from V0.0 benchmark/acceptance requirements unless separately admitted.
