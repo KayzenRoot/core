@@ -3,7 +3,7 @@
   "workOrder": "CORE-WO-M02-001",
   "status": "PENDING_HOSTED_EXACT_HEAD",
   "authorizedBase": "bae47b2021a897396109dfcf42e8632dde13ec21",
-  "candidateHead": "39b751a2c21462be9061eb850327c3fd930a9d39",
+  "candidateHead": "98615a8143fdb28a7ce1ef4a010c228b736be845",
   "contextLock": ".engineering/context-locks/CORE-WO-M02-001.json",
   "hive": {
     "availability": "AVAILABLE_SOURCE_STALE",
@@ -45,7 +45,7 @@
     "fuzz/fuzz_targets/m02_repository_graph.rs", ".github/workflows/governance.yml", "scripts/validate_m02.py",
     "docs/evidence/M02-PREFLIGHT.md", "docs/evidence/M02-CALIBRATION-REPORT.md", "docs/evidence/M02-EXECUTION-REPORT.md"
   ],
-  "commits": ["00c8fd3", "eccd045", "b22020a", "17f9b7c", "d7cf62d", "9f11261", "4e8045e", "7c6d6b3", "39b751a"],
+  "commits": ["00c8fd3", "eccd045", "b22020a", "17f9b7c", "d7cf62d", "9f11261", "4e8045e", "7c6d6b3", "39b751a", "98615a8"],
   "commands": [
     {"command": "cargo fmt --all -- --check", "result": "PASS"},
     {"command": "cargo clippy --workspace --all-targets --all-features --locked -- -D warnings", "result": "PASS"},
@@ -111,7 +111,8 @@
   "ciRuns": [],
   "failuresAndCorrections": [
     {"correction": "Static validator excluded TOML bench metadata key harness from dependency scan", "commit": "7c6d6b3"},
-    {"correction": "Standalone no-Git inventory now detects content/directory drift and nested repository boundaries", "commit": "7c6d6b3"}
+    {"correction": "Standalone no-Git inventory now detects content/directory drift and nested repository boundaries", "commit": "7c6d6b3"},
+    {"correction": "Cross-platform lexical normalization rejects Windows-shaped traversal on Unix", "commit": "98615a8", "hostedFailure": "M02 Ubuntu lib test traversal_is_rejected_without_writing_source"}
   ],
   "residualRisks": [
     "HIVE index/checkpoint is stale for this execution checkout; canonical Git remains truth",

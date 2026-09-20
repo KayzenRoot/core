@@ -3,7 +3,7 @@
 Work Order: `CORE-WO-M02-001`
 Authorized base: `bae47b2021a897396109dfcf42e8632dde13ec21`
 Execution branch: `feat/m02-project-workspace-adapter`
-Final implementation head: `39b751a2c21462be9061eb850327c3fd930a9d39` (the exact product/calibration head; evidence-only closure may follow).
+Final implementation head: `98615a8143fdb28a7ce1ef4a010c228b736be845` (the exact product/calibration head; evidence-only closure may follow).
 Executor verdict: `READY_FOR_REVIEW` only if the exact-head hosted gates and independent review conditions below are green; otherwise `BLOCKED`.
 
 ## Packet commits
@@ -19,6 +19,7 @@ Executor verdict: `READY_FOR_REVIEW` only if the exact-head hosted gates and ind
 | G | `4e8045e` |
 | F correction | `7c6d6b3` |
 | H | `39b751a` |
+| G portability correction | `98615a8` |
 
 ## HIVE truth
 
@@ -32,9 +33,11 @@ HIVE MCP was available and resolved CORE as project `c65b7abc-533a-411a-bbbb-2b7
 - `cargo test --workspace --all-features`: PASS, including M01 regression and all M02 integration/adversarial tests.
 - Fuzz targets `m02_path_authority`, `m02_repository_graph`, `m02_git_evidence`: compile gate PASS; bounded hosted campaign is required on the final head.
 - Standalone no-Git content drift and nested repository boundary regression tests: PASS.
+- Cross-platform Windows-shaped traversal rejection on Unix: PASS after Ubuntu exact-head correction.
 - Static dependency/zero-LLM/unsafe validator: PASS; no forbidden dependency, LLM term or unsafe construct in `core-workspace`.
 - Calibration benchmark: PASS with five measured iterations and finite values on the implementation head; see `M02-CALIBRATION-REPORT.md`.
 - Local cargo-deny/cargo-audit: pending availability of those external tools; hosted exact-head jobs are required and cannot be replaced by historical results.
+- Hosted first exact-head attempt found the Unix traversal-separator defect in M02 lib tests; corrected in `98615a8` and local Windows/full-workspace gates rerun PASS. A new hosted exact-head run is required.
 
 ## Acceptance criteria 1–41
 

@@ -3,7 +3,7 @@
 Work Order: `CORE-WO-M02-001`
 Calibration mode: `CALIBRATION_ONLY`
 Authorized base: `bae47b2021a897396109dfcf42e8632dde13ec21`
-Calibration input HEAD: `7c6d6b3`
+Calibration input HEAD: `98615a8143fdb28a7ce1ef4a010c228b736be845`
 Platform: Windows x86_64
 Rust: `rustc 1.98.1 (48a229cea 2026-09-01)`
 Cargo: `1.98.1`
@@ -25,13 +25,13 @@ The runner creates only synthetic fixtures under the OS temporary directory, per
 
 | Scenario | Scale | Iterations | Median us | Range us |
 |---|---:|---:|---:|---:|
-| system graph build | 100 | 5 | 501 | 318–522 |
-| lexical path validation | 1 | 5 | 2 | 2–3 |
-| streaming hash | 256 KiB | 5 | 581 | 501–653 |
+| system graph build | 100 | 5 | 309 | 223–347 |
+| lexical path validation | 1 | 5 | 2 | 1–2 |
+| streaming hash | 256 KiB | 5 | 651 | 606–758 |
 | event causal map | 1 | 5 | 0 | 0–0 |
-| canonical graph fingerprint | 100 | 5 | 188 | 187–195 |
-| canonical graph fingerprint | 1,000 synthetic nodes | 5 | 3,077 | 3,038–3,288 |
-| warm hash proof reuse | 1 | 5 | 133 | 110–180 |
+| canonical graph fingerprint | 100 | 5 | 182 | 172–212 |
+| canonical graph fingerprint | 1,000 synthetic nodes | 5 | 3,099 | 2,614–3,196 |
+| warm hash proof reuse | 1 | 5 | 175 | 96–299 |
 
 The complete machine-readable output is reproducible from the benchmark command above. The zero-microsecond event measurement is timer resolution, not an unlimited budget or a correctness shortcut.
 
