@@ -49,7 +49,7 @@ fn main() {
             let _ = std::fs::remove_file(&config.journal_path);
             let mut supervisor = Supervisor::new(config).expect("supervisor");
             supervisor.bootstrap().await.expect("bootstrap");
-            supervisor.shutdown().expect("shutdown");
+            supervisor.shutdown().await.expect("shutdown");
             let _ = std::fs::remove_file(journal_path);
         });
         samples.push(started.elapsed());

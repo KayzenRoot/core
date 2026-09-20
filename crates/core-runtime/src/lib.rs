@@ -20,8 +20,11 @@ use core_registry::{provider, CapabilityRegistry, ModuleRegistry};
 use serde::Serialize;
 use std::collections::{BTreeMap, BTreeSet};
 use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
+use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 use thiserror::Error;
+use tokio::sync::watch;
+use tokio::time::Instant as TokioInstant;
 
 const CARGO_LOCK_CONTENTS: &str =
     include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../Cargo.lock"));
@@ -39,6 +42,8 @@ pub enum RuntimeError {
     TransitionDenied { decision: TransitionDecision },
     #[error("worker admission denied or deferred: {receipt:?}")]
     WorkerAdmission { receipt: WorkerAdmissionReceipt },
+    #[error("worker completion was reported for an unknown worker: {0}")]
+    WorkerCompletion(String),
     #[error("configuration: {0}")]
     Configuration(String),
     #[error("journal: {0}")]
@@ -103,6 +108,135 @@ pub struct WorkerAdmissionReceipt {
     pub state: Option<WorkerSupervisionState>,
     pub retry_after_ms: Option<u64>,
     pub reason: String,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+pub enum WorkerCompletionStatus {
+    Running,
+    CancellationRequested,
+    Completed,
+}
+
+#[derive(Debug)]
+struct WorkerCompletionRegistry {
+    states: Mutex<BTreeMap<String, WorkerCompletionStatus>>,
+    revision: watch::Sender<u64>,
+}
+
+impl WorkerCompletionRegistry {
+    fn new() -> Self {
+        let (revision, _) = watch::channel(0_u64);
+        Self {
+            states: Mutex::new(BTreeMap::new()),
+            revision,
+        }
+    }
+
+    fn publish_change(&self) {
+        let next = self.revision.borrow().saturating_add(1);
+        self.revision.send_replace(next);
+    }
+
+    fn register(&self, worker_id: &str) {
+        self.states
+            .lock()
+            .expect("worker completion registry lock poisoned")
+            .insert(worker_id.to_owned(), WorkerCompletionStatus::Running);
+        self.publish_change();
+    }
+
+    fn request_cancellation(&self) {
+        let mut states = self
+            .states
+            .lock()
+            .expect("worker completion registry lock poisoned");
+        let mut changed = false;
+        for state in states.values_mut() {
+            if *state == WorkerCompletionStatus::Running {
+                *state = WorkerCompletionStatus::CancellationRequested;
+                changed = true;
+            }
+        }
+        drop(states);
+        if changed {
+            self.publish_change();
+        }
+    }
+
+    fn report_completed(&self, worker_id: &str) -> Result<(), RuntimeError> {
+        let mut states = self
+            .states
+            .lock()
+            .expect("worker completion registry lock poisoned");
+        let state = states
+            .get_mut(worker_id)
+            .ok_or_else(|| RuntimeError::WorkerCompletion(worker_id.to_owned()))?;
+        if *state != WorkerCompletionStatus::Completed {
+            *state = WorkerCompletionStatus::Completed;
+            drop(states);
+            self.publish_change();
+        }
+        Ok(())
+    }
+
+    fn status(&self, worker_id: &str) -> Option<WorkerCompletionStatus> {
+        self.states
+            .lock()
+            .expect("worker completion registry lock poisoned")
+            .get(worker_id)
+            .copied()
+    }
+
+    fn completed_worker_ids(&self) -> Vec<String> {
+        self.states
+            .lock()
+            .expect("worker completion registry lock poisoned")
+            .iter()
+            .filter(|(_, state)| **state == WorkerCompletionStatus::Completed)
+            .map(|(worker_id, _)| worker_id.clone())
+            .collect()
+    }
+
+    fn remove(&self, worker_id: &str) {
+        let removed = self
+            .states
+            .lock()
+            .expect("worker completion registry lock poisoned")
+            .remove(worker_id)
+            .is_some();
+        if removed {
+            self.publish_change();
+        }
+    }
+
+    fn subscribe(&self) -> watch::Receiver<u64> {
+        self.revision.subscribe()
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct WorkerCompletionHandle {
+    worker_id: String,
+    registry: Arc<WorkerCompletionRegistry>,
+    cancellation: CancellationToken,
+}
+
+impl WorkerCompletionHandle {
+    pub fn worker_id(&self) -> &str {
+        &self.worker_id
+    }
+
+    pub fn status(&self) -> Option<WorkerCompletionStatus> {
+        self.registry.status(&self.worker_id)
+    }
+
+    pub async fn wait_for_cancellation(&self) {
+        self.cancellation.cancelled().await;
+    }
+
+    pub fn report_completed(&self) -> Result<(), RuntimeError> {
+        self.registry.report_completed(&self.worker_id)
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -501,7 +635,7 @@ pub struct Supervisor {
     crash_suppression: CrashFingerprintSuppressor,
     probe_coalescer: ProbeCoalescer<HealthSignal>,
     cancellation: CancellationToken,
-    worker_completion_delays_ms: BTreeMap<String, u64>,
+    worker_completions: Arc<WorkerCompletionRegistry>,
     quiescence_proven: bool,
 }
 
@@ -537,7 +671,7 @@ impl Supervisor {
             crash_suppression: CrashFingerprintSuppressor::new(3),
             probe_coalescer: ProbeCoalescer::new(),
             cancellation: CancellationToken::new(),
-            worker_completion_delays_ms: BTreeMap::new(),
+            worker_completions: Arc::new(WorkerCompletionRegistry::new()),
             quiescence_proven: false,
         })
     }
@@ -1048,7 +1182,7 @@ impl Supervisor {
         self.reset_worker_supervision("soak-worker")?;
         self.register_isolated_worker("soak-worker")?;
         self.mark_worker_terminated("soak-worker");
-        let shutdown = self.shutdown()?;
+        let shutdown = self.shutdown().await?;
         Ok(serde_json::json!({
             "provider_initial": initial.provider_id,
             "provider_substituted": substituted.provider_id,
@@ -1088,46 +1222,48 @@ impl Supervisor {
         if receipt.decision != WorkerAdmissionDecision::Allow {
             return Err(RuntimeError::WorkerAdmission { receipt });
         }
-        self.isolated_workers.insert(worker_id);
+        if !self.isolated_workers.insert(worker_id.clone()) {
+            return Err(RuntimeError::WorkerAdmission {
+                receipt: WorkerAdmissionReceipt {
+                    worker_id,
+                    decision: WorkerAdmissionDecision::Deny,
+                    state: Some(WorkerSupervisionState::Running),
+                    retry_after_ms: None,
+                    reason: "worker is already admitted".into(),
+                },
+            });
+        }
+        self.worker_completions.register(&worker_id);
         Ok(receipt)
     }
 
-    pub fn register_isolated_worker_with_completion_delay(
-        &mut self,
-        worker_id: impl Into<String>,
-        delay_after_cancel_ms: u64,
-    ) -> Result<WorkerAdmissionReceipt, RuntimeError> {
-        let worker_id = worker_id.into();
-        let receipt = self.register_isolated_worker(worker_id.clone())?;
-        self.worker_completion_delays_ms
-            .insert(worker_id, delay_after_cancel_ms);
-        Ok(receipt)
+    pub fn worker_completion_handle(&self, worker_id: &str) -> Option<WorkerCompletionHandle> {
+        if !self.isolated_workers.contains(worker_id) {
+            return None;
+        }
+        Some(WorkerCompletionHandle {
+            worker_id: worker_id.to_owned(),
+            registry: Arc::clone(&self.worker_completions),
+            cancellation: self.cancellation.clone(),
+        })
     }
 
     pub fn mark_worker_terminated(&mut self, worker_id: &str) {
+        let _ = self.worker_completions.report_completed(worker_id);
         self.isolated_workers.remove(worker_id);
-        self.worker_completion_delays_ms.remove(worker_id);
+        self.worker_completions.remove(worker_id);
     }
 
-    fn complete_scheduled_workers(&mut self, elapsed_after_cancel_ms: u64) {
-        if !self.cancellation.is_cancelled() {
-            return;
-        }
-        let completed = self
-            .worker_completion_delays_ms
-            .iter()
-            .filter(|(_, delay)| **delay <= elapsed_after_cancel_ms)
-            .map(|(worker_id, _)| worker_id.clone())
-            .collect::<Vec<_>>();
-        for worker_id in completed {
-            self.worker_completion_delays_ms.remove(&worker_id);
+    fn reconcile_completed_workers(&mut self) {
+        for worker_id in self.worker_completions.completed_worker_ids() {
             self.isolated_workers.remove(&worker_id);
+            self.worker_completions.remove(&worker_id);
         }
     }
 
-    fn remaining_shutdown_budget(&self, deadline: Instant) -> u64 {
+    fn remaining_shutdown_budget(&self, deadline: TokioInstant) -> u64 {
         deadline
-            .saturating_duration_since(Instant::now())
+            .saturating_duration_since(TokioInstant::now())
             .as_millis()
             .min(u128::from(u64::MAX)) as u64
     }
@@ -1170,7 +1306,7 @@ impl Supervisor {
         Ok(())
     }
 
-    pub fn shutdown(&mut self) -> Result<ShutdownReceipt, RuntimeError> {
+    pub async fn shutdown(&mut self) -> Result<ShutdownReceipt, RuntimeError> {
         if !matches!(
             self.lifecycle.state(),
             RuntimeState::Ready | RuntimeState::Degraded
@@ -1182,7 +1318,7 @@ impl Supervisor {
         self.quiescence_proven = false;
         self.admission_closed.store(true, Ordering::Release);
         let shutdown_deadline =
-            Instant::now() + Duration::from_millis(self.config.shutdown_timeout_ms);
+            TokioInstant::now() + Duration::from_millis(self.config.shutdown_timeout_ms);
         self.transition_with_live_context(
             TransitionKind::Drain,
             RuntimeState::Draining,
@@ -1221,8 +1357,12 @@ impl Supervisor {
             JournalDurability::SyncRequired,
             [("active_leases".into(), active_leases.to_string())],
         )?;
-        while self.capabilities.total_active_leases() > 0 && Instant::now() < shutdown_deadline {
-            std::thread::sleep(Duration::from_millis(1));
+        while self.capabilities.total_active_leases() > 0 {
+            let remaining = shutdown_deadline.saturating_duration_since(TokioInstant::now());
+            if remaining.is_zero() {
+                break;
+            }
+            tokio::time::sleep(std::cmp::min(remaining, Duration::from_millis(1))).await;
         }
         let active_leases = self.capabilities.total_active_leases();
         if active_leases == 0 {
@@ -1246,6 +1386,7 @@ impl Supervisor {
             JournalDurability::SyncRequired,
             [],
         )?;
+        self.worker_completions.request_cancellation();
         self.cancellation.cancel();
         self.lifecycle.journal_mut().append(
             self.config.generation.boot_epoch,
@@ -1253,26 +1394,28 @@ impl Supervisor {
             JournalDurability::SyncRequired,
             [("cancel_requested".into(), "true".into())],
         )?;
-        let cancellation_started = Instant::now();
-        while (!self.active_modules.is_empty() || !self.isolated_workers.is_empty())
-            && Instant::now() < shutdown_deadline
-        {
-            self.complete_scheduled_workers(
-                cancellation_started
-                    .elapsed()
-                    .as_millis()
-                    .min(u128::from(u64::MAX)) as u64,
-            );
-            if !self.active_modules.is_empty() || !self.isolated_workers.is_empty() {
-                std::thread::sleep(Duration::from_millis(1));
+        let mut completion_revision = self.worker_completions.subscribe();
+        loop {
+            self.reconcile_completed_workers();
+            if self.active_modules.is_empty() && self.isolated_workers.is_empty() {
+                break;
+            }
+            let remaining = shutdown_deadline.saturating_duration_since(TokioInstant::now());
+            if remaining.is_zero() {
+                break;
+            }
+            let deadline_sleep = tokio::time::sleep(remaining);
+            tokio::pin!(deadline_sleep);
+            tokio::select! {
+                changed = completion_revision.changed() => {
+                    if changed.is_err() {
+                        break;
+                    }
+                }
+                _ = &mut deadline_sleep => break,
             }
         }
-        self.complete_scheduled_workers(
-            cancellation_started
-                .elapsed()
-                .as_millis()
-                .min(u128::from(u64::MAX)) as u64,
-        );
+        self.reconcile_completed_workers();
         let cancellation_complete =
             self.active_modules.is_empty() && self.isolated_workers.is_empty();
         self.lifecycle.journal_mut().append(
@@ -1291,24 +1434,7 @@ impl Supervisor {
             JournalDurability::SyncRequired,
             [],
         )?;
-        while (!self.active_modules.is_empty()
-            || !self.isolated_workers.is_empty()
-            || !self.residual_obligations.is_empty())
-            && Instant::now() < shutdown_deadline
-        {
-            self.complete_scheduled_workers(
-                cancellation_started
-                    .elapsed()
-                    .as_millis()
-                    .min(u128::from(u64::MAX)) as u64,
-            );
-            if !self.active_modules.is_empty()
-                || !self.isolated_workers.is_empty()
-                || !self.residual_obligations.is_empty()
-            {
-                std::thread::sleep(Duration::from_millis(1));
-            }
-        }
+        self.reconcile_completed_workers();
         let cleanup_complete = self.active_modules.is_empty()
             && self.isolated_workers.is_empty()
             && self.residual_obligations.is_empty();
@@ -1466,25 +1592,36 @@ impl Supervisor {
 
 #[derive(Debug, Clone)]
 pub struct CancellationToken {
-    cancelled: std::sync::Arc<AtomicBool>,
+    state: Arc<watch::Sender<bool>>,
 }
 
 impl CancellationToken {
     pub fn new() -> Self {
+        let (state, _) = watch::channel(false);
         Self {
-            cancelled: std::sync::Arc::new(AtomicBool::new(false)),
+            state: Arc::new(state),
         }
     }
     pub fn child(&self) -> Self {
         Self {
-            cancelled: std::sync::Arc::clone(&self.cancelled),
+            state: Arc::clone(&self.state),
         }
     }
     pub fn cancel(&self) {
-        self.cancelled.store(true, Ordering::Release);
+        self.state.send_replace(true);
     }
     pub fn is_cancelled(&self) -> bool {
-        self.cancelled.load(Ordering::Acquire)
+        let receiver = self.state.subscribe();
+        let cancelled = *receiver.borrow();
+        cancelled
+    }
+    pub async fn cancelled(&self) {
+        let mut receiver = self.state.subscribe();
+        while !*receiver.borrow() {
+            if receiver.changed().await.is_err() {
+                return;
+            }
+        }
     }
 }
 
@@ -1513,7 +1650,7 @@ mod tests {
         assert_eq!(receipt.verdict, BootstrapVerdict::ReadyEligible);
         assert_eq!(supervisor.status().state, RuntimeState::Ready);
         assert_eq!(supervisor.zero_llm_calls(), 0);
-        let _ = supervisor.shutdown().unwrap();
+        let _ = supervisor.shutdown().await.unwrap();
     }
 
     #[tokio::test]
@@ -1536,7 +1673,7 @@ mod tests {
         let mut supervisor = Supervisor::new(shutdown_config).unwrap();
         supervisor.bootstrap().await.unwrap();
         supervisor.register_isolated_worker("hung-worker").unwrap();
-        let receipt = supervisor.shutdown().unwrap();
+        let receipt = supervisor.shutdown().await.unwrap();
         assert!(!receipt.clean);
         assert_eq!(receipt.final_phase, ShutdownPhase::ForceTerminate);
         assert!(!receipt.residuals.is_empty());
@@ -1562,8 +1699,8 @@ mod tests {
         );
         assert!(!first_receipt.tcbm_fingerprint.is_empty());
         assert!(!first_receipt.saf_fingerprint.is_empty());
-        first.shutdown().unwrap();
-        second.shutdown().unwrap();
+        first.shutdown().await.unwrap();
+        second.shutdown().await.unwrap();
     }
 
     #[tokio::test]
@@ -1591,7 +1728,7 @@ mod tests {
             .capabilities()
             .acquire_lease("health", 17, 30_000)
             .unwrap();
-        let receipt = supervisor.shutdown().unwrap();
+        let receipt = supervisor.shutdown().await.unwrap();
         assert!(!receipt.clean);
         assert!(receipt
             .items
@@ -1669,7 +1806,7 @@ mod tests {
             .acquire_lease("health", 17, 30_000)
             .unwrap();
         supervisor.register_isolated_worker("hung-worker").unwrap();
-        let receipt = supervisor.shutdown().unwrap();
+        let receipt = supervisor.shutdown().await.unwrap();
         assert!(!receipt.clean);
         let records = supervisor.lifecycle.journal.read_validated().unwrap();
         assert!(!records
@@ -1710,7 +1847,7 @@ mod tests {
             Some(WorkerSupervisionState::Stabilizing)
         );
         supervisor.mark_worker_terminated("worker-a");
-        supervisor.shutdown().unwrap();
+        supervisor.shutdown().await.unwrap();
     }
 
     #[tokio::test]
@@ -1750,7 +1887,7 @@ mod tests {
         supervisor.reset_worker_supervision("worker-a").unwrap();
         supervisor.register_isolated_worker("worker-a").unwrap();
         supervisor.mark_worker_terminated("worker-a");
-        supervisor.shutdown().unwrap();
+        supervisor.shutdown().await.unwrap();
     }
 
     #[tokio::test]
@@ -1779,7 +1916,7 @@ mod tests {
             .capabilities()
             .acquire_lease_with_generation("health", &generation, 10)
             .unwrap();
-        let receipt = supervisor.shutdown().unwrap();
+        let receipt = supervisor.shutdown().await.unwrap();
         assert!(receipt.clean);
         let records = supervisor.lifecycle.journal.read_validated().unwrap();
         assert!(records
@@ -1797,9 +1934,18 @@ mod tests {
         let mut supervisor = Supervisor::new(shutdown_config).unwrap();
         supervisor.bootstrap().await.unwrap();
         supervisor
-            .register_isolated_worker_with_completion_delay("finishing-worker", 10)
+            .register_isolated_worker("finishing-worker")
             .unwrap();
-        let receipt = supervisor.shutdown().unwrap();
+        let worker = supervisor
+            .worker_completion_handle("finishing-worker")
+            .unwrap();
+        let worker_task = tokio::spawn(async move {
+            worker.wait_for_cancellation().await;
+            tokio::time::sleep(Duration::from_millis(10)).await;
+            worker.report_completed().unwrap();
+        });
+        let receipt = supervisor.shutdown().await.unwrap();
+        worker_task.await.unwrap();
         assert!(receipt.clean);
         let records = supervisor.lifecycle.journal.read_validated().unwrap();
         assert!(records
@@ -1814,6 +1960,78 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn multiple_workers_report_completion_without_lost_notifications() {
+        let mut shutdown_config = config("multiple-workers-before-deadline");
+        shutdown_config.shutdown_timeout_ms = 1_000;
+        let mut supervisor = Supervisor::new(shutdown_config).unwrap();
+        supervisor.bootstrap().await.unwrap();
+        let mut worker_tasks = Vec::new();
+        for (worker_id, delay_ms) in [
+            ("worker-fast", 5_u64),
+            ("worker-middle", 25),
+            ("worker-slow", 50),
+        ] {
+            supervisor.register_isolated_worker(worker_id).unwrap();
+            let worker = supervisor.worker_completion_handle(worker_id).unwrap();
+            worker_tasks.push(tokio::spawn(async move {
+                worker.wait_for_cancellation().await;
+                assert_eq!(
+                    worker.status(),
+                    Some(WorkerCompletionStatus::CancellationRequested)
+                );
+                tokio::time::sleep(Duration::from_millis(delay_ms)).await;
+                worker.report_completed().unwrap();
+                worker.worker_id().to_owned()
+            }));
+        }
+
+        let receipt = supervisor.shutdown().await.unwrap();
+        let mut completed_ids = Vec::new();
+        for task in worker_tasks {
+            completed_ids.push(task.await.unwrap());
+        }
+        assert_eq!(
+            completed_ids,
+            vec![
+                "worker-fast".to_owned(),
+                "worker-middle".to_owned(),
+                "worker-slow".to_owned()
+            ]
+        );
+        assert!(receipt.clean, "multi-worker shutdown receipt: {receipt:?}");
+        assert!(receipt
+            .items
+            .iter()
+            .any(|item| item.subject == "isolated-workers" && item.satisfied));
+    }
+
+    #[tokio::test]
+    async fn worker_completion_at_deadline_boundary_is_fail_closed() {
+        let timeout_ms = 30;
+        let mut shutdown_config = config("worker-deadline-boundary");
+        shutdown_config.shutdown_timeout_ms = timeout_ms;
+        let mut supervisor = Supervisor::new(shutdown_config).unwrap();
+        supervisor.bootstrap().await.unwrap();
+        supervisor
+            .register_isolated_worker("boundary-worker")
+            .unwrap();
+        let worker = supervisor
+            .worker_completion_handle("boundary-worker")
+            .unwrap();
+        let worker_task = tokio::spawn(async move {
+            worker.wait_for_cancellation().await;
+            tokio::time::sleep(Duration::from_millis(25)).await;
+            worker.report_completed().unwrap();
+        });
+
+        let started = Instant::now();
+        let receipt = supervisor.shutdown().await.unwrap();
+        let elapsed = started.elapsed();
+        worker_task.await.unwrap();
+        assert!(receipt.clean || elapsed >= Duration::from_millis(timeout_ms));
+    }
+
+    #[tokio::test]
     async fn shutdown_timeout_escalates_only_after_deadline() {
         let mut shutdown_config = config("deadline-timeout");
         shutdown_config.shutdown_timeout_ms = 5;
@@ -1821,7 +2039,7 @@ mod tests {
         supervisor.bootstrap().await.unwrap();
         supervisor.register_isolated_worker("hung-worker").unwrap();
         let started = Instant::now();
-        let receipt = supervisor.shutdown().unwrap();
+        let receipt = supervisor.shutdown().await.unwrap();
         assert!(!receipt.clean);
         assert!(started.elapsed() >= Duration::from_millis(5));
         let records = supervisor.lifecycle.journal.read_validated().unwrap();
