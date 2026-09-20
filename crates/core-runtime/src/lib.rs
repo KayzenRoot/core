@@ -2223,7 +2223,6 @@ mod tests {
             .unwrap();
         let worker_task = tokio::spawn(async move {
             worker.wait_for_cancellation().await;
-            tokio::time::sleep(Duration::from_millis(10)).await;
             worker.report_completed().unwrap();
         });
         let receipt = supervisor.shutdown().await.unwrap();
