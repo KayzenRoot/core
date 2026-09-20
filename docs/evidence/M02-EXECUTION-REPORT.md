@@ -3,8 +3,8 @@
 Work Order: `CORE-WO-M02-001`
 Authorized base: `bae47b2021a897396109dfcf42e8632dde13ec21`
 Execution branch: `feat/m02-project-workspace-adapter`
-Final implementation head: `1cb2a73ac49113729d46ddd170cb8d8345672b31` (the exact product/calibration head; current evidence head is `1afa944fe430039e1353ea11c16a19a35f774979`).
-Executor verdict: `BLOCKED` because the current exact-head hosted gate is still in progress; the executor does not approve or merge.
+Final implementation head: `09269ec65f230bae513623a7e5424466dbd82a0c` (the exact product/correction head).
+Executor verdict: `READY_FOR_REVIEW`; all required local and hosted gates are green at the exact implementation head. The executor does not approve, promote or merge.
 
 ## Packet commits
 
@@ -21,6 +21,22 @@ Executor verdict: `BLOCKED` because the current exact-head hosted gate is still 
 | H | `39b751a` |
 | G portability correction | `98615a8` |
 | Supply-chain metadata correction | `1cb2a73` |
+| M02 Review 007 correction | `09269ec` |
+
+## Review 007 correction closeout
+
+The six HIGH findings from M02-REVIEW-007 were corrected in `09269ec65f230bae513623a7e5424466dbd82a0c` without expanding the frozen architecture or dependency boundary:
+
+- HIGH-1: integrated EIS/CIG dirty-state hints, selective DWS revalidation only for equivalent proofs, broad fallback on overflow/unknown/security/policy/provider loss, and PEC L1 provenance.
+- HIGH-2: made Git `ContentHashed` consume safe `-z` records, authority-check untracked paths, reject physical escapes, stream through BHC and include deterministic content digests; the byte-change regression passes.
+- HIGH-3: made filesystem case semantics conservative `Unknown` instead of inferring verification from the Unix family.
+- HIGH-4: replaced path-only HashConveyor reuse with identity-aware re-read, bounded true in-flight coalescing and deadline cleanup.
+- HIGH-5: hardened production Git execution with fixed argv/config, disabled fsmonitor and hostile surfaces, concurrent capped stdout/stderr draining, deadline kill and reap.
+- HIGH-6: made time revalidation resolve the authority target rather than the process CWD; the relative-collision regression passes.
+
+Exact-head hosted run `35532968666` completed successfully. Governance job `106136806055`, M01 Ubuntu `106136806132`, M01 Windows `106136806021`, M01 fuzz `106136806023`, M02 bounded fuzz `106136806002`, M02 Ubuntu `106136806057` and M02 Windows `106136805858` all concluded `success`.
+
+Local gates also pass: format, locked clippy with `-D warnings`, the full locked workspace test suite, governance/M02 static validators, six Python HIVE/MCP tests, and seven bounded WSL fuzz campaigns with 1,000 executions each. The direct Windows sanitizer fuzz linker remains an environment limitation; the hosted Windows fuzz job is green.
 
 ## HIVE truth
 
@@ -32,7 +48,7 @@ HIVE MCP was available and resolved CORE as project `c65b7abc-533a-411a-bbbb-2b7
 - `cargo fmt --all -- --check`: PASS.
 - `cargo clippy --workspace --all-targets --all-features -- -D warnings`: PASS.
 - `cargo test --workspace --all-features`: PASS, including M01 regression and all M02 integration/adversarial tests.
-- Fuzz targets `m02_path_authority`, `m02_repository_graph`, `m02_git_evidence`: compile gate PASS; hosted bounded campaign PASS in run `35523152898`.
+- Fuzz targets `m02_path_authority`, `m02_repository_graph`, `m02_git_evidence`: compile gate PASS; hosted bounded campaign PASS in run `35532968666`; the seven local WSL bounded campaigns also completed without crashes.
 - Standalone no-Git content drift and nested repository boundary regression tests: PASS.
 - Cross-platform Windows-shaped traversal rejection on Unix: PASS after Ubuntu exact-head correction.
 - Static dependency/zero-LLM/unsafe validator: PASS; no forbidden dependency, LLM term or unsafe construct in `core-workspace`.
@@ -48,7 +64,7 @@ HIVE MCP was available and resolved CORE as project `c65b7abc-533a-411a-bbbb-2b7
 - Exact-head run `35526522996` at PR head `c4b46ec9a5d27e11eb3b80d61d6eb67a4a033297`: governance PASS; M02 Ubuntu PASS; M02 Windows PASS; M02 fuzz PASS. M02 Windows completed aggregate tests, cargo-deny, cargo-audit, SBOM and evidence upload successfully. M01 Windows was still running when recorded and is outside the M02 verdict.
 - Final evidence-head run `35527050540` at PR head `eb0ec043a0ba1cc786b5b582fa2c3b240b168e1b`: governance PASS; M02 fuzz PASS; M02 Windows failed at `Workspace and M02 tests`. The detailed hosted log was unavailable after connector authentication expiry; the required Windows gate is objectively red. M02 Ubuntu was still running when recorded.
 - Subsequent exact-head run `35527342471` at PR head `797f7bf81624fac78ab9557c9abecb3661817688`: governance PASS; M02 Ubuntu PASS; M02 Windows PASS; M02 fuzz PASS. M02 Windows completed aggregate tests, cargo-deny, cargo-audit, SBOM and evidence upload successfully. M01 Windows was still running when recorded and is outside the M02 verdict.
-- Current evidence-head run `35527882807` at PR head `1afa944fe430039e1353ea11c16a19a35f774979`: governance PASS; M02 Ubuntu PASS; M02 fuzz PASS; M02 Windows is still in the required supply-chain step. No final PASS is claimed for this head.
+- Final exact implementation-head run `35532968666` at PR head `09269ec65f230bae513623a7e5424466dbd82a0c`: all seven required jobs PASS, including governance, M01/M02 Ubuntu and Windows, and both bounded fuzz campaigns.
 
 ## Acceptance criteria 1–41
 
@@ -82,18 +98,18 @@ HIVE MCP was available and resolved CORE as project `c65b7abc-533a-411a-bbbb-2b7
 28. Typed resource exhaustion — budget validation/cache/hash tests.
 29. Unit/integration/property/adversarial suites — workspace test gate.
 30. Fuzz targets — `fuzz/fuzz_targets/m02_*.rs`, hosted bounded campaign.
-31. Ubuntu/Windows exact head — BLOCKED pending completion of current exact-head run `35527882807`; the previous completed run `35527342471` passed M02 Ubuntu and Windows, but the current evidence head's Windows supply-chain gate is not yet proven.
-32. Supply chain/advisory/license/SBOM — deny/audit/SBOM workflow gates, PASS in hosted run `35523830976`.
+31. Ubuntu/Windows exact head — PASS at implementation head `09269ec65f230bae513623a7e5424466dbd82a0c`, hosted run `35532968666`.
+32. Supply chain/advisory/license/SBOM — deny/audit/SBOM workflow gates, PASS in exact-head hosted run `35532968666`.
 33. Zero LLM — `scripts/validate_m02.py` and deterministic code paths.
 34. Reproducible RCG — `M02-CALIBRATION-REPORT.md`, benchmark source.
 35. Finite measured defaults — calibration report and `WorkspaceResourceBudget::finalized`.
-36. Calibration Delta bounds — calibration report; only budget finalization/documentation changed.
+36. Calibration Delta bounds — calibration report; Review 007 correction did not change selected budgets or calibration bounds.
 37. DWS included / WMF absent — source/file map and static inspection.
 38. L2/watchers/Rust-native provider absent — dependency/static/file-map checks.
 39. Exact evidence mapping — this report and Evidence Bundle.
-40. No unresolved HIGH/CRITICAL — hosted advisory/license gates PASS in the product qualification run; final hosted Windows aggregate test remains blocked by unrelated M01 runtime timing failures.
+40. No unresolved HIGH/CRITICAL — PASS for the six Review 007 findings; the exact-head hosted matrix, advisory, license and SBOM gates are green.
 41. Independent APPROVED review — not executor-controlled; required before promotion.
 
 ## Proposed Checkpoint Delta
 
-Stop pending completion of current exact-head hosted Windows supply-chain gates. After that gate is green, request independent governed review before promotion; retain HIVE degraded-currentness as an explicit assurance note. The executor does not self-promote the checkpoint or merge the implementation PR.
+Request independent governed Review 008 before promotion; retain HIVE degraded-currentness as an explicit assurance note. The executor does not self-promote the checkpoint or merge the implementation PR.

@@ -75,3 +75,7 @@ The selected defaults are the finite values in `WorkspaceResourceBudget::finaliz
 ## Calibration Delta
 
 The only implementation delta is the evidence-backed finalization of the finite `WorkspaceResourceBudget` defaults and its calibration marker/documentation. No product authority or topology rule changed. After this delta, the complete format/lint/test/security/static/fuzz/build gates must be rerun on the exact final head.
+
+## Review 007 correction delta
+
+The Review 007 correction at `09269ec65f230bae513623a7e5424466dbd82a0c` did not alter the selected resource budgets, calibration protocol or benchmark scale disposition. It corrected workspace safety, invalidation, Git process and hashing behavior within the admitted architecture; the required validation and hosted matrix were rerun at that exact implementation head. No recalibration claim is made for this correction.
