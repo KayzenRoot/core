@@ -1,17 +1,21 @@
 # CODEX HANDOFF — CORE-WO-M02-001
 
-Status: PENDING FINAL PLANNING PROMOTION
+Status: AUTHORIZED
 Execution branch: `feat/m02-project-workspace-adapter`
 Work Order: `.engineering/work-orders/CORE-WO-M02-001.md`
 Context Lock: `.engineering/context-locks/CORE-WO-M02-001.json`
 Module: M02 — Project / Workspace Adapter
 
+Frozen authorized base: `bae47b2021a897396109dfcf42e8632dde13ec21`
+
 ## Hard gate
 
-Do NOT begin product implementation unless the Context Lock says:
+Begin product implementation only while the Context Lock says:
 - `status=ACTIVE`;
 - `authorizedBase` is a concrete SHA;
-- `productImplementationAuthorized=true`.
+- `productImplementationAuthorized=true`;
+- `authorizationEffectiveOnlyOnCanonicalMain=true`;
+- the exact active lock is present on canonical `origin/main`, not only on a PR branch.
 
 If any of these are false, STOP and report STALE/NOT_AUTHORIZED.
 
@@ -19,8 +23,8 @@ If any of these are false, STOP and report STALE/NOT_AUTHORIZED.
 
 1. verify remote `KayzenRoot/core`;
 2. fetch origin;
-3. checkout/create `feat/m02-project-workspace-adapter` exactly from Context Lock `authorizedBase`;
-4. verify the authorized base is the current execution ancestor;
+3. fetch canonical `origin/main` after the admission PR is promoted and create `feat/m02-project-workspace-adapter` from that post-admission main head;
+4. verify Context Lock `authorizedBase` is an ancestor of the execution head and every intervening commit is governance/admission metadata only, with no M02 product implementation;
 5. validate Context Lock fingerprints;
 6. read canonical sources in Work Order order;
 7. run governance validation;

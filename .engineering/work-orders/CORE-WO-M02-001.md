@@ -1,11 +1,11 @@
 # CORE-WO-M02-001 — Project / Workspace Adapter
 
-Status: FROZEN_PENDING_REVIEW
+Status: ACTIVE_AUTHORIZED
 Module: M02
 Executor: Codex
 Risk / assurance: ELEVATED
 Execution model: one comprehensive Work Order, eight ordered construction packets
-Product implementation authorization: CLOSED — opens only after governed final-freeze promotion and execution-base Context Lock admission
+Product implementation authorization: OPEN — execution authorized only from Context Lock authorizedBase `bae47b2021a897396109dfcf42e8632dde13ec21`
 
 ## OBJECTIVE
 
@@ -702,3 +702,17 @@ Compilation alone is not completion.
 A partial packet sequence is not completion.
 Skipped required evidence is not completion.
 The executor must not declare APPROVED; only the independent governed reviewer may do so.
+
+
+## Execution admission record
+
+Final planning freeze review: M02 Review 005 / Issue #35 — APPROVED
+Final-freeze PR: #33
+Final-freeze exact-head workflow: #84 `35516261944` — Governance, Ubuntu, Windows and fuzz SUCCESS
+Promoted execution base: `bae47b2021a897396109dfcf42e8632dde13ec21`
+
+Authorization in this record becomes effective only after this admission delta is promoted to canonical `origin/main`.
+
+The execution branch MUST start from canonical `origin/main` immediately after admission promotion. The Context Lock `authorizedBase` (`bae47b2021a897396109dfcf42e8632dde13ec21`) must be an ancestor of that execution head, and every commit between `authorizedBase` and execution start must be governance/admission metadata only, with no M02 product implementation.
+
+This record changes execution state only. All architecture, scope, dependency, acceptance, calibration and STOP semantics above remain frozen.

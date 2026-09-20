@@ -1,16 +1,16 @@
 {
   "schemaVersion": "core-context-lock-v1",
   "workOrder": "CORE-WO-M02-001",
-  "status": "PENDING_PROMOTION",
+  "status": "ACTIVE",
   "repository": "KayzenRoot/core",
   "planningBase": "e84a2c678761fe9e357f490d42ea9a762630037b",
-  "authorizedBase": null,
+  "authorizedBase": "bae47b2021a897396109dfcf42e8632dde13ec21",
   "executionBranch": "feat/m02-project-workspace-adapter",
   "scopeClass": "M02_PROJECT_WORKSPACE_ADAPTER",
   "assuranceMode": "ELEVATED",
-  "productImplementationAuthorized": false,
+  "productImplementationAuthorized": true,
   "canonicalSources": {
-    "docs/project-brain/13-CHECKPOINT.md": "ae4f759f87de22c6c10c43654beacdc551fd5037",
+    "docs/project-brain/13-CHECKPOINT.md": "3c9901a2b19cbf6ea0b063e09ddbc589e484ba1a",
     "docs/project-brain/16-DECISIONS-LEDGER.md": "f55996920da23b03a0c4f01dd8435f78cd8ed5b3",
     "docs/project-brain/03-SCOPE.md": "6b82778e9ba7edf181caa23934289d0b9d438a54",
     "docs/project-brain/15-DEFINITION-OF-DONE.md": "8a7e99546381ac13e0587cb799eef15e4e5586e0",
@@ -32,10 +32,20 @@
   },
   "stalenessRule": "Any material change to authorized base, canonical sources, module plan, Work Order, or governing GEF policy makes this lock STALE and blocks execution until recompiled.",
   "promotionRule": "Final planning review must APPROVE and merge before authorizedBase is bound and productImplementationAuthorized may become true.",
-  "freezeCandidateBranch": "planning/m02-final-freeze",
-  "freezeCandidateBasis": "candidate fingerprints compiled before final exact-head review; execution authorizedBase remains unset until promotion",
   "workOrderSource": {
     "path": ".engineering/work-orders/CORE-WO-M02-001.md",
-    "blobSha": "eaaa3f8275471cbe3ac77689f59e8ca40b49c265"
-  }
+    "blobSha": "6e4f8e7506005b659727c7b52aa98a7646661447"
+  },
+  "authorizationEffectiveOnlyOnCanonicalMain": true,
+  "canonicalMain": "origin/main",
+  "activationRule": "Authorization is effective only when this exact active lock is present on canonical origin/main after the governed admission delta is promoted.",
+  "executionStartRule": "Create the execution branch from canonical origin/main after admission promotion; authorizedBase must be its ancestor and intervening commits must be governance/admission metadata only.",
+  "finalPlanningReview": {
+    "issue": 35,
+    "verdict": "APPROVED",
+    "freezePr": 33,
+    "workflowRun": 35516261944,
+    "promotionMerge": "bae47b2021a897396109dfcf42e8632dde13ec21"
+  },
+  "evidence": ".engineering/evidence/CORE-WO-M02-001.json"
 }
