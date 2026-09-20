@@ -2,7 +2,7 @@
 
 Status: `PRODUCT_DISCOVERY_ACTIVE`
 
-This document freezes only the foundation boundary. Product architecture remains pending discovery.
+This document contains the frozen foundation/runtime architecture plus accepted module-level product discovery architecture. Sections explicitly described as candidates remain unfrozen until their evidence gates are satisfied.
 
 ## Foundation planes
 

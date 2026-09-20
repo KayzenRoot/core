@@ -17,7 +17,7 @@ python -m unittest discover -s tests -p "test_*.py" -v
 ```
 
 ## Product validation
-Unit, integration, E2E, security, performance, recovery, compatibility and benchmark obligations remain `PENDING_DISCOVERY` and will be frozen by product architecture/risk.
+Product validation is frozen progressively by module and risk. M01 has promoted exact-head evidence; M02 obligations are being frozen during discovery; later-module unit, integration, E2E, security, performance, recovery, compatibility and benchmark obligations remain `PENDING_DISCOVERY` until their owning plans are accepted.
 
 Historical green evidence never automatically proves a changed head.
 

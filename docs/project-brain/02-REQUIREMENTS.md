@@ -2,7 +2,7 @@
 
 Status: `PRODUCT_DISCOVERY_ACTIVE`
 
-These are foundation requirements only. Product-functional requirements will be discovered and frozen during the planning phase.
+This file contains the frozen foundation requirements plus accepted module-level product discovery requirements. Later-module requirements remain pending until governed discovery/freeze.
 
 ## Foundation requirements
 
