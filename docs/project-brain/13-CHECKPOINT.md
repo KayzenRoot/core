@@ -1,19 +1,19 @@
 # CORE Checkpoint
 
 ## STATUS
-M01 COMPLETE / M02 FINAL FREEZE IN REVIEW
+M01 COMPLETE / M02 IMPLEMENTATION AUTHORIZED
 
 ## VERSION
 CORE V0.0 - Modular Construction
 
 ## PHASE
-2 - M02 Final Planning Freeze
+3 - M02 Implementation
 
 ## OBJECTIVE
 Continue building CORE as the headless NexLabs action plane that operates standalone and synchronizes deeply with HIVE without duplicating HIVE-owned intelligence.
 
 ## IN PROGRESS
-- M02 Project / Workspace Adapter final planning freeze candidate compiled: CORE-WO-M02-001 + pending Context Lock + Evidence Bundle + Codex handoff.
+- CORE-WO-M02-001 — Project / Workspace Adapter — ACTIVE AUTHORIZED after this admission promotion.
 - M03-M24 remain discovery-only.
 
 ## COMPLETED
@@ -32,22 +32,21 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - M02 Round 4 evidence architecture exact-head reviewed (Review 002 / Issue #28) and promoted through PR #27.
 - M02 Round 5 contract/file-map freeze exact-head reviewed (Review 003 / Issue #30) and promoted through PR #29.
 - M02 Round 6 calibration/technology disposition exact-head reviewed (Review 004 / Issue #32) and promoted through PR #31.
+- M02 final planning freeze exact-head reviewed (Review 005 / canonical Issue #35) and promoted through PR #33.
 
 ## PENDING
-- Governed exact-head review/promotion of the M02 final planning freeze.
-- Bind promoted execution base into CORE-WO-M02-001 Context Lock and authorize implementation only through a bounded admission delta.
+- Execute CORE-WO-M02-001 through Codex Packets A-H and return exact-head evidence for governed review.
 - Deep-plan M03 through M24 in dependency order.
 - Freeze product Requirements/Architecture/DoD as discovery matures.
 - Live local HIVE bootstrap evidence against current main.
 - GitHub main ruleset activation when authorized admin mutation is available.
 
 ## BLOCKERS
-- No architecture blocker remains for M02 planning.
-- M02 implementation remains gated by final-freeze review/promotion and execution-base Context Lock activation.
+- No known blocker for M02 execution preflight.
 - M03-M24 implementation remains gated by their respective planning freezes.
 
 ## NEXT STEP
-Review the exact-head M02 final planning freeze candidate. If APPROVED and promoted, perform only the bounded execution-admission delta that binds the promoted main SHA, activates the Context Lock and authorizes CORE-WO-M02-001. Do not start M02 implementation before that admission is promoted.
+After this execution-admission delta is APPROVED and promoted, execute CORE-WO-M02-001 using docs/work-orders/CODEX-HANDOFF-M02.md. Codex must perform preflight first, then Packets A-H, and may return only READY_FOR_REVIEW or BLOCKED.
 
 ## EVIDENCE
 - `docs/engineering/CORE-MODULAR-DELIVERY-MODEL.md`
@@ -75,6 +74,10 @@ Review the exact-head M02 final planning freeze candidate. If APPROVED and promo
 - M02 Round 6 PR #31
 - M02 Round 6 promotion merge `e84a2c678761fe9e357f490d42ea9a762630037b`
 - M02 Round 6 exact-head workflow #80 `35513851169` — Governance, Ubuntu, Windows and fuzz SUCCESS
+- M02 Review 005 / canonical Issue #35 — APPROVED final planning freeze
+- M02 final-freeze PR #33
+- M02 final-freeze promotion merge `bae47b2021a897396109dfcf42e8632dde13ec21`
+- M02 final-freeze exact-head workflow #84 `35516261944` — Governance, Ubuntu, Windows and fuzz SUCCESS
 
 ## M01 completion record
 Frozen Work Order: `CORE-WO-M01-001`
@@ -232,3 +235,16 @@ Codex handoff: `docs/work-orders/CODEX-HANDOFF-M02.md`
 Planning base: `e84a2c678761fe9e357f490d42ea9a762630037b`
 
 Result: all M02 V0.0 architecture/scope/contracts/file map/DoD/tests/calibration semantics are frozen in this candidate. Implementation remains unauthorized until final review/promotion and exact execution-base admission.
+
+
+## M02 execution admission
+
+Frozen Work Order: `.engineering/work-orders/CORE-WO-M02-001.md`
+Authorized product base: `bae47b2021a897396109dfcf42e8632dde13ec21`
+Context Lock: `.engineering/context-locks/CORE-WO-M02-001.json` — ACTIVE in this admission candidate
+Evidence skeleton: `.engineering/evidence/CORE-WO-M02-001.json`
+Codex handoff: `docs/work-orders/CODEX-HANDOFF-M02.md`
+Assurance: ELEVATED
+Scope: M02 Project / Workspace Adapter only
+
+This admission changes governance/execution state only. M02 architecture, scope, dependencies, contracts, acceptance criteria and STOP CONDITION remain exactly as approved by Review 005.
