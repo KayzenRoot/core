@@ -1,16 +1,16 @@
 {
   "schemaVersion": "core-context-lock-v1",
   "workOrder": "CORE-WO-M02-001",
-  "status": "PENDING_PROMOTION",
+  "status": "ACTIVE",
   "repository": "KayzenRoot/core",
   "planningBase": "e84a2c678761fe9e357f490d42ea9a762630037b",
-  "authorizedBase": null,
+  "authorizedBase": "bae47b2021a897396109dfcf42e8632dde13ec21",
   "executionBranch": "feat/m02-project-workspace-adapter",
   "scopeClass": "M02_PROJECT_WORKSPACE_ADAPTER",
   "assuranceMode": "ELEVATED",
-  "productImplementationAuthorized": false,
+  "productImplementationAuthorized": true,
   "canonicalSources": {
-    "docs/project-brain/13-CHECKPOINT.md": "ae4f759f87de22c6c10c43654beacdc551fd5037",
+    "docs/project-brain/13-CHECKPOINT.md": "4d92e6b80643c7dd23c6975fa50538ea872e8843",
     "docs/project-brain/16-DECISIONS-LEDGER.md": "f55996920da23b03a0c4f01dd8435f78cd8ed5b3",
     "docs/project-brain/03-SCOPE.md": "6b82778e9ba7edf181caa23934289d0b9d438a54",
     "docs/project-brain/15-DEFINITION-OF-DONE.md": "8a7e99546381ac13e0587cb799eef15e4e5586e0",
@@ -18,7 +18,7 @@
     "docs/project-brain/02-REQUIREMENTS.md": "de33ecab980785a2ce69061cd27cfe56c6a48d22",
     "docs/project-brain/10-SECURITY-GOVERNANCE.md": "430b861a0e2f1c0a93894cf5877e62cd20d8e0bd",
     "docs/project-brain/11-TEST-PLAN.md": "8d28f7b5d48aa2a1b0101694a29b5005baaa9c0c",
-    "docs/modules/M02-PROJECT-WORKSPACE-ADAPTER.md": "954aa5f7c772254ca145a76c4b22e0d43c535556"
+    "docs/modules/M02-PROJECT-WORKSPACE-ADAPTER.md": "b3fd77cb92e085ff827dc09fe146659c4616324b"
   },
   "upstream": {
     "gef": {
@@ -32,10 +32,21 @@
   },
   "stalenessRule": "Any material change to authorized base, canonical sources, module plan, Work Order, or governing GEF policy makes this lock STALE and blocks execution until recompiled.",
   "promotionRule": "Final planning review must APPROVE and merge before authorizedBase is bound and productImplementationAuthorized may become true.",
-  "freezeCandidateBranch": "planning/m02-final-freeze",
-  "freezeCandidateBasis": "candidate fingerprints compiled before final exact-head review; execution authorizedBase remains unset until promotion",
+  "freezeCandidateBasis": "PROMOTED_FINAL_FREEZE",
   "workOrderSource": {
     "path": ".engineering/work-orders/CORE-WO-M02-001.md",
-    "blobSha": "eaaa3f8275471cbe3ac77689f59e8ca40b49c265"
+    "blobSha": "6496f1fb10d37f4f0e0640a6c77adb7e85840492"
+  },
+  "activation": {
+    "finalFreezeReview": "M02-REVIEW-005",
+    "canonicalReviewIssue": 35,
+    "finalFreezePullRequest": 33,
+    "finalFreezeReviewedHead": "61db3cbdecb7cddf34a09d8e6493da642231630d",
+    "finalFreezeWorkflow": {
+      "runNumber": 84,
+      "runId": 35516261944
+    },
+    "finalFreezeMerge": "bae47b2021a897396109dfcf42e8632dde13ec21",
+    "admissionRule": "ACTIVE state becomes canonical only after the execution-admission PR is independently reviewed and promoted."
   }
 }
