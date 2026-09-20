@@ -334,3 +334,44 @@ Status: `ACTIVE`
 ## CORE-D-080 - Resource numbers require benchmark calibration
 **Decision:** M02 freezes typed resource-budget dimensions now, but exact numeric defaults must be calibrated from reproducible fixture/benchmark evidence rather than invented during architecture planning. Limit exhaustion fails typed and cannot yield partial BOUND.
 **State:** ACCEPTED
+
+
+## CORE-D-081 - M02 V0.0 uses one core-workspace crate
+**Decision:** the initial module is implemented as a single focused core-workspace crate rather than a family of micro-crates. Split is permitted only by evidence-backed Correction Delta.
+**State:** ACCEPTED
+
+## CORE-D-082 - core-workspace does not depend on core-runtime
+**Decision:** runtime generation/provenance crosses stable contracts; M02 avoids a reverse dependency cycle.
+**State:** ACCEPTED
+
+## CORE-D-083 - M02 reuses core-identity fingerprints
+**Decision:** Workspace/Repository/Worktree/Basis semantic fingerprints use the existing canonical identity stack; no parallel serializer/hash framework is introduced.
+**State:** ACCEPTED
+
+## CORE-D-084 - M02 public contracts use explicit v1 envelopes
+**Decision:** durable/external M02 payloads carry schema/kind/version and reject unsupported semantics. Evolution is versioned rather than inferred.
+**State:** ACCEPTED
+
+## CORE-D-085 - BVM v1 profiles are frozen freshness masks
+**Decision:** READ_METADATA, READ_SOURCE, PLAN_WORK, EXECUTE_TOOL_READONLY, MUTATE_SOURCE and GIT_DELIVERY define required basis freshness; HIVE_RECONCILED is an assurance overlay. BVM never grants action authority.
+**State:** ACCEPTED
+
+## CORE-D-086 - FSC is conservative and read-only
+**Decision:** M02 does not infer case behavior from OS family and does not write probe files into user source. Unknown security-sensitive semantics remain UNKNOWN or require stronger use-time proof.
+**State:** ACCEPTED
+
+## CORE-D-087 - System Git is the M02 V0.0 baseline provider
+**Decision:** initial implementation includes a hardened system-Git GitInspector behind a provider-neutral trait. It must pass all evidence gates. Rust-native/hybrid alternatives remain separately evidence-gated and are not initial dependencies.
+**State:** ACCEPTED
+
+## CORE-D-088 - PEC persistent L2 is out of initial M02 scope
+**Decision:** M02 V0.0 implements bounded runtime-epoch L1 proof reuse only. Persistent cache adds recovery/corruption/secret-lifecycle scope without being required for correctness.
+**State:** ACCEPTED
+
+## CORE-D-089 - OS watcher adapters are not required for M02 V0.0
+**Decision:** EIS/CIG and typed hint ingestion are required, but baseline correctness must work with zero events. Platform watcher adapters are later optimizations.
+**State:** ACCEPTED
+
+## CORE-D-090 - New third-party dependencies require explicit admission
+**Decision:** Round 5 freezes the initial dependency graph. Convenience alone is insufficient to add Git parsing, watcher, database, path-walk or platform-FFI crates.
+**State:** ACCEPTED
