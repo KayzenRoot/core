@@ -13,7 +13,7 @@ CORE V0.0 - Modular Construction
 Continue building CORE as the headless NexLabs action plane that operates standalone and synchronizes deeply with HIVE without duplicating HIVE-owned intelligence.
 
 ## IN PROGRESS
-- M02 Project / Workspace Adapter deep planning — Rounds 1-4 recorded; Round 4 freezes evidence invalidation, proof-cache, bounded hashing and backend-evaluation architecture.
+- M02 Project / Workspace Adapter deep planning — Rounds 1-5 recorded; Round 5 freezes v1 contracts, BVM/FSC semantics, V0.0 provider/cache disposition and exact initial crate/file map.
 - M03-M24 remain discovery-only.
 
 ## COMPLETED
@@ -29,6 +29,7 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - CAL admission close/acquire race fixed and proven under active QDS DRAINING.
 - M01 final evidence normalized and exact-head workflow validated.
 - M02 Rounds 1–3 discovery baseline exact-head reviewed (Review 001 / Issue #26) and promoted through PR #23.
+- M02 Round 4 evidence architecture exact-head reviewed (Review 002 / Issue #28) and promoted through PR #27.
 
 ## PENDING
 - Deep-plan M02 through M24 in dependency order.
@@ -58,6 +59,10 @@ Deep-plan M02 Project / Workspace Adapter using the same freeze-before-execution
 - M02 discovery PR #23
 - M02 Rounds 1–3 promotion merge `2556f1d380efe59f0b14cb1392c4aa9fb19efa2d`
 - M02 exact-head workflow #66 `35506655672` — Governance, Ubuntu, Windows and fuzz SUCCESS
+- M02 Review 002 / Issue #28 — APPROVED
+- M02 Round 4 PR #27
+- M02 Round 4 promotion merge `ed7b481cabd6911a0d7c3853eeabad14452ac54b`
+- M02 Round 4 exact-head workflow #71 `35508958685` — Governance, Ubuntu, Windows and fuzz SUCCESS
 
 ## M01 completion record
 Frozen Work Order: `CORE-WO-M01-001`
@@ -144,5 +149,33 @@ New required design mechanisms:
 - PEC Proof Economy Cache L1;
 - BHC Bounded Hash Conveyor;
 - SPO Semantic Provider Oracle.
+
+M02 implementation remains unauthorized.
+
+
+## M02 Round 4 promotion record
+
+Round promoted: 4
+Exact governed review head: `3ba0a08090e134c40ceef91e2da3c935b4b8b1e1`
+Governed review: Review 002 / Issue #28 — APPROVED
+Reviewed PR: #27
+Exact-head workflow: run #71 `35508958685` — Governance, Ubuntu, Windows and fuzz SUCCESS
+Promotion merge: `ed7b481cabd6911a0d7c3853eeabad14452ac54b`
+Result: Round 4 accepted into the M02 discovery baseline. M02 implementation remains unauthorized.
+
+## M02 Round 5 discovery delta
+
+Round 5 freezes executor-addressable v1 schemas, BVM profiles, conservative FSC semantics, the one-crate core-workspace file map and a minimal dependency boundary.
+
+Initial V0.0 disposition:
+- hardened system Git is the required baseline GitInspector behind a provider-neutral trait;
+- Rust-native/hybrid providers remain separately evidence-gated;
+- PEC is L1/runtime-epoch only;
+- OS watcher adapters are not required for correctness;
+- no new Git parser/watcher/database/path-walk dependency is admitted;
+- core-workspace does not depend on core-runtime;
+- M02-specific DoD is explicit.
+
+Remaining before planning freeze: benchmark-backed numeric resource defaults/acceptance thresholds, WMF/DWS final acceleration disposition, final Work Order/Context Lock and final planning audit.
 
 M02 implementation remains unauthorized.
