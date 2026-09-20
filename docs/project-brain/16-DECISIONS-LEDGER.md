@@ -170,3 +170,36 @@ Status: `ACTIVE`
 ## CORE-D-040 - Technology names do not override evidence
 **Decision:** NexLabs technology branding does not protect a mechanism from narrowing, merging or rejection. Independent measurable value and production evidence govern final retention.
 **State:** ACCEPTED
+
+
+## CORE-D-041 - M02 is an adapter, not a second Project Registry
+**Decision:** M02 owns local action-plane workspace binding and reconciliation. HIVE retains canonical Project Registry intelligence.
+**State:** ACCEPTED
+
+## CORE-D-042 - Workspace action requires explicit basis
+**Decision:** later execution may not rely on ambient current-directory assumptions. A validated WorkspaceHandle/basis is required before action.
+**State:** ACCEPTED
+
+## CORE-D-043 - Project, workspace, repository and worktree identities remain separate
+**Decision:** M02 models these as distinct typed identities linked by explicit relations rather than collapsing them into an absolute path.
+**State:** ACCEPTED
+
+## CORE-D-044 - Git/filesystem state and HIVE identity are different authorities
+**Decision:** HIVE may authoritatively identify the registered project; local Git/filesystem evidence authoritatively describes the concrete checkout. Conflict is explicit and blocks unsafe attachment rather than being silently merged.
+**State:** ACCEPTED
+
+## CORE-D-045 - M02 is read-only with respect to source and Git mutation
+**Decision:** M02 may inspect Git/filesystem state for basis establishment but mutation belongs to M13 and Git/GitHub delivery belongs to M20/M21.
+**State:** ACCEPTED
+
+## CORE-D-046 - Path authority precedes sandboxing
+**Decision:** M02 performs deterministic path-within-authority validation and escape detection. M11 later adds runtime sandbox/capability enforcement; M02 must not pretend path validation is a complete sandbox.
+**State:** ACCEPTED
+
+## CORE-D-047 - Workspace drift is a correctness event
+**Decision:** correctness-relevant changes to repository/worktree/config/security basis invalidate or require revalidation of affected workspace handles before action.
+**State:** ACCEPTED
+
+## CORE-D-048 - M02 workspace discovery is zero-LLM
+**Decision:** identity, Git basis, path normalization, boundary resolution, HIVE/local reconciliation and drift detection are deterministic-first and require no inference.
+**State:** ACCEPTED

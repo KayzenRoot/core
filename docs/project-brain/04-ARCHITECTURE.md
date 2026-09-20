@@ -74,3 +74,49 @@ CORE product runtime is Rust-first:
 - no arbitrary dynamic-library plugins.
 
 HIVE remains independently implemented/deployed. CORE communicates with HIVE through versioned external contracts rather than sharing language/runtime/database internals.
+
+
+## M02 Project / Workspace Adapter architecture direction
+
+M02 sits directly above M01 runtime/contracts and below every later module that needs a concrete project checkout.
+
+```text
+HIVE Project Registry (external intelligence authority)
+          |
+          | optional project identity/provenance
+          v
+M02 Basis Reconciliation Layer
+          ^
+          | local deterministic evidence
+          |
+Git / filesystem / explicit config
+          |
+          v
+Workspace Identity + Authority + Basis
+          |
+          v
+WorkspaceHandle / Workspace Binding Receipt
+          |
+          +--> M03 Work Order Engine
+          +--> M04 Run Engine
+          +--> M05 Host Adapters
+          +--> M11 Sandbox/Leases
+          +--> M13 Mutation
+          +--> M20 Git Delivery
+```
+
+M02 is read-oriented. It may invoke Git only for bounded inspection/discovery needed to establish the current basis. It does not commit, checkout, reset, branch, push, merge or otherwise mutate repository state.
+
+M02 consumes M01 deterministic canonical serialization, generations, typed errors, health/degradation and capability provenance rather than creating parallel primitives.
+
+Candidate M02 technologies under evaluation:
+- WIL Workspace Identity Lattice;
+- CWB Canonical Workspace Basis;
+- PAF Path Authority Firewall;
+- BRL Basis Reconciliation Layer;
+- WDG Workspace Drift Guard;
+- RBR Repository Boundary Resolver;
+- WBR Workspace Binding Receipt;
+- DWS Delta Workspace Snapshot.
+
+These are discovery candidates until M02 technology disposition is governed by measurable tests/benchmarks.

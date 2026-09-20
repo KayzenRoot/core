@@ -45,3 +45,22 @@ These are foundation requirements only. Product-functional requirements will be 
 - **CORE-R-028 Supply-chain evidence:** release evidence MUST include dependency/advisory/license/provenance checks and SBOM.
 - **CORE-R-029 Unsafe Rust:** first-party unsafe code MUST be exceptional, localized, documented and independently reviewable.
 - **CORE-R-030 Cache economics:** future LLM-facing execution MUST expose stable/cache-eligible versus uncached/retried token economics.
+
+
+## M02 Project / Workspace Adapter requirements
+
+- **CORE-R-031 Explicit workspace basis:** execution-capable modules MUST NOT act without a validated WorkspaceHandle and WorkspaceBasisFingerprint.
+- **CORE-R-032 Identity separation:** project binding, workspace, repository and worktree identities MUST remain distinct typed identities.
+- **CORE-R-033 Git/local truth:** local filesystem/Git state is canonical for the attached checkout; HIVE project identity MUST NOT overwrite contradictory local checkout evidence.
+- **CORE-R-034 HIVE reconciliation:** HIVE association MUST be represented with provenance and explicit match/conflict/unknown state; no fabricated HIVE identity is allowed.
+- **CORE-R-035 Standalone binding:** M02 MUST support bounded deterministic workspace binding without HIVE.
+- **CORE-R-036 Path authority:** every path exposed for later execution MUST be validated against declared workspace authority roots.
+- **CORE-R-037 Escape resistance:** traversal, symlink/junction/reparse escape and ambiguous normalization MUST fail closed when security-relevant.
+- **CORE-R-038 Read-only M02:** M02 MUST NOT own source mutation, Git commit/branch/PR mutation or delivery behavior.
+- **CORE-R-039 Workspace drift:** correctness-relevant basis drift MUST invalidate or revalidate affected WorkspaceHandles before later action.
+- **CORE-R-040 Worktree awareness:** linked worktrees, detached HEAD, submodules, sparse checkout and nested repositories MUST be represented explicitly rather than flattened into one path.
+- **CORE-R-041 Zero-LLM workspace identity:** discovery, binding, path validation, Git basis and drift detection MUST require zero inference.
+- **CORE-R-042 Deterministic workspace fingerprints:** M02 MUST reuse M01 canonical serialization/fingerprint primitives for workspace correctness identity.
+- **CORE-R-043 Delta revalidation:** repeated workspace validation SHOULD recompute only correctness-relevant deltas when equivalence to full recomputation is provable.
+- **CORE-R-044 Secret-safe Git metadata:** remote URLs, config and process output MUST be redacted so credentials/tokens cannot enter receipts/evidence.
+- **CORE-R-045 Proof-carrying binding:** successful workspace admission MUST emit a compact versioned binding receipt sufficient for downstream validation without embedding repository contents.
