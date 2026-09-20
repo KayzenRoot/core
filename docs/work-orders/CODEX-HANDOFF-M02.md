@@ -1,6 +1,6 @@
 # CODEX HANDOFF — CORE-WO-M02-001
 
-Status: PENDING FINAL PLANNING PROMOTION
+Status: AUTHORIZED FOR EXECUTION AFTER ADMISSION PROMOTION
 Execution branch: `feat/m02-project-workspace-adapter`
 Work Order: `.engineering/work-orders/CORE-WO-M02-001.md`
 Context Lock: `.engineering/context-locks/CORE-WO-M02-001.json`
@@ -19,8 +19,8 @@ If any of these are false, STOP and report STALE/NOT_AUTHORIZED.
 
 1. verify remote `KayzenRoot/core`;
 2. fetch origin;
-3. checkout/create `feat/m02-project-workspace-adapter` exactly from Context Lock `authorizedBase`;
-4. verify the authorized base is the current execution ancestor;
+3. checkout the admission-promoted `main`, then create/checkout `feat/m02-project-workspace-adapter` from that admitted main head;
+4. verify Context Lock `authorizedBase` is an ancestor of the admitted main head and that intervening commits are governance/admission-only, with no product implementation delta;
 5. validate Context Lock fingerprints;
 6. read canonical sources in Work Order order;
 7. run governance validation;
