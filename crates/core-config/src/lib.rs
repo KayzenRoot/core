@@ -6,8 +6,7 @@ use std::collections::BTreeMap;
 use std::path::PathBuf;
 use thiserror::Error;
 
-/// Finite M02 resource bounds. Values are bounded bootstrap defaults until the
-/// Work Order calibration gate records the final measured selection.
+/// Finite M02 resource bounds selected by the Work Order calibration gate.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct WorkspaceResourceBudget {
     pub max_repository_graph_nodes: u64,
@@ -48,6 +47,12 @@ impl WorkspaceResourceBudget {
         }
     }
 
+    pub fn finalized() -> Self {
+        let mut budget = Self::provisional();
+        budget.calibrated = true;
+        budget
+    }
+
     pub fn validate(&self) -> Result<(), ConfigError> {
         let values = [
             self.max_repository_graph_nodes,
@@ -76,7 +81,7 @@ impl WorkspaceResourceBudget {
 
 impl Default for WorkspaceResourceBudget {
     fn default() -> Self {
-        Self::provisional()
+        Self::finalized()
     }
 }
 
