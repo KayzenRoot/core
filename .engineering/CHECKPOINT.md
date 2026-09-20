@@ -6,13 +6,13 @@ Canonical source: `docs/project-brain/13-CHECKPOINT.md`
 This file is a GEF continuity view. It is not a second source of product truth. Shared fields are validated deterministically against the canonical HIVE-compatible checkpoint.
 
 ## STATUS
-M01 COMPLETE / M02 FINAL FREEZE IN REVIEW
+M01 COMPLETE / M02 IMPLEMENTATION AUTHORIZED
 
 ## VERSION
 CORE V0.0 - Modular Construction
 
 ## PHASE
-2 - M02 Final Planning Freeze
+3 - M02 Implementation
 
 ## NEXT STEP
-Review the exact-head M02 final planning freeze candidate. If APPROVED and promoted, perform only the bounded execution-admission delta that binds the promoted main SHA, activates the Context Lock and authorizes CORE-WO-M02-001. Do not start M02 implementation before that admission is promoted.
+After this execution-admission delta is APPROVED and promoted, execute CORE-WO-M02-001 using docs/work-orders/CODEX-HANDOFF-M02.md. Codex must perform preflight first, then Packets A-H, and may return only READY_FOR_REVIEW or BLOCKED.
