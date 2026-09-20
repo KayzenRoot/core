@@ -47,12 +47,24 @@ M02 is complete only when the frozen M02 plan and Work Order prove all of the fo
 - EIS/CIG correctness with watcher disabled and with overflow/loss hints;
 - PEC L1 proof reuse that is disposable, observable and never mtime-only correctness;
 - BHC bounded streaming/coalesced hashing and cancellation cleanup;
-- explicit WorkspaceResourceBudget defaults backed by reproducible M02 calibration evidence;
+- explicit finite WorkspaceResourceBudget defaults backed by the mandatory M02 Resource Calibration Gate and committed calibration evidence;
 - zero-LLM proof for all M02 discovery/binding/revalidation paths;
 - unit/integration/property/adversarial/fuzz coverage on Windows and Ubuntu;
 - supply-chain/advisory/SBOM checks;
-- M02 benchmark/regression evidence;
+- M02 benchmark/regression evidence, including selected and rejected calibration candidates;
 - executor Evidence Bundle and proposed Checkpoint Delta;
 - independent governed exact-head review with no unresolved HIGH/CRITICAL finding.
 
 Persistent L2 proof cache, Rust-native/hybrid GitInspector providers and OS watcher adapters are not required for M02 V0.0 completion unless later admitted by governed evidence.
+
+
+### M02 calibration completion gate
+
+M02 cannot satisfy its DoD until:
+- the implementation reaches CALIBRATION_ONLY state under the frozen Work Order;
+- the required fixture/benchmark matrix runs;
+- `docs/evidence/M02-CALIBRATION-REPORT.md` records environment, commands, measurements, selected/rejected candidates and final numeric budgets;
+- the authorized Calibration Delta is applied without architecture/dependency/contract mutation;
+- the full test/security/supply-chain/benchmark suite reruns on the new exact head.
+
+WMF is not required for M02 V0.0 DoD. DWS equivalence to full recomputation is required.
