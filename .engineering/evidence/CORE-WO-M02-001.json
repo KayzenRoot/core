@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "core-evidence-bundle-v1",
+  "workOrder": "CORE-WO-M02-001",
+  "status": "PENDING_EXECUTION",
+  "authorizedBase": null,
+  "candidateHead": null,
+  "contextLock": ".engineering/context-locks/CORE-WO-M02-001.json",
+  "hive": {
+    "availability": "UNKNOWN_UNTIL_PREFLIGHT",
+    "projectResolution": null
+  },
+  "canonicalSources": [],
+  "changedFiles": [],
+  "commands": [],
+  "tests": {
+    "unit": null,
+    "integration": null,
+    "property": null,
+    "adversarial": null,
+    "fuzz": null,
+    "windows": null,
+    "ubuntu": null
+  },
+  "security": {
+    "dependencyPolicy": null,
+    "advisory": null,
+    "license": null,
+    "sbom": null,
+    "unsafeInventory": null,
+    "noNetworkNoMutation": null,
+    "secretRedaction": null
+  },
+  "calibration": {
+    "status": "PENDING",
+    "report": "docs/evidence/M02-CALIBRATION-REPORT.md",
+    "selectedBudgets": null,
+    "rejectedCandidates": []
+  },
+  "zeroLlmProof": null,
+  "ciRuns": [],
+  "failuresAndCorrections": [],
+  "residualRisks": [],
+  "proposedCheckpointDelta": null,
+  "executorVerdict": null,
+  "reviewerVerdict": null
+}

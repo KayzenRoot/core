@@ -3,13 +3,13 @@
   "project": "KayzenRoot/core",
   "promptMode": "GEF_V1_HIVE_FIRST",
   "reviewMode": "DELTA_EXACT_HEAD",
-  "assuranceMode": "STANDARD_PLUS",
-  "productStage": "M02_DISCOVERY_ACTIVE",
-  "nextLegalAction": "FREEZE_M02_WORK_ORDER_AND_CONTEXT_LOCK",
+  "assuranceMode": "ELEVATED",
+  "productStage": "M02_FINAL_FREEZE_REVIEW",
+  "nextLegalAction": "REVIEW_M02_FINAL_PLANNING_FREEZE",
   "productImplementationAuthorized": false,
   "canonicalCheckpoint": "docs/project-brain/13-CHECKPOINT.md",
   "lastCompletedWorkOrder": "CORE-WO-M01-001",
-  "lastPromotedMerge": "c69bf761dad9fbec8f8128ab62c5ba0a0271ef61",
+  "lastPromotedMerge": "e84a2c678761fe9e357f490d42ea9a762630037b",
   "authorizedScope": "NONE",
   "activeWorkOrder": null
 }

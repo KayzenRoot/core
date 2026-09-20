@@ -2205,3 +2205,42 @@ The final planning round must now:
 - authorize M02 implementation only after APPROVED promotion of that freeze.
 
 M02 implementation remains unauthorized.
+
+
+## Final planning freeze candidate
+
+M02 planning rounds 1-6 are complete and the executor contract is compiled.
+
+Frozen execution artifacts:
+- Work Order: `.engineering/work-orders/CORE-WO-M02-001.md`;
+- Context Lock: `.engineering/context-locks/CORE-WO-M02-001.json`;
+- Evidence Bundle skeleton: `.engineering/evidence/CORE-WO-M02-001.json`;
+- Codex handoff: `docs/work-orders/CODEX-HANDOFF-M02.md`.
+
+The Work Order contains:
+- one-module implementation authority boundary;
+- eight ordered construction packets A-H;
+- HIVE preflight and SOLO degradation behavior;
+- exact initial file/dependency map;
+- 41 acceptance criteria;
+- mandatory adversarial/property/fuzz/security/supply-chain/Windows/Ubuntu evidence;
+- mandatory RCG Calibration Gate;
+- bounded Calibration Delta authority;
+- exact Evidence Bundle expectations;
+- final READY_FOR_REVIEW / BLOCKED STOP CONDITION.
+
+No unresolved architecture choice remains for M02 V0.0.
+
+Execution is still unauthorized in this candidate because:
+- the final planning freeze has not yet received governed exact-head approval/promotion;
+- the execution `authorizedBase` cannot be bound until the promoted merge SHA exists;
+- the pending Context Lock therefore remains `PENDING_PROMOTION`.
+
+After APPROVED promotion, only a bounded execution-admission delta may:
+- bind the promoted main SHA as `authorizedBase`;
+- recompute relevant canonical fingerprints if promotion changed them;
+- set Context Lock `status=ACTIVE`;
+- set `productImplementationAuthorized=true`;
+- mark `CORE-WO-M02-001` as the active Work Order.
+
+No architecture, scope, dependency or acceptance semantics may change during that admission delta.
