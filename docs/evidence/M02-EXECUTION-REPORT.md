@@ -3,7 +3,7 @@
 Work Order: `CORE-WO-M02-001`
 Authorized base: `bae47b2021a897396109dfcf42e8632dde13ec21`
 Execution branch: `feat/m02-project-workspace-adapter`
-Final implementation head: `98615a8143fdb28a7ce1ef4a010c228b736be845` (the exact product/calibration head; evidence-only closure may follow).
+Final implementation head: `1cb2a73ac49113729d46ddd170cb8d8345672b31` (the exact product/calibration head; evidence-only closure may follow).
 Executor verdict: `READY_FOR_REVIEW` only if the exact-head hosted gates and independent review conditions below are green; otherwise `BLOCKED`.
 
 ## Packet commits
@@ -20,6 +20,7 @@ Executor verdict: `READY_FOR_REVIEW` only if the exact-head hosted gates and ind
 | F correction | `7c6d6b3` |
 | H | `39b751a` |
 | G portability correction | `98615a8` |
+| Supply-chain metadata correction | `1cb2a73` |
 
 ## HIVE truth
 
@@ -38,6 +39,7 @@ HIVE MCP was available and resolved CORE as project `c65b7abc-533a-411a-bbbb-2b7
 - Calibration benchmark: PASS with five measured iterations and finite values on the implementation head; see `M02-CALIBRATION-REPORT.md`.
 - Local cargo-deny/cargo-audit: pending availability of those external tools; hosted exact-head jobs are required and cannot be replaced by historical results.
 - Hosted first exact-head attempt found the Unix traversal-separator defect in M02 lib tests; corrected in `98615a8` and local Windows/full-workspace gates rerun PASS. A new hosted exact-head run is required.
+- Hosted second exact-head attempt found `cargo-deny` wildcard path dependencies; versions were declared for the three admitted local dependencies in `1cb2a73`. A new hosted exact-head run is required.
 
 ## Acceptance criteria 1–41
 

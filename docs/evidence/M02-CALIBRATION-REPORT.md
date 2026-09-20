@@ -3,7 +3,7 @@
 Work Order: `CORE-WO-M02-001`
 Calibration mode: `CALIBRATION_ONLY`
 Authorized base: `bae47b2021a897396109dfcf42e8632dde13ec21`
-Calibration input HEAD: `98615a8143fdb28a7ce1ef4a010c228b736be845`
+Calibration input HEAD: `1cb2a73ac49113729d46ddd170cb8d8345672b31`
 Platform: Windows x86_64
 Rust: `rustc 1.98.1 (48a229cea 2026-09-01)`
 Cargo: `1.98.1`
