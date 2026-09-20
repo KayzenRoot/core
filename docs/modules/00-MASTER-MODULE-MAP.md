@@ -1,6 +1,6 @@
 # CORE Master Module Map
 
-Status: `M01_COMPLETE_M02_DISCOVERY_ACTIVE`
+Status: `M01_COMPLETE_M02_FINAL_FREEZE_REVIEW`
 
 ## Product boundary
 
@@ -87,5 +87,5 @@ The order may be refined by dependency evidence, but a later module must not sil
 
 ## Current progression
 - M01 Core Runtime & Lifecycle — COMPLETE / PROMOTED.
-- M02 Project / Workspace Adapter — DEEP PLANNING ACTIVE.
+- M02 Project / Workspace Adapter — FINAL PLANNING FREEZE IN REVIEW.
 - M03-M24 — discovery-only until their planning freezes.
