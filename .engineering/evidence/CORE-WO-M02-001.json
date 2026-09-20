@@ -1,8 +1,8 @@
 {
   "schemaVersion": "core-evidence-bundle-v1",
   "workOrder": "CORE-WO-M02-001",
-  "status": "PENDING_EXECUTION",
-  "authorizedBase": null,
+  "status": "READY_FOR_EXECUTION",
+  "authorizedBase": "bae47b2021a897396109dfcf42e8632dde13ec21",
   "candidateHead": null,
   "contextLock": ".engineering/context-locks/CORE-WO-M02-001.json",
   "hive": {
@@ -42,5 +42,16 @@
   "residualRisks": [],
   "proposedCheckpointDelta": null,
   "executorVerdict": null,
-  "reviewerVerdict": null
+  "reviewerVerdict": null,
+  "admission": {
+    "review": "M02-REVIEW-005",
+    "canonicalIssue": 35,
+    "freezePullRequest": 33,
+    "freezeMerge": "bae47b2021a897396109dfcf42e8632dde13ec21",
+    "freezeWorkflow": {
+      "run": 84,
+      "id": 35516261944
+    },
+    "assurance": "ELEVATED"
+  }
 }
