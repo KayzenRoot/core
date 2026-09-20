@@ -408,3 +408,8 @@ Status: `ACTIVE`
 ## CORE-D-098 - Unlimited security-sensitive resource sentinels are forbidden
 **Decision:** resource budgets used to bound hostile repository/path/output behavior must have explicit finite values after calibration; zero/unlimited semantics cannot bypass those limits.
 **State:** ACCEPTED
+
+
+## CORE-D-099 - V0.0 system-Git baseline refines earlier provider-neutral evaluation decisions
+**Decision:** CORE-D-087 is the V0.0 implementation refinement of CORE-D-064/075. The admitted system-Git baseline must prove its own semantic/security/resource/cross-platform obligations, but M02 V0.0 does not require adding an unadmitted alternative provider merely to create a comparison. Any future Rust-native/hybrid provider promotion requires differential comparison against the semantic reference and current baseline.
+**State:** ACCEPTED
