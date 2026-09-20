@@ -6,9 +6,9 @@ license.workspace = true
 rust-version.workspace = true
 
 [dependencies]
-core-config = { path = "../core-config" }
-core-contracts = { path = "../core-contracts" }
-core-identity = { path = "../core-identity" }
+core-config = { path = "../core-config", version = "0.1.0" }
+core-contracts = { path = "../core-contracts", version = "0.1.0" }
+core-identity = { path = "../core-identity", version = "0.1.0" }
 serde.workspace = true
 serde_json.workspace = true
 sha2.workspace = true
