@@ -7,7 +7,7 @@ Status: `ACTIVE`
 Canonical module map: `docs/modules/00-MASTER-MODULE-MAP.md`.
 
 - M01 Core Runtime & Lifecycle — COMPLETE / PROMOTED.
-- M02 Project / Workspace Adapter — IMPLEMENTATION AUTHORIZED (CORE-WO-M02-001 active; execute under ELEVATED assurance from admitted Context Lock base).
+- M02 Project / Workspace Adapter — IMPLEMENTATION AUTHORIZATION ARMED (effective only after this exact admission state is promoted to canonical `origin/main`; then execute CORE-WO-M02-001 under ELEVATED assurance).
 - M03 Work Order Engine.
 - M04 Run / Attempt / Step Engine.
 - M05 Host Adapter Fabric.
