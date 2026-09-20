@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "core-context-lock-v1",
+  "workOrder": {
+    "path": ".engineering/work-orders/CORE-WO-M02-001.md",
+    "blobSha": "7ecd057a9e5edac233f8fcbc37e3fbd28cc9177e"
+  },
+  "status": "PENDING_PROMOTION",
+  "repository": "KayzenRoot/core",
+  "planningBase": "e84a2c678761fe9e357f490d42ea9a762630037b",
+  "authorizedBase": null,
+  "executionBranch": "feat/m02-project-workspace-adapter",
+  "scopeClass": "M02_PROJECT_WORKSPACE_ADAPTER",
+  "assuranceMode": "ELEVATED",
+  "productImplementationAuthorized": false,
+  "canonicalSources": {
+    "docs/project-brain/13-CHECKPOINT.md": "2ad42ae247078038df9b5e9461a89f2d0c09f962",
+    "docs/project-brain/16-DECISIONS-LEDGER.md": "f55996920da23b03a0c4f01dd8435f78cd8ed5b3",
+    "docs/project-brain/03-SCOPE.md": "6b82778e9ba7edf181caa23934289d0b9d438a54",
+    "docs/project-brain/15-DEFINITION-OF-DONE.md": "8a7e99546381ac13e0587cb799eef15e4e5586e0",
+    "docs/project-brain/04-ARCHITECTURE.md": "5ad24de448ca8dea3f0130fdddd12377d18f32e2",
+    "docs/project-brain/02-REQUIREMENTS.md": "de33ecab980785a2ce69061cd27cfe56c6a48d22",
+    "docs/project-brain/10-SECURITY-GOVERNANCE.md": "430b861a0e2f1c0a93894cf5877e62cd20d8e0bd",
+    "docs/project-brain/11-TEST-PLAN.md": "8d28f7b5d48aa2a1b0101694a29b5005baaa9c0c",
+    "docs/modules/M02-PROJECT-WORKSPACE-ADAPTER.md": "13a208ed17601035f3823df9412aff4eb85bce13"
+  },
+  "upstream": {
+    "gef": {
+      "version": "1.0.0",
+      "commit": "866fe3af8cccc65c929aaf6a47a924401fa448b3"
+    },
+    "hive": {
+      "version": "1.0.0",
+      "commit": "a53b5b9fcf55c32a5696180fb1b1ef80ccd1edcf"
+    }
+  },
+  "stalenessRule": "Any material change to authorized base, canonical sources, module plan, Work Order, or governing GEF policy makes this lock STALE and blocks execution until recompiled.",
+  "promotionRule": "Final planning review must APPROVE and merge before authorizedBase is bound and productImplementationAuthorized may become true."
+}
