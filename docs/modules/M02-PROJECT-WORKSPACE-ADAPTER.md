@@ -1948,9 +1948,9 @@ core-identity     core-config
 
 `core-workspace` MUST NOT depend on core-runtime, core-cli, core-health, M03+ crates or HIVE code. Runtime epoch/generation data crosses through core-contracts.
 
-### Round 5 unresolved items
+### Round 5 unresolved items at Round 5 close
 
-Before M02 planning STOP CONDITION:
+At the end of Round 5, before Round 6 refinement, the remaining items were:
 - benchmark/calibration evidence for exact resource defaults;
 - final acceptance thresholds from that evidence;
 - final WMF/DWS acceleration disposition;
