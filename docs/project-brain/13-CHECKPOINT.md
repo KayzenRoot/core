@@ -13,7 +13,7 @@ CORE V0.0 - Modular Construction
 Continue building CORE as the headless NexLabs action plane that operates standalone and synchronizes deeply with HIVE without duplicating HIVE-owned intelligence.
 
 ## IN PROGRESS
-- M02 Project / Workspace Adapter deep planning — Rounds 1-3 ownership, contracts, repository graph, threat model and HIVE association seam recorded.
+- M02 Project / Workspace Adapter deep planning — Rounds 1-4 recorded; Round 4 freezes evidence invalidation, proof-cache, bounded hashing and backend-evaluation architecture.
 - M03-M24 remain discovery-only.
 
 ## COMPLETED
@@ -104,3 +104,31 @@ New technology candidate:
 - WMF Workspace Merkle Forest.
 
 GitInspector implementation backend remains intentionally unfrozen pending benchmark/security evidence. M02 remains zero-LLM and read-only.
+
+
+## M02 Round 4 discovery delta
+
+Round 4 freezes the workspace evidence/revalidation architecture without selecting a GitInspector production backend prematurely.
+
+Accepted direction:
+- watcher events are non-authoritative invalidation hints;
+- EIS + CIG map hints/evidence changes into deterministic basis-component invalidation;
+- action-boundary revalidation remains the correctness proof;
+- PEC L1 caches compact derived proofs only and exposes hit/miss/bypass/invalidation reasons;
+- mtime/stat alone never proves correctness-relevant content equality;
+- BHC performs bounded streaming/coalesced content hashing;
+- authority roots become explicit typed/non-transitive records;
+- repository graph serialization is canonical and order-stable;
+- system Git is the semantic reference oracle for differential provider tests, not an automatic production-backend selection;
+- SPO gates Rust-native/system/hybrid provider promotion on semantic/security/resource evidence;
+- compact fingerprints/deltas/evidence refs are preferred over raw repository inventories for downstream HIVE/LLM token economy;
+- exact numeric resource defaults remain benchmark-calibrated rather than fabricated.
+
+New required design mechanisms:
+- EIS Event Invalidation Spine;
+- CIG Causal Invalidation Graph;
+- PEC Proof Economy Cache L1;
+- BHC Bounded Hash Conveyor;
+- SPO Semantic Provider Oracle.
+
+M02 implementation remains unauthorized.

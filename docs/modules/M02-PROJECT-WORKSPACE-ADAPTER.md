@@ -1236,3 +1236,433 @@ Still to freeze:
 - final crate/file map;
 - final technology disposition;
 - DoD and Work Order.
+
+
+## Round 4 - Evidence engine, invalidation, cache and backend evaluation
+
+### Round 4 objective
+
+Round 4 freezes how M02 observes workspace change efficiently without weakening correctness.
+
+The central rule is:
+
+> events and caches may tell M02 what to re-check, but only deterministic revalidation may prove what is currently true.
+
+This round deliberately does **not** select the final `GitInspector` production backend. CORE-D-064 remains binding: backend selection requires comparative security/compatibility/performance evidence.
+
+### Evidence pipeline
+
+M02 uses a four-stage evidence pipeline:
+
+```text
+OS/Git change hints
+      |
+      v
+EIS Event Invalidation Spine
+      |
+      v
+CIG Causal Invalidation Graph
+      |
+      +--> dirty WorkspaceBasis component mask
+      |
+      v
+deterministic revalidation
+      |
+      +--> GitInspector
+      +--> Path/FSC proof
+      +--> bounded content hashing
+      +--> optional HIVE association refresh
+      |
+      v
+CWB / WorkspaceBasisDiff
+      |
+      +--> PEC proof cache
+      +--> new WorkspaceHandle generation when required
+```
+
+No watcher event, cache entry or timestamp alone can transition a workspace to BOUND.
+
+### EIS - Event Invalidation Spine
+
+**Problem:** full workspace rescans on every action waste I/O and CPU, while filesystem watchers can drop, coalesce or reorder events.
+
+**Mechanism:** platform watcher/Git metadata events are normalized into non-authoritative invalidation hints.
+
+Candidate event classes:
+- PATH_CREATED;
+- PATH_REMOVED;
+- PATH_RENAMED;
+- PATH_CONTENT_CHANGED;
+- PATH_METADATA_CHANGED;
+- GIT_HEAD_HINT;
+- GIT_INDEX_HINT;
+- GIT_REFS_HINT;
+- GIT_METADATA_HINT;
+- AUTHORITY_ROOT_HINT;
+- FILESYSTEM_SEMANTICS_HINT;
+- ASSOCIATION_HINT;
+- OVERFLOW_OR_LOSS.
+
+Each hint carries:
+- WorkspaceId;
+- optional RepositoryId/WorktreeId;
+- normalized path handle when safe;
+- event class;
+- provider identity/version;
+- monotonic local sequence when available;
+- observation time as diagnostic only;
+- overflow/loss indicator.
+
+Rules:
+- events only mark basis components DIRTY/UNKNOWN;
+- event loss/overflow broadens invalidation rather than pretending no change;
+- duplicate/coalesced events are safe;
+- event ordering is not a correctness dependency;
+- a watcher provider may be disabled with no loss of correctness, only performance.
+
+### CIG - Causal Invalidation Graph
+
+**Problem:** one changed fact can invalidate several basis components and downstream cache classes.
+
+**Mechanism:** a deterministic graph maps evidence classes to affected WorkspaceBasis components and operation validity masks.
+
+Example edges:
+- HEAD/ref hint -> HEAD_STATE + REPOSITORY_GRAPH checks as policy requires;
+- index hint -> INDEX_STATE;
+- tracked source hint -> TRACKED_WORKTREE_STATE;
+- untracked source hint -> UNTRACKED_WORKTREE_STATE under policy;
+- .git/common-dir hint -> REPOSITORY_GRAPH + WORKTREE_IDENTITY + GIT_METADATA authority;
+- authority-root hint -> AUTHORITY_ROOTS + FILESYSTEM_SEMANTICS + security hard invalidation;
+- configuration generation -> CONFIG_GENERATION;
+- security policy generation -> SECURITY_POLICY;
+- HIVE provider generation -> PROJECT_ASSOCIATION.
+
+CIG output is a component mask plus reason/provenance. It never produces ALLOW directly.
+
+### PEC - Proof Economy Cache
+
+**Problem:** repeated deterministic proofs still cost CPU/I/O and generate large repeated evidence/context.
+
+**Mechanism:** cache compact proof objects, not mutable source truth.
+
+Minimum cache identity:
+- schema/algorithm version;
+- WorkspaceId;
+- runtime epoch where relevant;
+- WorkspaceGeneration/basis component generation;
+- authority-root identity;
+- provider/backend identity + version;
+- policy/config/security generation;
+- filesystem semantics capsule fingerprint;
+- normalized path/repository/worktree identity;
+- evidence-specific semantic identity;
+- hash algorithm/version when content-derived.
+
+Cache entry result classes:
+- HIT_VALIDATED;
+- MISS_NOT_FOUND;
+- BYPASS_SECURITY;
+- BYPASS_UNKNOWN_SEMANTICS;
+- BYPASS_POLICY;
+- INVALIDATED_EVENT;
+- INVALIDATED_GENERATION;
+- INVALIDATED_PROVIDER;
+- INVALIDATED_AUTHORITY;
+- INVALIDATED_SECURITY;
+- EXPIRED_DIAGNOSTIC_ONLY.
+
+Rules:
+- cache state is derived and disposable;
+- cache corruption/loss cannot change canonical repository truth;
+- a cache hit is usable only after its identity preconditions are rechecked;
+- mtime alone is never sufficient proof of unchanged correctness-relevant content;
+- unknown security-sensitive filesystem semantics force bypass or stronger proof;
+- no credential-bearing Git/config material enters cache keys or payloads;
+- cache hit/miss/bypass reasons are machine-readable for later performance/token accounting.
+
+### Cache tiers
+
+#### L1 epoch proof cache
+
+Required candidate:
+- in-memory;
+- bounded;
+- process/runtime-epoch scoped;
+- deterministic eviction policy not required for correctness;
+- coalesces identical concurrent proof requests.
+
+#### L2 persistent proof cache
+
+Deferred candidate:
+- optional optimization only;
+- never required for correctness;
+- must be schema/version/provenance keyed;
+- must support safe invalidation after dependency/security/provider changes;
+- cannot be promoted until recovery, corruption and secret-leak tests exist.
+
+Round 4 does not authorize a persistent cache database.
+
+### BHC - Bounded Hash Conveyor
+
+**Problem:** CONTENT_HASHED untracked/worktree policies can create expensive duplicate hashing and memory pressure.
+
+**Mechanism:** a bounded asynchronous hashing conveyor:
+- streams file content in fixed bounded buffers;
+- globally caps active hash tasks by policy;
+- coalesces identical in-flight hash requests;
+- supports cancellation/deadline;
+- emits content digest + algorithm/version + path/file-identity proof;
+- never allocates proportional RAM to input size;
+- does not follow a changed symlink/reparse chain without fresh PAF proof.
+
+Hash reuse candidates:
+- Git object IDs may satisfy content identity only for facts Git semantically proves, such as committed blobs/index entries;
+- dirty worktree/untracked content requires local content proof according to policy;
+- filesystem metadata may nominate a cache candidate but cannot alone prove equivalence.
+
+### AuthorityRoot contract freeze direction
+
+Candidate canonical structure:
+
+```text
+AuthorityRoot {
+  authority_root_id
+  class
+  logical_root
+  canonical_existing_root
+  physical_root_identity
+  filesystem_semantics_fingerprint
+  provenance
+  policy_generation
+  externality
+  allowed_inspection_profile
+}
+```
+
+Authority classes remain:
+- SOURCE_AUTHORITY;
+- GIT_METADATA_AUTHORITY;
+- EXTERNAL_OBJECT_AUTHORITY;
+- INTERNAL_CORE_TEMP.
+
+Invariants:
+- authority is explicit and non-transitive;
+- an authority edge describes topology, never grants a broader class;
+- SOURCE_AUTHORITY cannot be inferred from GIT_METADATA_AUTHORITY;
+- EXTERNAL_OBJECT_AUTHORITY is deny-by-default for execution-ready binding;
+- INTERNAL_CORE_TEMP cannot appear as project source;
+- policy/security generation changes invalidate all affected authority receipts.
+
+### Deterministic repository graph serialization
+
+Repository graph evidence is serialized canonically:
+- nodes sorted by typed stable identity;
+- edges sorted by (edge class, source id, target id);
+- no map/hash iteration order enters DCS;
+- diagnostic timestamps excluded;
+- redacted remote association hints excluded from local RepositoryId;
+- schema version participates in the fingerprint.
+
+Graph deltas must reconstruct to the same canonical root as full graph recomputation.
+
+### GitInspector backend evaluation contract
+
+Round 4 freezes a differential evaluation harness rather than choosing a winner.
+
+#### Semantic reference oracle
+
+The installed Git executable is the **test/reference semantic oracle** for Git behavior because downstream repositories are Git repositories and compatibility must match Git semantics.
+
+This does not automatically make the system-Git adapter the production backend.
+
+Reference facts include, where supported:
+- repository/worktree/common-dir discovery;
+- bare/worktree status;
+- object format;
+- HEAD/ref/object identity;
+- index semantic entries;
+- porcelain-v2 worktree status;
+- submodule/gitlink state;
+- sparse-checkout declarations;
+- local config facts explicitly admitted by policy.
+
+Reference invocation rules:
+- argv only, no shell;
+- no network operations;
+- no interactive prompts;
+- bounded output and deadline;
+- sanitized environment;
+- explicit repository/worktree target;
+- no mutation/repair commands.
+
+#### Candidate production providers
+
+At minimum:
+1. hardened system-Git provider;
+2. Rust-native provider candidate (for example a gix-class implementation) where feature coverage is sufficient.
+
+Every provider must emit the same canonical `GitEvidence` contract.
+
+Provider promotion requires:
+- semantic equivalence fixture pass;
+- hostile config/path safety pass;
+- no-network/no-mutation proof;
+- cancellation/resource-bound proof;
+- Windows + Unix coverage;
+- cold/warm/large-workspace benchmarks;
+- dependency/supply-chain review.
+
+A hybrid provider is permitted only if its boundary is explicit and differential tests prove equivalent canonical evidence.
+
+### SPO - Semantic Provider Oracle
+
+**Problem:** provider-specific behavior can silently change workspace fingerprints.
+
+**Mechanism:** differential fixture runner compares provider output after canonicalization against the Git semantic reference oracle.
+
+Results:
+- EQUIVALENT;
+- EQUIVALENT_WITH_DIAGNOSTIC_DELTA;
+- UNSUPPORTED_CAPABILITY;
+- SEMANTIC_MISMATCH;
+- SECURITY_VIOLATION;
+- RESOURCE_POLICY_VIOLATION.
+
+Any semantic/security mismatch blocks provider promotion for the affected capability.
+
+### Watcher strategy
+
+Watcher/event providers are optimization-only.
+
+Candidate adapters:
+- Linux inotify-class;
+- Windows ReadDirectoryChangesW-class;
+- macOS FSEvents-class when macOS support is admitted;
+- portable polling fallback only as an optional hint provider, never as the freshness proof.
+
+Correctness path:
+1. action requests validity;
+2. CIG determines required basis mask;
+3. dirty/unknown components are revalidated;
+4. even when no watcher event exists, generation/provider/policy preconditions are checked;
+5. security-sensitive action boundaries may force targeted physical/path revalidation regardless of clean hints.
+
+Overflow/loss:
+- marks affected scope UNKNOWN;
+- invalidates relevant PEC entries;
+- triggers bounded targeted/full recomputation according to scope;
+- never reports a clean workspace solely because the watcher recovered.
+
+### Token/context economy
+
+M02 does not call an LLM, but its outputs are designed to reduce later LLM context cost.
+
+Downstream context should prefer:
+- WorkspaceId;
+- WorkspaceGeneration;
+- WorkspaceBasisFingerprint;
+- compact component mask;
+- WorkspaceBasisDiff summary;
+- repository graph root/subroot IDs;
+- cache/invalidation reason;
+- evidence references.
+
+Large path inventories, Git status payloads and raw watcher streams stay out of normal model context unless explicitly requested.
+
+This creates a stable cacheable prefix for later HIVE/CORE planning and lets downstream systems request only changed evidence.
+
+### ResourceBudget contract
+
+Round 4 freezes resource dimensions, not fabricated numeric limits.
+
+`WorkspaceResourceBudget` must include:
+- max repository graph nodes;
+- max recursion depth;
+- max Git process duration;
+- max stdout bytes;
+- max stderr bytes;
+- max parsed records;
+- max concurrent Git inspectors;
+- max concurrent hash tasks;
+- max single-file hash bytes before explicit policy decision;
+- max aggregate hash bytes per validation attempt;
+- max cache entries/bytes;
+- max watcher backlog/hints;
+- max revalidation wall-clock budget.
+
+Exact defaults are frozen only after the M02 benchmark fixture suite establishes compatible baselines. A timeout/limit breach is typed and never converted into partial BOUND success.
+
+### Round 4 technology disposition
+
+Promote to REQUIRED DESIGN MECHANISM:
+- EIS Event Invalidation Spine;
+- CIG Causal Invalidation Graph;
+- PEC Proof Economy Cache L1;
+- BHC Bounded Hash Conveyor;
+- SPO Semantic Provider Oracle/differential harness.
+
+Remain EXPERIMENTAL/CONDITIONAL:
+- persistent PEC L2;
+- WMF acceleration;
+- Rust-native Git provider;
+- hybrid Git provider;
+- platform watcher implementations beyond supported CI platforms.
+
+Technology branding never bypasses evidence requirements.
+
+### Round 4 verification additions
+
+Properties:
+- no event sequence can directly produce BOUND;
+- dropping all watcher events preserves correctness after action-boundary revalidation;
+- watcher overflow broadens invalidation;
+- cache loss/corruption cannot create a valid handle;
+- mtime-only changes/reuse never falsely prove content equality;
+- content change with preserved timestamp is detected when content proof is required;
+- identical concurrent hash/proof requests coalesce without changing output;
+- cancellation releases permits and emits no partial proof;
+- CIG selective invalidation is never weaker than full required-mask validation;
+- graph delta reconstruction equals full canonical graph root;
+- provider canonical evidence equals reference oracle for supported fixtures;
+- provider mismatch cannot be hidden by cache;
+- security/policy/provider version change invalidates affected cached proof;
+- compact evidence references reconstruct to canonical source/evidence without embedding raw repository contents.
+
+Adversarial fixtures:
+- watcher event loss/overflow;
+- rename storms;
+- timestamp-preserving content rewrite;
+- case-only rename;
+- symlink/junction swap during hash request;
+- Git index replacement;
+- hostile Git config with helpers/pagers/diff/textconv;
+- oversized porcelain output;
+- cache entry with old policy/provider generation;
+- corrupted persistent-cache candidate record;
+- provider semantic disagreement.
+
+Benchmarks:
+- cold attach with cache empty;
+- warm no-change revalidation;
+- 1-file / 10-file / 1,000-file delta;
+- untracked CONTENT_HASHED sets;
+- concurrent duplicate hash requests;
+- watcher-hinted vs no-watcher revalidation;
+- system-Git vs Rust-native candidate equivalence/performance;
+- memory ceiling under large status/hash fixtures.
+
+### Round 4 unresolved items
+
+Still to freeze before M02 planning STOP CONDITION:
+- final GitInspector production provider disposition from evidence;
+- exact numeric resource defaults;
+- exact Rust crate/file map and dependency graph;
+- repository graph wire/schema representation;
+- exact FSC platform probing implementation;
+- persistent cache disposition;
+- final BVM operation masks after downstream contract review;
+- final technology disposition after benchmarks;
+- M02-specific DoD;
+- frozen Work Order, executor packet and FINAL STOP CONDITION.
+
+M02 implementation remains unauthorized.

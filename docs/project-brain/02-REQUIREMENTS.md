@@ -1,6 +1,6 @@
 # CORE Requirements
 
-Status: `BOOTSTRAP_BASELINE`
+Status: `PRODUCT_DISCOVERY_ACTIVE`
 
 These are foundation requirements only. Product-functional requirements will be discovered and frozen during the planning phase.
 
@@ -97,3 +97,22 @@ These are foundation requirements only. Product-functional requirements will be 
 - **CORE-R-068 Nested repository explicitness:** nested independent repositories MUST be explicitly admitted/ignored/conflicted by policy rather than silently merged.
 - **CORE-R-069 No repository repair:** M02 MUST report malformed/unsupported Git state rather than repairing, resetting or normalizing the repository.
 - **CORE-R-070 Backend equivalence:** any system-Git or Rust-native GitInspector implementation MUST satisfy the same canonical fixtures/security contract.
+
+
+## M02 Round 4 requirements
+
+- **CORE-R-071 Watchers are hints:** filesystem/Git watcher events MAY narrow revalidation work but MUST NOT be treated as freshness proof or directly produce BOUND.
+- **CORE-R-072 Action-boundary proof:** downstream action admission MUST re-check the required WorkspaceBasis validity mask even when no watcher change was observed.
+- **CORE-R-073 Derived proof cache:** M02 cache entries are disposable derived evidence and MUST NOT become canonical workspace truth or filesystem authority.
+- **CORE-R-074 Cache observability:** proof reuse MUST expose hit/miss/bypass/invalidation reason, provider/version, policy generation and provenance.
+- **CORE-R-075 No mtime-only correctness:** timestamps/stat metadata MAY nominate reuse candidates but MUST NOT alone prove unchanged correctness-relevant file content.
+- **CORE-R-076 Bounded hashing:** content hashing MUST be streaming, cancellation-aware, concurrency-bounded and coalesce equivalent in-flight work when safe.
+- **CORE-R-077 Causal invalidation:** evidence changes MUST map deterministically to affected WorkspaceBasis component masks; selective invalidation MUST be no weaker than full required-mask validation.
+- **CORE-R-078 Provider differential proof:** alternative GitInspector providers MUST be compared after canonicalization against a Git semantic reference oracle for all claimed capabilities.
+- **CORE-R-079 Backend evidence gate:** production GitInspector provider selection MUST remain evidence-driven across semantic compatibility, security, resource use, cross-platform behavior and benchmark results.
+- **CORE-R-080 Canonical graph serialization:** repository/worktree graph identity MUST use deterministic sorted serialization independent of map/hash iteration order and diagnostic timestamps.
+- **CORE-R-081 Authority root contract:** each authority root MUST carry typed class, stable identity, physical/canonical evidence, filesystem semantics, provenance and policy generation; authority classes are non-transitive.
+- **CORE-R-082 Security-sensitive cache bypass:** unknown filesystem semantics, changed authority/security generation or insufficient proof MUST bypass/invalidate cached evidence rather than assume freshness.
+- **CORE-R-083 Event loss safety:** watcher overflow/loss MUST broaden invalidation and trigger revalidation; it MUST NOT be interpreted as no change.
+- **CORE-R-084 Compact downstream evidence:** M02 SHOULD expose stable fingerprints, component masks, deltas and evidence references instead of raw path/status inventories to reduce downstream context/token cost.
+- **CORE-R-085 Resource-budget contract:** Git inspection, graph traversal, hashing, cache and watcher processing MUST operate under explicit typed resource budgets; limit breach MUST fail typed without partial BOUND success.

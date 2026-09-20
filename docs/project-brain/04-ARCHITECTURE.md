@@ -1,6 +1,6 @@
 # CORE Architecture
 
-Status: `BOOTSTRAP_BASELINE`
+Status: `PRODUCT_DISCOVERY_ACTIVE`
 
 This document freezes only the foundation boundary. Product architecture remains pending discovery.
 
@@ -184,3 +184,42 @@ Workspace SOURCE_AUTHORITY
 Only SOURCE_AUTHORITY is eligible to become downstream source-path input. Git metadata/object authorities exist solely to interpret repository state and do not transitively grant mutation capability.
 
 HIVE association enters through a versioned `nexlabs.project-association@1`-style capability seam. M23 may later provide a deeper provider while M02 keeps the same consumer contract.
+
+
+## M02 evidence/invalidation architecture
+
+M02 separates optimization signals from correctness proof.
+
+```text
+watcher/Git hints
+      |
+      v
+EIS Event Invalidation Spine
+      |
+      v
+CIG Causal Invalidation Graph
+      |
+      v
+required dirty basis mask
+      |
+      +--> GitInspector differential/provider layer
+      +--> PAF/FSC physical proof
+      +--> BHC bounded hashing
+      +--> project-association refresh
+      |
+      v
+Canonical Workspace Basis / Diff
+      |
+      +--> PEC L1 derived proof cache
+      +--> compact evidence references
+```
+
+Correctness does not depend on watcher delivery or cache persistence. Action boundaries request a Basis Validity Matrix mask and revalidate every DIRTY/UNKNOWN or policy-required component.
+
+Git backend architecture is provider-based. System Git serves as the semantic reference oracle in differential verification, while production provider selection remains governed by CORE-D-064 and benchmark/security evidence. A Rust-native or hybrid provider may be promoted only when its canonical evidence is equivalent for claimed capabilities.
+
+Authority roots are explicit typed records rather than path prefixes. SOURCE, GIT_METADATA, EXTERNAL_OBJECT and INTERNAL_CORE_TEMP authority remain non-transitive.
+
+The L1 proof cache is runtime-epoch scoped and disposable. Persistent proof caching remains optional and unapproved until corruption/recovery/security evidence exists.
+
+M02 emits stable fingerprints, component masks and deltas so HIVE and later LLM-facing modules can reuse compact context rather than repeatedly embedding full path inventories or Git status payloads.

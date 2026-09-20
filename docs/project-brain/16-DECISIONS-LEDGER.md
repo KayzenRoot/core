@@ -285,3 +285,52 @@ Status: `ACTIVE`
 ## CORE-D-068 - Large-workspace optimization must preserve full-basis semantics
 **Decision:** WMF/DWS component hashing may optimize revalidation only when canonical root/basis semantics and delta/full equivalence are proven.
 **State:** ACCEPTED
+
+
+## CORE-D-069 - Watcher events are invalidation hints, not truth
+**Decision:** filesystem/Git watcher events may mark WorkspaceBasis components dirty or unknown but cannot directly prove freshness or transition M02 to BOUND. Correctness survives total watcher loss through action-boundary revalidation.
+**State:** ACCEPTED
+
+## CORE-D-070 - Proof caches are derived and disposable
+**Decision:** M02 may cache compact deterministic proofs, but cache contents never become canonical repository truth or filesystem authority. Cache loss/corruption must degrade performance, not correctness.
+**State:** ACCEPTED
+
+## CORE-D-071 - Cache identity includes policy and provider provenance
+**Decision:** reusable proof identity includes relevant authority, filesystem semantics, policy/security/config generations and provider/backend version. Changed preconditions invalidate or bypass reuse.
+**State:** ACCEPTED
+
+## CORE-D-072 - mtime alone never proves content equality
+**Decision:** timestamps/stat metadata can nominate a cache candidate but cannot alone prove unchanged correctness-relevant content. Stronger Git/content/file-identity evidence is required by policy.
+**State:** ACCEPTED
+
+## CORE-D-073 - Hashing is bounded and coalesced
+**Decision:** content hashing uses streaming bounded buffers, bounded concurrency, cancellation/deadlines and safe in-flight request coalescing. Input size must not imply proportional RAM use.
+**State:** ACCEPTED
+
+## CORE-D-074 - Causal invalidation precedes selective revalidation
+**Decision:** CIG deterministically maps evidence changes to affected WorkspaceBasis components. Selective revalidation is allowed only when it is no weaker than validating the full required BVM mask.
+**State:** ACCEPTED
+
+## CORE-D-075 - System Git is the semantic reference oracle, not the automatic production winner
+**Decision:** provider differential tests use Git's own semantics as reference for Git repositories. CORE-D-064 remains in force: final production GitInspector selection requires comparative compatibility, security, resource and benchmark evidence.
+**State:** ACCEPTED
+
+## CORE-D-076 - Repository graph serialization is canonical
+**Decision:** graph nodes/edges are deterministically sorted and schema-versioned before fingerprinting. Hash-map iteration order and diagnostic timestamps never enter semantic graph identity.
+**State:** ACCEPTED
+
+## CORE-D-077 - Authority roots are typed non-transitive records
+**Decision:** authority roots carry class, stable/physical identity evidence, filesystem semantics, provenance and policy generation. Metadata/object/temp authority never expands SOURCE_AUTHORITY by transitivity.
+**State:** ACCEPTED
+
+## CORE-D-078 - Persistent proof cache is optional and not yet authorized
+**Decision:** M02 requires only a bounded runtime-epoch L1 proof cache candidate. Persistent L2 caching cannot become required until corruption, recovery, invalidation and secret-safety evidence is frozen.
+**State:** ACCEPTED
+
+## CORE-D-079 - Compact workspace evidence is the downstream default
+**Decision:** downstream HIVE/LLM-facing context should consume stable fingerprints, generations, component masks, deltas and evidence references instead of repeated raw path inventories/status output unless detail is explicitly required.
+**State:** ACCEPTED
+
+## CORE-D-080 - Resource numbers require benchmark calibration
+**Decision:** M02 freezes typed resource-budget dimensions now, but exact numeric defaults must be calibrated from reproducible fixture/benchmark evidence rather than invented during architecture planning. Limit exhaustion fails typed and cannot yield partial BOUND.
+**State:** ACCEPTED
