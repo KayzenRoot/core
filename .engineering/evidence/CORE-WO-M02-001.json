@@ -363,6 +363,28 @@
       "m01UbuntuResult": "PASS",
       "m01WindowsResult": "PASS",
       "m01FuzzResult": "PASS"
+    },
+    {
+      "runId": 35540264458,
+      "workflow": "CI",
+      "candidateProductHead": "098de069b77aa843248b5a66dd0ca8af4107e879",
+      "evidenceHead": "fa1d4afa8ecabc8bbac56206071692c247facd6d",
+      "governanceJob": 106156524287,
+      "m02UbuntuJob": 106156524225,
+      "m02WindowsJob": 106156524259,
+      "m02FuzzJob": 106156524242,
+      "m01UbuntuJob": 106156524282,
+      "m01WindowsJob": 106156524171,
+      "m01FuzzJob": 106156524246,
+      "m02Result": "PASS; overall run failed only in M01 Ubuntu aggregate tests",
+      "m02UbuntuResult": "PASS",
+      "m02WindowsResult": "PASS",
+      "m02FuzzResult": "PASS",
+      "governanceResult": "PASS",
+      "m01UbuntuResult": "FAIL_UNRELATED_LEGACY_TEST_STEP_EXIT_101_LOG_UNAVAILABLE",
+      "m01WindowsResult": "PASS",
+      "m01FuzzResult": "PASS",
+      "qualificationNote": "Evidence-only head; no source change from qualifying product head 098de069b77aa843248b5a66dd0ca8af4107e879. The qualifying product-head run 35539174568 was fully green."
     }
   ],
   "failuresAndCorrections": [

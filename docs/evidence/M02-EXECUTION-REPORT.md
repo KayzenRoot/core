@@ -51,6 +51,8 @@ Exact-head hosted run `35539174568` at implementation head `098de069b77aa843248b
 
 Local Review 008 evidence is green: focused M02 coverage (16 unit and 31 integration/adversarial tests), full locked workspace tests, format, Clippy, governance/M02 validators, Python HIVE/MCP tests, fuzz-bin compilation and the seven-scenario calibration benchmark. No calibration delta was required because selected budgets and dependency inputs were unchanged.
 
+The subsequent evidence-only head `fa1d4afa8ecabc8bbac56206071692c247facd6d` triggered run `35540264458`. Governance, M01 Windows, both fuzz jobs, and both M02 jobs were green (`106156524287`, `106156524171`, `106156524246`, `106156524242`, `106156524225`, `106156524259`); M01 Ubuntu `106156524282` failed in the aggregate test step with exit code 101, with no public hosted log available. This head changed only the evidence/report files, and the exact implementation-head qualification run `35539174568` remained fully green; the M01 failure is therefore recorded as an unrelated legacy gate and not attributed to Review 008.
+
 ## HIVE truth
 
 HIVE MCP was available and resolved CORE as project `c65b7abc-533a-411a-bbbb-2b72b976d921`, but reported stale indexed HEAD `fdb4dbe165e74b009c43df3874b6043c9b94710b`. `checkpoint.read` returned typed `source_not_current`; context search was lexical fallback with semantic/rerank unavailable. HIVE was used only as advisory context and never as local path authority or canonical Git truth.
