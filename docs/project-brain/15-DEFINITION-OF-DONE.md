@@ -17,7 +17,7 @@ Bootstrap is complete only when:
 
 ## Product DoD
 
-`PENDING DISCOVERY`
+`PROGRESSIVE_MODULE_DISCOVERY`
 
 No product-completion percentage or production-readiness claim may be derived from the bootstrap DoD.
 
@@ -31,3 +31,28 @@ No M01 completion claim is valid without exact-head tests, security/supply-chain
 
 ## M01 completion evidence
 M01 satisfied its module DoD after the final corrective cycle. Review 011 recorded APPROVED at exact head `aac0f143ea576a11013e4346076b8b3b4bd24282`; workflow run #54 `35488781894` passed Governance, Ubuntu, Windows, fuzz, supply-chain/advisory, SBOM, soak and PRB/WNF; PR #17 was promoted as merge `d70b4296afbba93e8849ab6160e9b1caf5281e7d`. No unresolved HIGH/CRITICAL finding remained at promotion.
+
+
+## M02 - Project / Workspace Adapter DoD
+
+M02 is complete only when the frozen M02 plan and Work Order prove all of the following on the exact candidate head:
+- explicit attach/revalidate/detach lifecycle with no ambient-CWD authority;
+- deterministic ProjectBinding/Workspace/Repository/Worktree identities;
+- versioned v1 contract envelopes and canonical fingerprints using core-identity;
+- typed non-transitive authority roots and adversarial PAF/FSC path proof;
+- deterministic RepositoryGraphV1 across normal, bare, linked-worktree, nested-repo and submodule fixtures;
+- hardened system-Git GitInspector baseline with no shell, no network, no prompt, no repair/mutation, bounded output/deadline and secret redaction;
+- standalone plus HIVE project-association reconciliation without HIVE granting local authority;
+- WorkspaceBasis/BasisDiff generations, stale-handle invalidation and BVM action-boundary freshness;
+- EIS/CIG correctness with watcher disabled and with overflow/loss hints;
+- PEC L1 proof reuse that is disposable, observable and never mtime-only correctness;
+- BHC bounded streaming/coalesced hashing and cancellation cleanup;
+- explicit WorkspaceResourceBudget defaults backed by reproducible M02 calibration evidence;
+- zero-LLM proof for all M02 discovery/binding/revalidation paths;
+- unit/integration/property/adversarial/fuzz coverage on Windows and Ubuntu;
+- supply-chain/advisory/SBOM checks;
+- M02 benchmark/regression evidence;
+- executor Evidence Bundle and proposed Checkpoint Delta;
+- independent governed exact-head review with no unresolved HIGH/CRITICAL finding.
+
+Persistent L2 proof cache, Rust-native/hybrid GitInspector providers and OS watcher adapters are not required for M02 V0.0 completion unless later admitted by governed evidence.
