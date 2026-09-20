@@ -149,3 +149,5 @@ This file contains the frozen foundation requirements plus accepted module-level
 - **CORE-R-108 WMF deferred:** Workspace Merkle Forest MUST NOT enter the initial Work Order absent a later evidence-backed scalability decision.
 - **CORE-R-109 No runtime hidden autotuning:** V0.0 MUST NOT perform background/permanent self-benchmarking or silently rewrite budget defaults at runtime.
 - **CORE-R-110 Calibration preserves zero-LLM:** calibration, budget selection and benchmark evaluation MUST require zero LLM inference.
+
+- **CORE-R-111 Baseline provider proof without forced alternative dependency:** the system-Git V0.0 baseline MUST prove its own contract/security/resource obligations; an alternative provider comparison is required only when an alternative is proposed for admission.
