@@ -39,12 +39,7 @@ pub fn build_basis(
         &local_basis,
         &association,
     );
-    if reconciliation.status == crate::ReconciliationStatus::Conflict
-        && matches!(
-            request.assurance,
-            crate::AssuranceRequirement::HiveReconciled
-        )
-    {
+    if reconciliation.status == crate::ReconciliationStatus::Conflict {
         return Err(M02Error::AssociationConflict(reconciliation.reason.clone()));
     }
     let mut basis = WorkspaceBasisV1 {

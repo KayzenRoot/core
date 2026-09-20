@@ -22,10 +22,12 @@ pub use basis::*;
 pub use cache::*;
 pub use contracts::*;
 pub use core_config::WorkspaceResourceBudget;
+pub use hashing::*;
 pub use identity::*;
 pub use invalidation::*;
 pub use reconcile::*;
 pub use repository::*;
+pub use service::*;
 pub use state::*;
 
 pub const M02_SCHEMA: &str = "nexlabs.core.workspace";

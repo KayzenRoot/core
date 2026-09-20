@@ -170,6 +170,24 @@ pub fn build_graph(
     })
 }
 
+pub fn empty_graph(root: &Path) -> Result<RepositoryGraphV1, M02Error> {
+    let id = format!("workspace:{}", normalized_path_string(root));
+    let nodes = vec![node(&id, RepositoryNodeKind::WorkspaceRoot, root)];
+    let fingerprint = fingerprint(
+        &(M02GraphPayload {
+            nodes: &nodes,
+            edges: &[],
+        }),
+    )
+    .map_err(|error| M02Error::InvalidInput(error.to_string()))?;
+    Ok(RepositoryGraphV1 {
+        schema_version: crate::M02_VERSION,
+        nodes,
+        edges: Vec::new(),
+        fingerprint,
+    })
+}
+
 #[derive(serde::Serialize)]
 struct M02GraphPayload<'a> {
     nodes: &'a [RepositoryNodeV1],
