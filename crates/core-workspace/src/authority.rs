@@ -28,8 +28,15 @@ pub fn lexical_normalize(path: &Path) -> Result<PathBuf, M02Error> {
             ));
         }
     }
+    // Treat both separators as untrusted path separators at the input boundary.
+    // This keeps Windows-shaped traversal payloads fail-closed when validated on Unix.
+    let parsed_path = if cfg!(unix) {
+        PathBuf::from(raw.replace('\\', "/"))
+    } else {
+        path.to_path_buf()
+    };
     let mut output = PathBuf::new();
-    for component in path.components() {
+    for component in parsed_path.components() {
         match component {
             Component::Prefix(prefix) => {
                 if matches!(
