@@ -1815,6 +1815,65 @@ mod tests {
         ));
     }
 
+    #[tokio::test]
+    async fn in_drain_clone_acquire_is_rejected_during_repeated_shutdowns() {
+        for iteration in 0..16 {
+            let mut supervisor =
+                Supervisor::new(config(&format!("lease-admission-in-drain-{iteration}"))).unwrap();
+            supervisor.bootstrap().await.unwrap();
+            supervisor
+                .capabilities()
+                .register_provider(provider(
+                    "native",
+                    "core",
+                    "health",
+                    ProviderOrigin::CoreNative,
+                    90,
+                ))
+                .unwrap();
+            let requirement = CapabilityRequirement::new("health", SemVer::new(1, 0, 0));
+            let generation = supervisor.status().generation;
+            supervisor
+                .capabilities()
+                .bind_with_generation(&requirement, "in-drain-admission", &generation)
+                .unwrap();
+
+            let clone = supervisor.capabilities().clone();
+            let pre_close_lease = clone
+                .acquire_lease_with_generation("health", &generation, 30_000)
+                .unwrap();
+            assert_eq!(clone.total_active_leases(), 1);
+
+            let shutdown_task = tokio::spawn(async move { supervisor.shutdown().await });
+            tokio::time::timeout(std::time::Duration::from_secs(2), async {
+                loop {
+                    if clone.lease_admission_closed() {
+                        break;
+                    }
+                    tokio::task::yield_now().await;
+                }
+            })
+            .await
+            .expect("shutdown must close lease admission within the bounded wait");
+
+            assert_eq!(clone.total_active_leases(), 1);
+            assert!(matches!(
+                clone.acquire_lease_with_generation("health", &generation, 1_000),
+                Err(core_registry::RegistryError::AdmissionClosed)
+            ));
+            assert_eq!(clone.total_active_leases(), 1);
+
+            clone.release_lease(&pre_close_lease).unwrap();
+            let receipt = shutdown_task
+                .await
+                .expect("shutdown task must not panic")
+                .unwrap();
+            assert!(receipt.clean);
+            assert_eq!(receipt.final_phase, ShutdownPhase::StopCommit);
+            assert!(receipt.items.iter().all(|item| item.satisfied));
+        }
+    }
+
     #[test]
     fn rlc_returns_typed_allow_deny_and_defer_without_mutation() {
         let base = TransitionContext {
