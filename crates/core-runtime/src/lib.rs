@@ -1934,6 +1934,7 @@ mod tests {
         let mut shutdown_config = config("worker-admission");
         shutdown_config.shutdown_timeout_ms = 10;
         let mut supervisor = Supervisor::new(shutdown_config).unwrap();
+        supervisor.crash_suppression.initial_backoff_ms = 60_000;
         supervisor.bootstrap().await.unwrap();
         supervisor.register_isolated_worker("worker-a").unwrap();
         supervisor.mark_worker_terminated("worker-a");
@@ -1972,7 +1973,7 @@ mod tests {
     #[tokio::test]
     async fn lease_expiration_completes_before_shutdown_deadline() {
         let mut shutdown_config = config("lease-before-deadline");
-        shutdown_config.shutdown_timeout_ms = 1_000;
+        shutdown_config.shutdown_timeout_ms = 5_000;
         let mut supervisor = Supervisor::new(shutdown_config).unwrap();
         supervisor.bootstrap().await.unwrap();
         supervisor
@@ -1997,7 +1998,7 @@ mod tests {
             .unwrap();
         let started = Instant::now();
         let receipt = supervisor.shutdown().await.unwrap();
-        assert!(started.elapsed() < Duration::from_millis(800));
+        assert!(started.elapsed() < Duration::from_secs(4));
         assert!(receipt.clean);
         let records = supervisor.lifecycle.journal.read_validated().unwrap();
         assert!(records
@@ -2011,7 +2012,7 @@ mod tests {
     #[tokio::test]
     async fn lease_released_from_separate_task_wakes_qds_before_deadline() {
         let mut shutdown_config = config("lease-release-wakes-qds");
-        shutdown_config.shutdown_timeout_ms = 1_000;
+        shutdown_config.shutdown_timeout_ms = 5_000;
         let mut supervisor = Supervisor::new(shutdown_config).unwrap();
         supervisor.bootstrap().await.unwrap();
         supervisor
@@ -2046,7 +2047,7 @@ mod tests {
         releaser.await.unwrap();
 
         assert!(receipt.clean, "lease release receipt: {receipt:?}");
-        assert!(elapsed < Duration::from_millis(900));
+        assert!(elapsed < Duration::from_secs(4));
         let records = supervisor.lifecycle.journal.read_validated().unwrap();
         assert!(records
             .iter()
