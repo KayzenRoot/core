@@ -39,3 +39,14 @@ Required controls:
 - concurrent workspace drift requires action-boundary freshness checks; stale handles are never silently revived.
 
 M02 threat model details and adversarial fixtures are maintained in `docs/modules/M02-PROJECT-WORKSPACE-ADAPTER.md`.
+
+
+## M02 resource-calibration security rules
+
+- security-sensitive resource budgets must become explicit finite values before M02 can be accepted;
+- benchmark/calibration failure cannot degrade into partial BOUND success;
+- calibration runs use local/synthetic fixtures and no network;
+- unsupported scales are reported honestly rather than extrapolated;
+- calibration output must redact secrets and user content;
+- the bounded Calibration Delta cannot alter authority, dependency or security semantics;
+- runtime overrides remain subject to hard validation and cannot create unlimited behavior.
