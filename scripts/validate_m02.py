@@ -36,7 +36,10 @@ FORBIDDEN_TERMS = (
 def main() -> int:
     cargo = (WORKSPACE / "Cargo.toml").read_text(encoding="utf-8")
     dependency_names = set(re.findall(r"^([A-Za-z0-9_-]+)(?:\.workspace)?\s*=", cargo, re.MULTILINE))
-    dependencies = sorted(dependency_names - {"name", "version", "edition", "license", "rust-version"})
+    dependencies = sorted(
+        dependency_names
+        - {"name", "version", "edition", "license", "rust-version", "harness"}
+    )
     forbidden_dependencies = sorted(set(dependencies) - ALLOWED_DEPENDENCIES)
     source_files = sorted(WORKSPACE.rglob("*.rs"))
     source = "\n".join(path.read_text(encoding="utf-8") for path in source_files)

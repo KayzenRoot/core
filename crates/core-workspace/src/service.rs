@@ -2,7 +2,7 @@
 
 use crate::basis::{association_for_request, build_basis, diff, required_components_fresh};
 use crate::reconcile::{NoopAssociationProvider, ProjectAssociationProvider};
-use crate::repository::{empty_graph, inspect_repository};
+use crate::repository::{empty_graph_with_policy, inspect_repository};
 use crate::{
     source_authority_root, workspace_identity, BindingState, BindingStateMachine, BvmProfile,
     ComponentMask, M02Error, PathValidationRequestV1, RevalidationOutcome, RevalidationResult,
@@ -89,7 +89,14 @@ impl WorkspaceService {
         )?;
         let (git, graph) = match inspected {
             Some((git, graph)) => (Some(git), graph),
-            None => (None, empty_graph(&request.workspace_root)?),
+            None => (
+                None,
+                empty_graph_with_policy(
+                    &request.workspace_root,
+                    request.untracked_policy,
+                    &request.resource_budget,
+                )?,
+            ),
         };
         if let Some(expected) = &request.expected_repository {
             if git.as_ref().map(|value| &value.repository_id) != Some(expected) {

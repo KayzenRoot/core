@@ -115,6 +115,25 @@ pub fn build_graph(
         }
     }
 
+    for (index, path) in nested_repository_paths(root, budget)?
+        .into_iter()
+        .enumerate()
+    {
+        let key = format!("nested:{index}:{}", normalized_path_string(&path));
+        let semantic_fingerprint = nested_repository_fingerprint(&path, budget)?;
+        nodes.push(RepositoryNodeV1 {
+            id: key.clone(),
+            kind: RepositoryNodeKind::NestedRepository,
+            path,
+            semantic_fingerprint,
+        });
+        edges.push(edge(
+            RepositoryEdgeKind::NestedWithin,
+            &key,
+            &repository_key,
+        ));
+    }
+
     let alternates = git
         .common_dir
         .join("objects")
@@ -188,10 +207,240 @@ pub fn empty_graph(root: &Path) -> Result<RepositoryGraphV1, M02Error> {
     })
 }
 
+pub fn empty_graph_with_policy(
+    root: &Path,
+    policy: UntrackedPolicy,
+    budget: &WorkspaceResourceBudget,
+) -> Result<RepositoryGraphV1, M02Error> {
+    let inventory = filesystem_inventory_fingerprint(root, policy, budget)?;
+    let nested = nested_repository_paths(root, budget)?;
+    let mut nodes = vec![node(
+        &format!("workspace:{}", normalized_path_string(root)),
+        RepositoryNodeKind::WorkspaceRoot,
+        root,
+    )];
+    let mut edges = Vec::new();
+    nodes[0].semantic_fingerprint = fingerprint(&(
+        RepositoryNodeKind::WorkspaceRoot,
+        normalized_path_string(root),
+        &inventory,
+    ))
+    .map_err(|error| M02Error::InvalidInput(error.to_string()))?;
+    let workspace_id = nodes[0].id.clone();
+    for (index, path) in nested.into_iter().enumerate() {
+        let key = format!("nested:{index}:{}", normalized_path_string(&path));
+        nodes.push(RepositoryNodeV1 {
+            id: key.clone(),
+            kind: RepositoryNodeKind::NestedRepository,
+            path: path.clone(),
+            semantic_fingerprint: nested_repository_fingerprint(&path, budget)?,
+        });
+        edges.push(edge(RepositoryEdgeKind::NestedWithin, &key, &workspace_id));
+    }
+    finalize_graph(nodes, edges)
+}
+
 #[derive(serde::Serialize)]
 struct M02GraphPayload<'a> {
     nodes: &'a [RepositoryNodeV1],
     edges: &'a [RepositoryEdgeV1],
+}
+
+fn finalize_graph(
+    mut nodes: Vec<RepositoryNodeV1>,
+    mut edges: Vec<RepositoryEdgeV1>,
+) -> Result<RepositoryGraphV1, M02Error> {
+    nodes.sort_by(|left, right| left.id.cmp(&right.id));
+    edges.sort_by(|left, right| {
+        (left.kind, &left.source, &left.target).cmp(&(right.kind, &right.source, &right.target))
+    });
+    let fingerprint = fingerprint(
+        &(M02GraphPayload {
+            nodes: &nodes,
+            edges: &edges,
+        }),
+    )
+    .map_err(|error| M02Error::InvalidInput(error.to_string()))?;
+    Ok(RepositoryGraphV1 {
+        schema_version: crate::M02_VERSION,
+        nodes,
+        edges,
+        fingerprint,
+    })
+}
+
+fn nested_repository_paths(
+    root: &Path,
+    budget: &WorkspaceResourceBudget,
+) -> Result<Vec<PathBuf>, M02Error> {
+    if !root.is_dir() {
+        return Ok(Vec::new());
+    }
+    let mut paths = Vec::new();
+    let mut visited = 0_u64;
+    let mut pending = vec![(root.to_path_buf(), 0_u32)];
+    while let Some((directory, depth)) = pending.pop() {
+        if depth >= budget.max_recursion_depth {
+            return Err(M02Error::ResourceBudgetExceeded(
+                "nested repository recursion depth".into(),
+            ));
+        }
+        let mut entries = fs::read_dir(&directory)
+            .map_err(|error| M02Error::Io(format!("read nested repository directory: {error}")))?
+            .collect::<Result<Vec<_>, _>>()
+            .map_err(|error| M02Error::Io(format!("read nested repository entry: {error}")))?;
+        entries.sort_by_key(|entry| entry.path());
+        for entry in entries {
+            if entry.file_name() == ".git" {
+                continue;
+            }
+            visited = visited.saturating_add(1);
+            if visited > budget.max_parsed_records {
+                return Err(M02Error::ResourceBudgetExceeded(
+                    "nested repository records".into(),
+                ));
+            }
+            let path = entry.path();
+            let file_type = entry
+                .file_type()
+                .map_err(|error| M02Error::Io(format!("read nested repository type: {error}")))?;
+            if !file_type.is_dir() || file_type.is_symlink() {
+                continue;
+            }
+            if path.join(".git").exists() {
+                paths.push(path);
+            } else {
+                pending.push((path, depth + 1));
+            }
+        }
+    }
+    Ok(paths)
+}
+
+fn nested_repository_fingerprint(
+    path: &Path,
+    budget: &WorkspaceResourceBudget,
+) -> Result<String, M02Error> {
+    let inspector = SystemGitInspector::default();
+    match inspector.inspect(&GitInspectRequest {
+        root: path.to_path_buf(),
+        untracked_policy: UntrackedPolicy::ExcludedByPolicy,
+        budget: budget.clone(),
+    })? {
+        Some(evidence) => fingerprint(&(
+            &evidence.repository_id,
+            &evidence.worktree_id,
+            &evidence.head,
+            &evidence.index_fingerprint,
+            &evidence.tracked_delta_fingerprint,
+        )),
+        None => fingerprint(&normalized_path_string(path)),
+    }
+    .map_err(|error| M02Error::InvalidInput(error.to_string()))
+}
+
+#[derive(serde::Serialize)]
+struct InventoryEntry {
+    path: String,
+    size: u64,
+    proof: String,
+}
+
+fn filesystem_inventory_fingerprint(
+    root: &Path,
+    policy: UntrackedPolicy,
+    budget: &WorkspaceResourceBudget,
+) -> Result<String, M02Error> {
+    if policy == UntrackedPolicy::ExcludedByPolicy {
+        return Ok("excluded-by-policy".into());
+    }
+    let canonical_root = root
+        .canonicalize()
+        .map_err(|error| M02Error::Io(format!("canonicalize inventory root: {error}")))?;
+    let mut pending = vec![(root.to_path_buf(), 0_u32)];
+    let mut entries = Vec::new();
+    let mut aggregate_bytes = 0_u64;
+    while let Some((directory, depth)) = pending.pop() {
+        if depth >= budget.max_recursion_depth {
+            return Err(M02Error::ResourceBudgetExceeded(
+                "workspace inventory recursion depth".into(),
+            ));
+        }
+        let mut children = fs::read_dir(&directory)
+            .map_err(|error| M02Error::Io(format!("read workspace inventory: {error}")))?
+            .collect::<Result<Vec<_>, _>>()
+            .map_err(|error| M02Error::Io(format!("read workspace inventory entry: {error}")))?;
+        children.sort_by_key(|entry| entry.path());
+        for child in children {
+            if child.file_name() == ".git" {
+                continue;
+            }
+            if entries.len() as u64 >= budget.max_parsed_records {
+                return Err(M02Error::ResourceBudgetExceeded(
+                    "workspace inventory records".into(),
+                ));
+            }
+            let path = child.path();
+            let file_type = child
+                .file_type()
+                .map_err(|error| M02Error::Io(format!("read workspace inventory type: {error}")))?;
+            if file_type.is_dir() && !file_type.is_symlink() {
+                entries.push(InventoryEntry {
+                    path: normalized_path_string(path.strip_prefix(root).map_err(|error| {
+                        M02Error::InvalidInput(format!(
+                            "workspace inventory relative path: {error}"
+                        ))
+                    })?),
+                    size: 0,
+                    proof: "directory".into(),
+                });
+                pending.push((path, depth + 1));
+                continue;
+            }
+            let canonical = path.canonicalize().map_err(|error| {
+                M02Error::Io(format!("canonicalize workspace inventory entry: {error}"))
+            })?;
+            if !canonical.starts_with(&canonical_root) {
+                return Err(M02Error::AuthorityViolation(
+                    "workspace inventory escaped source authority".into(),
+                ));
+            }
+            let metadata = fs::metadata(&canonical).map_err(|error| {
+                M02Error::Io(format!("metadata workspace inventory entry: {error}"))
+            })?;
+            let relative = normalized_path_string(path.strip_prefix(root).map_err(|error| {
+                M02Error::InvalidInput(format!("workspace inventory relative path: {error}"))
+            })?);
+            let proof = match policy {
+                UntrackedPolicy::NamesOnly => "names-only".into(),
+                UntrackedPolicy::ContentHashed => {
+                    aggregate_bytes = aggregate_bytes.saturating_add(metadata.len());
+                    if aggregate_bytes > budget.max_aggregate_hash_bytes_per_validation {
+                        return Err(M02Error::ResourceBudgetExceeded(
+                            "workspace inventory aggregate hash bytes".into(),
+                        ));
+                    }
+                    if metadata.len() > budget.max_single_file_hash_bytes_before_explicit_policy {
+                        return Err(M02Error::ResourceBudgetExceeded(
+                            "workspace inventory single-file hash bytes".into(),
+                        ));
+                    }
+                    crate::hash_file(&canonical, budget)?.digest
+                }
+                UntrackedPolicy::ExcludedByPolicy => unreachable!(),
+            };
+            entries.push(InventoryEntry {
+                path: relative,
+                size: if policy == UntrackedPolicy::NamesOnly {
+                    0
+                } else {
+                    metadata.len()
+                },
+                proof,
+            });
+        }
+    }
+    fingerprint(&entries).map_err(|error| M02Error::InvalidInput(error.to_string()))
 }
 
 fn node(id: &str, kind: RepositoryNodeKind, path: &Path) -> RepositoryNodeV1 {

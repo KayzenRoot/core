@@ -62,3 +62,17 @@ fn attach_path_revalidate_and_detach_are_explicit() {
     service.detach(&result.handle.unwrap()).unwrap();
     let _ = fs::remove_dir_all(root);
 }
+
+#[test]
+fn no_git_content_change_invalidates_standalone_binding() {
+    let root = std::env::temp_dir().join(format!("m02-service-no-git-{}", std::process::id()));
+    fs::create_dir_all(&root).unwrap();
+    fs::write(root.join("initial.txt"), "initial").unwrap();
+    let mut service = WorkspaceService::new(8);
+    let request = WorkspaceAttachRequestV1::new(&root, 8);
+    let attached = service.attach(request).unwrap();
+    fs::write(root.join("new.txt"), "new content").unwrap();
+    let result = service.revalidate(&attached.handle).unwrap();
+    assert_eq!(result.outcome, RevalidationOutcome::UpdatedCompatible);
+    let _ = fs::remove_dir_all(root);
+}
