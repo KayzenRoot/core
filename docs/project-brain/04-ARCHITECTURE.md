@@ -223,3 +223,16 @@ Authority roots are explicit typed records rather than path prefixes. SOURCE, GI
 The L1 proof cache is runtime-epoch scoped and disposable. Persistent proof caching remains optional and unapproved until corruption/recovery/security evidence exists.
 
 M02 emits stable fingerprints, component masks and deltas so HIVE and later LLM-facing modules can reuse compact context rather than repeatedly embedding full path inventories or Git status payloads.
+
+
+## M02 crate and contract architecture freeze
+
+M02 V0.0 is one focused Rust crate: `core-workspace`.
+
+It depends downward on core-contracts, core-identity and core-config, not on core-runtime. Runtime generation is contract data, avoiding a dependency cycle.
+
+The initial GitInspector is hardened system Git behind a provider-neutral trait. Future Rust-native/hybrid providers remain swappable behind canonical GitEvidence and require separate evidence/admission.
+
+PEC is L1/runtime-epoch only. EIS/CIG accept typed hints but correctness does not depend on an OS watcher adapter. These choices avoid a database, watcher framework and second Git parsing stack in the initial dependency graph.
+
+Public M02 contracts are versioned, compact and canonical. Repository graphs, basis components and diffs use deterministic sorted serialization; durable receipts never become live capabilities.

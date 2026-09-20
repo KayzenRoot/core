@@ -116,3 +116,20 @@ This file contains the frozen foundation requirements plus accepted module-level
 - **CORE-R-083 Event loss safety:** watcher overflow/loss MUST broaden invalidation and trigger revalidation; it MUST NOT be interpreted as no change.
 - **CORE-R-084 Compact downstream evidence:** M02 SHOULD expose stable fingerprints, component masks, deltas and evidence references instead of raw path/status inventories to reduce downstream context/token cost.
 - **CORE-R-085 Resource-budget contract:** Git inspection, graph traversal, hashing, cache and watcher processing MUST operate under explicit typed resource budgets; limit breach MUST fail typed without partial BOUND success.
+
+
+## M02 Round 5 requirements
+
+- **CORE-R-086 Versioned workspace contracts:** durable/external M02 payloads MUST use explicit schema/version envelopes and reject unsupported semantics.
+- **CORE-R-087 Single fingerprint stack:** M02 identities/fingerprints MUST reuse core-identity canonical primitives.
+- **CORE-R-088 Canonical collection ordering:** unordered graph/basis collections MUST be explicitly sorted before fingerprinting.
+- **CORE-R-089 Receipt/handle separation:** a durable receipt MUST NOT directly become a live handle without fresh validation.
+- **CORE-R-090 Fixed BVM profiles:** deterministic READ_METADATA, READ_SOURCE, PLAN_WORK, EXECUTE_TOOL_READONLY, MUTATE_SOURCE and GIT_DELIVERY freshness profiles plus assurance overlays are required.
+- **CORE-R-091 Conservative FSC:** case/alias semantics remain UNKNOWN unless reliably proved; OS family alone is insufficient.
+- **CORE-R-092 No source-tree probe writes:** filesystem-semantics discovery MUST NOT create probe files in user source authority.
+- **CORE-R-093 Initial provider baseline:** V0.0 MUST implement hardened system Git behind a provider-neutral trait; alternatives require separate evidence/admission.
+- **CORE-R-094 L1 cache only:** persistent proof caching is OUT OF SCOPE for initial M02.
+- **CORE-R-095 Watcher-independent baseline:** M02 MUST remain correct with zero watcher events.
+- **CORE-R-096 Minimal dependency graph:** core-workspace MUST use only the frozen dependency set unless a governed dependency-admission delta proves necessity.
+- **CORE-R-097 No runtime dependency cycle:** core-workspace MUST NOT depend on core-runtime.
+- **CORE-R-098 Exact file-map discipline:** implementation MUST remain inside the frozen Round 5 file map except generated evidence or audited Correction Delta.
