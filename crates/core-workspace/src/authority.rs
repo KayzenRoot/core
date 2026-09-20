@@ -76,11 +76,10 @@ pub fn probe_filesystem_semantics(root: &Path) -> Result<FilesystemSemanticsCaps
         metadata.permissions().readonly(),
     ))
     .map_err(|error| M02Error::InvalidInput(error.to_string()))?;
-    let case_state = if cfg!(unix) {
-        FilesystemSemanticsState::CaseSensitiveVerified
-    } else {
-        FilesystemSemanticsState::CasePreservingUnknown
-    };
+    // The OS family does not prove the mounted filesystem's alias semantics.
+    // Keep this conservative until a reliable, read-only filesystem-specific
+    // proof is available at the use boundary.
+    let case_state = FilesystemSemanticsState::UnknownUnsafeForAliasDecision;
     Ok(FilesystemSemanticsCapsuleV1 {
         root_physical_identity: physical_identity,
         namespace_class: if cfg!(windows) {
@@ -166,7 +165,8 @@ pub fn validate_path(
             "physical path escaped source authority".into(),
         ));
     }
-    let target = if lexical.exists() {
+    let target_exists = lexical.exists();
+    let target = if target_exists {
         let physical = lexical
             .canonicalize()
             .map_err(|error| M02Error::Io(error.to_string()))?;
@@ -186,7 +186,7 @@ pub fn validate_path(
         nearest_existing_ancestor: physical_ancestor,
         resolved_target: target,
         filesystem_semantics_fingerprint: authority.filesystem_semantics_fingerprint.clone(),
-        use_time_revalidation_required: !requested.exists(),
+        use_time_revalidation_required: !target_exists,
         allowed: true,
         reason: "lexical-and-physical-containment-proven".into(),
     })
@@ -241,5 +241,40 @@ mod tests {
         let receipt = validate_path(&authority, &request).unwrap();
         assert!(receipt.use_time_revalidation_required);
         let _ = fs::remove_dir(&root);
+    }
+
+    #[test]
+    fn filesystem_case_semantics_do_not_follow_unix_family() {
+        let root = std::env::temp_dir().join(format!("m02-authority-fsc-{}", std::process::id()));
+        fs::create_dir_all(&root).unwrap();
+        let capsule = probe_filesystem_semantics(&root).unwrap();
+        assert_ne!(
+            capsule.case_state,
+            FilesystemSemanticsState::CaseSensitiveVerified
+        );
+        let _ = fs::remove_dir(&root);
+    }
+
+    #[test]
+    fn relative_collision_uses_authority_resolved_target() {
+        let root =
+            std::env::temp_dir().join(format!("m02-authority-collision-{}", std::process::id()));
+        let cwd_name = format!("m02-collision-{}", std::process::id());
+        let cwd_file = std::env::current_dir().unwrap().join(&cwd_name);
+        fs::create_dir_all(&root).unwrap();
+        fs::write(&cwd_file, b"process-cwd").unwrap();
+        let authority = source_authority_root(&root, 1).unwrap();
+        let receipt = validate_path(
+            &authority,
+            &PathValidationRequestV1 {
+                requested: cwd_name.clone().into(),
+                operation: crate::PathOperation::MutateSource,
+                root: authority.id.clone(),
+            },
+        )
+        .unwrap();
+        assert!(receipt.use_time_revalidation_required);
+        let _ = fs::remove_file(cwd_file);
+        let _ = fs::remove_dir(root);
     }
 }

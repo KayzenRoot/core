@@ -1,11 +1,13 @@
 //! M02 attach/revalidate/detach service facade.
 
 use crate::basis::{association_for_request, build_basis, diff, required_components_fresh};
+use crate::cache::{CacheDecisionReason, ProofCache, ProofCacheKey};
 use crate::reconcile::{NoopAssociationProvider, ProjectAssociationProvider};
-use crate::repository::{empty_graph_with_policy, inspect_repository};
+use crate::repository::{empty_graph_with_policy, inspect_repository_with_conveyor};
 use crate::{
     source_authority_root, workspace_identity, BindingState, BindingStateMachine, BvmProfile,
-    ComponentMask, M02Error, PathValidationRequestV1, RevalidationOutcome, RevalidationResult,
+    ComponentMask, DeltaWorkspaceSnapshot, EventHint, EventInvalidationSpine, HashConveyor,
+    M02Error, PathValidationRequestV1, RevalidationOutcome, RevalidationResult,
     ValidatedPathReceiptV1, WorkspaceAttachRequestV1, WorkspaceBasisV1, WorkspaceBindingReceiptV1,
     WorkspaceGeneration, WorkspaceHandleV1, WorkspaceResourceBudget,
 };
@@ -32,6 +34,11 @@ pub struct WorkspaceService {
     current: Option<CurrentBinding>,
     association: Arc<dyn ProjectAssociationProvider>,
     budget: WorkspaceResourceBudget,
+    invalidation: EventInvalidationSpine,
+    dirty_components: ComponentMask,
+    broad_invalidation: bool,
+    proof_cache: ProofCache<WorkspaceBasisV1>,
+    hash_conveyor: HashConveyor,
 }
 
 impl std::fmt::Debug for WorkspaceService {
@@ -61,6 +68,13 @@ impl WorkspaceService {
             current: None,
             association,
             budget: WorkspaceResourceBudget::default(),
+            invalidation: EventInvalidationSpine::new(&WorkspaceResourceBudget::default())
+                .expect("finalized M02 budget is valid"),
+            dirty_components: ComponentMask::NONE,
+            broad_invalidation: false,
+            proof_cache: ProofCache::new(&WorkspaceResourceBudget::default())
+                .expect("finalized M02 budget is valid"),
+            hash_conveyor: HashConveyor::default(),
         }
     }
 
@@ -73,7 +87,27 @@ impl WorkspaceService {
             .validate()
             .map_err(|error| M02Error::InvalidInput(error.to_string()))?;
         self.budget = budget;
+        self.invalidation = EventInvalidationSpine::new(&self.budget)
+            .map_err(|error| M02Error::InvalidInput(error.to_string()))?;
+        self.proof_cache = ProofCache::new(&self.budget)?;
+        self.dirty_components = ComponentMask::ALL;
+        self.broad_invalidation = true;
         Ok(())
+    }
+
+    pub fn push_event_hint(&mut self, hint: EventHint) -> crate::InvalidationResult {
+        let result = self.invalidation.push(hint);
+        self.dirty_components = self.dirty_components.union(result.dirty_components);
+        self.broad_invalidation |= result.broad;
+        result
+    }
+
+    pub fn dirty_components(&self) -> ComponentMask {
+        self.dirty_components
+    }
+
+    pub fn hash_operation_count(&self) -> u64 {
+        self.hash_conveyor.hash_operation_count()
     }
 
     fn collect_basis(
@@ -82,10 +116,11 @@ impl WorkspaceService {
     ) -> Result<WorkspaceBasisV1, M02Error> {
         let authority = source_authority_root(&request.workspace_root, request.policy_generation)?;
         let (workspace_id, _) = workspace_identity(&request.workspace_root)?;
-        let inspected = inspect_repository(
+        let inspected = inspect_repository_with_conveyor(
             request.workspace_root.clone(),
             request.untracked_policy,
             request.resource_budget.clone(),
+            Some(&self.hash_conveyor),
         )?;
         let (git, graph) = match inspected {
             Some((git, graph)) => (Some(git), graph),
@@ -129,6 +164,49 @@ impl WorkspaceService {
             local_fingerprint,
         )?;
         build_basis(request, authority, graph, git, association)
+    }
+
+    fn proof_cache_key(
+        &self,
+        basis: &WorkspaceBasisV1,
+        generation: WorkspaceGeneration,
+    ) -> Result<ProofCacheKey, M02Error> {
+        let authority = basis
+            .authority_roots
+            .first()
+            .ok_or_else(|| M02Error::InvalidInput("basis has no authority root".into()))?;
+        let provider_version = basis
+            .git
+            .as_ref()
+            .map(|git| format!("{}:{}", git.provider, git.provider_version))
+            .unwrap_or_else(|| {
+                format!(
+                    "{}:{}",
+                    basis.association.provider_origin, basis.association.provider_version
+                )
+            });
+        let semantic_proof_identity = core_identity::fingerprint(&(
+            &basis.component_fingerprints,
+            &basis.untracked_policy,
+            &basis.filesystem_semantics,
+        ))
+        .map_err(|error| M02Error::InvalidInput(error.to_string()))?;
+        let content_hash = basis.fingerprint()?;
+        Ok(ProofCacheKey {
+            schema_version: crate::M02_VERSION,
+            workspace_id: basis.workspace_id.clone(),
+            runtime_epoch: generation.runtime_epoch,
+            generation,
+            component_mask: ComponentMask::ALL,
+            authority_generation: authority.policy_generation,
+            policy_generation: basis.config_generation,
+            security_generation: basis.security_generation,
+            provider_version,
+            filesystem_semantics_fingerprint: authority.filesystem_semantics_fingerprint.clone(),
+            semantic_proof_identity,
+            content_hash,
+            proof_kind: "workspace-basis-v1".into(),
+        })
     }
 
     fn issue_handle(
@@ -205,6 +283,11 @@ impl WorkspaceService {
             basis: basis.clone(),
             handle: handle.clone(),
         });
+        self.proof_cache
+            .insert(self.proof_cache_key(&basis, generation)?, basis.clone())?;
+        self.invalidation.drain();
+        self.dirty_components = ComponentMask::NONE;
+        self.broad_invalidation = false;
         Ok(AttachResult {
             receipt,
             handle,
@@ -231,7 +314,11 @@ impl WorkspaceService {
                 "handle is not the current generation".into(),
             ));
         }
-        required_components_fresh(&current.basis, profile.required_mask(), ComponentMask::NONE)
+        required_components_fresh(
+            &current.basis,
+            profile.required_mask(),
+            self.dirty_components,
+        )
     }
 
     pub fn validate_path(
@@ -257,7 +344,46 @@ impl WorkspaceService {
         &mut self,
         handle: &WorkspaceHandleV1,
     ) -> Result<RevalidationResult, M02Error> {
-        self.ensure_fresh(handle, BvmProfile::ReadMetadata)?;
+        self.revalidate_for(handle, BvmProfile::ReadMetadata)
+    }
+
+    pub fn revalidate_for(
+        &mut self,
+        handle: &WorkspaceHandleV1,
+        profile: BvmProfile,
+    ) -> Result<RevalidationResult, M02Error> {
+        self.validate_handle(handle)?;
+        let hints = self.invalidation.drain();
+        let required = profile.required_mask();
+        if !hints.is_empty()
+            && !self.broad_invalidation
+            && self.dirty_components.0 & required.0 == 0
+        {
+            let current = self
+                .current
+                .as_ref()
+                .ok_or_else(|| M02Error::StaleHandle("no current binding".into()))?;
+            let key = self.proof_cache_key(&current.basis, current.handle.generation)?;
+            if self.proof_cache.get(&key).reason == CacheDecisionReason::HitValidated {
+                let fingerprint = current.basis.fingerprint()?;
+                let snapshot = DeltaWorkspaceSnapshot {
+                    base_fingerprint: fingerprint.clone(),
+                    changed_components: self.dirty_components,
+                    resulting_fingerprint: fingerprint,
+                    evidence_references: vec!["pec-l1:event-provenance".into()],
+                };
+                if snapshot.proves_required_mask(required) {
+                    // Preserve dirty components that were not required by this
+                    // profile so a later stronger profile cannot consume a
+                    // metadata-only proof as source/content freshness.
+                    return Ok(RevalidationResult {
+                        outcome: RevalidationOutcome::StillValid,
+                        diff: None,
+                        handle: Some(handle.clone()),
+                    });
+                }
+            }
+        }
         let current = self
             .current
             .take()
@@ -275,8 +401,13 @@ impl WorkspaceService {
         let old_fingerprint = current.basis.fingerprint()?;
         let new_fingerprint = basis.fingerprint()?;
         if old_fingerprint == new_fingerprint {
+            let generation = current.handle.generation;
+            let cache_key = self.proof_cache_key(&basis, generation)?;
             self.state.transition(BindingState::Bound)?;
             self.current = Some(current);
+            self.proof_cache.insert(cache_key, basis)?;
+            self.dirty_components = ComponentMask::NONE;
+            self.broad_invalidation = false;
             return Ok(RevalidationResult {
                 outcome: RevalidationOutcome::StillValid,
                 diff: None,
@@ -304,11 +435,15 @@ impl WorkspaceService {
             generation,
         )?;
         self.state.transition(BindingState::Bound)?;
+        let cache_key = self.proof_cache_key(&basis, generation)?;
         self.current = Some(CurrentBinding {
             request: current.request,
-            basis,
+            basis: basis.clone(),
             handle: new_handle.clone(),
         });
+        self.proof_cache.insert(cache_key, basis)?;
+        self.dirty_components = ComponentMask::NONE;
+        self.broad_invalidation = false;
         Ok(RevalidationResult {
             outcome: RevalidationOutcome::UpdatedCompatible,
             diff: Some(delta),
@@ -321,6 +456,24 @@ impl WorkspaceService {
         self.state.transition(BindingState::Detaching)?;
         self.current = None;
         self.state.transition(BindingState::Unbound)?;
+        Ok(())
+    }
+
+    fn validate_handle(&self, handle: &WorkspaceHandleV1) -> Result<(), M02Error> {
+        if !handle.is_for_epoch(self.runtime_epoch) {
+            return Err(M02Error::StaleHandle("runtime epoch mismatch".into()));
+        }
+        let current = self
+            .current
+            .as_ref()
+            .ok_or_else(|| M02Error::StaleHandle("no current binding".into()))?;
+        if current.handle.basis_fingerprint != handle.basis_fingerprint
+            || current.handle.generation != handle.generation
+        {
+            return Err(M02Error::StaleHandle(
+                "handle is not the current generation".into(),
+            ));
+        }
         Ok(())
     }
 }

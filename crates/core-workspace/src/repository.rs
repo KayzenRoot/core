@@ -15,13 +15,23 @@ pub fn inspect_repository(
     policy: UntrackedPolicy,
     budget: WorkspaceResourceBudget,
 ) -> Result<Option<(crate::GitEvidenceV1, RepositoryGraphV1)>, M02Error> {
+    inspect_repository_with_conveyor(root, policy, budget, None)
+}
+
+pub fn inspect_repository_with_conveyor(
+    root: impl Into<PathBuf>,
+    policy: UntrackedPolicy,
+    budget: WorkspaceResourceBudget,
+    conveyor: Option<&crate::HashConveyor>,
+) -> Result<Option<(crate::GitEvidenceV1, RepositoryGraphV1)>, M02Error> {
     let root = root.into();
     let inspector = SystemGitInspector::default();
-    let evidence = inspector.inspect(&GitInspectRequest {
+    let request = GitInspectRequest {
         root: root.clone(),
         untracked_policy: policy,
         budget: budget.clone(),
-    })?;
+    };
+    let evidence = inspector.inspect_with_conveyor(&request, conveyor)?;
     evidence
         .map(|git| {
             build_graph(&root, &git, &budget, ExternalObjectPolicy::Deny).map(|graph| (git, graph))

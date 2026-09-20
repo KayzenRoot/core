@@ -18,6 +18,8 @@ pub enum EventKind {
     AuthorityRootHint,
     FilesystemSemanticsHint,
     AssociationHint,
+    PolicyGenerationHint,
+    ProviderChangedHint,
     OverflowOrLoss,
 }
 
@@ -88,6 +90,19 @@ impl CausalInvalidationGraph {
                 ComponentMask::only(C::ProjectAssociation),
                 false,
                 "association",
+            ),
+            EventKind::PolicyGenerationHint => (
+                ComponentMask::only(C::ConfigGeneration)
+                    .union(ComponentMask::only(C::SecurityPolicy)),
+                true,
+                "policy-generation",
+            ),
+            EventKind::ProviderChangedHint => (
+                ComponentMask::only(C::RepositoryGraph)
+                    .union(ComponentMask::only(C::ProjectAssociation))
+                    .union(ComponentMask::only(C::SecurityPolicy)),
+                true,
+                "provider-changed",
             ),
             EventKind::OverflowOrLoss => (ComponentMask::ALL, true, "event-overflow-or-loss"),
         };

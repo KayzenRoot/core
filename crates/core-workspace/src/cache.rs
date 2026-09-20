@@ -14,8 +14,11 @@ pub struct ProofCacheKey {
     pub component_mask: ComponentMask,
     pub authority_generation: u64,
     pub policy_generation: u64,
+    pub security_generation: u64,
     pub provider_version: String,
     pub filesystem_semantics_fingerprint: String,
+    pub semantic_proof_identity: String,
+    pub content_hash: String,
     pub proof_kind: String,
 }
 
@@ -141,8 +144,11 @@ mod tests {
             component_mask: ComponentMask::ALL,
             authority_generation: 1,
             policy_generation: 1,
+            security_generation: 1,
             provider_version: "v1".into(),
             filesystem_semantics_fingerprint: "fsc".into(),
+            semantic_proof_identity: "semantic".into(),
+            content_hash: "content".into(),
             proof_kind: "path".into(),
         }
     }

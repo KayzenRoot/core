@@ -14,8 +14,11 @@ fn cache_is_disposable_derived_evidence() {
         component_mask: ComponentMask::ALL,
         authority_generation: 1,
         policy_generation: 1,
+        security_generation: 1,
         provider_version: "v1".into(),
         filesystem_semantics_fingerprint: "fsc".into(),
+        semantic_proof_identity: "semantic".into(),
+        content_hash: "content".into(),
         proof_kind: "basis".into(),
     };
     cache.insert(key.clone(), "derived".to_owned()).unwrap();

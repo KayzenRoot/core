@@ -48,3 +48,37 @@ fn system_git_inspects_a_local_repository_without_network_or_mutation() {
     assert_eq!(before, std::fs::read(root.join("file.txt")).unwrap());
     let _ = std::fs::remove_dir_all(root);
 }
+
+#[test]
+fn content_hashed_untracked_bytes_change_the_git_basis() {
+    let root = std::env::temp_dir().join(format!("m02-git-untracked-{}", std::process::id()));
+    std::fs::create_dir_all(&root).unwrap();
+    let run = |args: &[&str]| {
+        let status = Command::new("git")
+            .args(args)
+            .current_dir(&root)
+            .status()
+            .unwrap();
+        assert!(status.success(), "git {:?} failed", args);
+    };
+    run(&["init"]);
+    run(&["config", "user.email", "m02@example.test"]);
+    run(&["config", "user.name", "M02 Test"]);
+    std::fs::write(root.join("untracked.txt"), b"first").unwrap();
+    let request = || GitInspectRequest {
+        root: root.clone(),
+        untracked_policy: UntrackedPolicy::ContentHashed,
+        budget: WorkspaceResourceBudget::default(),
+    };
+    let first = SystemGitInspector::default()
+        .inspect(&request())
+        .unwrap()
+        .unwrap();
+    std::fs::write(root.join("untracked.txt"), b"second").unwrap();
+    let second = SystemGitInspector::default()
+        .inspect(&request())
+        .unwrap()
+        .unwrap();
+    assert_ne!(first.untracked_fingerprint, second.untracked_fingerprint);
+    let _ = std::fs::remove_dir_all(root);
+}
