@@ -6,7 +6,7 @@ Canonical source: `docs/project-brain/13-CHECKPOINT.md`
 This file is a GEF continuity view. It is not a second source of product truth. Shared fields are validated deterministically against the canonical HIVE-compatible checkpoint.
 
 ## STATUS
-M01 COMPLETE / M02 PLANNING READY
+M01 COMPLETE / M02 DISCOVERY ACTIVE
 
 ## VERSION
 CORE V0.0 - Modular Construction
