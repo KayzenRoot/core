@@ -41,3 +41,19 @@ Before Round 4 mechanisms can be promoted into an implementation Work Order, evi
 - memory/concurrency ceilings under large status/hash workloads.
 
 Exact numeric resource defaults and production GitInspector provider selection remain blocked until this evidence exists. Historical M01 evidence does not substitute for M02-specific proof.
+
+
+## M02 Round 5 contract/file-map validation
+
+Planning freeze review must verify:
+- every v1 contract has explicit schema/version and canonical semantic fields;
+- contract serialization order is deterministic;
+- BVM profile masks match Round 5 definitions;
+- file/crate map creates no dependency cycle;
+- core-workspace initial dependency set is limited to the approved graph;
+- system-Git provider is behind a trait and cannot leak provider-specific payload into canonical GitEvidence;
+- L1 cache/watchers are optimizations only;
+- persistent cache/Rust-native provider/watcher framework remain outside initial Work Order;
+- M02 DoD is traceable to requirements and the module plan.
+
+Implementation acceptance later must execute the fixture/fuzz/benchmark matrix described in the M02 module plan.
