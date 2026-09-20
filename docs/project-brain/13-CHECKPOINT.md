@@ -1,7 +1,7 @@
 # CORE Checkpoint
 
 ## STATUS
-M01 COMPLETE / M02 IMPLEMENTATION AUTHORIZED
+M01 COMPLETE / M02 IMPLEMENTATION AUTHORIZATION ARMED
 
 ## VERSION
 CORE V0.0 - Modular Construction
@@ -13,7 +13,7 @@ CORE V0.0 - Modular Construction
 Continue building CORE as the headless NexLabs action plane that operates standalone and synchronizes deeply with HIVE without duplicating HIVE-owned intelligence.
 
 ## IN PROGRESS
-- CORE-WO-M02-001 authorized for governed Codex implementation from the admitted Context Lock base.
+- CORE-WO-M02-001 execution admission is armed; authorization becomes effective only when this exact admission state is promoted to canonical `origin/main`.
 - M03-M24 remain discovery-only.
 
 ## COMPLETED
@@ -43,11 +43,12 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - GitHub main ruleset activation when authorized admin mutation is available.
 
 ## BLOCKERS
-- No known blocker prevents CORE-WO-M02-001 execution.
+- Before admission PR promotion: execution remains blocked because authorization is effective only on canonical `origin/main`.
+- After this exact admission state is promoted to canonical `origin/main`: no known blocker prevents CORE-WO-M02-001 execution.
 - M03-M24 implementation remains gated by their respective planning freezes.
 
 ## NEXT STEP
-Execute CORE-WO-M02-001 using docs/work-orders/CODEX-HANDOFF-M02.md from the Context Lock authorizedBase. Preserve the frozen architecture and stop only at READY_FOR_REVIEW or BLOCKED under the Work Order.
+If this exact admission state is present on canonical `origin/main`, execute CORE-WO-M02-001 using docs/work-orders/CODEX-HANDOFF-M02.md. Otherwise, do not execute. Preserve the frozen architecture and stop only at READY_FOR_REVIEW or BLOCKED under the Work Order.
 
 ## EVIDENCE
 - `docs/engineering/CORE-MODULAR-DELIVERY-MODEL.md`
@@ -240,11 +241,11 @@ Result: all M02 V0.0 architecture/scope/contracts/file map/DoD/tests/calibration
 
 ## M02 execution admission
 
-Work Order: `CORE-WO-M02-001` — ACTIVE_AUTHORIZED
+Work Order: `CORE-WO-M02-001` — ACTIVE_ON_CANONICAL_MAIN_PROMOTION
 Authorized execution base: `bae47b2021a897396109dfcf42e8632dde13ec21`
 Execution branch: `feat/m02-project-workspace-adapter`
 Final planning review: Review 005 / Issue #35 — APPROVED
-Scope authorized: M02 Project / Workspace Adapter only
+Scope armed for authorization: M02 Project / Workspace Adapter only; effective only on canonical `origin/main`
 Assurance: ELEVATED
 
 No architecture, scope, dependency, acceptance or calibration semantics changed during admission.
