@@ -3,7 +3,7 @@
   "workOrder": "CORE-WO-M02-001",
   "status": "READY_FOR_REVIEW",
   "authorizedBase": "bae47b2021a897396109dfcf42e8632dde13ec21",
-  "candidateHead": "09269ec65f230bae513623a7e5424466dbd82a0c",
+  "candidateHead": "098de069b77aa843248b5a66dd0ca8af4107e879",
   "contextLock": ".engineering/context-locks/CORE-WO-M02-001.json",
   "hive": {
     "availability": "AVAILABLE_SOURCE_STALE",
@@ -45,7 +45,7 @@
     "fuzz/fuzz_targets/m02_repository_graph.rs", ".github/workflows/governance.yml", "scripts/validate_m02.py",
     "docs/evidence/M02-PREFLIGHT.md", "docs/evidence/M02-CALIBRATION-REPORT.md", "docs/evidence/M02-EXECUTION-REPORT.md"
   ],
-  "commits": ["00c8fd3", "eccd045", "b22020a", "17f9b7c", "d7cf62d", "9f11261", "4e8045e", "7c6d6b3", "39b751a", "98615a8", "1cb2a73", "09269ec65f230bae513623a7e5424466dbd82a0c"],
+  "commits": ["00c8fd3", "eccd045", "b22020a", "17f9b7c", "d7cf62d", "9f11261", "4e8045e", "7c6d6b3", "39b751a", "98615a8", "1cb2a73", "09269ec65f230bae513623a7e5424466dbd82a0c", "098de069b77aa843248b5a66dd0ca8af4107e879"],
   "commands": [
     {"command": "cargo fmt --all -- --check", "result": "PASS"},
     {"command": "cargo clippy --workspace --all-targets --all-features --locked -- -D warnings", "result": "PASS"},
@@ -57,22 +57,24 @@
     {"command": "python -m unittest discover -s tests -p test_*.py -v", "result": "PASS (6 tests)"},
     {"command": "cargo bench -p core-workspace --bench m02_workspace", "result": "PASS (5 measured iterations per scenario; calibration unchanged by Review 007 correction)"},
     {"command": "python -m pytest -q tests", "result": "PASS (6 tests)"},
+    {"command": "cargo check --manifest-path fuzz/Cargo.toml --bins --locked", "result": "PASS"},
+    {"command": "cargo bench -p core-workspace --bench m02_workspace --locked", "result": "PASS (7 scenarios; five measured iterations; selected budgets unchanged)"},
     {"command": "WSL2 cargo fuzz run <seven admitted targets> -- -runs=1000", "result": "PASS (seven bounded campaigns; no crashes)"}
   ],
   "tests": {
-    "unit": "PASS",
-    "integration": "PASS",
+    "unit": "PASS (16 core-workspace unit tests)",
+    "integration": "PASS (31 core-workspace integration/adversarial tests)",
     "property": "PASS by deterministic delta/invalidation fixtures",
     "adversarial": "PASS (3 M02 adversarial tests)",
-    "fuzz": "PASS; exact-head hosted M02 campaign plus seven local WSL campaigns completed",
-    "windows": "PASS; exact implementation-head hosted run 35532968666, M02 Windows job 106136805858",
-    "ubuntu": "PASS; exact implementation-head hosted run 35532968666, M02 Ubuntu job 106136806057"
+    "fuzz": "PASS; exact-head hosted M01/M02 campaigns in run 35539174568",
+    "windows": "PASS; exact implementation-head hosted run 35539174568, M02 Windows job 106153571783",
+    "ubuntu": "PASS; exact implementation-head hosted run 35539174568, M02 Ubuntu job 106153571894"
   },
   "security": {
     "dependencyPolicy": "PASS; hosted cargo-deny on Ubuntu and Windows",
     "advisory": "PASS; hosted cargo-audit on Ubuntu and Windows",
     "license": "PASS; hosted cargo-deny license gate on Ubuntu and Windows",
-    "sbom": "PASS; local artifacts/m02-sbom.cdx.json sha256=98f45f46f74082e649bc8965c13cf89cb63771befa67a86422a4a4a426aa2a9f and hosted exact-head SBOM gates",
+    "sbom": "PASS; hosted exact-head SBOM gates in run 35539174568; dependency inputs unchanged from the prior measured bundle",
     "unsafeInventory": "PASS; unsafe_keyword_count=0",
     "noNetworkNoMutation": "PASS by argv-only Git inspector, hostile-helper canary, local-only calibration",
     "secretRedaction": "PASS by remote redaction test"
@@ -340,6 +342,27 @@
       "m01UbuntuResult": "PASS",
       "m01WindowsResult": "PASS",
       "m01FuzzResult": "PASS"
+    },
+    {
+      "runId": 35539174568,
+      "workflow": "CI",
+      "candidateProductHead": "098de069b77aa843248b5a66dd0ca8af4107e879",
+      "evidenceHead": "098de069b77aa843248b5a66dd0ca8af4107e879",
+      "governanceJob": 106153571798,
+      "m02UbuntuJob": 106153571894,
+      "m02WindowsJob": 106153571783,
+      "m02FuzzJob": 106153571761,
+      "m01UbuntuJob": 106153571638,
+      "m01WindowsJob": 106153571743,
+      "m01FuzzJob": 106153571815,
+      "m02Result": "PASS",
+      "m02UbuntuResult": "PASS",
+      "m02WindowsResult": "PASS",
+      "m02FuzzResult": "PASS",
+      "governanceResult": "PASS",
+      "m01UbuntuResult": "PASS",
+      "m01WindowsResult": "PASS",
+      "m01FuzzResult": "PASS"
     }
   ],
   "failuresAndCorrections": [
@@ -352,13 +375,16 @@
     {"correction": "Made filesystem case semantics conservative and removed Unix-family inference", "commit": "09269ec", "finding": "HIGH-3"},
     {"correction": "Replaced path-only hash reuse with identity-aware bounded coalescing and deadline cleanup", "commit": "09269ec", "finding": "HIGH-4"},
     {"correction": "Hardened production Git argv/config, concurrent output draining, deadline kill/reap and fsmonitor isolation", "commit": "09269ec", "finding": "HIGH-5"},
-    {"correction": "Resolved revalidation targets through authority instead of process CWD", "commit": "09269ec", "finding": "HIGH-6"}
+    {"correction": "Resolved revalidation targets through authority instead of process CWD", "commit": "09269ec", "finding": "HIGH-6"},
+    {"correction": "Removed event-hint/PEC freshness shortcuts; action-boundary evidence is recomputed and selective DWS results are proven equivalent to full recomputation, including nested repository graph drift", "commit": "098de069b77aa843248b5a66dd0ca8af4107e879", "finding": "M02-REVIEW-008 residual 1"},
+    {"correction": "Made BHC deadlines/cancellation terminal inside bounded streaming, propagated typed waiter results, cleaned in-flight state, and added concurrent coalescing/rewrite regression coverage", "commit": "098de069b77aa843248b5a66dd0ca8af4107e879", "finding": "M02-REVIEW-008 residual 2"},
+    {"correction": "Added hostile fsmonitor, capped dual-output, and deadline kill/reap/no-poison Git regressions; nested directory boundaries are represented without opening directories", "commit": "098de069b77aa843248b5a66dd0ca8af4107e879", "finding": "M02-REVIEW-008 residual 3"}
   ],
   "residualRisks": [
     "HIVE index/checkpoint is stale for this execution checkout; canonical Git remains truth",
-    "Independent review and approval are not executor-controlled"
+    "Independent Review 009 approval and criterion 41 are not executor-controlled"
   ],
-  "proposedCheckpointDelta": "Request independent governed Review 008 now that the exact-head hosted matrix, supply-chain/advisory/SBOM/fuzz gates and local evidence are green; do not self-promote or merge, and retain HIVE stale-currentness note.",
+  "proposedCheckpointDelta": "Request independent governed Review 009 now that the three Review 008 residual blockers, exact-head hosted matrix, supply-chain/advisory/SBOM/fuzz gates and local evidence are green; do not self-promote or merge, and retain HIVE stale-currentness note.",
   "executorVerdict": "READY_FOR_REVIEW",
   "reviewerVerdict": null,
   "finalPlanningReview": {

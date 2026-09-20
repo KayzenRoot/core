@@ -3,7 +3,7 @@
 Work Order: `CORE-WO-M02-001`
 Authorized base: `bae47b2021a897396109dfcf42e8632dde13ec21`
 Execution branch: `feat/m02-project-workspace-adapter`
-Final implementation head: `09269ec65f230bae513623a7e5424466dbd82a0c` (the exact product/correction head).
+Final implementation head: `098de069b77aa843248b5a66dd0ca8af4107e879` (the exact product/correction head).
 Executor verdict: `READY_FOR_REVIEW`; all required local and hosted gates are green at the exact implementation head. The executor does not approve, promote or merge.
 
 ## Packet commits
@@ -22,6 +22,7 @@ Executor verdict: `READY_FOR_REVIEW`; all required local and hosted gates are gr
 | G portability correction | `98615a8` |
 | Supply-chain metadata correction | `1cb2a73` |
 | M02 Review 007 correction | `09269ec` |
+| M02 Review 008 correction | `098de06` |
 
 ## Review 007 correction closeout
 
@@ -37,6 +38,18 @@ The six HIGH findings from M02-REVIEW-007 were corrected in `09269ec65f230bae513
 Exact-head hosted run `35532968666` completed successfully. Governance job `106136806055`, M01 Ubuntu `106136806132`, M01 Windows `106136806021`, M01 fuzz `106136806023`, M02 bounded fuzz `106136806002`, M02 Ubuntu `106136806057` and M02 Windows `106136805858` all concluded `success`.
 
 Local gates also pass: format, locked clippy with `-D warnings`, the full locked workspace test suite, governance/M02 static validators, six Python HIVE/MCP tests, and seven bounded WSL fuzz campaigns with 1,000 executions each. The direct Windows sanitizer fuzz linker remains an environment limitation; the hosted Windows fuzz job is green.
+
+## Review 008 correction closeout
+
+The three residual Review 008 blockers were corrected in `098de069b77aa843248b5a66dd0ca8af4107e879`, on the same branch and PR, without changing the frozen architecture, dependency boundary, budgets or calibration:
+
+- Residual 1 — event hints and PEC are no longer freshness proof. `revalidate_for()` obtains fresh deterministic basis evidence at the action boundary, preserves selective DWS semantics only when the requested mask is unchanged, and falls back to the full computation when evidence is unavailable. Nested repository graph drift under an unrelated `PathContentChanged` hint and selective-versus-full equivalence are covered by regression tests.
+- Residual 2 — BHC deadlines are enforced inside bounded streaming rather than by abandoning a detached task. Cancellation is typed, terminal results are shared with waiters, in-flight entries are cleaned and notified, and concurrent same-path requests coalesce into one underlying operation; rewrite-after-completion yields a new digest.
+- Residual 3 — Git regressions now prove hostile local fsmonitor configuration does not execute a canary, dual stdout/stderr output is independently capped without deadlock, and a sleeping fake process receives a typed deadline, is killed/reaped, leaves no poisoned inspection state, and does not block the next inspection.
+
+Exact-head hosted run `35539174568` at implementation head `098de069b77aa843248b5a66dd0ca8af4107e879` completed successfully. Governance `106153571798`, M01 Ubuntu `106153571638`, M01 Windows `106153571743`, M01 fuzz `106153571815`, M02 bounded fuzz `106153571761`, M02 Ubuntu `106153571894` and M02 Windows `106153571783` all concluded `success`.
+
+Local Review 008 evidence is green: focused M02 coverage (16 unit and 31 integration/adversarial tests), full locked workspace tests, format, Clippy, governance/M02 validators, Python HIVE/MCP tests, fuzz-bin compilation and the seven-scenario calibration benchmark. No calibration delta was required because selected budgets and dependency inputs were unchanged.
 
 ## HIVE truth
 
@@ -98,18 +111,18 @@ HIVE MCP was available and resolved CORE as project `c65b7abc-533a-411a-bbbb-2b7
 28. Typed resource exhaustion — budget validation/cache/hash tests.
 29. Unit/integration/property/adversarial suites — workspace test gate.
 30. Fuzz targets — `fuzz/fuzz_targets/m02_*.rs`, hosted bounded campaign.
-31. Ubuntu/Windows exact head — PASS at implementation head `09269ec65f230bae513623a7e5424466dbd82a0c`, hosted run `35532968666`.
-32. Supply chain/advisory/license/SBOM — deny/audit/SBOM workflow gates, PASS in exact-head hosted run `35532968666`.
+31. Ubuntu/Windows exact head — PASS at implementation head `098de069b77aa843248b5a66dd0ca8af4107e879`, hosted run `35539174568`.
+32. Supply chain/advisory/license/SBOM — deny/audit/SBOM workflow gates, PASS in exact-head hosted run `35539174568`.
 33. Zero LLM — `scripts/validate_m02.py` and deterministic code paths.
 34. Reproducible RCG — `M02-CALIBRATION-REPORT.md`, benchmark source.
 35. Finite measured defaults — calibration report and `WorkspaceResourceBudget::finalized`.
-36. Calibration Delta bounds — calibration report; Review 007 correction did not change selected budgets or calibration bounds.
+36. Calibration Delta bounds — calibration report; Review 008 correction did not change selected budgets or calibration bounds, confirmed by the seven-scenario benchmark.
 37. DWS included / WMF absent — source/file map and static inspection.
 38. L2/watchers/Rust-native provider absent — dependency/static/file-map checks.
 39. Exact evidence mapping — this report and Evidence Bundle.
-40. No unresolved HIGH/CRITICAL — PASS for the six Review 007 findings; the exact-head hosted matrix, advisory, license and SBOM gates are green.
-41. Independent APPROVED review — not executor-controlled; required before promotion.
+40. No unresolved HIGH/CRITICAL — PASS for the six Review 007 findings and the three Review 008 residual blockers; the exact-head hosted matrix, advisory, license and SBOM gates are green.
+41. Independent APPROVED review — PENDING Review 009; not executor-controlled and required before promotion.
 
 ## Proposed Checkpoint Delta
 
-Request independent governed Review 008 before promotion; retain HIVE degraded-currentness as an explicit assurance note. The executor does not self-promote the checkpoint or merge the implementation PR.
+Request independent governed Review 009 before promotion; retain HIVE degraded-currentness as an explicit assurance note. The executor does not self-promote the checkpoint or merge the implementation PR.
