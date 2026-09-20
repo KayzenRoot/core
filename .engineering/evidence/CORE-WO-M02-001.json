@@ -1,9 +1,9 @@
 {
   "schemaVersion": "core-evidence-bundle-v1",
   "workOrder": "CORE-WO-M02-001",
-  "status": "READY_FOR_EXECUTION",
+  "status": "PENDING_HOSTED_EXACT_HEAD",
   "authorizedBase": "bae47b2021a897396109dfcf42e8632dde13ec21",
-  "candidateHead": "a0e88e818051217cfb23ec0e69261f6f32750391",
+  "candidateHead": "39b751a2c21462be9061eb850327c3fd930a9d39",
   "contextLock": ".engineering/context-locks/CORE-WO-M02-001.json",
   "hive": {
     "availability": "AVAILABLE_SOURCE_STALE",
@@ -16,7 +16,8 @@
       "reportedHead": "fdb4dbe165e74b009c43df3874b6043c9b94710b",
       "checkpointRead": "source_not_current",
       "contextSearch": "LEXICAL_FALLBACK_SEMANTIC_UNAVAILABLE"
-    }
+    },
+    "canonicalTruth": "Git/filesystem evidence; HIVE was advisory only"
   },
   "canonicalSources": [
     {"path": "docs/project-brain/13-CHECKPOINT.md", "blobSha": "3c9901a2b19cbf6ea0b063e09ddbc589e484ba1a"},
@@ -29,41 +30,96 @@
     {"path": "docs/project-brain/11-TEST-PLAN.md", "blobSha": "8d28f7b5d48aa2a1b0101694a29b5005baaa9c0c"},
     {"path": "docs/modules/M02-PROJECT-WORKSPACE-ADAPTER.md", "blobSha": "954aa5f7c772254ca145a76c4b22e0d43c535556"}
   ],
-  "changedFiles": [],
+  "changedFiles": [
+    "Cargo.toml", "Cargo.lock", "crates/core-config/src/lib.rs", "crates/core-workspace/Cargo.toml",
+    "crates/core-workspace/benches/m02_workspace.rs", "crates/core-workspace/src/authority.rs",
+    "crates/core-workspace/src/basis.rs", "crates/core-workspace/src/cache.rs", "crates/core-workspace/src/contracts.rs",
+    "crates/core-workspace/src/git/mod.rs", "crates/core-workspace/src/git/system.rs", "crates/core-workspace/src/hashing.rs",
+    "crates/core-workspace/src/identity.rs", "crates/core-workspace/src/invalidation.rs", "crates/core-workspace/src/lib.rs",
+    "crates/core-workspace/src/reconcile.rs", "crates/core-workspace/src/repository.rs", "crates/core-workspace/src/service.rs",
+    "crates/core-workspace/src/state.rs", "crates/core-workspace/tests/adversarial.rs", "crates/core-workspace/tests/attach.rs",
+    "crates/core-workspace/tests/cache.rs", "crates/core-workspace/tests/drift.rs", "crates/core-workspace/tests/git_system.rs",
+    "crates/core-workspace/tests/hashing.rs", "crates/core-workspace/tests/identity.rs", "crates/core-workspace/tests/invalidation.rs",
+    "crates/core-workspace/tests/reconciliation.rs", "crates/core-workspace/tests/repository_graph.rs", "crates/core-workspace/tests/service.rs",
+    "fuzz/Cargo.toml", "fuzz/Cargo.lock", "fuzz/fuzz_targets/m02_git_evidence.rs", "fuzz/fuzz_targets/m02_path_authority.rs",
+    "fuzz/fuzz_targets/m02_repository_graph.rs", ".github/workflows/governance.yml", "scripts/validate_m02.py",
+    "docs/evidence/M02-PREFLIGHT.md", "docs/evidence/M02-CALIBRATION-REPORT.md", "docs/evidence/M02-EXECUTION-REPORT.md"
+  ],
+  "commits": ["00c8fd3", "eccd045", "b22020a", "17f9b7c", "d7cf62d", "9f11261", "4e8045e", "7c6d6b3", "39b751a"],
   "commands": [
-    {"command": "python -m py_compile scripts/validate_governance.py scripts/hive_bootstrap.py scripts/hive_mcp.py", "result": "PASS"},
-    {"command": "python scripts/validate_governance.py", "result": "PASS"}
+    {"command": "cargo fmt --all -- --check", "result": "PASS"},
+    {"command": "cargo clippy --workspace --all-targets --all-features --locked -- -D warnings", "result": "PASS"},
+    {"command": "cargo test --workspace --all-features --locked", "result": "PASS"},
+    {"command": "cargo check --manifest-path fuzz/Cargo.toml --bins", "result": "PASS"},
+    {"command": "python -m py_compile scripts/validate_governance.py scripts/hive_bootstrap.py scripts/hive_mcp.py scripts/validate_m02.py", "result": "PASS"},
+    {"command": "python scripts/validate_governance.py", "result": "PASS"},
+    {"command": "python scripts/validate_m02.py", "result": "PASS"},
+    {"command": "python -m unittest discover -s tests -p test_*.py -v", "result": "PASS (6 tests)"},
+    {"command": "cargo bench -p core-workspace --bench m02_workspace", "result": "PASS (5 measured iterations per scenario)"}
   ],
   "tests": {
-    "unit": null,
-    "integration": null,
-    "property": null,
-    "adversarial": null,
-    "fuzz": null,
-    "windows": null,
-    "ubuntu": null
+    "unit": "PASS",
+    "integration": "PASS",
+    "property": "PASS by deterministic delta/invalidation fixtures",
+    "adversarial": "PASS (3 M02 adversarial tests)",
+    "fuzz": "COMPILE_PASS; hosted 1000-run campaign pending exact head",
+    "windows": "LOCAL_PASS",
+    "ubuntu": "HOSTED_PENDING"
   },
   "security": {
-    "dependencyPolicy": null,
-    "advisory": null,
-    "license": null,
-    "sbom": null,
-    "unsafeInventory": null,
-    "noNetworkNoMutation": null,
-    "secretRedaction": null
+    "dependencyPolicy": "HOSTED_PENDING; cargo-deny not installed locally",
+    "advisory": "HOSTED_PENDING; cargo-audit not installed locally",
+    "license": "HOSTED_PENDING via cargo-deny",
+    "sbom": "LOCAL_GENERATED artifacts/m02-sbom.cdx.json sha256=98f45f46f74082e649bc8965c13cf89cb63771befa67a86422a4a4a426aa2a9f; hosted exact-head pending",
+    "unsafeInventory": "PASS; unsafe_keyword_count=0",
+    "noNetworkNoMutation": "PASS by argv-only Git inspector, hostile-helper canary, local-only calibration",
+    "secretRedaction": "PASS by remote redaction test"
   },
   "calibration": {
-    "status": "PENDING",
+    "status": "FINALIZED",
     "report": "docs/evidence/M02-CALIBRATION-REPORT.md",
-    "selectedBudgets": null,
-    "rejectedCandidates": []
+    "selectedBudgets": {
+      "max_repository_graph_nodes": 1024,
+      "max_recursion_depth": 32,
+      "max_git_process_duration_ms": 5000,
+      "max_stdout_bytes": 4194304,
+      "max_stderr_bytes": 1048576,
+      "max_parsed_records": 10000,
+      "max_concurrent_git_inspectors": 2,
+      "max_concurrent_hash_tasks": 2,
+      "max_single_file_hash_bytes_before_explicit_policy": 16777216,
+      "max_aggregate_hash_bytes_per_validation": 134217728,
+      "max_cache_entries": 256,
+      "max_cache_bytes": 8388608,
+      "max_event_hint_backlog": 1024,
+      "max_revalidation_wall_clock_ms": 10000
+    },
+    "rejectedCandidates": [
+      "zero/unlimited sentinel values",
+      "graph ceilings below measured synthetic 1000-node fingerprint",
+      "unsupported changed-path and untracked top scales recorded SKIPPED_RESOURCE_BOUND",
+      "persistent L2/watchers/WMF/Rust-native Git outside frozen M02 scope"
+    ]
   },
-  "zeroLlmProof": null,
+  "zeroLlmProof": {
+    "status": "PASS",
+    "validator": "scripts/validate_m02.py",
+    "forbiddenDependencies": [],
+    "forbiddenRuntimeTerms": [],
+    "unsafeKeywordCount": 0
+  },
   "ciRuns": [],
-  "failuresAndCorrections": [],
-  "residualRisks": [],
-  "proposedCheckpointDelta": null,
-  "executorVerdict": null,
+  "failuresAndCorrections": [
+    {"correction": "Static validator excluded TOML bench metadata key harness from dependency scan", "commit": "7c6d6b3"},
+    {"correction": "Standalone no-Git inventory now detects content/directory drift and nested repository boundaries", "commit": "7c6d6b3"}
+  ],
+  "residualRisks": [
+    "HIVE index/checkpoint is stale for this execution checkout; canonical Git remains truth",
+    "cargo-deny/cargo-audit and Ubuntu/fuzz evidence require hosted exact-head workflow",
+    "Independent review and approval are not executor-controlled"
+  ],
+  "proposedCheckpointDelta": "Promote CORE-WO-M02-001 only after hosted Ubuntu/Windows, supply-chain/advisory/SBOM/fuzz gates and independent review are green at the exact implementation candidate; retain HIVE stale-currentness note.",
+  "executorVerdict": "PENDING_HOSTED_EXACT_HEAD",
   "reviewerVerdict": null,
   "finalPlanningReview": {
     "issue": 35,

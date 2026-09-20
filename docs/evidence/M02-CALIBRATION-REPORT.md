@@ -25,13 +25,13 @@ The runner creates only synthetic fixtures under the OS temporary directory, per
 
 | Scenario | Scale | Iterations | Median us | Range us |
 |---|---:|---:|---:|---:|
-| system graph build | 100 | 5 | 330 | 308–370 |
-| lexical path validation | 1 | 5 | 1 | 1–2 |
-| streaming hash | 256 KiB | 5 | 480 | 466–641 |
+| system graph build | 100 | 5 | 501 | 318–522 |
+| lexical path validation | 1 | 5 | 2 | 2–3 |
+| streaming hash | 256 KiB | 5 | 581 | 501–653 |
 | event causal map | 1 | 5 | 0 | 0–0 |
-| canonical graph fingerprint | 100 | 5 | 182 | 131–227 |
-| canonical graph fingerprint | 1,000 synthetic nodes | 5 | 2,054 | 1,593–2,974 |
-| warm hash proof reuse | 1 | 5 | 93 | 92–104 |
+| canonical graph fingerprint | 100 | 5 | 188 | 187–195 |
+| canonical graph fingerprint | 1,000 synthetic nodes | 5 | 3,077 | 3,038–3,288 |
+| warm hash proof reuse | 1 | 5 | 133 | 110–180 |
 
 The complete machine-readable output is reproducible from the benchmark command above. The zero-microsecond event measurement is timer resolution, not an unlimited budget or a correctness shortcut.
 
