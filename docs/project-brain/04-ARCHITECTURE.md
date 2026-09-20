@@ -74,3 +74,113 @@ CORE product runtime is Rust-first:
 - no arbitrary dynamic-library plugins.
 
 HIVE remains independently implemented/deployed. CORE communicates with HIVE through versioned external contracts rather than sharing language/runtime/database internals.
+
+
+## M02 Project / Workspace Adapter architecture direction
+
+M02 sits directly above M01 runtime/contracts and below every later module that needs a concrete project checkout.
+
+```text
+HIVE Project Registry (external intelligence authority)
+          |
+          | optional project identity/provenance
+          v
+M02 Basis Reconciliation Layer
+          ^
+          | local deterministic evidence
+          |
+Git / filesystem / explicit config
+          |
+          v
+Workspace Identity + Authority + Basis
+          |
+          v
+WorkspaceHandle / Workspace Binding Receipt
+          |
+          +--> M03 Work Order Engine
+          +--> M04 Run Engine
+          +--> M05 Host Adapters
+          +--> M11 Sandbox/Leases
+          +--> M13 Mutation
+          +--> M20 Git Delivery
+```
+
+M02 is read-oriented. It may invoke Git only for bounded inspection/discovery needed to establish the current basis. It does not commit, checkout, reset, branch, push, merge or otherwise mutate repository state.
+
+M02 consumes M01 deterministic canonical serialization, generations, typed errors, health/degradation and capability provenance rather than creating parallel primitives.
+
+Candidate M02 technologies under evaluation:
+- WIL Workspace Identity Lattice;
+- CWB Canonical Workspace Basis;
+- PAF Path Authority Firewall;
+- BRL Basis Reconciliation Layer;
+- WDG Workspace Drift Guard;
+- RBR Repository Boundary Resolver;
+- WBR Workspace Binding Receipt;
+- DWS Delta Workspace Snapshot.
+
+These are discovery candidates until M02 technology disposition is governed by measurable tests/benchmarks.
+
+
+## M02 validity architecture
+
+M02 separates durable evidence from live action state.
+
+```text
+WorkspaceAttachRequest
+        |
+        v
+DISCOVERING -> VALIDATING
+        |          |
+        |          +---- local Git/filesystem evidence
+        |          +---- explicit intent/config
+        |          +---- optional HIVE association evidence
+        v
+WorkspaceBindingReceipt  (durable proof)
+        |
+        +--> WorkspaceHandle (runtime-epoch-bound)
+                  |
+                  +--> WorkspaceBasisFingerprint
+                  +--> WorkspaceGeneration
+                  +--> authority roots
+                  +--> repository/worktree graph
+                  +--> reconciliation/assurance
+                  |
+                  v
+          downstream action boundary
+                  |
+             freshness check
+                  |
+         BOUND / DRIFTED / BLOCKED
+```
+
+Workspace basis is componentized so later modules can declare required validity masks without giving M02 permission to perform their actions. M02 may optimize revalidation with deltas only when the result is provably equivalent to full correctness evaluation.
+
+Path validation is a proof layer, not an OS sandbox. Mutation/sandbox modules must revalidate security-sensitive receipts at use time.
+
+
+## M02 repository graph and trust-boundary architecture
+
+M02 separates source paths from Git administration metadata.
+
+```text
+Workspace SOURCE_AUTHORITY
+   |
+   +-- Worktree A -----------+
+   |                         |
+   +-- Worktree B            | local source roots
+   |                         |
+   +-- Nested repo           |
+                             v
+                    Repository Graph
+                             |
+                             +--> GIT_METADATA_AUTHORITY
+                             |      common-dir / worktree gitdir
+                             |
+                             +--> optional EXTERNAL_OBJECT_AUTHORITY
+                                    alternates/shared objects
+```
+
+Only SOURCE_AUTHORITY is eligible to become downstream source-path input. Git metadata/object authorities exist solely to interpret repository state and do not transitively grant mutation capability.
+
+HIVE association enters through a versioned `nexlabs.project-association@1`-style capability seam. M23 may later provide a deeper provider while M02 keeps the same consumer contract.

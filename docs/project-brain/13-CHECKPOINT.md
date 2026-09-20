@@ -1,7 +1,7 @@
 # CORE Checkpoint
 
 ## STATUS
-M01 COMPLETE / M02 PLANNING READY
+M01 COMPLETE / M02 DISCOVERY ACTIVE
 
 ## VERSION
 CORE V0.0 - Modular Construction
@@ -13,7 +13,7 @@ CORE V0.0 - Modular Construction
 Continue building CORE as the headless NexLabs action plane that operates standalone and synchronizes deeply with HIVE without duplicating HIVE-owned intelligence.
 
 ## IN PROGRESS
-- M02 Project / Workspace Adapter deep planning.
+- M02 Project / Workspace Adapter deep planning — Rounds 1-3 ownership, contracts, repository graph, threat model and HIVE association seam recorded.
 - M03-M24 remain discovery-only.
 
 ## COMPLETED
@@ -47,6 +47,7 @@ Deep-plan M02 Project / Workspace Adapter using the same freeze-before-execution
 - `docs/engineering/CORE-MODULAR-DELIVERY-MODEL.md`
 - `docs/modules/00-MASTER-MODULE-MAP.md`
 - `docs/modules/M01-CORE-RUNTIME-LIFECYCLE.md`
+- `docs/modules/M02-PROJECT-WORKSPACE-ADAPTER.md`
 - `docs/work-orders/CORE-WO-M01-001.md`
 - `docs/evidence/M01-EXECUTION-REPORT.md`
 - Review 011 / Issue #20
@@ -66,3 +67,40 @@ Result: M01 COMPLETE. No unresolved HIGH/CRITICAL finding recorded at final prom
 ## Historical M01 freeze record
 Planning freeze basis: `d3a5772f0cb427bd8a9d7ff0c5182243e64cd6d7`
 The former M01 execution-ready instructions are historical and no longer represent the legal next action.
+
+
+## Current M02 discovery delta
+Round 1 established M02 as the deterministic Project / Workspace Adapter between local Git/filesystem state and optional HIVE Project Registry identity.
+
+Accepted direction:
+- no duplicate HIVE Project Registry;
+- explicit ProjectBinding / Workspace / Repository / Worktree identities;
+- no ambient current-directory execution;
+- read-only Git/filesystem inspection only;
+- path authority validation before later sandbox/mutation modules;
+- workspace drift is correctness-relevant;
+- zero-LLM workspace discovery/basis;
+- M02 implementation remains unauthorized.
+
+Next M02 planning rounds must freeze the exact state machine, canonical contracts, repository/worktree graph semantics, path-security model, drift algorithm, crate/file map, fixtures/fuzzing, benchmark policy, DoD and Work Order.
+
+
+## M02 Round 2 discovery delta
+Round 2 defined the binding lifecycle, runtime-bound WorkspaceHandle versus durable WorkspaceBindingReceipt, componentized WorkspaceBasis, reconciliation law, drift classes, lexical+physical path proof, untracked-file policy and candidate safe Git inspection profile.
+
+Additional candidates:
+- BVM Basis Validity Matrix;
+- GSI Git Safe Inspection;
+- ACR Authority Chain Receipt;
+- FSC Filesystem Semantics Capsule.
+
+M02 remains discovery-only. No crate/file implementation or Work Order is authorized yet.
+
+
+## M02 Round 3 discovery delta
+Round 3 added explicit repository/worktree/submodule/nested-repo graph semantics, separated SOURCE versus GIT_METADATA authority, defined a versioned HIVE project-association capability seam, and established the hostile-repository threat model.
+
+New technology candidate:
+- WMF Workspace Merkle Forest.
+
+GitInspector implementation backend remains intentionally unfrozen pending benchmark/security evidence. M02 remains zero-LLM and read-only.
