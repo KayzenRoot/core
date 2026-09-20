@@ -181,7 +181,7 @@ Initial V0.0 disposition:
 - core-workspace does not depend on core-runtime;
 - M02-specific DoD is explicit.
 
-Remaining before planning freeze: benchmark-backed numeric resource defaults/acceptance thresholds, WMF/DWS final acceleration disposition, final Work Order/Context Lock and final planning audit.
+At Round 5 close, the then-remaining items were benchmark-backed resource calibration, WMF/DWS disposition, final Work Order/Context Lock and final planning audit. Round 6 below refines and resolves the calibration/technology-disposition portion.
 
 M02 implementation remains unauthorized.
 
