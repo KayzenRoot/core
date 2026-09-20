@@ -1,11 +1,11 @@
 # CORE-WO-M02-001 — Project / Workspace Adapter
 
-Status: FROZEN_PENDING_REVIEW
+Status: ACTIVE_AUTHORIZED
 Module: M02
 Executor: Codex
 Risk / assurance: ELEVATED
 Execution model: one comprehensive Work Order, eight ordered construction packets
-Product implementation authorization: CLOSED — opens only after governed final-freeze promotion and execution-base Context Lock admission
+Product implementation authorization: OPEN FOR M02 ONLY — governed final-freeze approved; execution remains bounded by the ACTIVE Context Lock and this Work Order
 
 ## OBJECTIVE
 
