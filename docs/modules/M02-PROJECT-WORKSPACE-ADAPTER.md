@@ -788,3 +788,451 @@ Still to freeze:
 - HIVE association adapter contract placement relative to M23;
 - final threat model/fuzz corpus;
 - benchmark seed policy and M02 DoD.
+
+
+## Round 3 - Repository graph, threat model and external association seam
+
+### Repository/worktree graph model
+
+M02 represents repository topology as a typed graph instead of assuming one workspace equals one Git root.
+
+Node classes:
+- WORKSPACE_ROOT;
+- REPOSITORY;
+- WORKTREE;
+- SUBMODULE_DECLARATION;
+- SUBMODULE_WORKTREE;
+- NESTED_REPOSITORY;
+- GIT_METADATA_ROOT;
+- EXTERNAL_OBJECT_STORE.
+
+Edge classes:
+- CONTAINS;
+- WORKTREE_OF;
+- DECLARES_SUBMODULE;
+- MATERIALIZES_SUBMODULE;
+- NESTED_IN;
+- USES_GIT_METADATA;
+- USES_OBJECT_STORE;
+- PRIMARY_BINDING.
+
+Graph invariants:
+- every worktree references exactly one RepositoryId;
+- linked worktrees may share RepositoryId while retaining unique WorktreeId;
+- nested independent repositories are not silently converted into submodules;
+- submodule declarations and initialized submodule worktrees are distinct facts;
+- source authority and Git metadata authority are separate;
+- graph cycles caused by malformed metadata/path indirection fail typed;
+- graph traversal is depth/size bounded by policy.
+
+### Authority classes
+
+M02 distinguishes authority classes so discovery does not accidentally grant execution rights.
+
+#### SOURCE_AUTHORITY
+Paths downstream source operations may refer to after successful PAF validation.
+
+#### GIT_METADATA_AUTHORITY
+Read-only Git administration paths required to interpret a repository/worktree, including linked-worktree common metadata that may physically live outside SOURCE_AUTHORITY.
+
+This authority:
+- permits only M02's bounded metadata inspection;
+- is never inherited automatically as source/mutation authority;
+- must be recorded in the binding receipt.
+
+#### EXTERNAL_OBJECT_AUTHORITY
+Optional read-only object-store paths used by Git alternates/shared object databases.
+
+Default execution-ready policy is DENY unless explicitly admitted with provenance. If allowed, external object roots participate in the security/basis fingerprint.
+
+#### INTERNAL_CORE_TEMP
+Ephemeral CORE-owned scratch/state outside the workspace, when needed for bounded streaming/sorting/fixtures. It may never be represented as project source authority.
+
+### Worktree and .git indirection
+
+M02 must support:
+- normal .git directory;
+- .git file pointing to a worktree gitdir;
+- git-common-dir outside the worktree root;
+- bare repository;
+- detached HEAD;
+- linked worktrees.
+
+A .git indirection path is treated as untrusted metadata:
+1. parse without shell;
+2. resolve physically;
+3. classify as GIT_METADATA_AUTHORITY;
+4. validate against Git-reported/common-dir facts;
+5. never promote it into SOURCE_AUTHORITY merely because Git uses it.
+
+### Submodule policy
+
+M02 never auto-initializes, fetches, updates or recursively clones submodules.
+
+It records:
+- gitlink entries from the parent repository basis;
+- declared submodule path/name;
+- declared URL only as redacted association metadata;
+- initialized/uninitialized status;
+- initialized child repository/worktree identity where locally present.
+
+Submodule paths are passed through PAF.
+
+Recursion is bounded by:
+- maximum configured depth;
+- maximum repository/node count;
+- cycle detection;
+- cancellation/deadline.
+
+An uninitialized submodule is valid repository state, not an automatic error. Downstream operation requirements decide whether it is sufficient.
+
+### Nested repository policy
+
+An independent repository physically under another workspace path is represented as NESTED_REPOSITORY, not merged into the parent's Git state.
+
+Workspace policy decides whether it is:
+- admitted as a secondary repository;
+- ignored as outside the requested repository set;
+- a boundary conflict.
+
+The decision and evidence appear in WorkspaceBindingReceipt.
+
+### Bare repository policy
+
+A bare repository may be bound for operations whose Basis Validity Matrix does not require a worktree.
+
+It cannot satisfy a source-worktree operation merely because Git metadata exists.
+
+### HIVE project association capability seam
+
+M02 consumes project association through a versioned capability rather than importing HIVE code.
+
+Candidate capability identity:
+`nexlabs.project-association@1`
+
+Request fields:
+- local WorkspaceId;
+- repository/worktree evidence summary;
+- optional configured HIVE project reference;
+- local basis/provenance fingerprint;
+- required freshness/assurance.
+
+Response fields:
+- provider origin/version;
+- HIVE project reference when available;
+- asserted repository/workspace hints;
+- association generation/fingerprint;
+- freshness metadata;
+- provenance;
+- status/evidence refs.
+
+Rules:
+- provider unavailable -> explicit UNAVAILABLE;
+- response cannot grant local path authority;
+- response cannot mutate local WorkspaceId;
+- conflicting HIVE/local evidence produces reconciliation conflict under policy;
+- M23 may later provide a deeper federation implementation without changing the M02 consumer contract.
+
+### HIVE disconnect/reconnect semantics
+
+Temporary HIVE provider loss does not change WorkspaceId or RepositoryId.
+
+If the current handle only requires standalone assurance:
+- local binding may remain BOUND;
+- project association health becomes UNAVAILABLE/STALE;
+- the binding receipt/health view reflects degradation.
+
+If an operation requires HIVE_RECONCILED assurance:
+- existing local handle may remain structurally valid;
+- operation admission is blocked until fresh association evidence returns.
+
+Reconnect:
+- new association evidence is reconciled;
+- identical association may refresh freshness without local identity churn;
+- changed/conflicting association produces ASSOCIATION_DRIFT and revalidation.
+
+### Threat model
+
+M02 treats the workspace, repository metadata and external association data as potentially hostile inputs.
+
+#### T1 Path traversal / namespace escape
+Attack:
+- .. segments, alternate separators, device namespaces, UNC tricks.
+
+Control:
+- PAF lexical + physical validation;
+- platform-specific namespace classification;
+- fail closed on unknown security-sensitive forms.
+
+#### T2 Symlink/junction/reparse swap
+Attack:
+- accepted path is swapped after validation.
+
+Control:
+- ACR records chain/ancestor evidence;
+- use-time revalidation flag;
+- downstream action boundary must revalidate/enforce.
+
+#### T3 Malicious .git indirection
+Attack:
+- .git file points outside expected metadata roots or to malformed location.
+
+Control:
+- separate GIT_METADATA_AUTHORITY;
+- physical resolution/provenance;
+- no source authority inheritance.
+
+#### T4 Hostile Git config/helpers
+Attack:
+- fsmonitor hook, external diff/textconv, pager/editor, credential prompt or helper side effect.
+
+Control target:
+- GSI command profile;
+- no shell;
+- allowlisted read-only commands;
+- disable interactive/network behavior;
+- disable external diff/textconv/fsmonitor for inspection paths where applicable;
+- bounded environment and output.
+
+#### T5 Credential-bearing repository metadata
+Attack:
+- remote URLs or config contain credentials/tokens.
+
+Control:
+- redact URL userinfo/secrets;
+- avoid broad config serialization;
+- secret canary tests.
+
+#### T6 Output/resource bomb
+Attack:
+- huge status, pathological path counts, oversized config/output.
+
+Control:
+- streaming bounded readers;
+- output/entry/depth budgets;
+- cancellation/deadlines;
+- no unbounded Vec of attacker-controlled records.
+
+#### T7 Submodule recursion/network surprise
+Attack:
+- malicious submodule graph triggers fetch/recursive explosion.
+
+Control:
+- no fetch/init/update;
+- bounded local-only traversal;
+- path/URL treated as untrusted metadata.
+
+#### T8 Case/normalization collision
+Attack:
+- two logical paths alias on case-insensitive or normalization-sensitive filesystems.
+
+Control:
+- FSC records known/unknown semantics;
+- no unconditional lowercase;
+- collision tests;
+- fail closed when safe identity cannot be proved.
+
+#### T9 External object-store escape
+Attack:
+- Git alternates/shared object DB points outside admitted metadata authority.
+
+Control:
+- clear untrusted environment alternates;
+- detect repository alternates where possible;
+- explicit EXTERNAL_OBJECT_AUTHORITY policy/provenance.
+
+#### T10 HIVE stale/conflicting association
+Attack/failure:
+- stale HIVE record points at another project/repository.
+
+Control:
+- BRL reconciliation;
+- freshness generation;
+- no HIVE overwrite of local facts.
+
+#### T11 Concurrent workspace drift
+Attack/failure:
+- local user/process changes HEAD/index/files after preflight.
+
+Control:
+- WDG generation/fingerprint checks;
+- action-boundary freshness validation;
+- old handle never revived.
+
+#### T12 Repository graph confusion
+Attack:
+- nested repo/submodule/worktree is misclassified, broadening authority.
+
+Control:
+- RBR typed graph;
+- explicit boundary policy;
+- fixture/fuzz matrix.
+
+### Git inspection security contract
+
+M02 defines a `GitInspector` interface. Backend choice remains evidence-driven, but every backend must satisfy the same contract.
+
+Required properties:
+- read-only;
+- no network;
+- no shell command strings;
+- no interactive prompt;
+- cancellation/deadline aware;
+- bounded stdout/stderr/record count;
+- explicit repository/worktree target;
+- stable machine-readable parsing;
+- credential redaction;
+- no index/worktree mutation;
+- version/provenance recorded.
+
+System-Git backend hardening candidates:
+- explicit argv only;
+- `GIT_TERMINAL_PROMPT=0`;
+- pager/editor/askpass disabled;
+- optional locks disabled when safe;
+- external diff/textconv disabled;
+- fsmonitor disabled for deterministic status inspection;
+- literal pathspec behavior where paths are supplied;
+- no fetch/pull/remote contact;
+- bounded process output with kill on policy breach;
+- environment allowlist/clearing of alternate-object environment variables.
+
+Rust-native backend candidates must meet identical fixtures and security tests. Backend selection is frozen only after benchmark/security evidence.
+
+### Filesystem Semantics Capsule states
+
+FSC must avoid pretending every platform/root has known case behavior.
+
+Candidate states:
+- CASE_SENSITIVE_VERIFIED;
+- CASE_INSENSITIVE_VERIFIED;
+- CASE_PRESERVING_UNKNOWN;
+- UNKNOWN_UNSAFE_FOR_ALIAS_DECISION.
+
+FSC may also record:
+- volume/device identity hints;
+- root path namespace class;
+- symlink/reparse support;
+- canonical path evidence source;
+- normalization policy version.
+
+For existing paths, physical/file identity evidence may disambiguate aliases even when general filesystem behavior is unknown.
+For non-existing security-sensitive paths, unknown alias semantics may require blocking or downstream use-time proof.
+
+### Large-workspace algorithm direction
+
+M02 MUST avoid full content rescans when Git/local delta evidence can safely narrow work.
+
+Candidate pipeline:
+1. establish stable repository/worktree identity;
+2. collect semantic HEAD/index state;
+3. obtain tracked/untracked changed sets;
+4. hash only content whose correctness identity requires it;
+5. update component-level basis;
+6. emit WorkspaceBasisDiff;
+7. compare against full recomputation in verification/soak fixtures.
+
+Content hashing:
+- streaming buffers;
+- bounded concurrency;
+- cancellation-aware;
+- content size does not translate to equivalent RAM allocation.
+
+### New technology candidate: WMF - Workspace Merkle Forest
+
+**Problem:** large workspaces can make monolithic basis hashing expensive and cause broad invalidation.
+
+**Mechanism:** component/repository/path-partitioned Merkle-style fingerprints whose root forms part of CWB while subroots identify targeted change radius.
+
+**Expected benefit:**
+- faster DWS recomputation;
+- targeted cache/evidence invalidation;
+- compact handles for large path sets;
+- less repeated context material.
+
+**Primary risks:**
+- complexity;
+- canonical ordering mistakes;
+- accidental false freshness if partitions are incomplete.
+
+**Promotion criterion:**
+- root equality with canonical full-basis fingerprint semantics;
+- property tests for insert/delete/rename/content change;
+- delta vs full reconstruction equivalence;
+- benchmark advantage on large changed-path fixtures without unacceptable memory cost.
+
+### Basis Validity Matrix initial operation classes
+
+Discovery-only initial classes:
+- READ_METADATA;
+- READ_SOURCE;
+- PLAN_WORK;
+- EXECUTE_TOOL_READONLY;
+- MUTATE_SOURCE;
+- GIT_DELIVERY;
+- HIVE_RECONCILED_OPERATION.
+
+M02 does not own these actions. BVM only defines which basis components later modules must prove fresh before those actions.
+
+Example direction:
+- READ_METADATA may not require untracked content hashes;
+- READ_SOURCE requires source/path/security basis;
+- MUTATE_SOURCE requires authority + Git/source basis + use-time path revalidation;
+- GIT_DELIVERY additionally requires HEAD/index/worktree/ref basis;
+- HIVE_RECONCILED_OPERATION additionally requires fresh project association evidence.
+
+Masks remain discovery candidates until downstream M03/M11/M13/M20 contract review.
+
+### Round 3 resource invariants
+
+- repository/submodule graph node count bounded;
+- recursion depth bounded;
+- process output bounded;
+- command duration bounded;
+- content hashing memory bounded;
+- concurrency bounded;
+- no network request by M02 Git inspection;
+- no automatic repository repair;
+- no mutation to index/worktree/config;
+- no LLM inference;
+- no repository-wide semantic AST/RAG analysis.
+
+### Round 3 verification additions
+
+Fixtures:
+- linked worktree with common gitdir outside source root;
+- .git file with malformed/escaping target;
+- nested independent repo;
+- initialized and uninitialized submodule;
+- submodule path traversal attempt;
+- bare repo;
+- alternate object store inside/outside admitted policy;
+- hostile remote URL with embedded canary credential;
+- repo config with fsmonitor/external diff canaries;
+- huge command output / path-count cap;
+- case-collision fixtures on supported platforms;
+- HIVE association reconnect same/different/conflict.
+
+Properties:
+- source authority never expands from metadata authority;
+- HIVE evidence never grants path authority;
+- no Git backend command has network/mutation classification;
+- bounded parser rejects over-policy output without partial success;
+- WMF/DWS root equals full canonical basis semantics;
+- cancellation leaves no false BOUND receipt.
+
+### Round 3 unresolved items
+
+Still to freeze:
+- GitInspector production backend;
+- exact metadata commands/API set;
+- exact authority-root structures/contracts;
+- repository graph serialization;
+- object-store policy defaults;
+- filesystem-semantics probing implementation;
+- watcher/event strategy;
+- hashing/cache storage strategy;
+- exact resource limits after benchmarks;
+- final crate/file map;
+- final technology disposition;
+- DoD and Work Order.

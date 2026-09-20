@@ -13,7 +13,7 @@ CORE V0.0 - Modular Construction
 Continue building CORE as the headless NexLabs action plane that operates standalone and synchronizes deeply with HIVE without duplicating HIVE-owned intelligence.
 
 ## IN PROGRESS
-- M02 Project / Workspace Adapter deep planning — Rounds 1-2 ownership, state machine, contracts, reconciliation and drift semantics recorded.
+- M02 Project / Workspace Adapter deep planning — Rounds 1-3 ownership, contracts, repository graph, threat model and HIVE association seam recorded.
 - M03-M24 remain discovery-only.
 
 ## COMPLETED
@@ -95,3 +95,12 @@ Additional candidates:
 - FSC Filesystem Semantics Capsule.
 
 M02 remains discovery-only. No crate/file implementation or Work Order is authorized yet.
+
+
+## M02 Round 3 discovery delta
+Round 3 added explicit repository/worktree/submodule/nested-repo graph semantics, separated SOURCE versus GIT_METADATA authority, defined a versioned HIVE project-association capability seam, and established the hostile-repository threat model.
+
+New technology candidate:
+- WMF Workspace Merkle Forest.
+
+GitInspector implementation backend remains intentionally unfrozen pending benchmark/security evidence. M02 remains zero-LLM and read-only.

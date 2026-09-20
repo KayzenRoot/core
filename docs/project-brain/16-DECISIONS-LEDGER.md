@@ -244,3 +244,44 @@ Status: `ACTIVE`
 ## CORE-D-058 - Delta revalidation requires equivalence proof
 **Decision:** DWS/BVM optimizations may replace full rescans only where tests/benchmarks prove equivalent correctness for the affected basis components.
 **State:** ACCEPTED
+
+
+## CORE-D-059 - Source and Git metadata authority are separate
+**Decision:** linked-worktree/common-dir Git metadata may exist outside workspace source roots. M02 may inspect that metadata read-only but it never becomes source authority by transitivity.
+**State:** ACCEPTED
+
+## CORE-D-060 - Submodules are local evidence only in M02
+**Decision:** M02 records submodule declarations/materialization but never initializes, fetches, updates or clones them.
+**State:** ACCEPTED
+
+## CORE-D-061 - Nested repositories require explicit policy
+**Decision:** an independent nested repository is represented as its own graph node and must be admitted, ignored or conflicted explicitly.
+**State:** ACCEPTED
+
+## CORE-D-062 - Bare repositories do not imply source worktrees
+**Decision:** a bare repository may satisfy metadata-only operation profiles but cannot satisfy a worktree/source operation.
+**State:** ACCEPTED
+
+## CORE-D-063 - HIVE association enters through a versioned capability
+**Decision:** M02 consumes project association through a provider/capability contract. HIVE remains external; M23 may later replace/deepen the provider without changing M02 ownership.
+**State:** ACCEPTED
+
+## CORE-D-064 - GitInspector backend stays swappable until evidence
+**Decision:** M02 freezes the security/semantic contract before selecting system Git versus Rust-native Git inspection. Backend selection is benchmark/security evidence-driven.
+**State:** ACCEPTED
+
+## CORE-D-065 - Unknown filesystem semantics are explicit
+**Decision:** M02 does not guess case/alias behavior. Security-sensitive ambiguity yields UNKNOWN/blocked or requires stronger use-time proof.
+**State:** ACCEPTED
+
+## CORE-D-066 - External Git object stores require explicit admission
+**Decision:** Git alternates/shared object roots outside admitted metadata authority are denied by default for execution-ready binding unless policy explicitly admits them with provenance.
+**State:** ACCEPTED
+
+## CORE-D-067 - M02 never repairs repositories
+**Decision:** malformed/unsupported repository state is reported typed. Reset, checkout, index repair, submodule update and similar repair/mutation are outside M02.
+**State:** ACCEPTED
+
+## CORE-D-068 - Large-workspace optimization must preserve full-basis semantics
+**Decision:** WMF/DWS component hashing may optimize revalidation only when canonical root/basis semantics and delta/full equivalence are proven.
+**State:** ACCEPTED

@@ -157,3 +157,30 @@ WorkspaceBindingReceipt  (durable proof)
 Workspace basis is componentized so later modules can declare required validity masks without giving M02 permission to perform their actions. M02 may optimize revalidation with deltas only when the result is provably equivalent to full correctness evaluation.
 
 Path validation is a proof layer, not an OS sandbox. Mutation/sandbox modules must revalidate security-sensitive receipts at use time.
+
+
+## M02 repository graph and trust-boundary architecture
+
+M02 separates source paths from Git administration metadata.
+
+```text
+Workspace SOURCE_AUTHORITY
+   |
+   +-- Worktree A -----------+
+   |                         |
+   +-- Worktree B            | local source roots
+   |                         |
+   +-- Nested repo           |
+                             v
+                    Repository Graph
+                             |
+                             +--> GIT_METADATA_AUTHORITY
+                             |      common-dir / worktree gitdir
+                             |
+                             +--> optional EXTERNAL_OBJECT_AUTHORITY
+                                    alternates/shared objects
+```
+
+Only SOURCE_AUTHORITY is eligible to become downstream source-path input. Git metadata/object authorities exist solely to interpret repository state and do not transitively grant mutation capability.
+
+HIVE association enters through a versioned `nexlabs.project-association@1`-style capability seam. M23 may later provide a deeper provider while M02 keeps the same consumer contract.

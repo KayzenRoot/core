@@ -78,3 +78,22 @@ These are foundation requirements only. Product-functional requirements will be 
 - **CORE-R-053 Git inspection is bounded/read-only:** M02 Git inspection MUST use explicit non-shell commands/APIs, bounded output/deadlines, no interactive credentials and no network side effects.
 - **CORE-R-054 Basis deltas are reconstructable:** any incremental WorkspaceBasisDiff path admitted for correctness MUST be provably equivalent to full recomputation for the affected basis.
 - **CORE-R-055 Security drift invalidates:** authority/security/filesystem-semantics changes MUST invalidate affected handles regardless of performance/cache cost.
+
+
+## M02 Round 3 requirements
+
+- **CORE-R-056 Authority classes:** SOURCE_AUTHORITY, GIT_METADATA_AUTHORITY and any external object-store authority MUST remain distinct and non-transitive.
+- **CORE-R-057 Git metadata indirection:** linked-worktree/common-dir metadata outside the source root MAY be inspected read-only but MUST NOT become source authority.
+- **CORE-R-058 No automatic submodule/network mutation:** M02 MUST NOT init/update/fetch/clone submodules or contact remotes during workspace binding.
+- **CORE-R-059 Repository graph bounds:** nested/submodule/worktree discovery MUST have explicit depth/node/resource bounds and cycle detection.
+- **CORE-R-060 Bare repository semantics:** a bare repository MUST NOT satisfy an operation that requires source-worktree authority.
+- **CORE-R-061 HIVE association capability:** HIVE project association MUST enter M02 through a versioned external capability/provenance contract, not a HIVE source-code dependency.
+- **CORE-R-062 External object stores:** Git alternates/shared object roots outside admitted metadata authority MUST be blocked or explicitly policy-admitted with provenance.
+- **CORE-R-063 Git inspection hardening:** every GitInspector backend MUST be read-only, no-network, non-interactive, bounded and cancellation-aware.
+- **CORE-R-064 Filesystem semantics honesty:** case/alias/path semantics MUST expose UNKNOWN where not reliably provable; M02 MUST NOT guess security-sensitive normalization.
+- **CORE-R-065 Streaming resource safety:** attacker-controlled path/content/output cardinality MUST NOT cause unbounded memory allocation.
+- **CORE-R-066 Association disconnect semantics:** temporary HIVE loss MUST NOT rewrite local workspace/repository identity; assurance degradation MUST be explicit.
+- **CORE-R-067 Submodule declaration separation:** declared and materialized submodules MUST be represented separately.
+- **CORE-R-068 Nested repository explicitness:** nested independent repositories MUST be explicitly admitted/ignored/conflicted by policy rather than silently merged.
+- **CORE-R-069 No repository repair:** M02 MUST report malformed/unsupported Git state rather than repairing, resetting or normalizing the repository.
+- **CORE-R-070 Backend equivalence:** any system-Git or Rust-native GitInspector implementation MUST satisfy the same canonical fixtures/security contract.
