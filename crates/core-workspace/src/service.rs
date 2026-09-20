@@ -1,15 +1,15 @@
 //! M02 attach/revalidate/detach service facade.
 
 use crate::basis::{association_for_request, build_basis, diff, required_components_fresh};
-use crate::cache::{CacheDecisionReason, ProofCache, ProofCacheKey};
+use crate::cache::{ProofCache, ProofCacheKey};
 use crate::reconcile::{NoopAssociationProvider, ProjectAssociationProvider};
 use crate::repository::{empty_graph_with_policy, inspect_repository_with_conveyor};
 use crate::{
     source_authority_root, workspace_identity, BindingState, BindingStateMachine, BvmProfile,
-    ComponentMask, DeltaWorkspaceSnapshot, EventHint, EventInvalidationSpine, HashConveyor,
-    M02Error, PathValidationRequestV1, RevalidationOutcome, RevalidationResult,
-    ValidatedPathReceiptV1, WorkspaceAttachRequestV1, WorkspaceBasisV1, WorkspaceBindingReceiptV1,
-    WorkspaceGeneration, WorkspaceHandleV1, WorkspaceResourceBudget,
+    ComponentMask, EventHint, EventInvalidationSpine, HashConveyor, M02Error,
+    PathValidationRequestV1, RevalidationOutcome, RevalidationResult, ValidatedPathReceiptV1,
+    WorkspaceAttachRequestV1, WorkspaceBasisV1, WorkspaceBindingReceiptV1, WorkspaceGeneration,
+    WorkspaceHandleV1, WorkspaceResourceBudget,
 };
 use std::sync::Arc;
 
@@ -353,37 +353,11 @@ impl WorkspaceService {
         profile: BvmProfile,
     ) -> Result<RevalidationResult, M02Error> {
         self.validate_handle(handle)?;
-        let hints = self.invalidation.drain();
+        // Hints only bound the work that may be necessary. They are never a
+        // freshness witness: every requested component is re-read at this
+        // action boundary before a handle remains usable.
+        let _hints = self.invalidation.drain();
         let required = profile.required_mask();
-        if !hints.is_empty()
-            && !self.broad_invalidation
-            && self.dirty_components.0 & required.0 == 0
-        {
-            let current = self
-                .current
-                .as_ref()
-                .ok_or_else(|| M02Error::StaleHandle("no current binding".into()))?;
-            let key = self.proof_cache_key(&current.basis, current.handle.generation)?;
-            if self.proof_cache.get(&key).reason == CacheDecisionReason::HitValidated {
-                let fingerprint = current.basis.fingerprint()?;
-                let snapshot = DeltaWorkspaceSnapshot {
-                    base_fingerprint: fingerprint.clone(),
-                    changed_components: self.dirty_components,
-                    resulting_fingerprint: fingerprint,
-                    evidence_references: vec!["pec-l1:event-provenance".into()],
-                };
-                if snapshot.proves_required_mask(required) {
-                    // Preserve dirty components that were not required by this
-                    // profile so a later stronger profile cannot consume a
-                    // metadata-only proof as source/content freshness.
-                    return Ok(RevalidationResult {
-                        outcome: RevalidationOutcome::StillValid,
-                        diff: None,
-                        handle: Some(handle.clone()),
-                    });
-                }
-            }
-        }
         let current = self
             .current
             .take()
@@ -398,10 +372,25 @@ impl WorkspaceService {
                 return Err(error);
             }
         };
-        let old_fingerprint = current.basis.fingerprint()?;
-        let new_fingerprint = basis.fingerprint()?;
-        if old_fingerprint == new_fingerprint {
-            let generation = current.handle.generation;
+        let generation = current.handle.generation;
+        let delta = diff(&current.basis, &basis, generation, generation)?;
+        if delta.changed_components != ComponentMask::NONE
+            && delta.changed_components.0 & required.0 == 0
+        {
+            // Fresh evidence proves the requested mask unchanged. Keep the
+            // old handle for a selective result, but retain actual changes
+            // outside that mask for a later stronger action boundary.
+            self.state.transition(BindingState::Bound)?;
+            self.current = Some(current);
+            self.dirty_components = ComponentMask(delta.changed_components.0 & !required.0);
+            self.broad_invalidation = false;
+            return Ok(RevalidationResult {
+                outcome: RevalidationOutcome::StillValid,
+                diff: None,
+                handle: Some(handle.clone()),
+            });
+        }
+        if delta.changed_components == ComponentMask::NONE {
             let cache_key = self.proof_cache_key(&basis, generation)?;
             self.state.transition(BindingState::Bound)?;
             self.current = Some(current);
@@ -428,12 +417,6 @@ impl WorkspaceService {
         self.next_generation = self.next_generation.saturating_add(1);
         let generation = WorkspaceGeneration::new(self.runtime_epoch, self.next_generation);
         let new_handle = self.issue_handle(&basis, generation)?;
-        let delta = diff(
-            &current.basis,
-            &basis,
-            current.handle.generation,
-            generation,
-        )?;
         self.state.transition(BindingState::Bound)?;
         let cache_key = self.proof_cache_key(&basis, generation)?;
         self.current = Some(CurrentBinding {

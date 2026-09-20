@@ -5,7 +5,7 @@ use std::collections::BTreeMap;
 use std::path::PathBuf;
 use thiserror::Error;
 
-#[derive(Debug, Error)]
+#[derive(Debug, Clone, Error)]
 pub enum M02Error {
     #[error("unsupported M02 schema {schema} version {version}")]
     UnsupportedVersion { schema: String, version: u16 },

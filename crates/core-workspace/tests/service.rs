@@ -1,9 +1,39 @@
 use core_workspace::{
-    AssuranceRequirement, BvmProfile, EventHint, EventKind, PathOperation, PathValidationRequestV1,
-    RevalidationOutcome, WorkspaceAttachRequestV1, WorkspaceResourceBudget, WorkspaceService,
+    AssuranceRequirement, BasisComponent, BvmProfile, EventHint, EventKind, PathOperation,
+    PathValidationRequestV1, RevalidationOutcome, WorkspaceAttachRequestV1,
+    WorkspaceResourceBudget, WorkspaceService,
 };
 use std::fs;
 use std::process::Command;
+
+fn run_git(root: &std::path::Path, args: &[&str]) {
+    let status = Command::new("git")
+        .args(args)
+        .current_dir(root)
+        .status()
+        .unwrap();
+    assert!(status.success(), "git {:?} failed", args);
+}
+
+fn git_workspace(label: &str, runtime_epoch: u64) -> std::path::PathBuf {
+    let root = std::env::temp_dir().join(format!("m02-service-{label}-{}", std::process::id()));
+    fs::create_dir_all(&root).unwrap();
+    run_git(&root, &["init"]);
+    run_git(&root, &["config", "user.email", "m02@example.test"]);
+    run_git(&root, &["config", "user.name", "M02 Test"]);
+    fs::write(root.join("tracked.txt"), "initial").unwrap();
+    run_git(&root, &["add", "tracked.txt"]);
+    run_git(&root, &["commit", "-m", "fixture"]);
+    let _ = runtime_epoch;
+    root
+}
+
+fn add_nested_repository(root: &std::path::Path) -> std::path::PathBuf {
+    let nested = root.join("nested");
+    fs::create_dir_all(&nested).unwrap();
+    run_git(&nested, &["init"]);
+    nested
+}
 
 #[test]
 fn attach_path_revalidate_and_detach_are_explicit() {
@@ -54,7 +84,9 @@ fn attach_path_revalidate_and_detach_are_explicit() {
         .ensure_fresh(&attached.handle, BvmProfile::ReadMetadata)
         .unwrap();
     fs::write(root.join("new.txt"), "drift").unwrap();
-    let result = service.revalidate(&attached.handle).unwrap();
+    let result = service
+        .revalidate_for(&attached.handle, BvmProfile::ReadSource)
+        .unwrap();
     assert_eq!(result.outcome, RevalidationOutcome::UpdatedCompatible);
     assert!(service
         .ensure_fresh(&attached.handle, BvmProfile::ReadMetadata)
@@ -104,10 +136,8 @@ fn no_git_content_change_invalidates_standalone_binding() {
 
 #[test]
 fn selective_metadata_revalidation_preserves_source_dirtiness() {
-    let root = std::env::temp_dir().join(format!("m02-service-selective-{}", std::process::id()));
-    fs::create_dir_all(&root).unwrap();
-    let source = root.join("source.txt");
-    fs::write(&source, "initial").unwrap();
+    let root = git_workspace("selective", 9);
+    let source = root.join("tracked.txt");
     let mut service = WorkspaceService::new(9);
     let attached = service
         .attach(WorkspaceAttachRequestV1::new(&root, 9))
@@ -136,6 +166,67 @@ fn selective_metadata_revalidation_preserves_source_dirtiness() {
         source_result.outcome,
         RevalidationOutcome::UpdatedCompatible
     );
+    let _ = fs::remove_dir_all(root);
+}
+
+#[test]
+fn unrelated_event_hint_cannot_hide_nested_repository_graph_drift() {
+    let root = git_workspace("nested-drift", 12);
+    let mut service = WorkspaceService::new(12);
+    let attached = service
+        .attach(WorkspaceAttachRequestV1::new(&root, 12))
+        .unwrap();
+    let _nested = add_nested_repository(&root);
+    service.push_event_hint(EventHint {
+        workspace_id: attached.basis.workspace_id.clone(),
+        repository_id: None,
+        path: Some(root.join("unrelated.txt")),
+        kind: EventKind::PathContentChanged,
+        provider: "test".into(),
+        sequence: 1,
+    });
+
+    let result = service
+        .revalidate_for(&attached.handle, BvmProfile::ReadMetadata)
+        .unwrap();
+    assert_ne!(result.outcome, RevalidationOutcome::StillValid);
+    assert!(result
+        .diff
+        .as_ref()
+        .expect("graph drift must produce a delta")
+        .changed_components
+        .contains(BasisComponent::RepositoryGraph));
+    let _ = fs::remove_dir_all(root);
+}
+
+#[test]
+fn selective_revalidation_matches_full_recomputation_for_same_mask() {
+    let root = git_workspace("dws-equivalence", 13);
+    let mut selective = WorkspaceService::new(13);
+    let mut full = WorkspaceService::new(13);
+    let selective_attached = selective
+        .attach(WorkspaceAttachRequestV1::new(&root, 13))
+        .unwrap();
+    let full_attached = full
+        .attach(WorkspaceAttachRequestV1::new(&root, 13))
+        .unwrap();
+    let _nested = add_nested_repository(&root);
+    selective.push_event_hint(EventHint {
+        workspace_id: selective_attached.basis.workspace_id.clone(),
+        repository_id: None,
+        path: Some(root.join("unrelated.txt")),
+        kind: EventKind::PathContentChanged,
+        provider: "test".into(),
+        sequence: 1,
+    });
+
+    let selective_result = selective
+        .revalidate_for(&selective_attached.handle, BvmProfile::ReadMetadata)
+        .unwrap();
+    let full_result = full
+        .revalidate_for(&full_attached.handle, BvmProfile::ReadMetadata)
+        .unwrap();
+    assert_eq!(selective_result, full_result);
     let _ = fs::remove_dir_all(root);
 }
 

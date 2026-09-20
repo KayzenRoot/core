@@ -6,7 +6,7 @@ use crate::{GitEvidenceV1, HashConveyor, M02Error};
 use sha2::{Digest, Sha256};
 use std::io::Read;
 use std::path::{Path, PathBuf};
-use std::process::{Command, Stdio};
+use std::process::{Child, Command, Stdio};
 use std::thread;
 use std::time::{Duration, Instant};
 
@@ -27,6 +27,20 @@ struct GitOutput {
     stdout: Vec<u8>,
     stderr: Vec<u8>,
     status: std::process::ExitStatus,
+}
+
+fn terminate_child(child: &mut Child) {
+    #[cfg(windows)]
+    {
+        let pid = child.id().to_string();
+        let _ = Command::new("taskkill")
+            .args(["/PID", &pid, "/T", "/F"])
+            .stdout(Stdio::null())
+            .stderr(Stdio::null())
+            .status();
+    }
+    let _ = child.kill();
+    let _ = child.wait();
 }
 
 impl SystemGitInspector {
@@ -103,14 +117,7 @@ impl SystemGitInspector {
             match child.try_wait() {
                 Ok(Some(status)) => break status,
                 Ok(None) if Instant::now() >= deadline => {
-                    let _ = child.kill();
-                    let _ = child.wait();
-                    let _ = stdout_reader
-                        .as_ref()
-                        .map(|reader| reader.thread().unpark());
-                    let _ = stderr_reader
-                        .as_ref()
-                        .map(|reader| reader.thread().unpark());
+                    terminate_child(&mut child);
                     if let Some(reader) = stdout_reader {
                         let _ = reader.join();
                     }
@@ -123,8 +130,13 @@ impl SystemGitInspector {
                 }
                 Ok(None) => thread::sleep(Duration::from_millis(2)),
                 Err(error) => {
-                    let _ = child.kill();
-                    let _ = child.wait();
+                    terminate_child(&mut child);
+                    if let Some(reader) = stdout_reader {
+                        let _ = reader.join();
+                    }
+                    if let Some(reader) = stderr_reader {
+                        let _ = reader.join();
+                    }
                     return Err(M02Error::GitInspection(format!("poll git: {error}")));
                 }
             }
@@ -330,6 +342,16 @@ impl SystemGitInspector {
                 let mut aggregate_bytes = 0_u64;
                 for record in &untracked {
                     let path = Self::untracked_path(&request.root, record)?;
+                    let relative = Self::relative_untracked_path(&request.root, &path)?;
+                    if path.is_dir() {
+                        // Git reports an untracked nested-directory boundary
+                        // as a directory record. It is not a hashable file;
+                        // the repository graph carries the nested boundary
+                        // proof, while this marker keeps the untracked basis
+                        // deterministic and avoids opening a directory.
+                        content.push((relative, "directory".into(), 0));
+                        continue;
+                    }
                     let proof = match conveyor {
                         Some(conveyor) => conveyor.hash(&path, &request.budget)?,
                         None => crate::hash_file(&path, &request.budget)?,
@@ -340,11 +362,7 @@ impl SystemGitInspector {
                             "Git untracked aggregate hash bytes".into(),
                         ));
                     }
-                    content.push((
-                        Self::relative_untracked_path(&request.root, &path)?,
-                        proof.digest,
-                        proof.byte_len,
-                    ));
+                    content.push((relative, proof.digest, proof.byte_len));
                 }
                 content.sort_by(|left, right| left.0.cmp(&right.0));
                 core_identity::fingerprint(&content)
