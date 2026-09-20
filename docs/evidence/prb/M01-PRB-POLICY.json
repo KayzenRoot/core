@@ -1,0 +1,12 @@
+{
+  "policy_version": "m01-prb-v1",
+  "sample_count": 25,
+  "p50_max_regression_percent": 20.0,
+  "comparison_requirements": [
+    "work_normalization_fingerprint",
+    "hardware_class_fingerprint",
+    "toolchain"
+  ],
+  "incompatible_baseline_decision": "do-not-compare",
+  "first_valid_baseline_rule": "record the first implementation result for each compatible hardware/toolchain/workload class"
+}

@@ -1,0 +1,25 @@
+[package]
+name = "core-runtime"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+core-contracts = { path = "../core-contracts", version = "0.1.0" }
+core-config = { path = "../core-config", version = "0.1.0" }
+core-health = { path = "../core-health", version = "0.1.0" }
+core-identity = { path = "../core-identity", version = "0.1.0" }
+core-journal = { path = "../core-journal", version = "0.1.0" }
+core-registry = { path = "../core-registry", version = "0.1.0" }
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+tokio.workspace = true
+
+[dev-dependencies]
+core-identity = { path = "../core-identity", version = "0.1.0" }
+
+[[bench]]
+name = "m01_baseline"
+harness = false

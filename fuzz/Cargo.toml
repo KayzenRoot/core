@@ -1,0 +1,47 @@
+[package]
+name = "core-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2021"
+
+[package.metadata]
+cargo-fuzz = true
+
+[workspace]
+members = ["."]
+
+[dependencies]
+core-contracts = { path = "../crates/core-contracts" }
+core-identity = { path = "../crates/core-identity" }
+core-ipc = { path = "../crates/core-ipc" }
+core-config = { path = "../crates/core-config" }
+libfuzzer-sys = "0.4"
+serde_json = "1.0"
+
+[[bin]]
+name = "ipc_frames"
+path = "fuzz_targets/ipc_frames.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "config_toml"
+path = "fuzz_targets/config_toml.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "compatibility"
+path = "fuzz_targets/compatibility.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "journal_records"
+path = "fuzz_targets/journal_records.rs"
+test = false
+doc = false
+bench = false
