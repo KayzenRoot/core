@@ -6,6 +6,80 @@ use std::collections::BTreeMap;
 use std::path::PathBuf;
 use thiserror::Error;
 
+/// Finite M02 resource bounds. Values are bounded bootstrap defaults until the
+/// Work Order calibration gate records the final measured selection.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct WorkspaceResourceBudget {
+    pub max_repository_graph_nodes: u64,
+    pub max_recursion_depth: u32,
+    pub max_git_process_duration_ms: u64,
+    pub max_stdout_bytes: u64,
+    pub max_stderr_bytes: u64,
+    pub max_parsed_records: u64,
+    pub max_concurrent_git_inspectors: u32,
+    pub max_concurrent_hash_tasks: u32,
+    pub max_single_file_hash_bytes_before_explicit_policy: u64,
+    pub max_aggregate_hash_bytes_per_validation: u64,
+    pub max_cache_entries: u64,
+    pub max_cache_bytes: u64,
+    pub max_event_hint_backlog: u64,
+    pub max_revalidation_wall_clock_ms: u64,
+    pub calibrated: bool,
+}
+
+impl WorkspaceResourceBudget {
+    pub fn provisional() -> Self {
+        Self {
+            max_repository_graph_nodes: 1_024,
+            max_recursion_depth: 32,
+            max_git_process_duration_ms: 5_000,
+            max_stdout_bytes: 4 * 1024 * 1024,
+            max_stderr_bytes: 1024 * 1024,
+            max_parsed_records: 10_000,
+            max_concurrent_git_inspectors: 2,
+            max_concurrent_hash_tasks: 2,
+            max_single_file_hash_bytes_before_explicit_policy: 16 * 1024 * 1024,
+            max_aggregate_hash_bytes_per_validation: 128 * 1024 * 1024,
+            max_cache_entries: 256,
+            max_cache_bytes: 8 * 1024 * 1024,
+            max_event_hint_backlog: 1_024,
+            max_revalidation_wall_clock_ms: 10_000,
+            calibrated: false,
+        }
+    }
+
+    pub fn validate(&self) -> Result<(), ConfigError> {
+        let values = [
+            self.max_repository_graph_nodes,
+            self.max_recursion_depth as u64,
+            self.max_git_process_duration_ms,
+            self.max_stdout_bytes,
+            self.max_stderr_bytes,
+            self.max_parsed_records,
+            self.max_concurrent_git_inspectors as u64,
+            self.max_concurrent_hash_tasks as u64,
+            self.max_single_file_hash_bytes_before_explicit_policy,
+            self.max_aggregate_hash_bytes_per_validation,
+            self.max_cache_entries,
+            self.max_cache_bytes,
+            self.max_event_hint_backlog,
+            self.max_revalidation_wall_clock_ms,
+        ];
+        if values.contains(&0) {
+            return Err(ConfigError::Invalid(
+                "M02 resource bounds must be finite and positive".into(),
+            ));
+        }
+        Ok(())
+    }
+}
+
+impl Default for WorkspaceResourceBudget {
+    fn default() -> Self {
+        Self::provisional()
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum ConfigSource {
     CompiledDefault,
@@ -37,6 +111,7 @@ pub struct CoreConfig {
     pub secret_reference: Option<SecretReference>,
     pub generation: RuntimeGeneration,
     pub provenance: BTreeMap<String, ConfigProvenance>,
+    pub workspace_budget: WorkspaceResourceBudget,
 }
 
 #[derive(Debug, Clone, Default, Deserialize)]
@@ -81,6 +156,7 @@ impl CoreConfig {
             secret_reference: None,
             generation: RuntimeGeneration::new(boot_epoch),
             provenance: BTreeMap::new(),
+            workspace_budget: WorkspaceResourceBudget::default(),
         };
         config.mark_defaults();
         config
@@ -105,6 +181,7 @@ impl CoreConfig {
         }
         config.apply_cli(cli);
         config.validate()?;
+        config.workspace_budget.validate()?;
         config.generation.config = 1;
         Ok(config)
     }
@@ -303,6 +380,7 @@ impl CoreConfig {
             "secret_reference": self.secret_reference.as_ref().map(|_| "<reference-present>"),
             "generation": self.generation,
             "provenance": self.provenance,
+            "workspace_budget": self.workspace_budget,
         })
     }
 }

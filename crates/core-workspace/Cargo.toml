@@ -1,0 +1,20 @@
+[package]
+name = "core-workspace"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+core-config = { path = "../core-config" }
+core-contracts = { path = "../core-contracts" }
+core-identity = { path = "../core-identity" }
+serde.workspace = true
+serde_json.workspace = true
+sha2.workspace = true
+thiserror.workspace = true
+tokio.workspace = true
+
+[dev-dependencies]
+serde_json.workspace = true
+

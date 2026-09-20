@@ -3,15 +3,37 @@
   "workOrder": "CORE-WO-M02-001",
   "status": "READY_FOR_EXECUTION",
   "authorizedBase": "bae47b2021a897396109dfcf42e8632dde13ec21",
-  "candidateHead": null,
+  "candidateHead": "a0e88e818051217cfb23ec0e69261f6f32750391",
   "contextLock": ".engineering/context-locks/CORE-WO-M02-001.json",
   "hive": {
-    "availability": "UNKNOWN_UNTIL_PREFLIGHT",
-    "projectResolution": null
+    "availability": "AVAILABLE_SOURCE_STALE",
+    "projectResolution": {
+      "projectId": "c65b7abc-533a-411a-bbbb-2b72b976d921",
+      "name": "CORE",
+      "relativePath": "core",
+      "state": "READY",
+      "reportedBranch": "main",
+      "reportedHead": "fdb4dbe165e74b009c43df3874b6043c9b94710b",
+      "checkpointRead": "source_not_current",
+      "contextSearch": "LEXICAL_FALLBACK_SEMANTIC_UNAVAILABLE"
+    }
   },
-  "canonicalSources": [],
+  "canonicalSources": [
+    {"path": "docs/project-brain/13-CHECKPOINT.md", "blobSha": "3c9901a2b19cbf6ea0b063e09ddbc589e484ba1a"},
+    {"path": "docs/project-brain/16-DECISIONS-LEDGER.md", "blobSha": "f55996920da23b03a0c4f01dd8435f78cd8ed5b3"},
+    {"path": "docs/project-brain/03-SCOPE.md", "blobSha": "6b82778e9ba7edf181caa23934289d0b9d438a54"},
+    {"path": "docs/project-brain/15-DEFINITION-OF-DONE.md", "blobSha": "8a7e99546381ac13e0587cb799eef15e4e5586e0"},
+    {"path": "docs/project-brain/04-ARCHITECTURE.md", "blobSha": "5ad24de448ca8dea3f0130fdddd12377d18f32e2"},
+    {"path": "docs/project-brain/02-REQUIREMENTS.md", "blobSha": "de33ecab980785a2ce69061cd27cfe56c6a48d22"},
+    {"path": "docs/project-brain/10-SECURITY-GOVERNANCE.md", "blobSha": "430b861a0e2f1c0a93894cf5877e62cd20d8e0bd"},
+    {"path": "docs/project-brain/11-TEST-PLAN.md", "blobSha": "8d28f7b5d48aa2a1b0101694a29b5005baaa9c0c"},
+    {"path": "docs/modules/M02-PROJECT-WORKSPACE-ADAPTER.md", "blobSha": "954aa5f7c772254ca145a76c4b22e0d43c535556"}
+  ],
   "changedFiles": [],
-  "commands": [],
+  "commands": [
+    {"command": "python -m py_compile scripts/validate_governance.py scripts/hive_bootstrap.py scripts/hive_mcp.py", "result": "PASS"},
+    {"command": "python scripts/validate_governance.py", "result": "PASS"}
+  ],
   "tests": {
     "unit": null,
     "integration": null,
