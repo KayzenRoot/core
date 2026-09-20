@@ -11,5 +11,8 @@
   "lastCompletedWorkOrder": "CORE-WO-M01-001",
   "lastPromotedMerge": "bae47b2021a897396109dfcf42e8632dde13ec21",
   "authorizedScope": "M02_PROJECT_WORKSPACE_ADAPTER",
-  "activeWorkOrder": "CORE-WO-M02-001"
+  "activeWorkOrder": "CORE-WO-M02-001",
+  "authorizationEffectiveOnlyOnCanonicalMain": true,
+  "admissionCandidateBranch": "planning/m02-execution-admission",
+  "frozenAuthorizedBase": "bae47b2021a897396109dfcf42e8632dde13ec21"
 }
