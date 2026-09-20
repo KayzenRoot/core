@@ -1,7 +1,7 @@
 {
   "schemaVersion": "core-evidence-bundle-v1",
   "workOrder": "CORE-WO-M02-001",
-  "status": "READY_FOR_REVIEW",
+  "status": "BLOCKED_HOSTED_EXACT_HEAD",
   "authorizedBase": "bae47b2021a897396109dfcf42e8632dde13ec21",
   "candidateHead": "1cb2a73ac49113729d46ddd170cb8d8345672b31",
   "contextLock": ".engineering/context-locks/CORE-WO-M02-001.json",
@@ -63,7 +63,7 @@
     "property": "PASS by deterministic delta/invalidation fixtures",
     "adversarial": "PASS (3 M02 adversarial tests)",
     "fuzz": "PASS; hosted bounded M02 campaign completed",
-    "windows": "PASS; final exact evidence-head M02 Windows job 106121697299 completed aggregate tests and all M02 supply-chain gates",
+    "windows": "BLOCKED; current exact evidence-head run 35527882807 remains in progress at the M02 Windows supply-chain step",
     "ubuntu": "PASS; hosted M02 workspace adapter job"
   },
   "security": {
@@ -296,6 +296,27 @@
       "m01UbuntuResult": "PASS",
       "m01FuzzResult": "PASS",
       "m01WindowsResult": "IN_PROGRESS_AT_RECORDING"
+    },
+    {
+      "runId": 35527882807,
+      "workflow": "CI",
+      "candidateProductHead": "1cb2a73ac49113729d46ddd170cb8d8345672b31",
+      "evidenceHead": "1afa944fe430039e1353ea11c16a19a35f774979",
+      "governanceJob": 106123127236,
+      "m02UbuntuJob": 106123127467,
+      "m02WindowsJob": 106123127431,
+      "m02FuzzJob": 106123127557,
+      "m01UbuntuJob": 106123127548,
+      "m01WindowsJob": 106123127393,
+      "m01FuzzJob": 106123127472,
+      "m02Result": "BLOCKED_PENDING_WINDOWS_SUPPLY_CHAIN",
+      "m02UbuntuResult": "PASS",
+      "m02WindowsResult": "IN_PROGRESS_SUPPLY_CHAIN",
+      "m02FuzzResult": "PASS",
+      "governanceResult": "PASS",
+      "m01UbuntuResult": "PASS",
+      "m01FuzzResult": "PASS",
+      "m01WindowsResult": "IN_PROGRESS_AT_RECORDING"
     }
   ],
   "failuresAndCorrections": [
@@ -306,11 +327,11 @@
   ],
   "residualRisks": [
     "HIVE index/checkpoint is stale for this execution checkout; canonical Git remains truth",
-    "Run 35525678221 and run 35527050540 exposed unrelated legacy core-runtime M01 lease/timing flakes; the subsequent exact evidence-head run 35527342471 passed every M02 Ubuntu/Windows, governance, supply-chain, advisory, SBOM and fuzz gate",
+    "Run 35525678221 and run 35527050540 exposed unrelated legacy core-runtime M01 lease/timing flakes; run 35527342471 passed M02, but current evidence-head run 35527882807 remains pending at the required Windows supply-chain step",
     "Independent review and approval are not executor-controlled"
   ],
   "proposedCheckpointDelta": "Promote CORE-WO-M02-001 only after hosted Ubuntu/Windows, supply-chain/advisory/SBOM/fuzz gates and independent review are green at the exact implementation candidate; retain HIVE stale-currentness note.",
-  "executorVerdict": "READY_FOR_REVIEW",
+  "executorVerdict": "BLOCKED",
   "reviewerVerdict": null,
   "finalPlanningReview": {
     "issue": 35,
