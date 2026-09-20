@@ -1,6 +1,6 @@
 # CORE Security & Governance
 
-Status: `BOOTSTRAP_BASELINE / PRODUCT_THREAT_MODEL_PENDING`
+Status: `PRODUCT_DISCOVERY_ACTIVE / M02_THREAT_MODEL_ACTIVE`
 
 ## Bootstrap security invariants
 - Secrets, credentials, tokens and private user data MUST NOT be committed.
@@ -12,6 +12,30 @@ Status: `BOOTSTRAP_BASELINE / PRODUCT_THREAT_MODEL_PENDING`
 - Public issues/PRs must not contain exploit-sensitive private information.
 
 ## Product security
-The product threat model, trust boundaries, authentication/authorization, secret lifecycle, dependency policy, abuse controls and release security gates remain `PENDING_DISCOVERY`.
 
-Product implementation cannot claim production security from this bootstrap baseline.
+Cross-product authentication/authorization, privileged execution, secret lifecycle, abuse controls and final release-security gates remain pending their owning modules.
+
+Product implementation cannot claim production security until the applicable module threat models and gates are frozen.
+
+## M02 security and trust boundaries
+
+M02 treats workspace paths, Git metadata/config, repository topology, watcher events, cache entries and HIVE association data as untrusted or stale-able inputs.
+
+Required controls:
+- lexical plus physical path validation; traversal/symlink/junction/reparse escape fails closed;
+- SOURCE_AUTHORITY does not inherit from Git metadata/object/temp authority;
+- Git inspection is read-only, argv/API based, no-network, non-interactive, bounded and cancellation-aware;
+- hostile Git helpers/pagers/diff/textconv/fsmonitor behavior must not execute through the inspection path;
+- credential-bearing remote/config material is redacted and excluded from proof/cache payloads;
+- watcher events never grant freshness or authority;
+- watcher overflow/loss broadens invalidation;
+- proof caches are derived/disposable and cannot create BOUND after corruption/loss;
+- mtime/stat alone is insufficient for correctness-relevant content proof;
+- policy/security/filesystem-semantics/provider generation changes invalidate affected handles/cache;
+- hashing is streaming, bounded and revalidates security-sensitive path chains;
+- repository/submodule/nested graph traversal is depth/node/resource bounded with cycle detection;
+- external Git object stores are deny-by-default unless explicitly admitted with provenance;
+- HIVE association cannot grant local path authority or overwrite contradictory local checkout evidence;
+- concurrent workspace drift requires action-boundary freshness checks; stale handles are never silently revived.
+
+M02 threat model details and adversarial fixtures are maintained in `docs/modules/M02-PROJECT-WORKSPACE-ADAPTER.md`.
