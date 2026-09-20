@@ -1,19 +1,19 @@
-# CORE-WO-M01-001 execution report — Prompt 009
+# CORE-WO-M01-001 execution report — Prompt 010
 
 Status: `READY_FOR_REVIEW` — criteria 1–20 pass; criterion 21 governed review pending
 Date: 2026-09-20
-Correction source: `CORE-M01-CODEX-CORRECTION-PROMPT-009.pdf`
+Correction source: `CORE-M01-CODEX-CORRECTION-PROMPT-010.pdf`
 Repository: `KayzenRoot/core`
 Target branch: `fix/m01-cal-admission-close`
 Exact PDF base: `8f0820188130613caa6890c82d43225d9a317947`
-Audited basis: `fa4e0687a27c79c3564b56ebee02a56f42e8aacf`
+Audited basis: `73c711987053418754ba9af6d53ef499babebc25`
 Implementation HEAD: `31b08c87c350c745762a1ac06ca28f43f7a9514a`
-Review source: Issue [#18](https://github.com/KayzenRoot/core/issues/18)
+Review source: Issue [#19](https://github.com/KayzenRoot/core/issues/19)
 Pull request: [#17](https://github.com/KayzenRoot/core/pull/17)
 
 ## Authority and bounded scope
 
-Prompt 009 was executed in document order under the CORE Executor Contract, the frozen M01 Work Order and repository rules. The correction is limited to the missing in-drain CAL admission proof:
+Prompt 010 was executed in document order under the CORE Executor Contract, the frozen M01 Work Order and repository rules. This correction is documentation/evidence normalization only; the prior CAL admission implementation and proof remain unchanged:
 
 1. Capability lease admission is stored in the existing synchronized `RegistryState` and is closed by `close_lease_admission()` without a reopen path for the runtime epoch.
 2. `RegistryError::AdmissionClosed` is returned by `acquire_lease_with_generation()` while holding the same write lock used for lease insertion.
@@ -21,13 +21,13 @@ Prompt 009 was executed in document order under the CORE Executor Contract, the 
 4. QVM proves both gates, re-reads active leases immediately before the quiescence matrix, and cannot produce clean STOP with a residual lease.
 5. The new `in_drain_clone_acquire_is_rejected_during_repeated_shutdowns` integration test repeats the full spawned-shutdown scenario 16 times and proves rejection while the pre-close lease remains active.
 
-The existing production implementation is unchanged by Prompt 009. No merge, promotion, release or M01 completion is claimed.
+The existing production implementation and all tests are unchanged by Prompt 010. No merge, promotion, release or M01 completion is claimed.
 
-## Changed files
+## Prompt 010 changed files
 
-- `crates/core-registry/src/lib.rs`
-- `crates/core-runtime/src/lib.rs`
 - `docs/evidence/M01-EXECUTION-REPORT.md`
+
+The Rust and test files listed by the preceding Prompt 008/009 corrections remain historical implementation scope; Prompt 010 changed no production code, tests, contracts, Cargo files or runtime behavior.
 
 ## Exact-head local evidence
 
@@ -69,6 +69,8 @@ Workflow [35486894184](https://github.com/KayzenRoot/core/actions/runs/354868941
 
 The predecessor run at `e471eb495b9561fbbe0ccfed6140d8bd6af1e99c` was superseded after loaded Windows timing assertions failed; the final implementation head has the new in-drain proof. No unresolved HIGH/CRITICAL finding is reported by the required hosted gates.
 
+The later documentation-only head `73c711987053418754ba9af6d53ef499babebc25` was independently validated by workflow [35487496411](https://github.com/KayzenRoot/core/actions/runs/35487496411): Governance [106016449529](https://github.com/KayzenRoot/core/actions/runs/35487496411/job/106016449529), Ubuntu [106016449497](https://github.com/KayzenRoot/core/actions/runs/35487496411/job/106016449497), Windows [106016449443](https://github.com/KayzenRoot/core/actions/runs/35487496411/job/106016449443) and fuzz [106016449513](https://github.com/KayzenRoot/core/actions/runs/35487496411/job/106016449513) all completed SUCCESS. Prompt 010 creates a further documentation-only head; its own exact workflow is required after push, and this report intentionally does not embed that future commit hash. Governed Review 011 will bind the final documentation head.
+
 ## Canonical acceptance criteria
 
 1. **All M01-required crates/contracts/mechanisms exist at governed boundaries — PASS.** Existing M01 workspace and hosted Governance/platform gates pass.
@@ -87,12 +89,12 @@ The predecessor run at `e471eb495b9561fbbe0ccfed6140d8bd6af1e99c` was superseded
 14. **Security/supply-chain gates and unsafe inventory pass — PASS.** Hosted cargo-deny/audit, Governance, SBOM and advisory gates pass; no HIGH/CRITICAL gate finding remains.
 15. **Unit/property/integration/fuzz/failure-injection suites pass — PASS.** Workspace tests are 56/56; the new clone/race/QDS tests, 16-cycle in-drain integration proof, residual/timeout/release-wakeup tests and hosted fuzz campaign pass.
 16. **Soak tests show no unbounded growth — PASS.** 16-cycle soak passed with handle growth `+3 <= 4`.
-17. **PRB/WNF benchmark evidence is reproducible and no unapproved material regression exists — PASS.** Current p50 regression is `13.31121925512975%`, within the `20%` policy.
+17. **PRB/WNF benchmark evidence is reproducible and no unapproved material regression exists — PASS.** Baseline p50 is `110.8193 ms`, current p50 is `127.0076 ms`, regression is `14.607834555894145%`, within the allowed `20%` policy.
 18. **CLI machine outputs are versioned/stable — PASS.** Existing CLI/benchmark output tests and hosted jobs pass.
 19. **Zero-LLM M01 proof passes — PASS.** Existing zero-LLM bootstrap and soak evidence pass.
-20. **Exact-head evidence bundle identifies commit/toolchain/platform/baselines — PASS.** This report binds branch, PDF base, final implementation HEAD, local evidence, SBOM, PRB baseline and the exact successful workflow/job IDs.
-21. **Independent governed review verdict is APPROVED — PENDING.** Review 010 is required; PR #17 remains open and no independent approval or merge is claimed.
+20. **Exact-head evidence bundle identifies commit/toolchain/platform/baselines — PASS.** This report binds the implementation head/workflow, the later independently validated documentation head/workflow, local evidence, SBOM, PRB baseline and the exact final workflow handoff without embedding a future self-referential hash.
+21. **Independent governed review verdict is APPROVED — PENDING.** Review 011 is required; PR #17 remains open and no independent approval or merge is claimed.
 
 ## Final verdict
 
-`READY_FOR_REVIEW` is justified for implementation HEAD `31b08c87c350c745762a1ac06ca28f43f7a9514a`: workflow `35486894184` jobs `106014811918`, `106014812031`, `106014812038` and `106014812071` are all successful; the repeated in-drain test proves the old clone is rejected while the pre-close lease remains active, the lease count does not increase, release wakes QDS, and QVM reaches clean `StopCommit`; all mandatory local and hosted gates pass; and no HIGH/CRITICAL gate finding remains. The STOP condition is reached for handoff to Review 010. M01 is not declared complete and no closeout merge was created.
+`READY_FOR_REVIEW` remains the intended handoff verdict after the new documentation-only head passes its exact workflow: implementation HEAD `31b08c87c350c745762a1ac06ca28f43f7a9514a` is validated by workflow `35486894184`, later documentation-only head `73c711987053418754ba9af6d53ef499babebc25` is validated by workflow `35487496411`, and this Prompt 010 normalization changes only evidence text. Criterion 21 remains pending for Review 011. M01 is not declared complete and no closeout merge was created.
