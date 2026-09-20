@@ -9,7 +9,44 @@
     "availability": "UNKNOWN_UNTIL_PREFLIGHT",
     "projectResolution": null
   },
-  "canonicalSources": [],
+  "canonicalSources": [
+    {
+      "path": "docs/project-brain/13-CHECKPOINT.md",
+      "blobSha": "4d92e6b80643c7dd23c6975fa50538ea872e8843"
+    },
+    {
+      "path": "docs/project-brain/16-DECISIONS-LEDGER.md",
+      "blobSha": "f55996920da23b03a0c4f01dd8435f78cd8ed5b3"
+    },
+    {
+      "path": "docs/project-brain/03-SCOPE.md",
+      "blobSha": "6b82778e9ba7edf181caa23934289d0b9d438a54"
+    },
+    {
+      "path": "docs/project-brain/15-DEFINITION-OF-DONE.md",
+      "blobSha": "8a7e99546381ac13e0587cb799eef15e4e5586e0"
+    },
+    {
+      "path": "docs/project-brain/04-ARCHITECTURE.md",
+      "blobSha": "5ad24de448ca8dea3f0130fdddd12377d18f32e2"
+    },
+    {
+      "path": "docs/project-brain/02-REQUIREMENTS.md",
+      "blobSha": "de33ecab980785a2ce69061cd27cfe56c6a48d22"
+    },
+    {
+      "path": "docs/project-brain/10-SECURITY-GOVERNANCE.md",
+      "blobSha": "430b861a0e2f1c0a93894cf5877e62cd20d8e0bd"
+    },
+    {
+      "path": "docs/project-brain/11-TEST-PLAN.md",
+      "blobSha": "8d28f7b5d48aa2a1b0101694a29b5005baaa9c0c"
+    },
+    {
+      "path": "docs/modules/M02-PROJECT-WORKSPACE-ADAPTER.md",
+      "blobSha": "b3fd77cb92e085ff827dc09fe146659c4616324b"
+    }
+  ],
   "changedFiles": [],
   "commands": [],
   "tests": {
@@ -53,5 +90,10 @@
       "id": 35516261944
     },
     "assurance": "ELEVATED"
-  }
+  },
+  "workOrderSource": {
+    "path": ".engineering/work-orders/CORE-WO-M02-001.md",
+    "blobSha": "6496f1fb10d37f4f0e0640a6c77adb7e85840492"
+  },
+  "contextLockStatus": "ACTIVE_ON_ADMISSION_PROMOTION"
 }
