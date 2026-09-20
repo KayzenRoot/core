@@ -3,8 +3,8 @@
 Work Order: `CORE-WO-M02-001`
 Authorized base: `bae47b2021a897396109dfcf42e8632dde13ec21`
 Execution branch: `feat/m02-project-workspace-adapter`
-Final implementation head: `1cb2a73ac49113729d46ddd170cb8d8345672b31` (the exact product/calibration head; evidence-only closure may follow).
-Executor verdict: `READY_FOR_REVIEW` only if the exact-head hosted gates and independent review conditions below are green; otherwise `BLOCKED`.
+Final implementation head: `1cb2a73ac49113729d46ddd170cb8d8345672b31` (the exact product/calibration head; evidence-only closure is at PR head `3e4cf33979d0bdb955d765c9e03bfccfda6e2891`).
+Executor verdict: `READY_FOR_REVIEW` for the M02 scope; independent review remains required and the executor does not approve or merge.
 
 ## Packet commits
 
@@ -32,14 +32,15 @@ HIVE MCP was available and resolved CORE as project `c65b7abc-533a-411a-bbbb-2b7
 - `cargo fmt --all -- --check`: PASS.
 - `cargo clippy --workspace --all-targets --all-features -- -D warnings`: PASS.
 - `cargo test --workspace --all-features`: PASS, including M01 regression and all M02 integration/adversarial tests.
-- Fuzz targets `m02_path_authority`, `m02_repository_graph`, `m02_git_evidence`: compile gate PASS; bounded hosted campaign is required on the final head.
+- Fuzz targets `m02_path_authority`, `m02_repository_graph`, `m02_git_evidence`: compile gate PASS; hosted bounded campaign PASS in run `35523152898`.
 - Standalone no-Git content drift and nested repository boundary regression tests: PASS.
 - Cross-platform Windows-shaped traversal rejection on Unix: PASS after Ubuntu exact-head correction.
 - Static dependency/zero-LLM/unsafe validator: PASS; no forbidden dependency, LLM term or unsafe construct in `core-workspace`.
 - Calibration benchmark: PASS with five measured iterations and finite values on the implementation head; see `M02-CALIBRATION-REPORT.md`.
-- Local cargo-deny/cargo-audit: pending availability of those external tools; hosted exact-head jobs are required and cannot be replaced by historical results.
-- Hosted first exact-head attempt found the Unix traversal-separator defect in M02 lib tests; corrected in `98615a8` and local Windows/full-workspace gates rerun PASS. A new hosted exact-head run is required.
-- Hosted second exact-head attempt found `cargo-deny` wildcard path dependencies; versions were declared for the three admitted local dependencies in `1cb2a73`. A new hosted exact-head run is required.
+- Local cargo-deny/cargo-audit: unavailable in the executor environment; hosted exact-head cargo-deny, cargo-audit, license and SBOM gates PASS on Ubuntu and Windows in run `35523152898`.
+- Hosted first exact-head attempt found the Unix traversal-separator defect in M02 lib tests; corrected in `98615a8`.
+- Hosted second exact-head attempt found `cargo-deny` wildcard path dependencies; versions were declared for the three admitted local dependencies in `1cb2a73`.
+- Final hosted run `35523152898`: governance PASS; M02 Ubuntu PASS; M02 Windows PASS; M02 fuzz PASS; M01 Ubuntu PASS; M01 fuzz PASS. M01 Windows job `106110623256` remained in progress at the time of this M02 verdict and is outside this Work Order's scope.
 
 ## Acceptance criteria 1–41
 
@@ -73,8 +74,8 @@ HIVE MCP was available and resolved CORE as project `c65b7abc-533a-411a-bbbb-2b7
 28. Typed resource exhaustion — budget validation/cache/hash tests.
 29. Unit/integration/property/adversarial suites — workspace test gate.
 30. Fuzz targets — `fuzz/fuzz_targets/m02_*.rs`, hosted bounded campaign.
-31. Ubuntu/Windows exact head — `m02` workflow matrix, pending final hosted run.
-32. Supply chain/advisory/license/SBOM — deny/audit/SBOM workflow gates, pending final hosted run.
+31. Ubuntu/Windows exact head — `m02` workflow matrix, PASS in hosted run `35523152898` (jobs `106110623239` and `106110623250`).
+32. Supply chain/advisory/license/SBOM — deny/audit/SBOM workflow gates, PASS in hosted run `35523152898`.
 33. Zero LLM — `scripts/validate_m02.py` and deterministic code paths.
 34. Reproducible RCG — `M02-CALIBRATION-REPORT.md`, benchmark source.
 35. Finite measured defaults — calibration report and `WorkspaceResourceBudget::finalized`.
@@ -82,7 +83,7 @@ HIVE MCP was available and resolved CORE as project `c65b7abc-533a-411a-bbbb-2b7
 37. DWS included / WMF absent — source/file map and static inspection.
 38. L2/watchers/Rust-native provider absent — dependency/static/file-map checks.
 39. Exact evidence mapping — this report and Evidence Bundle.
-40. No unresolved HIGH/CRITICAL — final security/advisory/independent review gates required.
+40. No unresolved HIGH/CRITICAL — hosted advisory/license gates PASS; independent review remains required.
 41. Independent APPROVED review — not executor-controlled; required before promotion.
 
 ## Proposed Checkpoint Delta

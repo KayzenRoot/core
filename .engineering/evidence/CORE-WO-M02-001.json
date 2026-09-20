@@ -1,7 +1,7 @@
 {
   "schemaVersion": "core-evidence-bundle-v1",
   "workOrder": "CORE-WO-M02-001",
-  "status": "PENDING_HOSTED_EXACT_HEAD",
+  "status": "READY_FOR_REVIEW",
   "authorizedBase": "bae47b2021a897396109dfcf42e8632dde13ec21",
   "candidateHead": "1cb2a73ac49113729d46ddd170cb8d8345672b31",
   "contextLock": ".engineering/context-locks/CORE-WO-M02-001.json",
@@ -62,15 +62,15 @@
     "integration": "PASS",
     "property": "PASS by deterministic delta/invalidation fixtures",
     "adversarial": "PASS (3 M02 adversarial tests)",
-    "fuzz": "COMPILE_PASS; hosted 1000-run campaign pending exact head",
-    "windows": "LOCAL_PASS",
-    "ubuntu": "HOSTED_PENDING"
+    "fuzz": "PASS; hosted bounded M02 campaign completed",
+    "windows": "PASS; hosted M02 workspace adapter job",
+    "ubuntu": "PASS; hosted M02 workspace adapter job"
   },
   "security": {
-    "dependencyPolicy": "HOSTED_PENDING; cargo-deny not installed locally",
-    "advisory": "HOSTED_PENDING; cargo-audit not installed locally",
-    "license": "HOSTED_PENDING via cargo-deny",
-    "sbom": "LOCAL_GENERATED artifacts/m02-sbom.cdx.json sha256=98f45f46f74082e649bc8965c13cf89cb63771befa67a86422a4a4a426aa2a9f; hosted exact-head pending",
+    "dependencyPolicy": "PASS; hosted cargo-deny on Ubuntu and Windows",
+    "advisory": "PASS; hosted cargo-audit on Ubuntu and Windows",
+    "license": "PASS; hosted cargo-deny license gate on Ubuntu and Windows",
+    "sbom": "PASS; local artifacts/m02-sbom.cdx.json sha256=98f45f46f74082e649bc8965c13cf89cb63771befa67a86422a4a4a426aa2a9f and hosted exact-head SBOM gates",
     "unsafeInventory": "PASS; unsafe_keyword_count=0",
     "noNetworkNoMutation": "PASS by argv-only Git inspector, hostile-helper canary, local-only calibration",
     "secretRedaction": "PASS by remote redaction test"
@@ -108,7 +108,27 @@
     "forbiddenRuntimeTerms": [],
     "unsafeKeywordCount": 0
   },
-  "ciRuns": [],
+  "ciRuns": [
+    {
+      "runId": 35523152898,
+      "workflow": "CI",
+      "candidateProductHead": "1cb2a73ac49113729d46ddd170cb8d8345672b31",
+      "prHead": "3e4cf33979d0bdb955d765c9e03bfccfda6e2891",
+      "governanceJob": 106110623118,
+      "m02UbuntuJob": 106110623239,
+      "m02WindowsJob": 106110623250,
+      "m02FuzzJob": 106110623283,
+      "m01UbuntuJob": 106110623236,
+      "m01WindowsJob": 106110623256,
+      "m01FuzzJob": 106110623274,
+      "m02Result": "PASS",
+      "m02UbuntuResult": "PASS",
+      "m02WindowsResult": "PASS",
+      "m02FuzzResult": "PASS",
+      "governanceResult": "PASS",
+      "m01WindowsResult": "IN_PROGRESS_UNRELATED_LEGACY_JOB"
+    }
+  ],
   "failuresAndCorrections": [
     {"correction": "Static validator excluded TOML bench metadata key harness from dependency scan", "commit": "7c6d6b3"},
     {"correction": "Standalone no-Git inventory now detects content/directory drift and nested repository boundaries", "commit": "7c6d6b3"},
@@ -117,11 +137,11 @@
   ],
   "residualRisks": [
     "HIVE index/checkpoint is stale for this execution checkout; canonical Git remains truth",
-    "cargo-deny/cargo-audit and Ubuntu/fuzz evidence require hosted exact-head workflow",
+    "M01 Windows legacy job 106110623256 was still in progress when M02 reached READY_FOR_REVIEW and is outside CORE-WO-M02-001 scope",
     "Independent review and approval are not executor-controlled"
   ],
   "proposedCheckpointDelta": "Promote CORE-WO-M02-001 only after hosted Ubuntu/Windows, supply-chain/advisory/SBOM/fuzz gates and independent review are green at the exact implementation candidate; retain HIVE stale-currentness note.",
-  "executorVerdict": "PENDING_HOSTED_EXACT_HEAD",
+  "executorVerdict": "READY_FOR_REVIEW",
   "reviewerVerdict": null,
   "finalPlanningReview": {
     "issue": 35,
