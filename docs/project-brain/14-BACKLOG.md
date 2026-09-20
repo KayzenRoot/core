@@ -7,7 +7,7 @@ Status: `ACTIVE`
 Canonical module map: `docs/modules/00-MASTER-MODULE-MAP.md`.
 
 - M01 Core Runtime & Lifecycle — COMPLETE / PROMOTED.
-- M02 Project / Workspace Adapter — DEEP PLANNING ACTIVE (Rounds 1-6 recorded; final Context Lock/Work Order/planning freeze remain; implementation not authorized).
+- M02 Project / Workspace Adapter — FINAL PLANNING FREEZE IN REVIEW (CORE-WO-M02-001 compiled; implementation not authorized until promotion + Context Lock admission).
 - M03 Work Order Engine.
 - M04 Run / Attempt / Step Engine.
 - M05 Host Adapter Fabric.
