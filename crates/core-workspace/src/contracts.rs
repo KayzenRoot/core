@@ -128,7 +128,7 @@ pub enum BasisComponent {
     SparseCheckoutState = 13,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, Default)]
 pub struct ComponentMask(pub u64);
 
 impl ComponentMask {
