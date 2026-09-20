@@ -18,9 +18,11 @@ mod state;
 pub mod git;
 
 pub use authority::*;
+pub use basis::*;
 pub use contracts::*;
 pub use core_config::WorkspaceResourceBudget;
 pub use identity::*;
+pub use reconcile::*;
 pub use repository::*;
 pub use state::*;
 
