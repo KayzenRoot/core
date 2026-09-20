@@ -17,8 +17,11 @@ mod state;
 
 pub mod git;
 
+pub use authority::*;
 pub use contracts::*;
 pub use core_config::WorkspaceResourceBudget;
+pub use identity::*;
+pub use repository::*;
 pub use state::*;
 
 pub const M02_SCHEMA: &str = "nexlabs.core.workspace";
