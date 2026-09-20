@@ -2,8 +2,8 @@
   "schemaVersion": "core-gef-checkpoint-bridge-v1",
   "viewStatus": "DERIVED_VIEW",
   "canonicalCheckpoint": "docs/project-brain/13-CHECKPOINT.md",
-  "status": "M01 COMPLETE / M02 FINAL FREEZE IN REVIEW",
+  "status": "M01 COMPLETE / M02 IMPLEMENTATION AUTHORIZED",
   "version": "CORE V0.0 - Modular Construction",
-  "phase": "2 - M02 Final Planning Freeze",
-  "nextStep": "Review the exact-head M02 final planning freeze candidate. If APPROVED and promoted, perform only the bounded execution-admission delta that binds the promoted main SHA, activates the Context Lock and authorizes CORE-WO-M02-001. Do not start M02 implementation before that admission is promoted."
+  "phase": "3 - M02 Implementation",
+  "nextStep": "After this execution-admission delta is APPROVED and promoted, execute CORE-WO-M02-001 using docs/work-orders/CODEX-HANDOFF-M02.md. Codex must perform preflight first, then Packets A-H, and may return only READY_FOR_REVIEW or BLOCKED."
 }
