@@ -1,6 +1,6 @@
 # CORE Master Module Map
 
-Status: `M01_COMPLETE_M02_IMPLEMENTATION_AUTHORIZED`
+Status: `M01_COMPLETE_M02_IMPLEMENTATION_AUTHORIZATION_ARMED`
 
 ## Product boundary
 
@@ -87,5 +87,5 @@ The order may be refined by dependency evidence, but a later module must not sil
 
 ## Current progression
 - M01 Core Runtime & Lifecycle — COMPLETE / PROMOTED.
-- M02 Project / Workspace Adapter — IMPLEMENTATION AUTHORIZED / CORE-WO-M02-001 ACTIVE.
+- M02 Project / Workspace Adapter — IMPLEMENTATION AUTHORIZATION ARMED / effective only on canonical main promotion.
 - M03-M24 — discovery-only until their planning freezes.
