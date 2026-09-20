@@ -120,3 +120,40 @@ Candidate M02 technologies under evaluation:
 - DWS Delta Workspace Snapshot.
 
 These are discovery candidates until M02 technology disposition is governed by measurable tests/benchmarks.
+
+
+## M02 validity architecture
+
+M02 separates durable evidence from live action state.
+
+```text
+WorkspaceAttachRequest
+        |
+        v
+DISCOVERING -> VALIDATING
+        |          |
+        |          +---- local Git/filesystem evidence
+        |          +---- explicit intent/config
+        |          +---- optional HIVE association evidence
+        v
+WorkspaceBindingReceipt  (durable proof)
+        |
+        +--> WorkspaceHandle (runtime-epoch-bound)
+                  |
+                  +--> WorkspaceBasisFingerprint
+                  +--> WorkspaceGeneration
+                  +--> authority roots
+                  +--> repository/worktree graph
+                  +--> reconciliation/assurance
+                  |
+                  v
+          downstream action boundary
+                  |
+             freshness check
+                  |
+         BOUND / DRIFTED / BLOCKED
+```
+
+Workspace basis is componentized so later modules can declare required validity masks without giving M02 permission to perform their actions. M02 may optimize revalidation with deltas only when the result is provably equivalent to full correctness evaluation.
+
+Path validation is a proof layer, not an OS sandbox. Mutation/sandbox modules must revalidate security-sensitive receipts at use time.

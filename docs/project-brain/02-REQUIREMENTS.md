@@ -64,3 +64,17 @@ These are foundation requirements only. Product-functional requirements will be 
 - **CORE-R-043 Delta revalidation:** repeated workspace validation SHOULD recompute only correctness-relevant deltas when equivalence to full recomputation is provable.
 - **CORE-R-044 Secret-safe Git metadata:** remote URLs, config and process output MUST be redacted so credentials/tokens cannot enter receipts/evidence.
 - **CORE-R-045 Proof-carrying binding:** successful workspace admission MUST emit a compact versioned binding receipt sufficient for downstream validation without embedding repository contents.
+
+
+## M02 Round 2 requirements
+
+- **CORE-R-046 Runtime-bound handles:** live WorkspaceHandle objects MUST be bound to the current runtime epoch/generation; durable receipts MUST NOT become implicit live authority after restart.
+- **CORE-R-047 Semantic Git basis:** raw Git metadata bytes/stat-cache churn MUST NOT alter workspace correctness identity unless repository semantics changed.
+- **CORE-R-048 Untracked policy is explicit:** untracked-file treatment MUST be recorded in the basis; narrower policies MUST NOT be silently selected for performance.
+- **CORE-R-049 Revalidation emits new generation:** correctness-relevant compatible drift MUST produce a new WorkspaceGeneration/handle rather than reviving the stale handle.
+- **CORE-R-050 No global evidence override:** user intent, local checkout facts and HIVE project association are separate authority domains and MUST be reconciled rather than ranked into one overwrite hierarchy.
+- **CORE-R-051 Path validation is not sandbox authority:** M02 receipts MUST state when use-time revalidation is required and MUST NOT claim M11-level enforcement.
+- **CORE-R-052 Non-existing path safety:** validation for non-existing targets MUST bind the nearest existing physical ancestor and require use-time revalidation before later mutation.
+- **CORE-R-053 Git inspection is bounded/read-only:** M02 Git inspection MUST use explicit non-shell commands/APIs, bounded output/deadlines, no interactive credentials and no network side effects.
+- **CORE-R-054 Basis deltas are reconstructable:** any incremental WorkspaceBasisDiff path admitted for correctness MUST be provably equivalent to full recomputation for the affected basis.
+- **CORE-R-055 Security drift invalidates:** authority/security/filesystem-semantics changes MUST invalidate affected handles regardless of performance/cache cost.

@@ -13,7 +13,7 @@ CORE V0.0 - Modular Construction
 Continue building CORE as the headless NexLabs action plane that operates standalone and synchronizes deeply with HIVE without duplicating HIVE-owned intelligence.
 
 ## IN PROGRESS
-- M02 Project / Workspace Adapter deep planning — Round 1 ownership/identity/basis architecture recorded.
+- M02 Project / Workspace Adapter deep planning — Rounds 1-2 ownership, state machine, contracts, reconciliation and drift semantics recorded.
 - M03-M24 remain discovery-only.
 
 ## COMPLETED
@@ -83,3 +83,15 @@ Accepted direction:
 - M02 implementation remains unauthorized.
 
 Next M02 planning rounds must freeze the exact state machine, canonical contracts, repository/worktree graph semantics, path-security model, drift algorithm, crate/file map, fixtures/fuzzing, benchmark policy, DoD and Work Order.
+
+
+## M02 Round 2 discovery delta
+Round 2 defined the binding lifecycle, runtime-bound WorkspaceHandle versus durable WorkspaceBindingReceipt, componentized WorkspaceBasis, reconciliation law, drift classes, lexical+physical path proof, untracked-file policy and candidate safe Git inspection profile.
+
+Additional candidates:
+- BVM Basis Validity Matrix;
+- GSI Git Safe Inspection;
+- ACR Authority Chain Receipt;
+- FSC Filesystem Semantics Capsule.
+
+M02 remains discovery-only. No crate/file implementation or Work Order is authorized yet.

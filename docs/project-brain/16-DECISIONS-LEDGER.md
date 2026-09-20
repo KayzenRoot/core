@@ -203,3 +203,44 @@ Status: `ACTIVE`
 ## CORE-D-048 - M02 workspace discovery is zero-LLM
 **Decision:** identity, Git basis, path normalization, boundary resolution, HIVE/local reconciliation and drift detection are deterministic-first and require no inference.
 **State:** ACCEPTED
+
+
+## CORE-D-049 - M02 state machine keeps ambiguity as typed evidence
+**Decision:** M02 top-level binding states are UNBOUND, DISCOVERING, VALIDATING, BOUND, DRIFTED, REVALIDATING, BLOCKED and DETACHING. Ambiguity/not-found/conflict are typed reasons, not hidden lifecycle states.
+**State:** ACCEPTED
+
+## CORE-D-050 - Live workspace handles are runtime-bound snapshots
+**Decision:** WorkspaceHandle is immutable, runtime-epoch-bound and non-authoritative outside freshness validation. Durable WorkspaceBindingReceipt is evidence, not a filesystem capability.
+**State:** ACCEPTED
+
+## CORE-D-051 - Workspace basis is componentized
+**Decision:** M02 represents workspace identity, authority, repository graph, Git state, config/security and project association as explicit basis components. Correctness fingerprints exclude diagnostic-only volatility.
+**State:** ACCEPTED
+
+## CORE-D-052 - Local RepositoryId is not a remote URL
+**Decision:** repository identity uses local Git/common-dir and boundary evidence. Remote URLs are mutable association hints and never the sole repository identity.
+**State:** ACCEPTED
+
+## CORE-D-053 - HIVE availability does not churn local workspace identity
+**Decision:** temporary HIVE availability/provider changes do not rewrite WorkspaceId. Association evidence and assurance may change the binding generation or block HIVE-required operations.
+**State:** ACCEPTED
+
+## CORE-D-054 - Compatible drift still invalidates the old handle
+**Decision:** successful revalidation after correctness-relevant drift emits a new WorkspaceGeneration/WorkspaceHandle; the stale handle is never silently revived.
+**State:** ACCEPTED
+
+## CORE-D-055 - Untracked-file policy is part of correctness evidence
+**Decision:** treatment of untracked files is explicit in WorkspaceBasis. CONTENT_HASHED is the safe general execution default unless a governed downstream profile proves a narrower policy sufficient.
+**State:** ACCEPTED
+
+## CORE-D-056 - Path proof uses lexical plus physical validation
+**Decision:** M02 validates both lexical containment and physical symlink/junction/reparse resolution. Non-existing targets bind the nearest existing ancestor and require use-time revalidation.
+**State:** ACCEPTED
+
+## CORE-D-057 - M02 cannot eliminate TOCTOU alone
+**Decision:** path/workspace validation receipts record staleness/use-time requirements. M11/M13/M20 must revalidate or enforce at their actual action boundary.
+**State:** ACCEPTED
+
+## CORE-D-058 - Delta revalidation requires equivalence proof
+**Decision:** DWS/BVM optimizations may replace full rescans only where tests/benchmarks prove equivalent correctness for the affected basis components.
+**State:** ACCEPTED
