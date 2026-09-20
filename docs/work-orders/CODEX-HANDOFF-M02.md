@@ -1,14 +1,16 @@
 # CODEX HANDOFF — CORE-WO-M02-001
 
-Status: PENDING FINAL PLANNING PROMOTION
+Status: AUTHORIZED
 Execution branch: `feat/m02-project-workspace-adapter`
 Work Order: `.engineering/work-orders/CORE-WO-M02-001.md`
 Context Lock: `.engineering/context-locks/CORE-WO-M02-001.json`
 Module: M02 — Project / Workspace Adapter
 
+Frozen authorized base: `bae47b2021a897396109dfcf42e8632dde13ec21`
+
 ## Hard gate
 
-Do NOT begin product implementation unless the Context Lock says:
+Begin product implementation only while the Context Lock says:
 - `status=ACTIVE`;
 - `authorizedBase` is a concrete SHA;
 - `productImplementationAuthorized=true`.
