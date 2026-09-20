@@ -50,6 +50,12 @@ Load in this order:
 
 Canonical Git content outranks HIVE/cache/chat summaries.
 
+## CONTEXT
+
+The admitted Context Lock, canonical source hierarchy and exact Git base define executable context. Chat history, HIVE retrieval, caches and derived summaries are advisory accelerators only.
+
+Use the canonical basis once as stable prefix, then progressively disclose only packet-relevant deltas, changed files and failing evidence.
+
 ## CONTEXT LOCK / STALENESS
 
 Execution is illegal until `.engineering/context-locks/CORE-WO-M02-001.json` is promoted to an admitted execution lock with:
@@ -136,7 +142,7 @@ Do not implement:
 - persistent runtime self-tuning/background recalibration;
 - new third-party dependencies not admitted below.
 
-## FILES / SEAMS TO INSPECT
+## FILES / SOURCES TO READ
 
 Existing:
 - `Cargo.toml`
@@ -238,6 +244,33 @@ Forbidden initial dependencies include:
 
 If a frozen proof obligation cannot be satisfied with the admitted graph, STOP and raise a dependency-admission Correction Delta with minimal reproduction plus security/supply-chain/performance justification.
 
+## REQUIREMENTS
+
+The executor MUST satisfy every applicable accepted M02 requirement in `docs/project-brain/02-REQUIREMENTS.md`, including CORE-R-039 through CORE-R-111.
+
+Mandatory requirement families include:
+- deterministic explicit workspace attachment and identity;
+- runtime-bound handle / durable receipt separation;
+- semantic Git basis and repository/worktree graph correctness;
+- explicit untracked/nested/external-object policies;
+- lexical + physical path/authority proof;
+- versioned HIVE association with no local-authority grant;
+- bounded read-only/no-network Git inspection;
+- conservative filesystem semantics;
+- watcher-independent correctness;
+- deterministic causal invalidation and DWS/full equivalence;
+- disposable/provenance-aware PEC L1;
+- bounded/coalesced hashing;
+- explicit finite resource budgets after RCG;
+- versioned contracts and canonical ordering;
+- one-crate/minimal-dependency boundary;
+- bounded Calibration Delta;
+- zero-LLM runtime/calibration/evidence selection;
+- no WMF in V0.0;
+- no forced alternative provider dependency absent admission.
+
+A requirement cannot be weakened by implementation convenience, benchmark result or cache behavior.
+
 ## ARCHITECTURE RULES
 
 1. M02 is read-oriented and deterministic.
@@ -270,6 +303,24 @@ If a frozen proof obligation cannot be satisfied with the admitted graph, STOP a
 28. Calibration is deterministic, local/no-network and zero-LLM.
 29. WMF/L2/Rust-native provider/watchers are not part of V0.0.
 30. No known HIGH/CRITICAL finding may survive promotion.
+
+## CONSTRAINTS
+
+- Rust stable, edition/toolchain as pinned by repository.
+- Safe Rust by default; any `unsafe` requires explicit inventory, justification and review.
+- Headless only.
+- Zero LLM inference in M02 product paths and calibration.
+- No network access in M02 Git inspection or calibration fixtures.
+- No destructive Git/history operations.
+- No source mutation.
+- No new third-party dependency outside admitted graph without governed correction.
+- No ambient CWD authority.
+- No user-source probe writes for FSC.
+- No unlimited security-sensitive resource sentinel.
+- No historical evidence substitution for changed relevant inputs.
+- No advancement past a failed packet STOP.
+- No implementation outside the frozen file/scope boundary except generated evidence or governed Correction Delta.
+- No checkpoint promotion or implementation-PR merge by the executor.
 
 ## CONSTRUCTION PACKETS
 
