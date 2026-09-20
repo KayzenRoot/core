@@ -4,7 +4,7 @@ Work Order: `CORE-WO-M02-001`
 Authorized base: `bae47b2021a897396109dfcf42e8632dde13ec21`
 Execution branch: `feat/m02-project-workspace-adapter`
 Final implementation head: `1cb2a73ac49113729d46ddd170cb8d8345672b31` (the exact product/calibration head; evidence-only closure is at PR head `3e4cf33979d0bdb955d765c9e03bfccfda6e2891`).
-Executor verdict: `READY_FOR_REVIEW` for the M02 scope; independent review remains required and the executor does not approve or merge.
+Executor verdict: `BLOCKED` at the final evidence head because the required hosted Windows aggregate test job is red; the executor does not approve or merge.
 
 ## Packet commits
 
@@ -40,7 +40,8 @@ HIVE MCP was available and resolved CORE as project `c65b7abc-533a-411a-bbbb-2b7
 - Local cargo-deny/cargo-audit: unavailable in the executor environment; hosted exact-head cargo-deny, cargo-audit, license and SBOM gates PASS on Ubuntu and Windows in run `35523152898`.
 - Hosted first exact-head attempt found the Unix traversal-separator defect in M02 lib tests; corrected in `98615a8`.
 - Hosted second exact-head attempt found `cargo-deny` wildcard path dependencies; versions were declared for the three admitted local dependencies in `1cb2a73`.
-- Final hosted run `35523830976` at evidence head `2da2f95ab2f3096f68ffc4032a404bb8e36eeb9a`: governance PASS; M02 Ubuntu PASS; M02 Windows PASS; M02 fuzz PASS; M01 Ubuntu PASS; M01 fuzz PASS. M01 Windows job `106112421521` failed only in the unrelated legacy test `core-runtime::multiple_leases_release_in_different_order_without_lost_notifications` with an active capability lease residual.
+- Product qualification run `35523830976` at evidence head `2da2f95ab2f3096f68ffc4032a404bb8e36eeb9a`: governance PASS; M02 Ubuntu PASS; M02 Windows PASS; M02 fuzz PASS; M01 Ubuntu PASS; M01 fuzz PASS. M01 Windows failed only in unrelated legacy `core-runtime` timing/lease coverage.
+- Final evidence-head run `35524430324` at PR head `5b86ee36452a9e87d34cfb5ab8a9d2f5623b02dc`: governance PASS; M02 Ubuntu PASS; M02 fuzz PASS; M01 Ubuntu PASS; M01 fuzz PASS. The M02 Windows aggregate workspace test failed in unrelated `core-runtime` M01 coverage; isolated rerun `106114953389` failed again in a different `core-runtime` timing test. M02-specific checks did not report a failure, but the required Windows matrix is not green.
 
 ## Acceptance criteria 1–41
 
@@ -74,7 +75,7 @@ HIVE MCP was available and resolved CORE as project `c65b7abc-533a-411a-bbbb-2b7
 28. Typed resource exhaustion — budget validation/cache/hash tests.
 29. Unit/integration/property/adversarial suites — workspace test gate.
 30. Fuzz targets — `fuzz/fuzz_targets/m02_*.rs`, hosted bounded campaign.
-31. Ubuntu/Windows exact head — `m02` workflow matrix, PASS in hosted run `35523830976` (jobs `106112421643` and `106112421607`).
+31. Ubuntu/Windows exact head — product qualification passed in `35523830976`, but final evidence-head matrix is `BLOCKED` because M02 Windows aggregate job `106114018725` and isolated rerun `106114953389` failed in unrelated M01 `core-runtime` tests.
 32. Supply chain/advisory/license/SBOM — deny/audit/SBOM workflow gates, PASS in hosted run `35523830976`.
 33. Zero LLM — `scripts/validate_m02.py` and deterministic code paths.
 34. Reproducible RCG — `M02-CALIBRATION-REPORT.md`, benchmark source.
@@ -83,9 +84,9 @@ HIVE MCP was available and resolved CORE as project `c65b7abc-533a-411a-bbbb-2b7
 37. DWS included / WMF absent — source/file map and static inspection.
 38. L2/watchers/Rust-native provider absent — dependency/static/file-map checks.
 39. Exact evidence mapping — this report and Evidence Bundle.
-40. No unresolved HIGH/CRITICAL — hosted advisory/license gates PASS; independent review remains required.
+40. No unresolved HIGH/CRITICAL — hosted advisory/license gates PASS in the product qualification run; final hosted Windows aggregate test remains blocked by unrelated M01 runtime timing failures.
 41. Independent APPROVED review — not executor-controlled; required before promotion.
 
 ## Proposed Checkpoint Delta
 
-Promote only after independent governed review: mark `CORE-WO-M02-001` complete at the exact reviewed implementation head, retain HIVE degraded-currentness as an explicit assurance note, record the final calibration report and hosted Ubuntu/Windows/security/SBOM/fuzz identities, and open M03 discovery only after the M02 promotion decision. The executor does not self-promote the checkpoint or merge the implementation PR.
+Promote only after the hosted Windows aggregate gate is green and independent governed review is complete: mark `CORE-WO-M02-001` complete at the exact reviewed implementation head, retain HIVE degraded-currentness as an explicit assurance note, record the final calibration report and hosted Ubuntu/Windows/security/SBOM/fuzz identities, and open M03 discovery only after the M02 promotion decision. The executor does not self-promote the checkpoint or merge the implementation PR.

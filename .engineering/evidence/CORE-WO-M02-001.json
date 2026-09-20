@@ -1,7 +1,7 @@
 {
   "schemaVersion": "core-evidence-bundle-v1",
   "workOrder": "CORE-WO-M02-001",
-  "status": "READY_FOR_REVIEW",
+  "status": "BLOCKED_HOSTED_EXACT_HEAD",
   "authorizedBase": "bae47b2021a897396109dfcf42e8632dde13ec21",
   "candidateHead": "1cb2a73ac49113729d46ddd170cb8d8345672b31",
   "contextLock": ".engineering/context-locks/CORE-WO-M02-001.json",
@@ -63,7 +63,7 @@
     "property": "PASS by deterministic delta/invalidation fixtures",
     "adversarial": "PASS (3 M02 adversarial tests)",
     "fuzz": "PASS; hosted bounded M02 campaign completed",
-    "windows": "PASS; hosted M02 workspace adapter job",
+    "windows": "BLOCKED; M02-specific checks reached without failure, but aggregate workspace test job failed in unrelated core-runtime M01 timing coverage",
     "ubuntu": "PASS; hosted M02 workspace adapter job"
   },
   "security": {
@@ -149,6 +149,26 @@
       "m01FuzzResult": "PASS",
       "m01WindowsResult": "FAIL_UNRELATED_LEGACY_TEST",
       "m01WindowsFailure": "core-runtime::multiple_leases_release_in_different_order_without_lost_notifications; active capability lease remains"
+    },
+    {
+      "runId": 35524430324,
+      "workflow": "CI",
+      "candidateProductHead": "1cb2a73ac49113729d46ddd170cb8d8345672b31",
+      "evidenceHead": "5b86ee36452a9e87d34cfb5ab8a9d2f5623b02dc",
+      "governanceJob": 106114018663,
+      "m02UbuntuJob": 106114018758,
+      "m02WindowsJob": 106114018725,
+      "m02WindowsRerunJob": 106114953389,
+      "m02FuzzJob": 106114018784,
+      "m02Result": "BLOCKED_HOSTED_WINDOWS_AGGREGATE",
+      "m02UbuntuResult": "PASS",
+      "m02WindowsResult": "FAIL_UNRELATED_M01_CORE_RUNTIME_TEST",
+      "m02WindowsFailure": "aggregate cargo test failed in core-runtime; initial failure multiple_leases_release_in_different_order_without_lost_notifications and isolated rerun worker_finishes_after_cancel_before_shutdown_deadline",
+      "m02FuzzResult": "PASS",
+      "governanceResult": "PASS",
+      "m01UbuntuResult": "PASS",
+      "m01FuzzResult": "PASS",
+      "m01WindowsResult": "FAIL_UNRELATED_M01_CORE_RUNTIME_TEST"
     }
   ],
   "failuresAndCorrections": [
@@ -159,11 +179,11 @@
   ],
   "residualRisks": [
     "HIVE index/checkpoint is stale for this execution checkout; canonical Git remains truth",
-    "M01 Windows legacy job 106112421521 failed in core-runtime lease timing/notification coverage and is outside CORE-WO-M02-001 scope",
+    "Hosted exact-head run 35524430324 and isolated M02 Windows rerun 106114953389 failed in aggregate workspace tests owned by legacy core-runtime M01 timing/lease coverage; M02-specific checks did not report a failure, but the required Windows matrix is not green",
     "Independent review and approval are not executor-controlled"
   ],
   "proposedCheckpointDelta": "Promote CORE-WO-M02-001 only after hosted Ubuntu/Windows, supply-chain/advisory/SBOM/fuzz gates and independent review are green at the exact implementation candidate; retain HIVE stale-currentness note.",
-  "executorVerdict": "READY_FOR_REVIEW",
+  "executorVerdict": "BLOCKED",
   "reviewerVerdict": null,
   "finalPlanningReview": {
     "issue": 35,
