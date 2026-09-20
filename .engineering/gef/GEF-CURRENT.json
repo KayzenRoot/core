@@ -5,11 +5,11 @@
   "reviewMode": "DELTA_EXACT_HEAD",
   "assuranceMode": "STANDARD_PLUS",
   "productStage": "M02_DISCOVERY_ACTIVE",
-  "nextLegalAction": "DEEP_PLAN_M02_PROJECT_WORKSPACE_ADAPTER",
+  "nextLegalAction": "FREEZE_M02_WORK_ORDER_AND_CONTEXT_LOCK",
   "productImplementationAuthorized": false,
   "canonicalCheckpoint": "docs/project-brain/13-CHECKPOINT.md",
   "lastCompletedWorkOrder": "CORE-WO-M01-001",
-  "lastPromotedMerge": "ed7b481cabd6911a0d7c3853eeabad14452ac54b",
+  "lastPromotedMerge": "c69bf761dad9fbec8f8128ab62c5ba0a0271ef61",
   "authorizedScope": "NONE",
   "activeWorkOrder": null
 }

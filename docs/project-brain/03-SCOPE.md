@@ -76,3 +76,28 @@ To be classified during governed discovery. No future capability is admitted mer
 - Git/GitHub delivery owned by M20/M21;
 - semantic AST/repository analysis;
 - visual UI/dashboard.
+
+
+## M02 Round 6 scope classification
+
+### NECESSARY
+- RCG Resource Calibration Gate inside the frozen M02 Work Order;
+- reproducible calibration evidence before final M02 acceptance;
+- finite WorkspaceResourceBudget defaults derived from implementation evidence;
+- DWS component/changed-set delta revalidation with full-recompute equivalence;
+- bounded Calibration Delta limited to numeric defaults/thresholds/evidence.
+
+### IMPORTANT
+- benchmark fixture scaling sufficient to expose resource bottlenecks on supported CI platforms;
+- explicit rejected-candidate evidence for budget selection.
+
+### FUTURE
+- WMF Workspace Merkle Forest;
+- persistent runtime self-tuning;
+- automatic background recalibration.
+
+### OUT OF SCOPE FOR M02 V0.0
+- guessed numeric resource defaults without evidence;
+- unlimited security-sensitive budgets;
+- architecture/dependency changes disguised as calibration;
+- WMF implementation in the initial Work Order.

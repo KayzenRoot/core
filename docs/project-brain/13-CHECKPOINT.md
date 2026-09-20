@@ -13,7 +13,7 @@ CORE V0.0 - Modular Construction
 Continue building CORE as the headless NexLabs action plane that operates standalone and synchronizes deeply with HIVE without duplicating HIVE-owned intelligence.
 
 ## IN PROGRESS
-- M02 Project / Workspace Adapter deep planning — Rounds 1-5 recorded; Round 5 freezes v1 contracts, BVM/FSC semantics, V0.0 provider/cache disposition and exact initial crate/file map.
+- M02 Project / Workspace Adapter deep planning — Rounds 1-6 recorded; Round 6 freezes calibration semantics, DWS/WMF disposition and the bounded Calibration Delta model.
 - M03-M24 remain discovery-only.
 
 ## COMPLETED
@@ -30,6 +30,7 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - M01 final evidence normalized and exact-head workflow validated.
 - M02 Rounds 1–3 discovery baseline exact-head reviewed (Review 001 / Issue #26) and promoted through PR #23.
 - M02 Round 4 evidence architecture exact-head reviewed (Review 002 / Issue #28) and promoted through PR #27.
+- M02 Round 5 contract/file-map freeze exact-head reviewed (Review 003 / Issue #30) and promoted through PR #29.
 
 ## PENDING
 - Deep-plan M02 through M24 in dependency order.
@@ -63,6 +64,10 @@ Deep-plan M02 Project / Workspace Adapter using the same freeze-before-execution
 - M02 Round 4 PR #27
 - M02 Round 4 promotion merge `ed7b481cabd6911a0d7c3853eeabad14452ac54b`
 - M02 Round 4 exact-head workflow #71 `35508958685` — Governance, Ubuntu, Windows and fuzz SUCCESS
+- M02 Review 003 / Issue #30 — APPROVED
+- M02 Round 5 PR #29
+- M02 Round 5 promotion merge `c69bf761dad9fbec8f8128ab62c5ba0a0271ef61`
+- M02 Round 5 exact-head workflow #74 `35512575017` — Governance, Ubuntu, Windows and fuzz SUCCESS
 
 ## M01 completion record
 Frozen Work Order: `CORE-WO-M01-001`
@@ -176,6 +181,36 @@ Initial V0.0 disposition:
 - core-workspace does not depend on core-runtime;
 - M02-specific DoD is explicit.
 
-Remaining before planning freeze: benchmark-backed numeric resource defaults/acceptance thresholds, WMF/DWS final acceleration disposition, final Work Order/Context Lock and final planning audit.
+At Round 5 close, the then-remaining items were benchmark-backed resource calibration, WMF/DWS disposition, final Work Order/Context Lock and final planning audit. Round 6 below refines and resolves the calibration/technology-disposition portion.
+
+M02 implementation remains unauthorized.
+
+
+## M02 Round 5 promotion record
+
+Round promoted: 5
+Exact governed review head: `ade706828998a2276bd309fe67ff3ae9d1c16a53`
+Governed review: Review 003 / Issue #30 — APPROVED
+Reviewed PR: #29
+Exact-head workflow: run #74 `35512575017` — Governance, Ubuntu, Windows and fuzz SUCCESS
+Promotion merge: `c69bf761dad9fbec8f8128ab62c5ba0a0271ef61`
+Result: Round 5 accepted into the M02 discovery baseline. M02 implementation remains unauthorized.
+
+## M02 Round 6 discovery delta
+
+Round 6 resolves resource calibration without fabricating pre-implementation numbers.
+
+Accepted direction:
+- RCG Resource Calibration Gate is mandatory inside the frozen Work Order;
+- exact numeric WorkspaceResourceBudget defaults are implementation-evidence outputs;
+- the Work Order may authorize one bounded Calibration Delta limited to numeric defaults/thresholds/evidence;
+- calibration cannot mutate architecture, contracts, authority, dependencies, provider class or BVM semantics;
+- DWS is REQUIRED for V0.0;
+- WMF is DEFERRED/FUTURE;
+- V0.0 has no hidden runtime self-tuning;
+- finite security-sensitive budgets are mandatory before M02 acceptance;
+- calibration remains deterministic and zero-LLM.
+
+Remaining before implementation authorization: final Context Lock, frozen Work Order, executor packet, acceptance criteria/STOP CONDITION and final cross-source planning audit.
 
 M02 implementation remains unauthorized.

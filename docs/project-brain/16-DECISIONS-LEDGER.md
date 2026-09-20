@@ -375,3 +375,41 @@ Status: `ACTIVE`
 ## CORE-D-090 - New third-party dependencies require explicit admission
 **Decision:** Round 5 freezes the initial dependency graph. Convenience alone is insufficient to add Git parsing, watcher, database, path-walk or platform-FFI crates.
 **State:** ACCEPTED
+
+
+## CORE-D-091 - Numeric M02 resource defaults are execution-evidence outputs
+**Decision:** planning freezes resource dimensions, measurement protocol and safety semantics; exact WorkspaceResourceBudget numbers are produced from reproducible M02 implementation evidence inside the frozen Work Order before final acceptance.
+**State:** ACCEPTED
+
+## CORE-D-092 - M02 Work Order may authorize a bounded Calibration Delta
+**Decision:** after benchmarks, the executor may change only numeric resource defaults, benchmark-derived thresholds and related evidence/documentation in the same Work Order/PR. Architecture/dependency/contract changes require a normal governed Correction Delta.
+**State:** ACCEPTED
+
+## CORE-D-093 - Calibration failure blocks BOUND/production acceptance
+**Decision:** no partial benchmark, timeout, overflow or missing required calibration evidence may be converted into a successful production-ready M02 result.
+**State:** ACCEPTED
+
+## CORE-D-094 - Calibration is deterministic and zero-LLM
+**Decision:** fixture generation, measurements, candidate selection and evidence processing do not use LLM inference.
+**State:** ACCEPTED
+
+## CORE-D-095 - DWS is required for M02 V0.0
+**Decision:** component/changed-set delta revalidation is part of the initial module because it underpins bounded revalidation and downstream token/context economy. Delta correctness must equal full recomputation semantics.
+**State:** ACCEPTED
+
+## CORE-D-096 - WMF is deferred
+**Decision:** Workspace Merkle Forest is not in the initial M02 Work Order. It may be admitted later only if evidence shows DWS/component fingerprints cannot satisfy scalability budgets.
+**State:** ACCEPTED
+
+## CORE-D-097 - V0.0 does not permanently self-tune resource defaults
+**Decision:** calibration is build/release evidence. Runtime may consume governed configuration but does not silently benchmark itself or rewrite defaults in the background.
+**State:** ACCEPTED
+
+## CORE-D-098 - Unlimited security-sensitive resource sentinels are forbidden
+**Decision:** resource budgets used to bound hostile repository/path/output behavior must have explicit finite values after calibration; zero/unlimited semantics cannot bypass those limits.
+**State:** ACCEPTED
+
+
+## CORE-D-099 - V0.0 system-Git baseline refines earlier provider-neutral evaluation decisions
+**Decision:** CORE-D-087 is the V0.0 implementation refinement of CORE-D-064/075. The admitted system-Git baseline must prove its own semantic/security/resource/cross-platform obligations, but M02 V0.0 does not require adding an unadmitted alternative provider merely to create a comparison. Any future Rust-native/hybrid provider promotion requires differential comparison against the semantic reference and current baseline.
+**State:** ACCEPTED
