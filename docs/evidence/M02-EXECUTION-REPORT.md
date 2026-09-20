@@ -3,8 +3,8 @@
 Work Order: `CORE-WO-M02-001`
 Authorized base: `bae47b2021a897396109dfcf42e8632dde13ec21`
 Execution branch: `feat/m02-project-workspace-adapter`
-Final implementation head: `1cb2a73ac49113729d46ddd170cb8d8345672b31` (the exact product/calibration head; final evidence head is `eb0ec043a0ba1cc786b5b582fa2c3b240b168e1b`).
-Executor verdict: `BLOCKED` at the final evidence head; the executor does not approve or merge.
+Final implementation head: `1cb2a73ac49113729d46ddd170cb8d8345672b31` (the exact product/calibration head; latest qualified evidence head is `797f7bf81624fac78ab9557c9abecb3661817688`).
+Executor verdict: `READY_FOR_REVIEW`; the executor does not approve or merge.
 
 ## Packet commits
 
@@ -47,6 +47,7 @@ HIVE MCP was available and resolved CORE as project `c65b7abc-533a-411a-bbbb-2b7
 - Subsequent exact-head run `35525969586` at PR head `11e45647d3f0b9cf2f5a20e11d44de511e5b458c`: governance PASS; M02 Ubuntu PASS; M02 Windows PASS; M02 fuzz PASS. M02 Windows completed aggregate tests, cargo-deny, cargo-audit, SBOM and evidence upload successfully. M01 Windows was still running when recorded and is outside the M02 verdict.
 - Exact-head run `35526522996` at PR head `c4b46ec9a5d27e11eb3b80d61d6eb67a4a033297`: governance PASS; M02 Ubuntu PASS; M02 Windows PASS; M02 fuzz PASS. M02 Windows completed aggregate tests, cargo-deny, cargo-audit, SBOM and evidence upload successfully. M01 Windows was still running when recorded and is outside the M02 verdict.
 - Final evidence-head run `35527050540` at PR head `eb0ec043a0ba1cc786b5b582fa2c3b240b168e1b`: governance PASS; M02 fuzz PASS; M02 Windows failed at `Workspace and M02 tests`. The detailed hosted log was unavailable after connector authentication expiry; the required Windows gate is objectively red. M02 Ubuntu was still running when recorded.
+- Subsequent exact-head run `35527342471` at PR head `797f7bf81624fac78ab9557c9abecb3661817688`: governance PASS; M02 Ubuntu PASS; M02 Windows PASS; M02 fuzz PASS. M02 Windows completed aggregate tests, cargo-deny, cargo-audit, SBOM and evidence upload successfully. M01 Windows was still running when recorded and is outside the M02 verdict.
 
 ## Acceptance criteria 1–41
 
@@ -80,7 +81,7 @@ HIVE MCP was available and resolved CORE as project `c65b7abc-533a-411a-bbbb-2b7
 28. Typed resource exhaustion — budget validation/cache/hash tests.
 29. Unit/integration/property/adversarial suites — workspace test gate.
 30. Fuzz targets — `fuzz/fuzz_targets/m02_*.rs`, hosted bounded campaign.
-31. Ubuntu/Windows exact head — BLOCKED in final evidence-head run `35527050540`; M02 Windows job `106120930499` failed the aggregate workspace test step. Earlier runs `35525969586` and `35526522996` passed M02, but the final exact-head evidence is red.
+31. Ubuntu/Windows exact head — PASS in exact-head run `35527342471`; M02 Ubuntu job `106121697295` and M02 Windows job `106121697299` passed, including aggregate tests and Windows supply-chain gates. The intermittent legacy M01 timing/lease failure was not reproduced in this M02 qualification run.
 32. Supply chain/advisory/license/SBOM — deny/audit/SBOM workflow gates, PASS in hosted run `35523830976`.
 33. Zero LLM — `scripts/validate_m02.py` and deterministic code paths.
 34. Reproducible RCG — `M02-CALIBRATION-REPORT.md`, benchmark source.
@@ -94,4 +95,4 @@ HIVE MCP was available and resolved CORE as project `c65b7abc-533a-411a-bbbb-2b7
 
 ## Proposed Checkpoint Delta
 
-Stop at the final evidence-head hosted Windows failure. Resolve or quarantine the recurring unrelated legacy `core-runtime` lease/timing failure under its own governed scope, rerun the full required matrix at a new exact head, then request independent review before promotion. Retain HIVE degraded-currentness as an explicit assurance note; the executor does not self-promote the checkpoint or merge the implementation PR.
+Independent governed review remains required before promotion: review `CORE-WO-M02-001` at the exact implementation head, retain HIVE degraded-currentness as an explicit assurance note, record the final calibration report and hosted Ubuntu/Windows/security/SBOM/fuzz identities, and open M03 discovery only after the M02 promotion decision. The executor does not self-promote the checkpoint or merge the implementation PR.
