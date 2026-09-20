@@ -1666,3 +1666,295 @@ Still to freeze before M02 planning STOP CONDITION:
 - frozen Work Order, executor packet and FINAL STOP CONDITION.
 
 M02 implementation remains unauthorized.
+
+
+## Round 5 - Contract freeze, file map and dependency boundary
+
+### Round 5 objective
+
+Round 5 turns the M02 architecture into executor-addressable contracts without authorizing implementation.
+
+It freezes:
+- the v1 public data model;
+- canonical repository-graph wire semantics;
+- Basis Validity Matrix profiles;
+- Filesystem Semantics Capsule behavior;
+- the V0.0 Git provider baseline rule;
+- persistent-cache disposition;
+- the exact initial Rust crate/file map;
+- dependency constraints and no-new-dependency default.
+
+Exact numeric resource defaults remain benchmark-calibrated under CORE-D-080 and are intentionally deferred to the evidence-calibration round.
+
+### M02 v1 contract envelope
+
+Every durable/external M02 contract uses an explicit envelope:
+
+```text
+M02Envelope<T> {
+  schema: "nexlabs.core.workspace"
+  version: 1
+  kind
+  payload: T
+}
+```
+
+Rules:
+- unsupported schema/version fails typed;
+- canonical fingerprints operate on the semantic payload plus schema/version;
+- diagnostic timestamps, wall-clock durations and human display strings are excluded from semantic identity;
+- unordered collections are sorted canonically before DCS/fingerprint;
+- secret-bearing raw Git config/remotes are never serialized into durable contracts;
+- forward evolution uses a new version, not silent field reinterpretation.
+
+### Frozen identity contracts
+
+- `ProjectBindingId`: CORE action-plane binding identity; never a HIVE ID alias.
+- `WorkspaceId`: admitted local source authority + physical root identity.
+- `RepositoryId`: local repository boundary/common-dir/object-format identity; remotes excluded.
+- `WorktreeId`: concrete checkout identity, distinct from RepositoryId.
+- `WorkspaceGeneration`: monotonic within runtime epoch; any accepted correctness-relevant basis change increments it.
+
+All deterministic hashes reuse `core_identity::fingerprint`; M02 does not introduce a second canonical serializer/hash stack.
+
+### Frozen public contract set
+
+`WorkspaceAttachRequestV1`:
+- explicit locator/root;
+- optional expected ProjectBindingId / RepositoryId / WorktreeId;
+- requested assurance profile;
+- untracked policy;
+- nested-repository policy;
+- external-object policy;
+- resource-budget profile id;
+- optional HIVE association expectation.
+
+Ambient current working directory is never implicit authority.
+
+`AuthorityRootV1`:
+- AuthorityRootId;
+- authority class;
+- logical + canonical existing root;
+- physical root identity evidence;
+- FSC fingerprint;
+- provenance;
+- policy/security generation;
+- externality;
+- inspection profile.
+
+`RepositoryGraphV1`:
+- sorted RepositoryNodeV1 list;
+- sorted RepositoryEdgeV1 list;
+- canonical graph fingerprint.
+
+Node kinds:
+WORKSPACE_ROOT, REPOSITORY, WORKTREE, SUBMODULE_DECLARATION, SUBMODULE_MATERIALIZATION, NESTED_REPOSITORY, GIT_COMMON_DIR, EXTERNAL_OBJECT_STORE.
+
+Edge kinds:
+CONTAINS, CHECKOUT_OF, USES_COMMON_DIR, DECLARES_SUBMODULE, MATERIALIZES, NESTED_WITHIN, USES_OBJECT_STORE.
+
+Nodes sort by typed stable identity. Edges sort by (edge kind, source id, target id). Diagnostic timestamps are excluded.
+
+`GitEvidenceV1`:
+- provider id/version/provenance;
+- RepositoryId and optional WorktreeId;
+- bare/worktree mode;
+- object format;
+- HEAD object/ref state;
+- index semantic fingerprint;
+- tracked delta fingerprint;
+- untracked fingerprint under explicit policy;
+- submodule/gitlink evidence;
+- sparse-checkout declaration;
+- common-dir/git-dir identities;
+- admitted external-object evidence;
+- bounded diagnostic counters.
+
+`FilesystemSemanticsCapsuleV1`:
+- root physical identity;
+- namespace class;
+- canonical-path evidence source;
+- case semantics state;
+- symlink/reparse capability state;
+- normalization policy version;
+- evidence confidence/provenance.
+
+Case states remain CASE_SENSITIVE_VERIFIED, CASE_INSENSITIVE_VERIFIED, CASE_PRESERVING_UNKNOWN and UNKNOWN_UNSAFE_FOR_ALIAS_DECISION. OS family alone never proves case behavior.
+
+`WorkspaceBasisV1` component groups:
+IDENTITY, AUTHORITY, REPOSITORY_GRAPH, HEAD_STATE, INDEX_STATE, TRACKED_WORKTREE_STATE, UNTRACKED_WORKTREE_STATE, FILESYSTEM_SEMANTICS, CONFIG_GENERATION, SECURITY_POLICY, PROJECT_ASSOCIATION.
+
+Each component has schema/version, semantic fingerprint, provenance/provider generation, validity state and invalidation reasons.
+
+`WorkspaceBasisDiffV1`:
+- from/to generation;
+- changed component mask;
+- before/after fingerprints;
+- compact reason/provenance;
+- optional evidence refs;
+- no raw file inventory by default.
+
+`WorkspaceBindingReceiptV1` is durable evidence and never a live capability.
+
+`WorkspaceHandleV1` is runtime-ephemeral and carries runtime generation/boot epoch, WorkspaceId, WorkspaceGeneration, WorkspaceBasisFingerprint and validity-mask snapshot. A receipt cannot mint a handle without fresh validation.
+
+### BVM v1 profile freeze
+
+BVM uses a M02-owned fixed component mask, with no third-party bitflag dependency.
+
+READ_METADATA:
+IDENTITY + REPOSITORY_GRAPH + CONFIG_GENERATION + SECURITY_POLICY.
+
+READ_SOURCE:
+IDENTITY + AUTHORITY + FILESYSTEM_SEMANTICS + TRACKED_WORKTREE_STATE + UNTRACKED_WORKTREE_STATE + CONFIG_GENERATION + SECURITY_POLICY.
+
+PLAN_WORK:
+READ_SOURCE + REPOSITORY_GRAPH + HEAD_STATE + INDEX_STATE.
+
+EXECUTE_TOOL_READONLY:
+PLAN_WORK + action-boundary path revalidation.
+
+MUTATE_SOURCE:
+PLAN_WORK + fresh AUTHORITY/FILESYSTEM_SEMANTICS + fresh TRACKED/UNTRACKED basis at admission.
+
+GIT_DELIVERY:
+IDENTITY + AUTHORITY + REPOSITORY_GRAPH + HEAD_STATE + INDEX_STATE + TRACKED_WORKTREE_STATE + UNTRACKED_WORKTREE_STATE + CONFIG_GENERATION + SECURITY_POLICY.
+
+HIVE_RECONCILED is an assurance overlay requiring PROJECT_ASSOCIATION. BVM expresses freshness only, never permission.
+
+### FSC v1 probing freeze
+
+FSC is conservative and read-only:
+1. physically resolve existing roots under PAF;
+2. collect stable root/file identity through standard-library platform metadata where available;
+3. record namespace and symlink/reparse evidence;
+4. verify case semantics only with reliable evidence;
+5. otherwise emit UNKNOWN;
+6. never create probe files inside user source;
+7. non-existing targets inherit no speculative semantics beyond the proven ancestor;
+8. insufficient security-sensitive alias evidence fails closed or requires use-time proof.
+
+No new native dependency is admitted solely for FSC in the initial Work Order. Preflight may propose one only through a governed dependency-admission delta if the pinned Rust standard library cannot satisfy a frozen proof obligation.
+
+### V0.0 Git provider disposition
+
+The initial M02 Work Order requires a hardened system-Git adapter behind a provider-neutral `GitInspector` trait.
+
+It must pass GSI/SPO equivalence, security, cancellation and resource gates before promotion. This baseline choice minimizes duplicate Git semantics and additional supply-chain surface; it is not a claim that system Git is universally superior.
+
+Rust-native/hybrid alternatives remain FUTURE/CONDITIONAL and require separate evidence plus dependency admission.
+
+### Persistent cache disposition
+
+M02 V0.0 uses PEC L1/runtime-epoch cache only.
+
+Persistent L2 is FUTURE and outside the initial Work Order because correctness does not require it and its recovery/corruption/key/secret lifecycle would expand M02. No cache database dependency is admitted.
+
+### Watcher implementation disposition
+
+EIS/CIG and typed EventHint ingestion are required. OS watcher adapters are not required for M02 V0.0 correctness.
+
+Initial implementation includes deterministic manual/Noop hint sources and overflow/loss semantics. Linux/Windows/macOS watcher adapters remain later optimizations, avoiding a watcher dependency before measured need.
+
+### Exact initial crate map
+
+New crate: `crates/core-workspace/`
+
+```text
+crates/core-workspace/
+  Cargo.toml
+  src/
+    lib.rs
+    contracts.rs
+    state.rs
+    identity.rs
+    authority.rs
+    repository.rs
+    basis.rs
+    association.rs
+    reconcile.rs
+    invalidation.rs
+    cache.rs
+    hashing.rs
+    service.rs
+    git/
+      mod.rs
+      system.rs
+  tests/
+    attach.rs
+    identity.rs
+    authority.rs
+    repository_graph.rs
+    git_system.rs
+    reconciliation.rs
+    invalidation.rs
+    cache.rs
+    hashing.rs
+    drift.rs
+    adversarial.rs
+    fixtures/
+      README.md
+  benches/
+    m02_workspace.rs
+```
+
+Existing files expected to change:
+- `Cargo.toml`;
+- `Cargo.lock`;
+- `crates/core-contracts/src/lib.rs`;
+- `crates/core-config/src/lib.rs`;
+- `crates/core-cli/src/main.rs` only for bounded diagnostic commands required by acceptance tests;
+- `fuzz/Cargo.toml`;
+- `fuzz/fuzz_targets/m02_path_authority.rs`;
+- `fuzz/fuzz_targets/m02_repository_graph.rs`;
+- `fuzz/fuzz_targets/m02_git_evidence.rs`;
+- `.github/workflows/governance.yml`;
+- `docs/evidence/M02-EXECUTION-REPORT.md`.
+
+No other crate split is authorized without Correction Delta.
+
+### Dependency rules
+
+Initial `core-workspace` dependencies are restricted to:
+- core-contracts;
+- core-identity;
+- core-config;
+- workspace serde;
+- workspace serde_json;
+- workspace sha2;
+- workspace thiserror;
+- workspace tokio.
+
+Root Tokio may add only the `process` and `fs` features if M02 preflight confirms they are needed.
+
+No gix, git2, watcher framework, database, glob/walk framework or platform FFI crate is admitted by this round.
+
+The executor cannot add a third-party dependency for convenience. If a frozen proof obligation cannot be met, execution stops with a dependency-admission Correction Delta containing security, supply-chain and performance justification.
+
+### Internal dependency direction
+
+```text
+core-contracts
+      ^
+      |
+core-identity     core-config
+      ^              ^
+       \            /
+        core-workspace
+             ^
+             |
+       later modules
+```
+
+`core-workspace` MUST NOT depend on core-runtime, core-cli, core-health, M03+ crates or HIVE code. Runtime epoch/generation data crosses through core-contracts.
+
+### Round 5 unresolved items
+
+Before M02 planning STOP CONDITION:
+- benchmark/calibration evidence for exact resource defaults;
+- final acceptance thresholds from that evidence;
+- final WMF/DWS acceleration disposition;
+- final executor Work Order and Context Lock;
+- final planning audit/freeze.
+
+M02 implementation remains unauthorized.
