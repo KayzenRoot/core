@@ -1338,7 +1338,8 @@ impl Supervisor {
             JournalDurability::SyncRequired,
             [],
         )?;
-        let active_leases = self.capabilities.total_active_leases();
+        let mut lease_changes = self.capabilities.subscribe_lease_changes();
+        let mut active_leases = self.capabilities.total_active_leases();
         self.lifecycle.journal_mut().append(
             self.config.generation.boot_epoch,
             JournalRecordKind::LeaseDrainStarted,
@@ -1357,14 +1358,33 @@ impl Supervisor {
             JournalDurability::SyncRequired,
             [("active_leases".into(), active_leases.to_string())],
         )?;
-        while self.capabilities.total_active_leases() > 0 {
+        while active_leases > 0 {
             let remaining = shutdown_deadline.saturating_duration_since(TokioInstant::now());
             if remaining.is_zero() {
                 break;
             }
-            tokio::time::sleep(std::cmp::min(remaining, Duration::from_millis(1))).await;
+            let deadline_sleep = tokio::time::sleep(remaining);
+            let expiry_sleep = tokio::time::sleep(
+                self.capabilities
+                    .next_lease_expiry()
+                    .map_or(remaining, |expiry| std::cmp::min(remaining, expiry)),
+            );
+            tokio::pin!(deadline_sleep);
+            tokio::pin!(expiry_sleep);
+            tokio::select! {
+                changed = lease_changes.changed() => {
+                    if changed.is_err() {
+                        break;
+                    }
+                    active_leases = self.capabilities.total_active_leases();
+                }
+                _ = &mut deadline_sleep => break,
+                _ = &mut expiry_sleep => {
+                    active_leases = self.capabilities.total_active_leases();
+                }
+            }
         }
-        let active_leases = self.capabilities.total_active_leases();
+        active_leases = self.capabilities.total_active_leases();
         if active_leases == 0 {
             self.lifecycle.journal_mut().append(
                 self.config.generation.boot_epoch,
@@ -1893,7 +1913,7 @@ mod tests {
     #[tokio::test]
     async fn lease_expiration_completes_before_shutdown_deadline() {
         let mut shutdown_config = config("lease-before-deadline");
-        shutdown_config.shutdown_timeout_ms = 80;
+        shutdown_config.shutdown_timeout_ms = 1_000;
         let mut supervisor = Supervisor::new(shutdown_config).unwrap();
         supervisor.bootstrap().await.unwrap();
         supervisor
@@ -1916,7 +1936,9 @@ mod tests {
             .capabilities()
             .acquire_lease_with_generation("health", &generation, 10)
             .unwrap();
+        let started = Instant::now();
         let receipt = supervisor.shutdown().await.unwrap();
+        assert!(started.elapsed() < Duration::from_millis(800));
         assert!(receipt.clean);
         let records = supervisor.lifecycle.journal.read_validated().unwrap();
         assert!(records
@@ -1925,6 +1947,147 @@ mod tests {
         assert!(!records
             .iter()
             .any(|record| record.kind == JournalRecordKind::LeaseDrainTimedOut));
+    }
+
+    #[tokio::test]
+    async fn lease_released_from_separate_task_wakes_qds_before_deadline() {
+        let mut shutdown_config = config("lease-release-wakes-qds");
+        shutdown_config.shutdown_timeout_ms = 1_000;
+        let mut supervisor = Supervisor::new(shutdown_config).unwrap();
+        supervisor.bootstrap().await.unwrap();
+        supervisor
+            .capabilities()
+            .register_provider(provider(
+                "native",
+                "core",
+                "health",
+                ProviderOrigin::CoreNative,
+                90,
+            ))
+            .unwrap();
+        let requirement = CapabilityRequirement::new("health", SemVer::new(1, 0, 0));
+        let generation = supervisor.status().generation;
+        supervisor
+            .capabilities()
+            .bind_with_generation(&requirement, "release-wakes-qds", &generation)
+            .unwrap();
+        let lease = supervisor
+            .capabilities()
+            .acquire_lease("health", 17, 30_000)
+            .unwrap();
+        let capabilities = supervisor.capabilities().clone();
+        let releaser = tokio::spawn(async move {
+            tokio::time::sleep(Duration::from_millis(40)).await;
+            capabilities.release_lease(&lease).unwrap();
+        });
+
+        let started = Instant::now();
+        let receipt = supervisor.shutdown().await.unwrap();
+        let elapsed = started.elapsed();
+        releaser.await.unwrap();
+
+        assert!(receipt.clean, "lease release receipt: {receipt:?}");
+        assert!(elapsed < Duration::from_millis(900));
+        let records = supervisor.lifecycle.journal.read_validated().unwrap();
+        assert!(records
+            .iter()
+            .any(|record| record.kind == JournalRecordKind::LeaseDrainCompleted));
+    }
+
+    #[tokio::test]
+    async fn unreleased_lease_times_out_only_after_shutdown_deadline() {
+        let timeout_ms = 50;
+        let mut shutdown_config = config("unreleased-lease-deadline");
+        shutdown_config.shutdown_timeout_ms = timeout_ms;
+        let mut supervisor = Supervisor::new(shutdown_config).unwrap();
+        supervisor.bootstrap().await.unwrap();
+        supervisor
+            .capabilities()
+            .register_provider(provider(
+                "native",
+                "core",
+                "health",
+                ProviderOrigin::CoreNative,
+                90,
+            ))
+            .unwrap();
+        let requirement = CapabilityRequirement::new("health", SemVer::new(1, 0, 0));
+        let generation = supervisor.status().generation;
+        supervisor
+            .capabilities()
+            .bind_with_generation(&requirement, "unreleased-lease", &generation)
+            .unwrap();
+        let lease = supervisor
+            .capabilities()
+            .acquire_lease("health", 17, 30_000)
+            .unwrap();
+        let capabilities = supervisor.capabilities().clone();
+
+        let started = Instant::now();
+        let receipt = supervisor.shutdown().await.unwrap();
+        let elapsed = started.elapsed();
+        capabilities.release_lease(&lease).unwrap();
+
+        assert!(!receipt.clean, "unreleased lease must be residual");
+        assert!(elapsed >= Duration::from_millis(timeout_ms));
+        assert!(receipt
+            .items
+            .iter()
+            .any(|item| { item.subject == "critical-capability-leases" && !item.satisfied }));
+    }
+
+    #[tokio::test]
+    async fn multiple_leases_release_in_different_order_without_lost_notifications() {
+        let mut shutdown_config = config("multiple-lease-release-order");
+        shutdown_config.shutdown_timeout_ms = 500;
+        let mut supervisor = Supervisor::new(shutdown_config).unwrap();
+        supervisor.bootstrap().await.unwrap();
+        supervisor
+            .capabilities()
+            .register_provider(provider(
+                "native",
+                "core",
+                "health",
+                ProviderOrigin::CoreNative,
+                90,
+            ))
+            .unwrap();
+        let requirement = CapabilityRequirement::new("health", SemVer::new(1, 0, 0));
+        let generation = supervisor.status().generation;
+        supervisor
+            .capabilities()
+            .bind_with_generation(&requirement, "multiple-release-order", &generation)
+            .unwrap();
+        let leases = (0..3)
+            .map(|_| {
+                supervisor
+                    .capabilities()
+                    .acquire_lease("health", 17, 30_000)
+                    .unwrap()
+            })
+            .collect::<Vec<_>>();
+        let capabilities = supervisor.capabilities().clone();
+        let release_order = vec![leases[1].clone(), leases[2].clone(), leases[0].clone()];
+        let releaser = tokio::spawn(async move {
+            let mut released = Vec::new();
+            for (index, lease) in release_order.into_iter().enumerate() {
+                tokio::time::sleep(Duration::from_millis(20)).await;
+                let lease_id = lease.lease_id.clone();
+                capabilities.release_lease(&lease).unwrap();
+                released.push((index, lease_id));
+            }
+            released
+        });
+
+        let receipt = supervisor.shutdown().await.unwrap();
+        let released = releaser.await.unwrap();
+
+        assert_eq!(released.len(), 3);
+        assert!(receipt.clean, "multiple lease receipt: {receipt:?}");
+        assert!(receipt
+            .items
+            .iter()
+            .any(|item| item.subject == "critical-capability-leases" && item.satisfied));
     }
 
     #[tokio::test]

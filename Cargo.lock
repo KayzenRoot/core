@@ -200,6 +200,7 @@ dependencies = [
  "core-identity",
  "serde",
  "thiserror",
+ "tokio",
 ]
 
 [[package]]

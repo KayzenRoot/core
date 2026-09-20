@@ -9,9 +9,10 @@ use core_contracts::{
 use core_identity::fingerprint;
 use serde::Serialize;
 use std::collections::{BTreeMap, BTreeSet};
-use std::sync::{Arc, RwLock};
+use std::sync::{Arc, Mutex, RwLock};
 use std::time::Instant;
 use thiserror::Error;
+use tokio::sync::watch;
 
 #[derive(Debug, Error)]
 pub enum RegistryError {
@@ -134,6 +135,27 @@ fn validate_manifest(manifest: &ModuleManifest) -> Result<(), RegistryError> {
 #[derive(Debug, Clone)]
 pub struct CapabilityRegistry {
     inner: Arc<RwLock<RegistryState>>,
+    lease_changes: watch::Sender<u64>,
+    lease_revision: Arc<Mutex<u64>>,
+}
+
+#[derive(Debug, Clone)]
+pub struct LeaseChangeSubscription {
+    receiver: watch::Receiver<u64>,
+}
+
+impl LeaseChangeSubscription {
+    pub fn revision(&self) -> u64 {
+        *self.receiver.borrow()
+    }
+
+    pub fn has_changed(&self) -> Result<bool, watch::error::RecvError> {
+        self.receiver.has_changed()
+    }
+
+    pub async fn changed(&mut self) -> Result<(), watch::error::RecvError> {
+        self.receiver.changed().await
+    }
 }
 
 #[derive(Debug)]
@@ -254,7 +276,7 @@ impl RegistryState {
         }
     }
 
-    fn prune_expired(&mut self) {
+    fn prune_expired(&mut self) -> bool {
         let now = self.now_ms();
         let expired: Vec<_> = self
             .leases
@@ -268,10 +290,12 @@ impl RegistryState {
                 )
             })
             .collect();
+        let changed = !expired.is_empty();
         for (lease_id, capability, generation) in expired {
             self.leases.remove(&lease_id);
             self.decrement_lease(&capability, generation);
         }
+        changed
     }
 }
 
@@ -283,11 +307,35 @@ impl Default for CapabilityRegistry {
 
 impl CapabilityRegistry {
     pub fn new() -> Self {
+        let (lease_changes, _) = watch::channel(0_u64);
         Self {
             inner: Arc::new(RwLock::new(RegistryState {
                 next_generation: 1,
                 ..Default::default()
             })),
+            lease_changes,
+            lease_revision: Arc::new(Mutex::new(0)),
+        }
+    }
+
+    pub fn subscribe_lease_changes(&self) -> LeaseChangeSubscription {
+        LeaseChangeSubscription {
+            receiver: self.lease_changes.subscribe(),
+        }
+    }
+
+    fn publish_lease_change(&self) {
+        let mut revision = self
+            .lease_revision
+            .lock()
+            .expect("lease revision lock poisoned");
+        *revision = revision.saturating_add(1);
+        self.lease_changes.send_replace(*revision);
+    }
+
+    fn prune_expired(&self, state: &mut RegistryState) {
+        if state.prune_expired() {
+            self.publish_lease_change();
         }
     }
 
@@ -386,7 +434,7 @@ impl CapabilityRegistry {
         runtime_generation: Option<&RuntimeGeneration>,
     ) -> Result<CapabilityBindingReceipt, RegistryError> {
         let mut state = self.inner.write().expect("registry lock poisoned");
-        state.prune_expired();
+        self.prune_expired(&mut state);
         let provider = resolve_from_state(&state, requirement)?;
         let generation = state.next_generation;
         state.next_generation = state.next_generation.saturating_add(1);
@@ -449,7 +497,7 @@ impl CapabilityRegistry {
         ttl_ms: u64,
     ) -> Result<CapabilityLease, RegistryError> {
         let mut state = self.inner.write().expect("registry lock poisoned");
-        state.prune_expired();
+        self.prune_expired(&mut state);
         let lease_id = format!("lease-{}", state.next_lease);
         state.next_lease = state.next_lease.saturating_add(1);
         let expires_at_monotonic_ms = state.now_ms().saturating_add(ttl_ms);
@@ -497,6 +545,7 @@ impl CapabilityRegistry {
                 safety_critical: assurance == AssuranceClass::Critical,
             },
         );
+        self.publish_lease_change();
         Ok(CapabilityLease {
             schema: SchemaVersion::CURRENT,
             lease_id,
@@ -527,7 +576,7 @@ impl CapabilityRegistry {
             return Err(RegistryError::StaleLease);
         }
         let mut state = self.inner.write().expect("registry lock poisoned");
-        state.prune_expired();
+        self.prune_expired(&mut state);
         let now = state.now_ms();
         let record = state
             .leases
@@ -569,7 +618,7 @@ impl CapabilityRegistry {
 
     pub fn release_lease(&self, lease: &CapabilityLease) -> Result<(), RegistryError> {
         let mut state = self.inner.write().expect("registry lock poisoned");
-        state.prune_expired();
+        self.prune_expired(&mut state);
         let record = state
             .leases
             .get(&lease.lease_id)
@@ -589,17 +638,19 @@ impl CapabilityRegistry {
         }
         state.leases.remove(&lease.lease_id);
         state.decrement_lease(&lease.capability, lease.binding_generation);
+        self.publish_lease_change();
         Ok(())
     }
 
     pub fn revoke_lease(&self, lease_id: &str) -> Result<(), RegistryError> {
         let mut state = self.inner.write().expect("registry lock poisoned");
-        state.prune_expired();
+        self.prune_expired(&mut state);
         let record = state
             .leases
             .remove(lease_id)
             .ok_or(RegistryError::StaleLease)?;
         state.decrement_lease(&record.capability, record.binding_generation);
+        self.publish_lease_change();
         Ok(())
     }
 
@@ -613,13 +664,25 @@ impl CapabilityRegistry {
 
     pub fn total_active_leases(&self) -> u64 {
         let mut state = self.inner.write().expect("registry lock poisoned");
-        state.prune_expired();
+        self.prune_expired(&mut state);
         state.leases.len() as u64
+    }
+
+    pub fn next_lease_expiry(&self) -> Option<std::time::Duration> {
+        let state = self.inner.read().expect("registry lock poisoned");
+        let now = state.now_ms();
+        state
+            .leases
+            .values()
+            .map(|lease| {
+                std::time::Duration::from_millis(lease.expires_at_monotonic_ms.saturating_sub(now))
+            })
+            .min()
     }
 
     pub fn active_lease_summary(&self) -> ActiveLeaseSummary {
         let mut state = self.inner.write().expect("registry lock poisoned");
-        state.prune_expired();
+        self.prune_expired(&mut state);
         ActiveLeaseSummary {
             total: state.leases.len() as u64,
             safety_critical: state
@@ -1154,6 +1217,48 @@ mod tests {
             registry.validate_lease(&lease, &RuntimeGeneration::new(4)),
             Err(RegistryError::StaleLease)
         ));
+    }
+
+    #[tokio::test]
+    async fn lease_change_notifications_cover_lifecycle_and_boundaries() {
+        let registry = CapabilityRegistry::new();
+        registry
+            .register_provider(provider(
+                "native",
+                "core",
+                "health",
+                ProviderOrigin::CoreNative,
+                90,
+            ))
+            .unwrap();
+        let requirement = CapabilityRequirement::new("health", SemVer::new(1, 0, 0));
+        registry.bind(&requirement, "startup").unwrap();
+
+        let lease = registry.acquire_lease("health", 4, 1_000).unwrap();
+        let mut after_acquire = registry.subscribe_lease_changes();
+        registry.release_lease(&lease).unwrap();
+        after_acquire.changed().await.unwrap();
+        assert_eq!(registry.total_active_leases(), 0);
+
+        let lease = registry.acquire_lease("health", 4, 1_000).unwrap();
+        registry.release_lease(&lease).unwrap();
+        let after_release = registry.subscribe_lease_changes();
+        assert_eq!(registry.total_active_leases(), 0);
+        assert!(!after_release.has_changed().unwrap());
+
+        let expiring = registry.acquire_lease("health", 4, 0).unwrap();
+        let expiry_subscription = registry.subscribe_lease_changes();
+        assert_eq!(registry.total_active_leases(), 0);
+        assert!(expiry_subscription.has_changed().unwrap());
+        assert!(registry
+            .validate_lease(&expiring, &RuntimeGeneration::new(4))
+            .is_err());
+
+        let revocable = registry.acquire_lease("health", 4, 1_000).unwrap();
+        let mut revoke_subscription = registry.subscribe_lease_changes();
+        registry.revoke_lease(&revocable.lease_id).unwrap();
+        revoke_subscription.changed().await.unwrap();
+        assert_eq!(registry.total_active_leases(), 0);
     }
 
     #[test]
