@@ -2244,3 +2244,18 @@ After APPROVED promotion, only a bounded execution-admission delta may:
 - mark `CORE-WO-M02-001` as the active Work Order.
 
 No architecture, scope, dependency or acceptance semantics may change during that admission delta.
+
+
+## Execution admission
+
+The final M02 planning freeze was APPROVED by Review 005 (canonical Issue #35) and promoted through PR #33 at merge `bae47b2021a897396109dfcf42e8632dde13ec21`.
+
+The bounded execution-admission delta now activates:
+- `CORE-WO-M02-001`;
+- the M02 Context Lock against the approved product base;
+- ELEVATED assurance;
+- M02-only implementation authority.
+
+No architecture, scope, dependency, contract, acceptance criterion, technology disposition or STOP CONDITION changes in this admission.
+
+Codex execution remains governed by Packets A-H, mandatory RCG calibration and independent exact-head review before any completion promotion.
