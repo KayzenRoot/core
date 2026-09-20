@@ -28,6 +28,7 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - CORE-WO-M01-001 completed with governed Review 011 APPROVED.
 - CAL admission close/acquire race fixed and proven under active QDS DRAINING.
 - M01 final evidence normalized and exact-head workflow validated.
+- M02 Rounds 1–3 discovery baseline exact-head reviewed (Review 001 / Issue #26) and promoted through PR #23.
 
 ## PENDING
 - Deep-plan M02 through M24 in dependency order.
@@ -53,6 +54,10 @@ Deep-plan M02 Project / Workspace Adapter using the same freeze-before-execution
 - Review 011 / Issue #20
 - Final reviewed PR #17
 - M01 correction merge `d70b4296afbba93e8849ab6160e9b1caf5281e7d`
+- M02 Review 001 / Issue #26 — APPROVED
+- M02 discovery PR #23
+- M02 Rounds 1–3 promotion merge `2556f1d380efe59f0b14cb1392c4aa9fb19efa2d`
+- M02 exact-head workflow #66 `35506655672` — Governance, Ubuntu, Windows and fuzz SUCCESS
 
 ## M01 completion record
 Frozen Work Order: `CORE-WO-M01-001`
@@ -68,6 +73,15 @@ Result: M01 COMPLETE. No unresolved HIGH/CRITICAL finding recorded at final prom
 Planning freeze basis: `d3a5772f0cb427bd8a9d7ff0c5182243e64cd6d7`
 The former M01 execution-ready instructions are historical and no longer represent the legal next action.
 
+
+## M02 discovery baseline promotion record
+Rounds promoted: 1–3
+Exact governed review head: `1a8e80d20779e83d656f791ebae64ae44194d812`
+Governed review: Review 001 / Issue #26 — APPROVED
+Reviewed PR: #23
+Exact-head workflow: run #66 `35506655672` — Governance, Ubuntu, Windows and fuzz SUCCESS
+Promotion merge: `2556f1d380efe59f0b14cb1392c4aa9fb19efa2d`
+Result: Rounds 1–3 accepted as the M02 discovery baseline. M02 implementation remains unauthorized.
 
 ## Current M02 discovery delta
 Round 1 established M02 as the deterministic Project / Workspace Adapter between local Git/filesystem state and optional HIVE Project Registry identity.
