@@ -113,7 +113,7 @@
       "runId": 35523152898,
       "workflow": "CI",
       "candidateProductHead": "1cb2a73ac49113729d46ddd170cb8d8345672b31",
-      "prHead": "3e4cf33979d0bdb955d765c9e03bfccfda6e2891",
+      "evidenceHead": "3e4cf33979d0bdb955d765c9e03bfccfda6e2891",
       "governanceJob": 106110623118,
       "m02UbuntuJob": 106110623239,
       "m02WindowsJob": 106110623250,
@@ -127,6 +127,28 @@
       "m02FuzzResult": "PASS",
       "governanceResult": "PASS",
       "m01WindowsResult": "IN_PROGRESS_UNRELATED_LEGACY_JOB"
+    },
+    {
+      "runId": 35523830976,
+      "workflow": "CI",
+      "candidateProductHead": "1cb2a73ac49113729d46ddd170cb8d8345672b31",
+      "evidenceHead": "2da2f95ab2f3096f68ffc4032a404bb8e36eeb9a",
+      "governanceJob": 106112421606,
+      "m02UbuntuJob": 106112421643,
+      "m02WindowsJob": 106112421607,
+      "m02FuzzJob": 106112421582,
+      "m01UbuntuJob": 106112421499,
+      "m01WindowsJob": 106112421521,
+      "m01FuzzJob": 106112421489,
+      "m02Result": "PASS",
+      "m02UbuntuResult": "PASS",
+      "m02WindowsResult": "PASS",
+      "m02FuzzResult": "PASS",
+      "governanceResult": "PASS",
+      "m01UbuntuResult": "PASS",
+      "m01FuzzResult": "PASS",
+      "m01WindowsResult": "FAIL_UNRELATED_LEGACY_TEST",
+      "m01WindowsFailure": "core-runtime::multiple_leases_release_in_different_order_without_lost_notifications; active capability lease remains"
     }
   ],
   "failuresAndCorrections": [
@@ -137,7 +159,7 @@
   ],
   "residualRisks": [
     "HIVE index/checkpoint is stale for this execution checkout; canonical Git remains truth",
-    "M01 Windows legacy job 106110623256 was still in progress when M02 reached READY_FOR_REVIEW and is outside CORE-WO-M02-001 scope",
+    "M01 Windows legacy job 106112421521 failed in core-runtime lease timing/notification coverage and is outside CORE-WO-M02-001 scope",
     "Independent review and approval are not executor-controlled"
   ],
   "proposedCheckpointDelta": "Promote CORE-WO-M02-001 only after hosted Ubuntu/Windows, supply-chain/advisory/SBOM/fuzz gates and independent review are green at the exact implementation candidate; retain HIVE stale-currentness note.",

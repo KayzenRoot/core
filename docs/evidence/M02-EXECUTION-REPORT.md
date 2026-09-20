@@ -40,7 +40,7 @@ HIVE MCP was available and resolved CORE as project `c65b7abc-533a-411a-bbbb-2b7
 - Local cargo-deny/cargo-audit: unavailable in the executor environment; hosted exact-head cargo-deny, cargo-audit, license and SBOM gates PASS on Ubuntu and Windows in run `35523152898`.
 - Hosted first exact-head attempt found the Unix traversal-separator defect in M02 lib tests; corrected in `98615a8`.
 - Hosted second exact-head attempt found `cargo-deny` wildcard path dependencies; versions were declared for the three admitted local dependencies in `1cb2a73`.
-- Final hosted run `35523152898`: governance PASS; M02 Ubuntu PASS; M02 Windows PASS; M02 fuzz PASS; M01 Ubuntu PASS; M01 fuzz PASS. M01 Windows job `106110623256` remained in progress at the time of this M02 verdict and is outside this Work Order's scope.
+- Final hosted run `35523830976` at evidence head `2da2f95ab2f3096f68ffc4032a404bb8e36eeb9a`: governance PASS; M02 Ubuntu PASS; M02 Windows PASS; M02 fuzz PASS; M01 Ubuntu PASS; M01 fuzz PASS. M01 Windows job `106112421521` failed only in the unrelated legacy test `core-runtime::multiple_leases_release_in_different_order_without_lost_notifications` with an active capability lease residual.
 
 ## Acceptance criteria 1–41
 
@@ -74,8 +74,8 @@ HIVE MCP was available and resolved CORE as project `c65b7abc-533a-411a-bbbb-2b7
 28. Typed resource exhaustion — budget validation/cache/hash tests.
 29. Unit/integration/property/adversarial suites — workspace test gate.
 30. Fuzz targets — `fuzz/fuzz_targets/m02_*.rs`, hosted bounded campaign.
-31. Ubuntu/Windows exact head — `m02` workflow matrix, PASS in hosted run `35523152898` (jobs `106110623239` and `106110623250`).
-32. Supply chain/advisory/license/SBOM — deny/audit/SBOM workflow gates, PASS in hosted run `35523152898`.
+31. Ubuntu/Windows exact head — `m02` workflow matrix, PASS in hosted run `35523830976` (jobs `106112421643` and `106112421607`).
+32. Supply chain/advisory/license/SBOM — deny/audit/SBOM workflow gates, PASS in hosted run `35523830976`.
 33. Zero LLM — `scripts/validate_m02.py` and deterministic code paths.
 34. Reproducible RCG — `M02-CALIBRATION-REPORT.md`, benchmark source.
 35. Finite measured defaults — calibration report and `WorkspaceResourceBudget::finalized`.
