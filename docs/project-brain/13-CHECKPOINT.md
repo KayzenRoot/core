@@ -1,7 +1,7 @@
 # CORE Checkpoint
 
 ## STATUS
-PRODUCT DISCOVERY ACTIVE / M01 PLANNING FROZEN / EXECUTION READY
+M01 COMPLETED / M02 PLANNING READY
 
 ## VERSION
 CORE V0.0 - Discovery Baseline
@@ -13,8 +13,8 @@ CORE V0.0 - Discovery Baseline
 Plan CORE as the headless NexLabs action plane that operates standalone and synchronizes deeply with HIVE without duplicating HIVE-owned intelligence.
 
 ## IN PROGRESS
-- M01 implementation handoff via CORE-WO-M01-001.
-- M02-M24 remain discovery-only.
+- M02 Project / Workspace Adapter planning.
+- M03-M24 remain discovery-only.
 
 ## COMPLETED
 - Repository/bootstrap foundation approved and promoted.
@@ -27,6 +27,8 @@ Plan CORE as the headless NexLabs action plane that operates standalone and sync
 - Default implementation granularity: one complete module per large bounded Work Order when safe.
 - ACS, TSS, EOF, ENS, PCE and NSP recorded as research candidates.
 - M01 initial executor-ready target file map recorded.
+- M01 CORE Runtime & Lifecycle implemented, exact-head reviewed and promoted via PR #8.
+- CORE-WO-M01-001 completed with governed Review 008 APPROVED.
 
 ## PENDING
 - Plan M02 through M24 in dependency order.
@@ -35,11 +37,11 @@ Plan CORE as the headless NexLabs action plane that operates standalone and sync
 - GitHub main ruleset activation when authorized admin mutation is available.
 
 ## BLOCKERS
-- None for M01 executor handoff.
+- None for M02 planning.
 - M02-M24 product implementation remains gated until each target module plan is frozen.
 
 ## NEXT STEP
-Execute CORE-WO-M01-001 in Codex using Packets A-H, collect exact-head evidence, then run governed review before promotion.
+Deep-plan M02 Project / Workspace Adapter using the same freeze-before-execution model; do not authorize M02 implementation until its plan and Work Order are frozen.
 
 ## EVIDENCE
 - `docs/engineering/CORE-MODULAR-DELIVERY-MODEL.md`
@@ -61,3 +63,13 @@ Frozen Work Order: `docs/work-orders/CORE-WO-M01-001.md`
 Freeze basis commit: `d3a5772f0cb427bd8a9d7ff0c5182243e64cd6d7`
 Execution scope: M01 only.
 Next legal action: hand CORE-WO-M01-001 to Codex, execute Packets A-H, collect exact-head evidence, then perform governed review before any completion/promotion claim.
+
+
+## M01 completion record
+Work Order: `CORE-WO-M01-001`
+Implementation PR: `#8`
+Approved exact head: `8834385b322d5982217a17d11573db5e072e29b0`
+Governed review: `M01-REVIEW-008` / Issue #14 — APPROVED
+Promotion merge: `8f0820188130613caa6890c82d43225d9a317947`
+Workflow evidence: run #45 `35481698068` — Governance, Ubuntu, Windows and fuzz SUCCESS.
+Result: M01 COMPLETE. No unresolved HIGH/CRITICAL finding recorded at promotion.

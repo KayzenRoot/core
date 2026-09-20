@@ -4,12 +4,12 @@
   "promptMode": "GEF_V1_HIVE_FIRST",
   "reviewMode": "DELTA_EXACT_HEAD",
   "assuranceMode": "STANDARD_PLUS",
-  "productStage": "M01_EXECUTION_READY",
-  "nextLegalAction": "EXECUTE_CORE_WO_M01_001",
-  "productImplementationAuthorized": true,
+  "productStage": "M01_COMPLETE_M02_PLANNING_READY",
+  "nextLegalAction": "PLAN_M02_PROJECT_WORKSPACE_ADAPTER",
+  "productImplementationAuthorized": false,
   "canonicalCheckpoint": "docs/project-brain/13-CHECKPOINT.md",
-  "lastCompletedWorkOrder": "CORE-WO-0001",
-  "lastPromotedMerge": "e669498558e6f129efd8a8f2e20679f28e8326a7",
-  "authorizedScope": "M01_ONLY",
-  "activeWorkOrder": "CORE-WO-M01-001"
+  "lastCompletedWorkOrder": "CORE-WO-M01-001",
+  "lastPromotedMerge": "8f0820188130613caa6890c82d43225d9a317947",
+  "authorizedScope": "NONE",
+  "activeWorkOrder": null
 }

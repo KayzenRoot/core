@@ -2,8 +2,8 @@
   "schemaVersion": "core-gef-checkpoint-bridge-v1",
   "viewStatus": "DERIVED_VIEW",
   "canonicalCheckpoint": "docs/project-brain/13-CHECKPOINT.md",
-  "status": "PRODUCT DISCOVERY ACTIVE / M01 PLANNING FROZEN / EXECUTION READY",
+  "status": "M01 COMPLETED / M02 PLANNING READY",
   "version": "CORE V0.0 - Discovery Baseline",
   "phase": "1 - Modular Product Discovery",
-  "nextStep": "Execute CORE-WO-M01-001 in Codex using Packets A-H, collect exact-head evidence, then run governed review before promotion."
+  "nextStep": "Deep-plan M02 Project / Workspace Adapter using the same freeze-before-execution model; do not authorize M02 implementation until its plan and Work Order are frozen."
 }
