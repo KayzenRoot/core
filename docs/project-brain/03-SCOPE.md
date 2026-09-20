@@ -1,6 +1,6 @@
 # CORE Scope
 
-Status: `BOOTSTRAP_BASELINE`
+Status: `PRODUCT_DISCOVERY_ACTIVE`
 
 ## NECESSARY - bootstrap
 
@@ -38,3 +38,41 @@ To be classified during governed discovery. No future capability is admitted mer
 - When compatible HIVE is available, CORE consumes HIVE-owned intelligence through contracts instead of duplicating HIVE subsystems.
 - Default delivery granularity is one complete planned module per bounded Codex Work Order when safe.
 - Product planning must provide executor-ready file maps, contracts, invariants and tests before implementation.
+
+
+## M02 Project / Workspace Adapter scope
+
+### NECESSARY
+- deterministic explicit workspace attachment and identity;
+- distinct ProjectBinding / Workspace / Repository / Worktree identities;
+- read-only Git/filesystem basis inspection;
+- typed SOURCE/GIT_METADATA/EXTERNAL_OBJECT/TEMP authority roots;
+- path containment/escape proof before later action modules;
+- workspace drift detection and action-boundary freshness validation;
+- standalone operation with explicit HIVE reconciliation when available;
+- canonical WorkspaceBasis fingerprints/diffs and compact binding receipts;
+- bounded zero-LLM evidence, hashing and revalidation;
+- deterministic invalidation and proof-cache semantics.
+
+### IMPORTANT
+- watcher-driven invalidation hints for lower revalidation cost;
+- L1 proof reuse/coalescing;
+- differential GitInspector provider evaluation;
+- WMF/DWS acceleration where equivalence is proven;
+- compact evidence surfaces that reduce HIVE/LLM downstream context.
+
+### FUTURE / CONDITIONAL
+- persistent L2 proof cache after recovery/corruption/secret-safety design;
+- hybrid or Rust-native GitInspector acceleration after semantic/security/benchmark proof;
+- additional platform watcher providers outside supported CI targets.
+
+### OUT OF SCOPE FOR M02
+- source mutation or patch application;
+- Git checkout/reset/branch/commit/merge/push/fetch;
+- repository repair;
+- network access to Git remotes;
+- HIVE RAG/memory/repository-intelligence duplication;
+- runtime sandbox enforcement owned by M11;
+- Git/GitHub delivery owned by M20/M21;
+- semantic AST/repository analysis;
+- visual UI/dashboard.

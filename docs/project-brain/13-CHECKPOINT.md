@@ -13,7 +13,7 @@ CORE V0.0 - Modular Construction
 Continue building CORE as the headless NexLabs action plane that operates standalone and synchronizes deeply with HIVE without duplicating HIVE-owned intelligence.
 
 ## IN PROGRESS
-- M02 Project / Workspace Adapter deep planning — Rounds 1-3 ownership, contracts, repository graph, threat model and HIVE association seam recorded.
+- M02 Project / Workspace Adapter deep planning — Rounds 1-4 recorded; Round 4 freezes evidence invalidation, proof-cache, bounded hashing and backend-evaluation architecture.
 - M03-M24 remain discovery-only.
 
 ## COMPLETED
@@ -28,6 +28,7 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - CORE-WO-M01-001 completed with governed Review 011 APPROVED.
 - CAL admission close/acquire race fixed and proven under active QDS DRAINING.
 - M01 final evidence normalized and exact-head workflow validated.
+- M02 Rounds 1–3 discovery baseline exact-head reviewed (Review 001 / Issue #26) and promoted through PR #23.
 
 ## PENDING
 - Deep-plan M02 through M24 in dependency order.
@@ -53,6 +54,10 @@ Deep-plan M02 Project / Workspace Adapter using the same freeze-before-execution
 - Review 011 / Issue #20
 - Final reviewed PR #17
 - M01 correction merge `d70b4296afbba93e8849ab6160e9b1caf5281e7d`
+- M02 Review 001 / Issue #26 — APPROVED
+- M02 discovery PR #23
+- M02 Rounds 1–3 promotion merge `2556f1d380efe59f0b14cb1392c4aa9fb19efa2d`
+- M02 exact-head workflow #66 `35506655672` — Governance, Ubuntu, Windows and fuzz SUCCESS
 
 ## M01 completion record
 Frozen Work Order: `CORE-WO-M01-001`
@@ -68,6 +73,15 @@ Result: M01 COMPLETE. No unresolved HIGH/CRITICAL finding recorded at final prom
 Planning freeze basis: `d3a5772f0cb427bd8a9d7ff0c5182243e64cd6d7`
 The former M01 execution-ready instructions are historical and no longer represent the legal next action.
 
+
+## M02 discovery baseline promotion record
+Rounds promoted: 1–3
+Exact governed review head: `1a8e80d20779e83d656f791ebae64ae44194d812`
+Governed review: Review 001 / Issue #26 — APPROVED
+Reviewed PR: #23
+Exact-head workflow: run #66 `35506655672` — Governance, Ubuntu, Windows and fuzz SUCCESS
+Promotion merge: `2556f1d380efe59f0b14cb1392c4aa9fb19efa2d`
+Result: Rounds 1–3 accepted as the M02 discovery baseline. M02 implementation remains unauthorized.
 
 ## Current M02 discovery delta
 Round 1 established M02 as the deterministic Project / Workspace Adapter between local Git/filesystem state and optional HIVE Project Registry identity.
@@ -104,3 +118,31 @@ New technology candidate:
 - WMF Workspace Merkle Forest.
 
 GitInspector implementation backend remains intentionally unfrozen pending benchmark/security evidence. M02 remains zero-LLM and read-only.
+
+
+## M02 Round 4 discovery delta
+
+Round 4 freezes the workspace evidence/revalidation architecture without selecting a GitInspector production backend prematurely.
+
+Accepted direction:
+- watcher events are non-authoritative invalidation hints;
+- EIS + CIG map hints/evidence changes into deterministic basis-component invalidation;
+- action-boundary revalidation remains the correctness proof;
+- PEC L1 caches compact derived proofs only and exposes hit/miss/bypass/invalidation reasons;
+- mtime/stat alone never proves correctness-relevant content equality;
+- BHC performs bounded streaming/coalesced content hashing;
+- authority roots become explicit typed/non-transitive records;
+- repository graph serialization is canonical and order-stable;
+- system Git is the semantic reference oracle for differential provider tests, not an automatic production-backend selection;
+- SPO gates Rust-native/system/hybrid provider promotion on semantic/security/resource evidence;
+- compact fingerprints/deltas/evidence refs are preferred over raw repository inventories for downstream HIVE/LLM token economy;
+- exact numeric resource defaults remain benchmark-calibrated rather than fabricated.
+
+New required design mechanisms:
+- EIS Event Invalidation Spine;
+- CIG Causal Invalidation Graph;
+- PEC Proof Economy Cache L1;
+- BHC Bounded Hash Conveyor;
+- SPO Semantic Provider Oracle.
+
+M02 implementation remains unauthorized.
