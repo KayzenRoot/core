@@ -1,19 +1,19 @@
 # CORE Checkpoint
 
 ## STATUS
-M01 COMPLETE / M02 DISCOVERY ACTIVE
+M01 COMPLETE / M02 FINAL FREEZE IN REVIEW
 
 ## VERSION
 CORE V0.0 - Modular Construction
 
 ## PHASE
-2 - M02 Product Discovery
+2 - M02 Final Planning Freeze
 
 ## OBJECTIVE
 Continue building CORE as the headless NexLabs action plane that operates standalone and synchronizes deeply with HIVE without duplicating HIVE-owned intelligence.
 
 ## IN PROGRESS
-- M02 Project / Workspace Adapter deep planning — Rounds 1-6 recorded; Round 6 freezes calibration semantics, DWS/WMF disposition and the bounded Calibration Delta model.
+- M02 Project / Workspace Adapter final planning freeze candidate compiled: CORE-WO-M02-001 + pending Context Lock + Evidence Bundle + Codex handoff.
 - M03-M24 remain discovery-only.
 
 ## COMPLETED
@@ -31,20 +31,23 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - M02 Rounds 1–3 discovery baseline exact-head reviewed (Review 001 / Issue #26) and promoted through PR #23.
 - M02 Round 4 evidence architecture exact-head reviewed (Review 002 / Issue #28) and promoted through PR #27.
 - M02 Round 5 contract/file-map freeze exact-head reviewed (Review 003 / Issue #30) and promoted through PR #29.
+- M02 Round 6 calibration/technology disposition exact-head reviewed (Review 004 / Issue #32) and promoted through PR #31.
 
 ## PENDING
-- Deep-plan M02 through M24 in dependency order.
+- Governed exact-head review/promotion of the M02 final planning freeze.
+- Bind promoted execution base into CORE-WO-M02-001 Context Lock and authorize implementation only through a bounded admission delta.
+- Deep-plan M03 through M24 in dependency order.
 - Freeze product Requirements/Architecture/DoD as discovery matures.
 - Live local HIVE bootstrap evidence against current main.
 - GitHub main ruleset activation when authorized admin mutation is available.
 
 ## BLOCKERS
-- None for M02 planning.
-- M02 implementation remains gated until its plan and Work Order are frozen.
+- No architecture blocker remains for M02 planning.
+- M02 implementation remains gated by final-freeze review/promotion and execution-base Context Lock activation.
 - M03-M24 implementation remains gated by their respective planning freezes.
 
 ## NEXT STEP
-Deep-plan M02 Project / Workspace Adapter using the same freeze-before-execution model. Do not authorize M02 product implementation until its plan, file map, contracts, tests, benchmarks, DoD, Work Order and STOP CONDITION are frozen.
+Review the exact-head M02 final planning freeze candidate. If APPROVED and promoted, perform only the bounded execution-admission delta that binds the promoted main SHA, activates the Context Lock and authorizes CORE-WO-M02-001. Do not start M02 implementation before that admission is promoted.
 
 ## EVIDENCE
 - `docs/engineering/CORE-MODULAR-DELIVERY-MODEL.md`
@@ -68,6 +71,10 @@ Deep-plan M02 Project / Workspace Adapter using the same freeze-before-execution
 - M02 Round 5 PR #29
 - M02 Round 5 promotion merge `c69bf761dad9fbec8f8128ab62c5ba0a0271ef61`
 - M02 Round 5 exact-head workflow #74 `35512575017` — Governance, Ubuntu, Windows and fuzz SUCCESS
+- M02 Review 004 / Issue #32 — APPROVED
+- M02 Round 6 PR #31
+- M02 Round 6 promotion merge `e84a2c678761fe9e357f490d42ea9a762630037b`
+- M02 Round 6 exact-head workflow #80 `35513851169` — Governance, Ubuntu, Windows and fuzz SUCCESS
 
 ## M01 completion record
 Frozen Work Order: `CORE-WO-M01-001`
@@ -214,3 +221,14 @@ Accepted direction:
 Remaining before implementation authorization: final Context Lock, frozen Work Order, executor packet, acceptance criteria/STOP CONDITION and final cross-source planning audit.
 
 M02 implementation remains unauthorized.
+
+
+## M02 final planning freeze candidate
+
+Work Order: `.engineering/work-orders/CORE-WO-M02-001.md`
+Context Lock: `.engineering/context-locks/CORE-WO-M02-001.json` — PENDING_PROMOTION
+Evidence skeleton: `.engineering/evidence/CORE-WO-M02-001.json`
+Codex handoff: `docs/work-orders/CODEX-HANDOFF-M02.md`
+Planning base: `e84a2c678761fe9e357f490d42ea9a762630037b`
+
+Result: all M02 V0.0 architecture/scope/contracts/file map/DoD/tests/calibration semantics are frozen in this candidate. Implementation remains unauthorized until final review/promotion and exact execution-base admission.
