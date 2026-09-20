@@ -15,4 +15,4 @@ CORE V0.0 - Modular Construction
 2 - M02 Product Discovery
 
 ## NEXT STEP
-Deep-plan M02 Project / Workspace Adapter using the same freeze-before-execution model. Do not authorize M02 implementation until its plan and Work Order are frozen.
+Deep-plan M02 Project / Workspace Adapter using the same freeze-before-execution model. Do not authorize M02 product implementation until its plan, file map, contracts, tests, benchmarks, DoD, Work Order and STOP CONDITION are frozen.
