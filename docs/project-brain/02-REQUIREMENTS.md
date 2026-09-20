@@ -133,3 +133,19 @@ This file contains the frozen foundation requirements plus accepted module-level
 - **CORE-R-096 Minimal dependency graph:** core-workspace MUST use only the frozen dependency set unless a governed dependency-admission delta proves necessity.
 - **CORE-R-097 No runtime dependency cycle:** core-workspace MUST NOT depend on core-runtime.
 - **CORE-R-098 Exact file-map discipline:** implementation MUST remain inside the frozen Round 5 file map except generated evidence or audited Correction Delta.
+
+
+## M02 Round 6 requirements
+
+- **CORE-R-099 Calibration gate:** M02 implementation MUST pass a mandatory Resource Calibration Gate before production-ready acceptance.
+- **CORE-R-100 Evidence-derived numeric defaults:** WorkspaceResourceBudget numeric defaults MUST be derived from reproducible M02 implementation/fixture evidence, never guessed during planning.
+- **CORE-R-101 Bounded calibration delta:** the Work Order MAY authorize a post-benchmark delta limited to numeric budget defaults, benchmark thresholds and evidence references.
+- **CORE-R-102 No architecture mutation through calibration:** calibration MUST NOT alter ownership, contract semantics, authority classes, dependency graph, provider class, BVM semantics or security invariants.
+- **CORE-R-103 Calibration report:** exact candidate evidence MUST include a committed M02 calibration report with environment, fixtures, commands, measurements, selections and rejected candidates.
+- **CORE-R-104 No extrapolated success:** unsupported fixture scales MUST be recorded as bounded/skipped rather than extrapolated.
+- **CORE-R-105 Deterministic concurrency calibration:** Git/hash concurrency candidates MUST be bounded by host available parallelism and selected from measured valid candidates.
+- **CORE-R-106 No unlimited security bounds:** resource configuration MUST NOT use zero/unlimited sentinels for security-sensitive budgets.
+- **CORE-R-107 DWS required:** M02 V0.0 MUST implement component/changed-set delta revalidation with proven equivalence to full recomputation.
+- **CORE-R-108 WMF deferred:** Workspace Merkle Forest MUST NOT enter the initial Work Order absent a later evidence-backed scalability decision.
+- **CORE-R-109 No runtime hidden autotuning:** V0.0 MUST NOT perform background/permanent self-benchmarking or silently rewrite budget defaults at runtime.
+- **CORE-R-110 Calibration preserves zero-LLM:** calibration, budget selection and benchmark evaluation MUST require zero LLM inference.
