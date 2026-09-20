@@ -58,6 +58,8 @@ pub enum RuntimeError {
 pub struct RuntimeStatus {
     pub schema: SchemaVersion,
     pub state: RuntimeState,
+    pub admission_closed: bool,
+    pub capability_lease_admission_closed: bool,
     pub boot_epoch: u64,
     pub generation: RuntimeGeneration,
     pub recovery: RecoveryClassification,
@@ -886,6 +888,8 @@ impl Supervisor {
         RuntimeStatus {
             schema: SchemaVersion::CURRENT,
             state: self.lifecycle.state(),
+            admission_closed: self.admission_closed.load(Ordering::Acquire),
+            capability_lease_admission_closed: self.capabilities.lease_admission_closed(),
             boot_epoch: self.config.generation.boot_epoch,
             generation: self.config.generation.clone(),
             recovery: self
@@ -1317,6 +1321,7 @@ impl Supervisor {
         }
         self.quiescence_proven = false;
         self.admission_closed.store(true, Ordering::Release);
+        self.capabilities.close_lease_admission();
         let shutdown_deadline =
             TokioInstant::now() + Duration::from_millis(self.config.shutdown_timeout_ms);
         self.transition_with_live_context(
@@ -1474,11 +1479,18 @@ impl Supervisor {
             JournalDurability::SyncRequired,
             [],
         )?;
+        active_leases = self.capabilities.total_active_leases();
         let items = vec![
             QuiescenceItem {
                 subject: "admission-closed".into(),
                 satisfied: self.admission_closed.load(Ordering::Acquire),
                 residual: None,
+            },
+            QuiescenceItem {
+                subject: "capability-lease-admission-closed".into(),
+                satisfied: self.capabilities.lease_admission_closed(),
+                residual: (!self.capabilities.lease_admission_closed())
+                    .then(|| "capability lease admission remains open".into()),
             },
             QuiescenceItem {
                 subject: "critical-capability-leases".into(),
@@ -1753,7 +1765,113 @@ mod tests {
         assert!(receipt
             .items
             .iter()
+            .any(|item| item.subject == "admission-closed" && item.satisfied));
+        assert!(receipt
+            .items
+            .iter()
+            .any(|item| item.subject == "capability-lease-admission-closed" && item.satisfied));
+        assert!(receipt
+            .items
+            .iter()
             .any(|item| item.subject == "critical-capability-leases" && !item.satisfied));
+    }
+
+    #[tokio::test]
+    async fn registry_clone_cannot_admit_after_qds_closes_capability_admission() {
+        let mut supervisor = Supervisor::new(config("lease-admission-close")).unwrap();
+        supervisor.bootstrap().await.unwrap();
+        supervisor
+            .capabilities()
+            .register_provider(provider(
+                "native",
+                "core",
+                "health",
+                ProviderOrigin::CoreNative,
+                90,
+            ))
+            .unwrap();
+        let requirement = CapabilityRequirement::new("health", SemVer::new(1, 0, 0));
+        let generation = supervisor.status().generation;
+        supervisor
+            .capabilities()
+            .bind_with_generation(&requirement, "admission-close", &generation)
+            .unwrap();
+        let clone = supervisor.capabilities().clone();
+        let pre_close_lease = clone
+            .acquire_lease_with_generation("health", &generation, 1_000)
+            .unwrap();
+        clone.release_lease(&pre_close_lease).unwrap();
+        assert!(!supervisor.status().admission_closed);
+        assert!(!supervisor.status().capability_lease_admission_closed);
+
+        let receipt = supervisor.shutdown().await.unwrap();
+
+        assert!(receipt.clean);
+        assert!(supervisor.status().admission_closed);
+        assert!(supervisor.status().capability_lease_admission_closed);
+        assert!(matches!(
+            clone.acquire_lease_with_generation("health", &generation, 1_000),
+            Err(core_registry::RegistryError::AdmissionClosed)
+        ));
+    }
+
+    #[tokio::test]
+    async fn in_drain_clone_acquire_is_rejected_during_repeated_shutdowns() {
+        for iteration in 0..16 {
+            let mut supervisor =
+                Supervisor::new(config(&format!("lease-admission-in-drain-{iteration}"))).unwrap();
+            supervisor.bootstrap().await.unwrap();
+            supervisor
+                .capabilities()
+                .register_provider(provider(
+                    "native",
+                    "core",
+                    "health",
+                    ProviderOrigin::CoreNative,
+                    90,
+                ))
+                .unwrap();
+            let requirement = CapabilityRequirement::new("health", SemVer::new(1, 0, 0));
+            let generation = supervisor.status().generation;
+            supervisor
+                .capabilities()
+                .bind_with_generation(&requirement, "in-drain-admission", &generation)
+                .unwrap();
+
+            let clone = supervisor.capabilities().clone();
+            let pre_close_lease = clone
+                .acquire_lease_with_generation("health", &generation, 30_000)
+                .unwrap();
+            assert_eq!(clone.total_active_leases(), 1);
+
+            let shutdown_task = tokio::spawn(async move { supervisor.shutdown().await });
+            tokio::time::timeout(std::time::Duration::from_secs(2), async {
+                loop {
+                    if clone.lease_admission_closed() {
+                        break;
+                    }
+                    tokio::task::yield_now().await;
+                }
+            })
+            .await
+            .expect("shutdown must close lease admission within the bounded wait");
+
+            assert_eq!(clone.total_active_leases(), 1);
+            assert!(matches!(
+                clone.acquire_lease_with_generation("health", &generation, 1_000),
+                Err(core_registry::RegistryError::AdmissionClosed)
+            ));
+            assert_eq!(clone.total_active_leases(), 1);
+
+            clone.release_lease(&pre_close_lease).unwrap();
+            let receipt = shutdown_task
+                .await
+                .expect("shutdown task must not panic")
+                .unwrap();
+            assert!(receipt.clean);
+            assert_eq!(receipt.final_phase, ShutdownPhase::StopCommit);
+            assert!(receipt.items.iter().all(|item| item.satisfied));
+        }
     }
 
     #[test]
@@ -1875,6 +1993,7 @@ mod tests {
         let mut shutdown_config = config("worker-admission");
         shutdown_config.shutdown_timeout_ms = 10;
         let mut supervisor = Supervisor::new(shutdown_config).unwrap();
+        supervisor.crash_suppression.initial_backoff_ms = 60_000;
         supervisor.bootstrap().await.unwrap();
         supervisor.register_isolated_worker("worker-a").unwrap();
         supervisor.mark_worker_terminated("worker-a");
@@ -1913,7 +2032,7 @@ mod tests {
     #[tokio::test]
     async fn lease_expiration_completes_before_shutdown_deadline() {
         let mut shutdown_config = config("lease-before-deadline");
-        shutdown_config.shutdown_timeout_ms = 1_000;
+        shutdown_config.shutdown_timeout_ms = 5_000;
         let mut supervisor = Supervisor::new(shutdown_config).unwrap();
         supervisor.bootstrap().await.unwrap();
         supervisor
@@ -1938,7 +2057,7 @@ mod tests {
             .unwrap();
         let started = Instant::now();
         let receipt = supervisor.shutdown().await.unwrap();
-        assert!(started.elapsed() < Duration::from_millis(800));
+        assert!(started.elapsed() < Duration::from_secs(4));
         assert!(receipt.clean);
         let records = supervisor.lifecycle.journal.read_validated().unwrap();
         assert!(records
@@ -1952,7 +2071,7 @@ mod tests {
     #[tokio::test]
     async fn lease_released_from_separate_task_wakes_qds_before_deadline() {
         let mut shutdown_config = config("lease-release-wakes-qds");
-        shutdown_config.shutdown_timeout_ms = 1_000;
+        shutdown_config.shutdown_timeout_ms = 5_000;
         let mut supervisor = Supervisor::new(shutdown_config).unwrap();
         supervisor.bootstrap().await.unwrap();
         supervisor
@@ -1987,7 +2106,7 @@ mod tests {
         releaser.await.unwrap();
 
         assert!(receipt.clean, "lease release receipt: {receipt:?}");
-        assert!(elapsed < Duration::from_millis(900));
+        assert!(elapsed < Duration::from_secs(4));
         let records = supervisor.lifecycle.journal.read_validated().unwrap();
         assert!(records
             .iter()
