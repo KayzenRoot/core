@@ -24,6 +24,8 @@ pub enum RegistryError {
     UnknownDependency(String),
     #[error("no eligible provider for capability {0}")]
     NoProvider(String),
+    #[error("capability lease admission is closed")]
+    AdmissionClosed,
     #[error("quality floor cannot be satisfied for capability {0}")]
     QualityFloor(String),
     #[error("lease is stale or revoked")]
@@ -164,6 +166,7 @@ struct RegistryState {
     bindings: BTreeMap<String, Binding>,
     retired_bindings: BTreeMap<(String, u64), Binding>,
     leases: BTreeMap<String, LeaseRecord>,
+    lease_admission_closed: bool,
     next_generation: u64,
     next_lease: u64,
     monotonic_origin: Instant,
@@ -229,6 +232,7 @@ impl Default for RegistryState {
             bindings: BTreeMap::new(),
             retired_bindings: BTreeMap::new(),
             leases: BTreeMap::new(),
+            lease_admission_closed: false,
             next_generation: 0,
             next_lease: 0,
             monotonic_origin: Instant::now(),
@@ -322,6 +326,16 @@ impl CapabilityRegistry {
         LeaseChangeSubscription {
             receiver: self.lease_changes.subscribe(),
         }
+    }
+
+    pub fn close_lease_admission(&self) {
+        let mut state = self.inner.write().expect("registry lock poisoned");
+        state.lease_admission_closed = true;
+    }
+
+    pub fn lease_admission_closed(&self) -> bool {
+        let state = self.inner.read().expect("registry lock poisoned");
+        state.lease_admission_closed
     }
 
     fn publish_lease_change(&self) {
@@ -497,6 +511,9 @@ impl CapabilityRegistry {
         ttl_ms: u64,
     ) -> Result<CapabilityLease, RegistryError> {
         let mut state = self.inner.write().expect("registry lock poisoned");
+        if state.lease_admission_closed {
+            return Err(RegistryError::AdmissionClosed);
+        }
         self.prune_expired(&mut state);
         let lease_id = format!("lease-{}", state.next_lease);
         state.next_lease = state.next_lease.saturating_add(1);
@@ -1048,6 +1065,7 @@ pub fn provider(
 mod tests {
     use super::*;
     use std::sync::Arc;
+    use std::sync::Barrier;
     use std::thread;
 
     fn manifest(id: &str, deps: &[&str]) -> ModuleManifest {
@@ -1258,6 +1276,93 @@ mod tests {
         let mut revoke_subscription = registry.subscribe_lease_changes();
         registry.revoke_lease(&revocable.lease_id).unwrap();
         revoke_subscription.changed().await.unwrap();
+        assert_eq!(registry.total_active_leases(), 0);
+    }
+
+    #[test]
+    fn cloned_registries_cannot_acquire_after_admission_closes() {
+        let registry = CapabilityRegistry::new();
+        registry
+            .register_provider(provider(
+                "native",
+                "core",
+                "health",
+                ProviderOrigin::CoreNative,
+                90,
+            ))
+            .unwrap();
+        let requirement = CapabilityRequirement::new("health", SemVer::new(1, 0, 0));
+        registry.bind(&requirement, "startup").unwrap();
+        let clone = registry.clone();
+        let lease = clone.acquire_lease("health", 4, 1_000).unwrap();
+
+        registry.close_lease_admission();
+
+        assert!(registry.lease_admission_closed());
+        assert!(clone.lease_admission_closed());
+        assert!(matches!(
+            clone.acquire_lease("health", 4, 1_000),
+            Err(RegistryError::AdmissionClosed)
+        ));
+        assert_eq!(registry.total_active_leases(), 1);
+        clone.release_lease(&lease).unwrap();
+    }
+
+    #[test]
+    fn concurrent_acquire_and_close_have_one_registry_linearization_point() {
+        let registry = Arc::new(CapabilityRegistry::new());
+        registry
+            .register_provider(provider(
+                "native",
+                "core",
+                "health",
+                ProviderOrigin::CoreNative,
+                90,
+            ))
+            .unwrap();
+        let requirement = CapabilityRequirement::new("health", SemVer::new(1, 0, 0));
+        registry.bind(&requirement, "startup").unwrap();
+
+        const ATTEMPTS: usize = 32;
+        let barrier = Arc::new(Barrier::new(ATTEMPTS + 1));
+        let handles = (0..ATTEMPTS)
+            .map(|_| {
+                let registry = Arc::clone(&registry);
+                let barrier = Arc::clone(&barrier);
+                thread::spawn(move || {
+                    barrier.wait();
+                    registry.acquire_lease("health", 4, 1_000)
+                })
+            })
+            .collect::<Vec<_>>();
+
+        barrier.wait();
+        registry.close_lease_admission();
+
+        let mut successful_leases = Vec::new();
+        let mut closed_attempts = 0;
+        for handle in handles {
+            match handle.join().unwrap() {
+                Ok(lease) => successful_leases.push(lease),
+                Err(RegistryError::AdmissionClosed) => closed_attempts += 1,
+                Err(error) => panic!("unexpected admission result: {error:?}"),
+            }
+        }
+
+        assert_eq!(successful_leases.len() + closed_attempts, ATTEMPTS);
+        assert_eq!(
+            registry.total_active_leases(),
+            successful_leases.len() as u64
+        );
+        for _ in 0..ATTEMPTS {
+            assert!(matches!(
+                registry.acquire_lease("health", 4, 1_000),
+                Err(RegistryError::AdmissionClosed)
+            ));
+        }
+        for lease in successful_leases {
+            registry.release_lease(&lease).unwrap();
+        }
         assert_eq!(registry.total_active_leases(), 0);
     }
 

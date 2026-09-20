@@ -58,6 +58,8 @@ pub enum RuntimeError {
 pub struct RuntimeStatus {
     pub schema: SchemaVersion,
     pub state: RuntimeState,
+    pub admission_closed: bool,
+    pub capability_lease_admission_closed: bool,
     pub boot_epoch: u64,
     pub generation: RuntimeGeneration,
     pub recovery: RecoveryClassification,
@@ -886,6 +888,8 @@ impl Supervisor {
         RuntimeStatus {
             schema: SchemaVersion::CURRENT,
             state: self.lifecycle.state(),
+            admission_closed: self.admission_closed.load(Ordering::Acquire),
+            capability_lease_admission_closed: self.capabilities.lease_admission_closed(),
             boot_epoch: self.config.generation.boot_epoch,
             generation: self.config.generation.clone(),
             recovery: self
@@ -1317,6 +1321,7 @@ impl Supervisor {
         }
         self.quiescence_proven = false;
         self.admission_closed.store(true, Ordering::Release);
+        self.capabilities.close_lease_admission();
         let shutdown_deadline =
             TokioInstant::now() + Duration::from_millis(self.config.shutdown_timeout_ms);
         self.transition_with_live_context(
@@ -1474,11 +1479,18 @@ impl Supervisor {
             JournalDurability::SyncRequired,
             [],
         )?;
+        active_leases = self.capabilities.total_active_leases();
         let items = vec![
             QuiescenceItem {
                 subject: "admission-closed".into(),
                 satisfied: self.admission_closed.load(Ordering::Acquire),
                 residual: None,
+            },
+            QuiescenceItem {
+                subject: "capability-lease-admission-closed".into(),
+                satisfied: self.capabilities.lease_admission_closed(),
+                residual: (!self.capabilities.lease_admission_closed())
+                    .then(|| "capability lease admission remains open".into()),
             },
             QuiescenceItem {
                 subject: "critical-capability-leases".into(),
@@ -1753,7 +1765,54 @@ mod tests {
         assert!(receipt
             .items
             .iter()
+            .any(|item| item.subject == "admission-closed" && item.satisfied));
+        assert!(receipt
+            .items
+            .iter()
+            .any(|item| item.subject == "capability-lease-admission-closed" && item.satisfied));
+        assert!(receipt
+            .items
+            .iter()
             .any(|item| item.subject == "critical-capability-leases" && !item.satisfied));
+    }
+
+    #[tokio::test]
+    async fn registry_clone_cannot_admit_after_qds_closes_capability_admission() {
+        let mut supervisor = Supervisor::new(config("lease-admission-close")).unwrap();
+        supervisor.bootstrap().await.unwrap();
+        supervisor
+            .capabilities()
+            .register_provider(provider(
+                "native",
+                "core",
+                "health",
+                ProviderOrigin::CoreNative,
+                90,
+            ))
+            .unwrap();
+        let requirement = CapabilityRequirement::new("health", SemVer::new(1, 0, 0));
+        let generation = supervisor.status().generation;
+        supervisor
+            .capabilities()
+            .bind_with_generation(&requirement, "admission-close", &generation)
+            .unwrap();
+        let clone = supervisor.capabilities().clone();
+        let pre_close_lease = clone
+            .acquire_lease_with_generation("health", &generation, 1_000)
+            .unwrap();
+        clone.release_lease(&pre_close_lease).unwrap();
+        assert!(!supervisor.status().admission_closed);
+        assert!(!supervisor.status().capability_lease_admission_closed);
+
+        let receipt = supervisor.shutdown().await.unwrap();
+
+        assert!(receipt.clean);
+        assert!(supervisor.status().admission_closed);
+        assert!(supervisor.status().capability_lease_admission_closed);
+        assert!(matches!(
+            clone.acquire_lease_with_generation("health", &generation, 1_000),
+            Err(core_registry::RegistryError::AdmissionClosed)
+        ));
     }
 
     #[test]
