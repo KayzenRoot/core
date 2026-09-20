@@ -236,3 +236,16 @@ The initial GitInspector is hardened system Git behind a provider-neutral trait.
 PEC is L1/runtime-epoch only. EIS/CIG accept typed hints but correctness does not depend on an OS watcher adapter. These choices avoid a database, watcher framework and second Git parsing stack in the initial dependency graph.
 
 Public M02 contracts are versioned, compact and canonical. Repository graphs, basis components and diffs use deterministic sorted serialization; durable receipts never become live capabilities.
+
+
+## M02 Resource Calibration Gate architecture
+
+Resource defaults are finalized by evidence inside the frozen M02 Work Order rather than fabricated during planning.
+
+The implementation PR has a mandatory CALIBRATION_ONLY phase. After the frozen mechanisms exist, the executor runs deterministic local fixture/benchmark families, produces `docs/evidence/M02-CALIBRATION-REPORT.md`, applies the narrowly authorized numeric Calibration Delta, and reruns the entire exact-head validation suite.
+
+The Calibration Delta cannot change architecture or dependencies. If evidence shows the architecture itself is insufficient, the Work Order stops and returns a normal governed Correction Delta.
+
+DWS is part of the V0.0 architecture using component fingerprints and changed-set reconstruction. WMF is not part of the initial architecture and requires later evidence-backed admission.
+
+Calibration is release/build evidence. M02 does not continuously self-tune in production.
