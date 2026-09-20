@@ -1958,3 +1958,250 @@ Before M02 planning STOP CONDITION:
 - final planning audit/freeze.
 
 M02 implementation remains unauthorized.
+
+
+## Round 6 - Calibration Gate, resource policy and technology disposition
+
+### Round 6 objective
+
+Round 6 resolves the final planning circularity around resource defaults.
+
+M02 cannot honestly benchmark `core-workspace` before `core-workspace` exists. Therefore the planning contract freezes **how** resource defaults are calibrated and what evidence is required, while the frozen Work Order will require the executor to produce the actual numeric defaults inside the same implementation PR before M02 can be accepted.
+
+This refines CORE-D-080 without weakening it: numeric defaults are still evidence-backed and cannot be invented during planning.
+
+### RCG - Resource Calibration Gate
+
+**Problem:** fixed resource values chosen before implementation would be guesses, while runtime-unbounded behavior is unsafe.
+
+**Mechanism:** the M02 Work Order contains a mandatory calibration gate between implementation skeleton and production-ready acceptance.
+
+Execution sequence:
+
+```text
+Phase A: implement frozen contracts + bounded mechanisms
+    |
+    v
+CALIBRATION_ONLY state
+    |
+    +--> fixture matrix
+    +--> benchmark matrix
+    +--> resource measurements
+    +--> semantic equivalence checks
+    |
+    v
+Calibration Evidence Bundle
+    |
+    +--> proposed WorkspaceResourceBudget defaults
+    +--> proposed acceptance thresholds
+    |
+    v
+bounded Calibration Delta in same Work Order/PR
+    |
+    v
+rerun complete exact-head validation
+    |
+    v
+eligible for governed M02 review
+```
+
+No M02 completion or production-ready claim is legal while the calibration gate is open.
+
+### Calibration Delta authority
+
+The frozen M02 Work Order may authorize one narrowly bounded `Calibration Delta` after measurements.
+
+The delta MAY change only:
+- numeric WorkspaceResourceBudget defaults;
+- benchmark-derived acceptance thresholds;
+- benchmark fixture metadata/evidence references;
+- comments/documentation explaining the selected values.
+
+The delta MUST NOT change:
+- architecture;
+- ownership;
+- public contract meaning;
+- authority classes;
+- dependency graph;
+- Git provider type;
+- file/crate topology;
+- BVM semantics;
+- security invariants;
+- DoD.
+
+Any need to change those items is a normal Correction Delta and re-enters governed review.
+
+### Calibration evidence contract
+
+Required artifact: `docs/evidence/M02-CALIBRATION-REPORT.md`.
+
+The report must record:
+- base/head SHA;
+- OS and architecture;
+- Rust version;
+- Git version;
+- logical CPU count available to the process;
+- fixture definitions and generated sizes;
+- cold/warm classification;
+- run count;
+- median and observed range for latency;
+- peak/upper-bound process memory evidence where available;
+- stdout/stderr/record counts;
+- hash bytes and concurrency;
+- repository graph nodes/depth;
+- cache hit/miss/bypass rates for benchmark scenarios;
+- timeout/cancellation behavior;
+- selected budget values;
+- rejected candidate values and reason;
+- exact commands;
+- machine-readable evidence references.
+
+No raw secrets, credential-bearing remotes or user source content may enter the calibration report.
+
+### Benchmark protocol
+
+Each benchmark scenario uses:
+- one non-measured warm-up when a warm case is relevant;
+- at least 5 measured iterations;
+- deterministic synthetic/local fixtures;
+- the same semantic assertions for every candidate budget;
+- isolated cold and warm result classes;
+- no network access.
+
+Selection is multi-objective:
+1. correctness and security are hard constraints;
+2. candidates violating memory/output/deadline bounds are rejected;
+3. among valid candidates, prefer the lower-resource candidate when throughput/latency is not materially improved by a higher-resource candidate;
+4. cache/delta acceleration is accepted only when full-recompute equivalence holds;
+5. benchmark results never weaken a security boundary.
+
+The report must show the evidence used for the selection rather than only the chosen number.
+
+### Calibration fixture families
+
+Required synthetic/local fixtures:
+- no-Git workspace;
+- normal clean Git repository;
+- dirty tracked workspace;
+- untracked CONTENT_HASHED workspace;
+- linked worktree;
+- bare repository;
+- nested independent repository;
+- initialized and uninitialized submodule layouts;
+- sparse checkout;
+- external object-store allowed/denied cases;
+- hostile config/remote redaction canaries.
+
+Scale dimensions:
+- repository graph: 1 / 10 / 100 / 1,000 nodes where fixture cost is bounded;
+- changed-path metadata: 0 / 1 / 10 / 100 / 1,000 / 10,000;
+- untracked files: 0 / 10 / 1,000 / 10,000;
+- hashed content: small-file fanout plus at least one streaming large-file fixture;
+- duplicate concurrent proof/hash requests;
+- event-hinted and zero-event revalidation.
+
+If a CI environment cannot safely reach a top scale, the report records SKIPPED_RESOURCE_BOUND with the lower proven ceiling. It must never fabricate extrapolated success.
+
+### WorkspaceResourceBudget calibration dimensions
+
+The executor must calibrate and then freeze exact numeric defaults for:
+- max_repository_graph_nodes;
+- max_recursion_depth;
+- max_git_process_duration;
+- max_stdout_bytes;
+- max_stderr_bytes;
+- max_parsed_records;
+- max_concurrent_git_inspectors;
+- max_concurrent_hash_tasks;
+- max_single_file_hash_bytes_before_explicit_policy;
+- max_aggregate_hash_bytes_per_validation;
+- max_cache_entries;
+- max_cache_bytes;
+- max_event_hint_backlog;
+- max_revalidation_wall_clock.
+
+The configuration schema may expose governed overrides, but:
+- overrides cannot disable hard safety validation;
+- zero/unlimited sentinel values are forbidden for security-sensitive bounds;
+- a rejected/overflowed budget yields a typed error and never partial BOUND.
+
+### Deterministic concurrency selection
+
+Concurrency calibration considers candidate values from 1 up to the host's `available_parallelism()` and any lower configured hard ceiling.
+
+The selected default is the smallest valid candidate on the observed performance/resource Pareto frontier. This avoids assuming that "more threads is faster" and naturally scales from low-core machines to workstation hardware.
+
+M02 V0.0 does not implement permanent self-tuning or background auto-benchmarking. Calibration is build/release evidence, not a hidden runtime optimizer.
+
+### DWS disposition
+
+**DWS - Delta Workspace Snapshot: REQUIRED for M02 V0.0.**
+
+Reason:
+- WorkspaceBasisDiff is already a frozen public concept;
+- incremental invalidation is central to CPU/I/O and downstream token economy;
+- correctness remains protected by equivalence-to-full-recompute tests.
+
+V0.0 DWS is component/changed-set based and does not require a Merkle tree.
+
+Promotion obligations:
+- delta/full basis equivalence properties;
+- security/policy changes force hard invalidation;
+- event loss cannot hide changes;
+- no delta path produces a fresher validity state than full recomputation would.
+
+### WMF disposition
+
+**WMF - Workspace Merkle Forest: DEFERRED / FUTURE.**
+
+Reason:
+- the V0.0 component fingerprint + DWS model already supports bounded incremental revalidation;
+- WMF adds partitioning/canonical-tree complexity before a measured bottleneck exists;
+- its contract can be added later without changing WorkspaceBasisV1 semantic meaning.
+
+WMF may be reconsidered only if M02 evidence demonstrates a material scalability bottleneck that DWS cannot address within resource budgets.
+
+No WMF-specific code/dependency enters the initial Work Order.
+
+### Final M02 V0.0 technology disposition
+
+REQUIRED:
+- WIL Workspace Identity Lattice;
+- CWB Canonical Workspace Basis;
+- PAF Path Authority Firewall;
+- BRL Basis Reconciliation Layer;
+- WDG Workspace Drift Guard;
+- RBR Repository Boundary Resolver;
+- WBR Workspace Binding Receipt;
+- DWS Delta Workspace Snapshot;
+- BVM Basis Validity Matrix;
+- GSI Git Safe Inspection;
+- ACR Authority Chain Receipt;
+- FSC Filesystem Semantics Capsule;
+- EIS Event Invalidation Spine;
+- CIG Causal Invalidation Graph;
+- PEC L1 Proof Economy Cache;
+- BHC Bounded Hash Conveyor;
+- SPO Semantic Provider Oracle contract;
+- RCG Resource Calibration Gate.
+
+DEFERRED / FUTURE:
+- WMF Workspace Merkle Forest;
+- PEC persistent L2;
+- Rust-native/hybrid GitInspector providers;
+- OS-native watcher adapters;
+- persistent self-tuning/autocalibration.
+
+### Round 6 planning freeze result
+
+After Round 6, architecture no longer requires guessed numeric resource values before implementation.
+
+The final planning round must now:
+- create the exact Work Order;
+- create Context Lock/fingerprints;
+- encode the RCG/Calibration Delta authority;
+- freeze acceptance criteria and STOP CONDITION;
+- perform the final cross-source audit;
+- authorize M02 implementation only after APPROVED promotion of that freeze.
+
+M02 implementation remains unauthorized.
