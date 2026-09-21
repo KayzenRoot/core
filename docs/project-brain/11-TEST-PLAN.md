@@ -153,3 +153,32 @@ Later implementation fixtures MUST include:
 - context-budget mandatory-source truncation attempt;
 - secret canary in provenance/context payload;
 - bounded large packet/source/criterion graphs.
+
+
+## M03 Round 3 validation obligations
+
+Planning review must verify:
+- compiler/service operations contain no hidden I/O authority;
+- stateless/no-internal-database disposition;
+- deterministic logical WorkOrderId behavior;
+- LineageSnapshot/LPC CAS semantics;
+- canonical revision numbering/conflict handling;
+- PacketContextPlan/PCM lossless reconstruction;
+- compile memo correctness independence;
+- resource dimension coverage;
+- error category/reason/retryability mapping;
+- no partial FROZEN/READY result on resource failure;
+- one-crate/dependency direction has no M02 reverse cycle.
+
+Later implementation evidence MUST include:
+- two concurrent N+1 candidates from same lineage -> only one canonical persistence under LPC;
+- stale lineage generation -> LINEAGE_CONFLICT;
+- deterministic compile replay;
+- compile cache hit/miss equivalence;
+- PCM packet reconstruction equivalence;
+- request/source/packet/criteria cardinality limit cases;
+- compile/validate/diff/admission deadline/resource failures;
+- no hidden network/Git/HIVE/process invocation from core-work-order;
+- safe diagnostics secret canaries;
+- fuzz/property tests for canonicalizer, packet DAG, delta classifier, lineage/LPC and admission inputs;
+- benchmark scaling for sources/packets/edges/criteria/lineage/context/diffs.
