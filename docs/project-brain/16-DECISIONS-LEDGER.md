@@ -470,3 +470,78 @@ Status: `ACTIVE`
 ## CORE-D-113 - Event/context hints never prove Work Order freshness by absence
 **Decision:** WSF may use change hints to narrow revalidation, but uncertain/missing evidence broadens STALE and canonical bindings must be verified deterministically.
 **State:** ACCEPTED
+
+
+## CORE-D-114 - M03 v1 uses explicit versioned envelopes
+**Decision:** durable/external M03 payloads use `nexlabs.core.work-order` schema/version/kind envelopes and unsupported semantics fail typed.
+**State:** ACCEPTED
+
+## CORE-D-115 - Frozen Work Order and admission receipt are separate contracts
+**Decision:** immutable Work Order semantics do not contain mutable/current admission truth. Admission is evaluated separately against current workspace, Context Lock, governance and policy evidence.
+**State:** ACCEPTED
+
+## CORE-D-116 - Frozen Work Orders declare workspace requirements, not live handles
+**Decision:** runtime-bound M02 WorkspaceHandles are supplied at admission and are never persisted as semantic Work Order capability.
+**State:** ACCEPTED
+
+## CORE-D-117 - M03 v1 packet dependencies form a bounded DAG
+**Decision:** packet prerequisites are acyclic semantic dependencies with deterministic topological order. The graph does not grant scheduler/concurrency authority.
+**State:** ACCEPTED
+
+## CORE-D-118 - READY admission is non-evergreen
+**Decision:** a READY receipt is valid only for its recorded workspace/basis/lock/governance/policy generations. M04 must re-check required bindings before creating a new Run.
+**State:** ACCEPTED
+
+## CORE-D-119 - Scope deny overrides allow
+**Decision:** explicit forbidden scope beats allow rules; ambiguity fails closed. Packet scope is intersected with parent Work Order scope.
+**State:** ACCEPTED
+
+## CORE-D-120 - Dependency admission is not implied by file/crate scope
+**Decision:** permission to edit a path/package does not itself authorize adding a dependency.
+**State:** ACCEPTED
+
+## CORE-D-121 - Execution corrections and semantic Work Order revisions are distinct
+**Decision:** implementation/test/evidence fixes that remain inside frozen semantics can use a typed ExecutionCorrectionProposal under the same Work Order revision. Semantic contract changes require a new immutable revision.
+**State:** ACCEPTED
+
+## CORE-D-122 - Same-revision correction classes are explicit
+**Decision:** correction policy may allow bounded implementation/test/evidence/documentation/calibration/generated-artifact changes, but cannot silently allow scope/dependency/architecture/security changes or acceptance/stop weakening.
+**State:** ACCEPTED
+
+## CORE-D-123 - Acceptance Evidence Graph is structurally complete
+**Decision:** each blocking criterion resolves to required evidence obligations or deterministic N/A semantics. Actual evidence artifacts remain outside M03 ownership.
+**State:** ACCEPTED
+
+## CORE-D-124 - Machine-readable stop conditions are mandatory
+**Decision:** a Work Order without explicit terminal success/blocked/required-obligation semantics cannot reach READY.
+**State:** ACCEPTED
+
+## CORE-D-125 - Context budgets never justify silent semantic truncation
+**Decision:** context limits can favor refs/progressive expansion but mandatory semantic sources cannot be silently dropped.
+**State:** ACCEPTED
+
+## CORE-D-126 - Work staleness hints are not truth
+**Decision:** WSF may use hints to nominate revalidation but absence of a hint cannot prove freshness. UNKNOWN broadens to STALE/BLOCKED.
+**State:** ACCEPTED
+
+## CORE-D-127 - Durable M03 payloads are secret-free by construction
+**Decision:** contracts store safe references/classifications/fingerprints, not raw credentials or secret-bearing provider payloads.
+**State:** ACCEPTED
+
+## CORE-D-128 - WOC/SDF/AEG/CBE/WLG/WSF/WPC are required M03 V0.0 semantic capabilities
+**Decision:** the semantic behaviors of all seven Round 1 mechanisms are part of planned V0.0. Exact Rust implementation/file decomposition remains a later freeze.
+**State:** ACCEPTED
+
+
+## CORE-D-129 - Frozen Work Order objects have no mutable diagnostic subspace
+**Decision:** non-semantic diagnostic/transport/rendering metadata may evolve only outside the immutable FrozenWorkOrder revision. No field stored inside a frozen revision is edited in place under a "diagnostic-only" label.
+**State:** ACCEPTED
+
+
+## CORE-D-130 - Context Lock concrete identity is admission evidence, not FrozenWorkOrder semantic input
+**Decision:** FrozenWorkOrder fingerprints Context Lock constraints. The concrete lock fingerprint is recorded only after freeze in admission evidence, preventing a WorkOrderFingerprint <-> ContextLockFingerprint cycle.
+**State:** ACCEPTED
+
+## CORE-D-131 - Admission receipts are immutable historical proofs
+**Decision:** a READY receipt never mutates into STALE. Later changed inputs cause a new admission evaluation/receipt, while M04 rejects reuse when recorded preconditions no longer match.
+**State:** ACCEPTED

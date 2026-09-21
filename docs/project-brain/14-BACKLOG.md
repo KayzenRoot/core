@@ -8,7 +8,7 @@ Canonical module map: `docs/modules/00-MASTER-MODULE-MAP.md`.
 
 - M01 Core Runtime & Lifecycle — COMPLETE / PROMOTED.
 - M02 Project / Workspace Adapter — COMPLETE / PROMOTED (CORE-WO-M02-001; Review 009 / Issue #43; PR #40).
-- M03 Work Order Engine — DEEP PLANNING ACTIVE (Round 1 discovery baseline recorded; implementation not authorized).
+- M03 Work Order Engine — DEEP PLANNING ACTIVE (Rounds 1-2 recorded; implementation not authorized).
 - M04 Run / Attempt / Step Engine.
 - M05 Host Adapter Fabric.
 - M06 Capability Negotiation.

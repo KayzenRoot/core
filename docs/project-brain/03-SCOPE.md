@@ -101,3 +101,43 @@ To be classified during governed discovery. No future capability is admitted mer
 - unlimited security-sensitive budgets;
 - architecture/dependency changes disguised as calibration;
 - WMF implementation in the initial Work Order.
+
+
+## M03 Round 2 scope classification
+
+### NECESSARY
+- versioned Work Order v1 envelope;
+- immutable FrozenWorkOrder revision model;
+- WorkOrderAdmissionRequest/Receipt separation;
+- workspace requirement + fresh M02 admission binding;
+- Context Lock binding;
+- external governance proof verification;
+- bounded packet DAG;
+- ScopeEnvelope + deny precedence;
+- ExecutionCorrectionProposal vs WorkOrderRevisionDiff separation;
+- AEG v1;
+- StopConditionV1;
+- CBE dimensions/expansion semantics;
+- WSF staleness dependency classes;
+- compact provenance/lineage.
+
+### IMPORTANT
+- stable logical IDs across compatible revisions;
+- packet/criterion/evidence split/merge lineage;
+- compact AdmittedWorkOrder handoff for M04;
+- admission status/reason taxonomy.
+
+### FUTURE
+- durable shared Work Order registry/database;
+- organization-wide distributed lineage service;
+- cryptographic signatures beyond available governance capability contracts;
+- adaptive context budget auto-tuning.
+
+### OUT OF SCOPE FOR M03 V0.0
+- Run/Attempt/Step persistence;
+- agent/model scheduling;
+- command/tool execution;
+- source mutation;
+- Git delivery;
+- final evidence artifact collection;
+- review verdict generation.

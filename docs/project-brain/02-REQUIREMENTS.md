@@ -181,3 +181,45 @@ This file contains the frozen foundation requirements plus accepted module-level
 - **CORE-R-135 Canonical collection ordering:** unordered Work Order collections MUST be explicitly sorted before fingerprinting.
 - **CORE-R-136 Secret-safe provenance:** provenance/context manifests MUST reference secrets safely and MUST NOT require durable embedding of raw credentials or secret-bearing payloads.
 - **CORE-R-137 Typed failure taxonomy:** invalid/stale/ambiguous/superseded/forbidden Work Orders MUST fail with machine-readable error classes and MUST NOT silently become READY.
+
+
+## M03 Round 2 requirements
+
+- **CORE-R-138 M03 v1 envelopes:** durable/external M03 payloads MUST carry explicit `nexlabs.core.work-order` schema/version/kind and reject unsupported semantics.
+- **CORE-R-139 Contract-layer separation:** authoring request, frozen semantic revision, admission request/receipt and M04 runtime state MUST remain distinct contracts.
+- **CORE-R-140 Frozen revision immutability:** `FrozenWorkOrderV1` MUST never be mutated in place after freeze.
+- **CORE-R-141 Semantic revision identity:** semantic field changes MUST create a new WorkOrderRevision and WorkOrderFingerprint.
+- **CORE-R-142 Non-semantic diagnostics exclusion:** timestamps/wall durations/UI rendering/transport identifiers MUST NOT alter Work Order semantic identity unless explicitly promoted to semantic policy.
+- **CORE-R-143 Packet DAG:** WorkPacket declarations MUST form a bounded acyclic graph with deterministic topological order and stable packet IDs.
+- **CORE-R-144 Packet scope intersection:** each packet's allowed mutation surface MUST be no broader than the parent Work Order ScopeEnvelope.
+- **CORE-R-145 No scheduling authority in packet graph:** packet dependencies MUST NOT themselves grant parallel/concurrent execution authority.
+- **CORE-R-146 Workspace requirement not live capability:** frozen Work Order semantics MUST declare workspace/basis requirements rather than persist a runtime-bound M02 WorkspaceHandle.
+- **CORE-R-147 Fresh workspace admission:** M03 admission MUST validate workspace requirements against current M02 handle/basis evidence.
+- **CORE-R-148 Explicit basis compatibility:** workspace admission MUST distinguish EXACT_MATCH, COMPATIBLE_REFRESH, INCOMPATIBLE and UNKNOWN; UNKNOWN MUST NOT become READY.
+- **CORE-R-149 Context Lock exact binding:** execution-capable admission MUST validate required Context Lock schema, Work Order binding, authorized base/source fingerprints and implementation authorization.
+- **CORE-R-150 External governance proof:** M03 MAY validate governance admission proof but MUST NOT mint its own governance approval.
+- **CORE-R-151 Non-evergreen admission receipt:** READY admission is proof at one exact basis/generation/policy state and MUST NOT be treated as a perpetual capability.
+- **CORE-R-152 Run-start revalidation:** M04 handoff MUST carry enough admission fingerprints/generations for M04 to re-check required freshness before creating a new Run.
+- **CORE-R-153 Scope deny precedence:** explicit deny MUST override allow and ambiguous scope classification MUST fail closed.
+- **CORE-R-154 Dependency permission isolation:** crate/path permission MUST NOT imply authority to add a dependency.
+- **CORE-R-155 Execution correction separation:** implementation/test/evidence corrections that remain inside frozen semantics MAY use an ExecutionCorrectionProposal without changing WorkOrderRevision.
+- **CORE-R-156 Semantic revision diff:** changes to scope, dependency policy, architecture/security rules, packet graph, acceptance, evidence obligations, context requirements, stop conditions, governance requirements or workspace requirements MUST be semantic revision changes.
+- **CORE-R-157 Same-revision correction policy:** same-revision correction classes MUST be explicit and MUST NOT include silent scope expansion, dependency admission, architecture change, security-policy change, acceptance weakening or stop-condition weakening.
+- **CORE-R-158 Acceptance graph completeness:** every blocking acceptance criterion MUST resolve to required EvidenceRequirement IDs or deterministic N/A semantics.
+- **CORE-R-159 Evidence declaration vs artifact separation:** M03 MUST declare evidence obligations while actual runtime evidence artifacts remain owned by later evidence modules.
+- **CORE-R-160 Mandatory machine-readable stop condition:** Work Orders without explicit success/blocked/required-criterion terminal semantics MUST NOT become READY.
+- **CORE-R-161 Context budget no-silent-truncation:** context budgets MUST NOT silently drop mandatory semantic sources/fields.
+- **CORE-R-162 Governed context expansion:** context budget overflow MUST fail typed or use an explicitly governed expansion reason/policy.
+- **CORE-R-163 Source expansion policy:** canonical sources MUST declare expansion behavior such as ALWAYS_LOAD, PACKET_ON_DEMAND, VALIDATE_FINGERPRINT_ONLY or OPTIONAL_DIAGNOSTIC.
+- **CORE-R-164 Staleness hints non-authoritative:** change/event/context hints MAY narrow candidate revalidation work but MUST NOT prove freshness by absence.
+- **CORE-R-165 Unknown staleness broadens:** unknown source/workspace/lock/governance/compiler/security state MUST broaden to STALE/BLOCKED.
+- **CORE-R-166 Secret-free durable Work Orders:** durable Work Order/provenance/context payloads MUST NOT embed raw credentials or secret-bearing provider payloads.
+- **CORE-R-167 Stable logical obligation IDs:** packet/criterion/evidence IDs MAY persist across revisions only when they retain the same logical responsibility/meaning.
+- **CORE-R-168 Split/merge lineage:** packet/criterion/evidence splits or merges MUST use new IDs plus explicit lineage rather than silently reusing one old ID for changed semantics.
+- **CORE-R-169 Contract-first lineage:** M03 V0.0 lineage MUST be representable with versioned contracts and MUST NOT require a database merely for revision relationships.
+- **CORE-R-170 Required semantic mechanisms:** WOC, SDF, AEG, CBE, WLG, WSF and WPC semantic capabilities are REQUIRED in the planned M03 V0.0 contract, while implementation shape remains pending.
+
+- **CORE-R-171 Frozen diagnostic separation:** mutable diagnostic/transport/rendering metadata MUST live outside the immutable FrozenWorkOrder revision; no stored frozen field may change in place as a diagnostic-only edit.
+
+- **CORE-R-172 Context Lock anti-circularity:** FrozenWorkOrder semantic identity MUST fingerprint Context Lock requirements/constraints, not a concrete Context Lock fingerprint that itself binds to the Work Order fingerprint; concrete lock identity is bound in admission evidence.
+- **CORE-R-173 Immutable admission receipts:** WorkOrderAdmissionReceiptV1 MUST be immutable evidence of one evaluation; later staleness produces a new evaluation/receipt rather than mutating historical READY proof.

@@ -5,5 +5,5 @@
   "status": "M01 COMPLETE / M02 COMPLETE / M03 DISCOVERY ACTIVE",
   "version": "CORE V0.0 - Modular Construction",
   "phase": "2 - M03 Product Discovery",
-  "nextStep": "Continue M03 Round 2 deep planning, focusing on exact Work Order v1 contracts, admission proof, packet/dependency semantics, Context Lock + M02 basis binding, revision compatibility and semantic delta rules. Do not authorize M03 implementation."
+  "nextStep": "Review/promote M03 Round 2. Then continue Round 3 with compiler/admission service interfaces, lineage persistence disposition, resource budget dimensions, exact error/API semantics and implementation file-map direction. Do not authorize implementation."
 }
