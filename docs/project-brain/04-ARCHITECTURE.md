@@ -438,3 +438,92 @@ M03 cannot mark a criterion satisfied merely because its EvidenceRequirement exi
 CBE carries finite dimensions and source expansion policy. Mandatory sources may be referenced/fingerprint-validated rather than inlined, but mandatory semantic content cannot disappear through truncation.
 
 Round 2 freezes dimensions and behavior, not numeric defaults.
+
+
+## M03 Round 3 service architecture
+
+M03 core is a synchronous deterministic compiler/validator with explicit evidence inputs.
+
+```text
+external resolvers/adapters
+  |  resolve source refs / M02 basis / Context Lock / governance / lineage
+  v
+CompilationContextV1 / AdmissionInputsV1
+  |
+  v
++---------------- core-work-order ----------------+
+| compile            validate_frozen             |
+| diff_revision      classify_correction         |
+| evaluate_admission materialize_handoff         |
+| canonical/identity scope/packets/AEG/context   |
+| lineage/LPC        budget/errors               |
++------------------------------------------------+
+  |
+  +--> immutable contracts / receipts / fingerprints
+  |
+  v
+external governed persistence / future M04
+```
+
+### Stateless persistence boundary
+
+The repository/GEF domain may persist canonical Work Orders. M03 provides canonical bytes/contracts and a Lineage Precondition Capsule but does not perform the durable write itself.
+
+LPC acts as compare-and-set evidence:
+- expected parent revision/fingerprint/store generation;
+- proposed new revision/fingerprint;
+- deterministic precondition fingerprint.
+
+A stale precondition cannot be silently rebased.
+
+### Compiler purity boundary
+
+No hidden repository/network/HIVE/GitHub access exists inside compiler semantics. Adapters resolve inputs first.
+
+This allows:
+- deterministic tests;
+- replayable compilation;
+- simpler fuzz/property models;
+- low dependency surface;
+- multiple future hosts without semantic drift.
+
+### Context mesh architecture
+
+```text
+CanonicalSourceRef set
+       |
+       v
+Packet Context Mesh (PCM)
+  shared source nodes
+  packet->source edges
+       |
+       +--> Packet A Context Plan
+       +--> Packet B Context Plan
+       +--> Packet C Context Plan
+```
+
+PCM deduplicates references, not obligations. Reconstructed packet mandatory-source sets must equal independently compiled requirements.
+
+### Compilation provenance
+
+DCR Deterministic Compilation Receipt records:
+- request semantic fingerprint;
+- compilation-context fingerprint;
+- compiler schema/algorithm version;
+- policy/config generation;
+- lineage snapshot/precondition fingerprint;
+- output WorkOrderFingerprint/CompilationId;
+- bounded safe diagnostics.
+
+DCR is evidence, not execution authority.
+
+### Initial crate direction
+
+One candidate crate: `core-work-order`.
+
+The core is synchronous and does not require Tokio by default.
+
+Candidate dependency direction:
+`core-contracts + core-identity + core-config + core-workspace -> core-work-order -> future M04`.
+
+No database/network/Git/HIVE runtime dependency belongs in the compiler core.
