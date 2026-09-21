@@ -13,7 +13,7 @@ CORE V0.0 - Modular Construction
 Continue building CORE as the headless NexLabs action plane that operates standalone and synchronizes deeply with HIVE without duplicating HIVE-owned intelligence.
 
 ## IN PROGRESS
-- M03 Work Order Engine deep planning is the next legal product increment.
+- M03 Work Order Engine Round 1 discovery baseline is compiled: ownership, state/identity model, canonical source/scope/packet/acceptance/evidence/context semantics, threat model and proprietary mechanism candidates.
 - M04-M24 remain discovery-only until their planning freezes.
 
 ## COMPLETED
@@ -34,9 +34,10 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - M02 Round 6 calibration/technology disposition exact-head reviewed (Review 004 / Issue #32) and promoted through PR #31.
 - M02 final planning freeze exact-head reviewed (Review 005 / Issue #35) and promoted through PR #33.
 - CORE-WO-M02-001 implemented, corrected through Reviews 007/008, independently APPROVED by Review 009 / Issue #43 and promoted through PR #40.
+- M02 canonical closeout exact-head reviewed (Review 010 / Issue #45) and promoted through PR #44.
 
 ## PENDING
-- Deep-plan M03 Work Order Engine using the freeze-before-execution model.
+- Continue M03 Work Order Engine Rounds 2+ to freeze public contracts, admission proof, packet/dependency semantics, staleness/delta model, resource budgets, exact file map, tests/benchmarks, DoD, Work Order and Context Lock.
 - Deep-plan M04 through M24 in dependency order.
 - Freeze each module Requirements/Architecture/DoD/Work Order before implementation authorization.
 - Live local HIVE bootstrap evidence against current main.
@@ -47,7 +48,7 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - M03-M24 implementation remains gated by their respective planning freezes.
 
 ## NEXT STEP
-Deep-plan M03 Work Order Engine. Do not authorize M03 product implementation until its ownership, contracts, state model, file map, tests, benchmarks, DoD, Work Order, Context Lock and STOP CONDITION are frozen and independently reviewed.
+Continue M03 Round 2 deep planning, focusing on exact Work Order v1 contracts, admission proof, packet/dependency semantics, Context Lock + M02 basis binding, revision compatibility and semantic delta rules. Do not authorize M03 implementation.
 
 ## EVIDENCE
 - `docs/engineering/CORE-MODULAR-DELIVERY-MODEL.md`
@@ -86,6 +87,12 @@ Deep-plan M03 Work Order Engine. Do not authorize M03 product implementation unt
 - M02 product correction head `098de069b77aa843248b5a66dd0ca8af4107e879`
 - M02 exact-head workflow #109 `35541164008` — Governance, M01 Ubuntu/Windows/fuzz, M02 Ubuntu/Windows/fuzz SUCCESS
 - M02 implementation promotion merge `5c56eb58ed26f42f196e8045d93f2ff52bd7d87e`
+
+- M02 Review 010 / Issue #45 — APPROVED canonical closeout
+- M02 closeout PR #44
+- M02 closeout exact-head `39c8be29fd898218a86b84667fd446b235f47935`
+- M02 closeout workflow #113 `35552201325` — Governance, M01 Ubuntu/Windows/fuzz, M02 Ubuntu/Windows/fuzz SUCCESS
+- M02 closeout promotion merge `039dd7bf93d637971c486f3ee783988cbee3c7cf`
 
 ## M02 completion record
 Frozen Work Order: `CORE-WO-M02-001`
@@ -265,3 +272,30 @@ Scope armed for authorization: M02 Project / Workspace Adapter only; effective o
 Assurance: ELEVATED
 
 No architecture, scope, dependency, acceptance or calibration semantics changed during admission.
+
+
+## M03 Round 1 discovery delta
+
+Round: 1
+Module: M03 Work Order Engine
+Status: DISCOVERY ACTIVE / IMPLEMENTATION UNAUTHORIZED
+
+Round 1 freezes the discovery baseline for:
+- M03 as compiler/admission boundary, not executor;
+- immutable WorkOrderId/revision/fingerprint/compilation identity model;
+- no direct prose execution;
+- canonical source/provenance manifest;
+- explicit scope envelope;
+- stable packet declarations separated from M04 Run/Attempt/Step state;
+- Acceptance Evidence Graph;
+- correction delta classification + fail-closed scope firewall;
+- compact context budget/manifests for token economy;
+- HIVE advisory/context boundary;
+- zero-LLM compiler/validator baseline;
+- initial threat/failure/resource model;
+- candidate mechanisms WOC, SDF, AEG, CBE, WLG, WSF and WPC.
+
+Requirements added: CORE-R-112 through CORE-R-137.
+Decisions added: CORE-D-100 through CORE-D-113.
+
+M03 implementation remains unauthorized. Exact public schemas, resource budgets, file/dependency map, fuzz/benchmark plan, DoD, Work Order and Context Lock remain for later rounds.
