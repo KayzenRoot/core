@@ -545,3 +545,8 @@ Status: `ACTIVE`
 ## CORE-D-131 - Admission receipts are immutable historical proofs
 **Decision:** a READY receipt never mutates into STALE. Later changed inputs cause a new admission evaluation/receipt, while M04 rejects reuse when recorded preconditions no longer match.
 **State:** ACCEPTED
+
+
+## CORE-D-132 - Reviews use reviewer-first correction
+**Decision:** during governed reviews, the reviewer first applies any safe, bounded, causally understood correction that can be implemented and validated with currently available repository/GitHub tools. Codex or another executor is used only when the correction requires broader product implementation, unavailable local/runtime state, dependency/architecture/scope/security-policy change, or assurance that the review environment cannot provide. Every direct correction creates a new exact head and requires fresh applicable evidence.
+**State:** ACCEPTED
