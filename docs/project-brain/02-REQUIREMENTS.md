@@ -218,3 +218,5 @@ This file contains the frozen foundation requirements plus accepted module-level
 - **CORE-R-168 Split/merge lineage:** packet/criterion/evidence splits or merges MUST use new IDs plus explicit lineage rather than silently reusing one old ID for changed semantics.
 - **CORE-R-169 Contract-first lineage:** M03 V0.0 lineage MUST be representable with versioned contracts and MUST NOT require a database merely for revision relationships.
 - **CORE-R-170 Required semantic mechanisms:** WOC, SDF, AEG, CBE, WLG, WSF and WPC semantic capabilities are REQUIRED in the planned M03 V0.0 contract, while implementation shape remains pending.
+
+- **CORE-R-171 Frozen diagnostic separation:** mutable diagnostic/transport/rendering metadata MUST live outside the immutable FrozenWorkOrder revision; no stored frozen field may change in place as a diagnostic-only edit.
