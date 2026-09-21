@@ -50,3 +50,21 @@ M02 threat model details and adversarial fixtures are maintained in `docs/module
 - calibration output must redact secrets and user content;
 - the bounded Calibration Delta cannot alter authority, dependency or security semantics;
 - runtime overrides remain subject to hard validation and cannot create unlimited behavior.
+
+
+## M03 Round 2 security rules
+
+- a frozen Work Order MUST NOT embed live runtime capabilities;
+- stale/superseded/admission-mismatched revisions fail closed;
+- Work Order semantic downgrade via schema/version confusion is rejected;
+- deny rules override scope allow rules;
+- dependency admission is separately governed;
+- source/provenance fingerprints are verified before READY where policy requires;
+- governance proof replay against a different Work Order revision/fingerprint is rejected;
+- Context Lock replay against changed canonical sources/base is rejected;
+- READY receipts are basis-bound and non-evergreen;
+- raw secrets are prohibited from durable M03 payloads;
+- context expansion cannot bypass source secret classification;
+- packet DAG cycles and oversized graph/cardinality are typed failures;
+- semantic changes cannot be relabeled as documentation/evidence-only by text size;
+- UNKNOWN freshness/authority/policy state never becomes ALLOW/READY.
