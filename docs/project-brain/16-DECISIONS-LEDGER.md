@@ -536,3 +536,12 @@ Status: `ACTIVE`
 ## CORE-D-129 - Frozen Work Order objects have no mutable diagnostic subspace
 **Decision:** non-semantic diagnostic/transport/rendering metadata may evolve only outside the immutable FrozenWorkOrder revision. No field stored inside a frozen revision is edited in place under a "diagnostic-only" label.
 **State:** ACCEPTED
+
+
+## CORE-D-130 - Context Lock concrete identity is admission evidence, not FrozenWorkOrder semantic input
+**Decision:** FrozenWorkOrder fingerprints Context Lock constraints. The concrete lock fingerprint is recorded only after freeze in admission evidence, preventing a WorkOrderFingerprint <-> ContextLockFingerprint cycle.
+**State:** ACCEPTED
+
+## CORE-D-131 - Admission receipts are immutable historical proofs
+**Decision:** a READY receipt never mutates into STALE. Later changed inputs cause a new admission evaluation/receipt, while M04 rejects reuse when recorded preconditions no longer match.
+**State:** ACCEPTED
