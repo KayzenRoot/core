@@ -346,3 +346,95 @@ Fail-closed checks include:
 - non-deterministic canonical serialization.
 
 No M03 state may grant path authority beyond M02 or sandbox authority beyond future M11.
+
+
+## M03 Round 2 contract architecture
+
+M03 v1 separates immutable semantics from current admission truth.
+
+```text
+WorkOrderRequestV1
+        |
+        v
+      WOC
+        |
+        v
+FrozenWorkOrderV1  --------------------+
+ immutable semantic revision           |
+        |                               |
+        +--> WorkOrderRevisionDiffV1    |
+        |                               |
+        v                               |
+WorkOrderAdmissionRequestV1             |
+        |                               |
+        +--> fresh M02 handle/basis     |
+        +--> Context Lock proof         |
+        +--> external governance proof  |
+        +--> policy/security/config     |
+        |                               |
+        v                               |
+WorkOrderAdmissionReceiptV1             |
+ READY / STALE / BLOCKED / ...          |
+        |                               |
+        v                               |
+AdmittedWorkOrderV1 <-------------------+
+        |
+        v
+M04 revalidates admission bindings before Run creation
+```
+
+A frozen Work Order does not persist a live WorkspaceHandle. It carries `WorkspaceRequirementV1`; admission evaluates that requirement against current M02 runtime evidence.
+
+A READY receipt is not a reusable capability forever. Its validity is parameterized by workspace generation/basis fingerprint, Context Lock fingerprint, governance proof, compiler/policy/security/config generations and relevant canonical-source identities.
+
+### Packet graph architecture
+
+M03 v1 models packets as a bounded DAG:
+- acyclic;
+- stable WorkPacketId;
+- deterministic topological order with ID tie-break;
+- packet scope intersected with parent ScopeEnvelope;
+- dependencies fingerprinted as semantic input.
+
+The DAG expresses prerequisite semantics only. It does not assign workers, agents, concurrency or scheduler policy.
+
+### Revision/correction architecture
+
+M03 separates:
+
+```text
+ExecutionCorrectionProposalV1
+  -> validate against existing CorrectionPolicyV1
+  -> same FrozenWorkOrder revision when still semantically inside contract
+
+WorkOrderRevisionDiffV1
+  -> semantic contract changed
+  -> new immutable revision/fingerprint required
+```
+
+This prevents unnecessary revision churn while preserving strong governance for true semantic changes.
+
+### Admission architecture
+
+Admission verifies, but does not create, external authority:
+- M02 provides workspace truth;
+- Context Lock provides exact execution binding;
+- governance system provides approval proof;
+- M03 verifies compatibility and emits a receipt;
+- M04 revalidates required bindings before new Run creation.
+
+### Acceptance/evidence architecture
+
+AEG is a declaration graph:
+- M03 freezes criterion/evidence obligation identities and edges;
+- M14 may later plan verification execution;
+- M15 binds actual evidence artifacts;
+- M16 issues independent review verdicts.
+
+M03 cannot mark a criterion satisfied merely because its EvidenceRequirement exists.
+
+### Context architecture
+
+CBE carries finite dimensions and source expansion policy. Mandatory sources may be referenced/fingerprint-validated rather than inlined, but mandatory semantic content cannot disappear through truncation.
+
+Round 2 freezes dimensions and behavior, not numeric defaults.
