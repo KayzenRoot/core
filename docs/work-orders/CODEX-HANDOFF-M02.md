@@ -1,10 +1,14 @@
 # CODEX HANDOFF — CORE-WO-M02-001
 
-Status: AUTHORIZED
+Status: HISTORICAL_COMPLETED
 Execution branch: `feat/m02-project-workspace-adapter`
 Work Order: `.engineering/work-orders/CORE-WO-M02-001.md`
 Context Lock: `.engineering/context-locks/CORE-WO-M02-001.json`
 Module: M02 — Project / Workspace Adapter
+
+## Completion notice
+
+CORE-WO-M02-001 is complete and approved. This handoff is historical and MUST NOT be used to start a new M02 execution. Any future M02 maintenance requires a new governed Work Order or correction admission.
 
 Frozen authorized base: `bae47b2021a897396109dfcf42e8632dde13ec21`
 

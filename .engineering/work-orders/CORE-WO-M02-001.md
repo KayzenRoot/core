@@ -1,11 +1,11 @@
 # CORE-WO-M02-001 — Project / Workspace Adapter
 
-Status: ACTIVE_AUTHORIZED
+Status: COMPLETED_APPROVED
 Module: M02
 Executor: Codex
 Risk / assurance: ELEVATED
 Execution model: one comprehensive Work Order, eight ordered construction packets
-Product implementation authorization: OPEN — execution authorized only from Context Lock authorizedBase `bae47b2021a897396109dfcf42e8632dde13ec21`
+Product implementation authorization: CLOSED — WORK ORDER COMPLETED
 
 ## OBJECTIVE
 
@@ -716,3 +716,14 @@ Authorization in this record becomes effective only after this admission delta i
 The execution branch MUST start from canonical `origin/main` immediately after admission promotion. The Context Lock `authorizedBase` (`bae47b2021a897396109dfcf42e8632dde13ec21`) must be an ancestor of that execution head, and every commit between `authorizedBase` and execution start must be governance/admission metadata only, with no M02 product implementation.
 
 This record changes execution state only. All architecture, scope, dependency, acceptance, calibration and STOP semantics above remain frozen.
+
+
+## COMPLETION RECORD
+
+Final governed review: M02 Review 009 / Issue #43 — APPROVED
+Final audited PR head: `2b5ebb412c86278c8834df7091f746a164d05031`
+Product correction head: `098de069b77aa843248b5a66dd0ca8af4107e879`
+Implementation PR: #40
+Exact-head workflow: run #109 `35541164008` — Governance, M01 Ubuntu/Windows/fuzz, M02 Ubuntu/Windows/fuzz SUCCESS after same-head rerun of the known M01 timing flake.
+Promotion merge: `5c56eb58ed26f42f196e8045d93f2ff52bd7d87e`
+Result: CORE-WO-M02-001 COMPLETED_APPROVED. No unresolved HIGH/CRITICAL finding remains.

@@ -1,7 +1,7 @@
 {
   "schemaVersion": "core-evidence-bundle-v1",
   "workOrder": "CORE-WO-M02-001",
-  "status": "READY_FOR_REVIEW",
+  "status": "COMPLETED_APPROVED",
   "authorizedBase": "bae47b2021a897396109dfcf42e8632dde13ec21",
   "candidateHead": "098de069b77aa843248b5a66dd0ca8af4107e879",
   "contextLock": ".engineering/context-locks/CORE-WO-M02-001.json",
@@ -20,46 +20,153 @@
     "canonicalTruth": "Git/filesystem evidence; HIVE was advisory only"
   },
   "canonicalSources": [
-    {"path": "docs/project-brain/13-CHECKPOINT.md", "blobSha": "3c9901a2b19cbf6ea0b063e09ddbc589e484ba1a"},
-    {"path": "docs/project-brain/16-DECISIONS-LEDGER.md", "blobSha": "f55996920da23b03a0c4f01dd8435f78cd8ed5b3"},
-    {"path": "docs/project-brain/03-SCOPE.md", "blobSha": "6b82778e9ba7edf181caa23934289d0b9d438a54"},
-    {"path": "docs/project-brain/15-DEFINITION-OF-DONE.md", "blobSha": "8a7e99546381ac13e0587cb799eef15e4e5586e0"},
-    {"path": "docs/project-brain/04-ARCHITECTURE.md", "blobSha": "5ad24de448ca8dea3f0130fdddd12377d18f32e2"},
-    {"path": "docs/project-brain/02-REQUIREMENTS.md", "blobSha": "de33ecab980785a2ce69061cd27cfe56c6a48d22"},
-    {"path": "docs/project-brain/10-SECURITY-GOVERNANCE.md", "blobSha": "430b861a0e2f1c0a93894cf5877e62cd20d8e0bd"},
-    {"path": "docs/project-brain/11-TEST-PLAN.md", "blobSha": "8d28f7b5d48aa2a1b0101694a29b5005baaa9c0c"},
-    {"path": "docs/modules/M02-PROJECT-WORKSPACE-ADAPTER.md", "blobSha": "954aa5f7c772254ca145a76c4b22e0d43c535556"}
+    {
+      "path": "docs/project-brain/13-CHECKPOINT.md",
+      "blobSha": "3c9901a2b19cbf6ea0b063e09ddbc589e484ba1a"
+    },
+    {
+      "path": "docs/project-brain/16-DECISIONS-LEDGER.md",
+      "blobSha": "f55996920da23b03a0c4f01dd8435f78cd8ed5b3"
+    },
+    {
+      "path": "docs/project-brain/03-SCOPE.md",
+      "blobSha": "6b82778e9ba7edf181caa23934289d0b9d438a54"
+    },
+    {
+      "path": "docs/project-brain/15-DEFINITION-OF-DONE.md",
+      "blobSha": "8a7e99546381ac13e0587cb799eef15e4e5586e0"
+    },
+    {
+      "path": "docs/project-brain/04-ARCHITECTURE.md",
+      "blobSha": "5ad24de448ca8dea3f0130fdddd12377d18f32e2"
+    },
+    {
+      "path": "docs/project-brain/02-REQUIREMENTS.md",
+      "blobSha": "de33ecab980785a2ce69061cd27cfe56c6a48d22"
+    },
+    {
+      "path": "docs/project-brain/10-SECURITY-GOVERNANCE.md",
+      "blobSha": "430b861a0e2f1c0a93894cf5877e62cd20d8e0bd"
+    },
+    {
+      "path": "docs/project-brain/11-TEST-PLAN.md",
+      "blobSha": "8d28f7b5d48aa2a1b0101694a29b5005baaa9c0c"
+    },
+    {
+      "path": "docs/modules/M02-PROJECT-WORKSPACE-ADAPTER.md",
+      "blobSha": "954aa5f7c772254ca145a76c4b22e0d43c535556"
+    }
   ],
   "changedFiles": [
-    "Cargo.toml", "Cargo.lock", "crates/core-config/src/lib.rs", "crates/core-workspace/Cargo.toml",
-    "crates/core-workspace/benches/m02_workspace.rs", "crates/core-workspace/src/authority.rs",
-    "crates/core-workspace/src/basis.rs", "crates/core-workspace/src/cache.rs", "crates/core-workspace/src/contracts.rs",
-    "crates/core-workspace/src/git/mod.rs", "crates/core-workspace/src/git/system.rs", "crates/core-workspace/src/hashing.rs",
-    "crates/core-workspace/src/identity.rs", "crates/core-workspace/src/invalidation.rs", "crates/core-workspace/src/lib.rs",
-    "crates/core-workspace/src/reconcile.rs", "crates/core-workspace/src/repository.rs", "crates/core-workspace/src/service.rs",
-    "crates/core-workspace/src/state.rs", "crates/core-workspace/tests/adversarial.rs", "crates/core-workspace/tests/attach.rs",
-    "crates/core-workspace/tests/cache.rs", "crates/core-workspace/tests/drift.rs", "crates/core-workspace/tests/git_system.rs",
-    "crates/core-workspace/tests/hashing.rs", "crates/core-workspace/tests/identity.rs", "crates/core-workspace/tests/invalidation.rs",
-    "crates/core-workspace/tests/reconciliation.rs", "crates/core-workspace/tests/repository_graph.rs", "crates/core-workspace/tests/service.rs",
-    "fuzz/Cargo.toml", "fuzz/Cargo.lock", "fuzz/fuzz_targets/m02_git_evidence.rs", "fuzz/fuzz_targets/m02_path_authority.rs",
-    "fuzz/fuzz_targets/m02_repository_graph.rs", ".github/workflows/governance.yml", "scripts/validate_m02.py",
-    "docs/evidence/M02-PREFLIGHT.md", "docs/evidence/M02-CALIBRATION-REPORT.md", "docs/evidence/M02-EXECUTION-REPORT.md"
+    "Cargo.toml",
+    "Cargo.lock",
+    "crates/core-config/src/lib.rs",
+    "crates/core-workspace/Cargo.toml",
+    "crates/core-workspace/benches/m02_workspace.rs",
+    "crates/core-workspace/src/authority.rs",
+    "crates/core-workspace/src/basis.rs",
+    "crates/core-workspace/src/cache.rs",
+    "crates/core-workspace/src/contracts.rs",
+    "crates/core-workspace/src/git/mod.rs",
+    "crates/core-workspace/src/git/system.rs",
+    "crates/core-workspace/src/hashing.rs",
+    "crates/core-workspace/src/identity.rs",
+    "crates/core-workspace/src/invalidation.rs",
+    "crates/core-workspace/src/lib.rs",
+    "crates/core-workspace/src/reconcile.rs",
+    "crates/core-workspace/src/repository.rs",
+    "crates/core-workspace/src/service.rs",
+    "crates/core-workspace/src/state.rs",
+    "crates/core-workspace/tests/adversarial.rs",
+    "crates/core-workspace/tests/attach.rs",
+    "crates/core-workspace/tests/cache.rs",
+    "crates/core-workspace/tests/drift.rs",
+    "crates/core-workspace/tests/git_system.rs",
+    "crates/core-workspace/tests/hashing.rs",
+    "crates/core-workspace/tests/identity.rs",
+    "crates/core-workspace/tests/invalidation.rs",
+    "crates/core-workspace/tests/reconciliation.rs",
+    "crates/core-workspace/tests/repository_graph.rs",
+    "crates/core-workspace/tests/service.rs",
+    "fuzz/Cargo.toml",
+    "fuzz/Cargo.lock",
+    "fuzz/fuzz_targets/m02_git_evidence.rs",
+    "fuzz/fuzz_targets/m02_path_authority.rs",
+    "fuzz/fuzz_targets/m02_repository_graph.rs",
+    ".github/workflows/governance.yml",
+    "scripts/validate_m02.py",
+    "docs/evidence/M02-PREFLIGHT.md",
+    "docs/evidence/M02-CALIBRATION-REPORT.md",
+    "docs/evidence/M02-EXECUTION-REPORT.md"
   ],
-  "commits": ["00c8fd3", "eccd045", "b22020a", "17f9b7c", "d7cf62d", "9f11261", "4e8045e", "7c6d6b3", "39b751a", "98615a8", "1cb2a73", "09269ec65f230bae513623a7e5424466dbd82a0c", "098de069b77aa843248b5a66dd0ca8af4107e879"],
+  "commits": [
+    "00c8fd3",
+    "eccd045",
+    "b22020a",
+    "17f9b7c",
+    "d7cf62d",
+    "9f11261",
+    "4e8045e",
+    "7c6d6b3",
+    "39b751a",
+    "98615a8",
+    "1cb2a73",
+    "09269ec65f230bae513623a7e5424466dbd82a0c",
+    "098de069b77aa843248b5a66dd0ca8af4107e879"
+  ],
   "commands": [
-    {"command": "cargo fmt --all -- --check", "result": "PASS"},
-    {"command": "cargo clippy --workspace --all-targets --all-features --locked -- -D warnings", "result": "PASS"},
-    {"command": "cargo test --workspace --all-features --locked", "result": "PASS"},
-    {"command": "cargo check --manifest-path fuzz/Cargo.toml --bins", "result": "PASS"},
-    {"command": "python -m py_compile scripts/validate_governance.py scripts/hive_bootstrap.py scripts/hive_mcp.py scripts/validate_m02.py", "result": "PASS"},
-    {"command": "python scripts/validate_governance.py", "result": "PASS"},
-    {"command": "python scripts/validate_m02.py", "result": "PASS"},
-    {"command": "python -m unittest discover -s tests -p test_*.py -v", "result": "PASS (6 tests)"},
-    {"command": "cargo bench -p core-workspace --bench m02_workspace", "result": "PASS (5 measured iterations per scenario; calibration unchanged by Review 007 correction)"},
-    {"command": "python -m pytest -q tests", "result": "PASS (6 tests)"},
-    {"command": "cargo check --manifest-path fuzz/Cargo.toml --bins --locked", "result": "PASS"},
-    {"command": "cargo bench -p core-workspace --bench m02_workspace --locked", "result": "PASS (7 scenarios; five measured iterations; selected budgets unchanged)"},
-    {"command": "WSL2 cargo fuzz run <seven admitted targets> -- -runs=1000", "result": "PASS (seven bounded campaigns; no crashes)"}
+    {
+      "command": "cargo fmt --all -- --check",
+      "result": "PASS"
+    },
+    {
+      "command": "cargo clippy --workspace --all-targets --all-features --locked -- -D warnings",
+      "result": "PASS"
+    },
+    {
+      "command": "cargo test --workspace --all-features --locked",
+      "result": "PASS"
+    },
+    {
+      "command": "cargo check --manifest-path fuzz/Cargo.toml --bins",
+      "result": "PASS"
+    },
+    {
+      "command": "python -m py_compile scripts/validate_governance.py scripts/hive_bootstrap.py scripts/hive_mcp.py scripts/validate_m02.py",
+      "result": "PASS"
+    },
+    {
+      "command": "python scripts/validate_governance.py",
+      "result": "PASS"
+    },
+    {
+      "command": "python scripts/validate_m02.py",
+      "result": "PASS"
+    },
+    {
+      "command": "python -m unittest discover -s tests -p test_*.py -v",
+      "result": "PASS (6 tests)"
+    },
+    {
+      "command": "cargo bench -p core-workspace --bench m02_workspace",
+      "result": "PASS (5 measured iterations per scenario; calibration unchanged by Review 007 correction)"
+    },
+    {
+      "command": "python -m pytest -q tests",
+      "result": "PASS (6 tests)"
+    },
+    {
+      "command": "cargo check --manifest-path fuzz/Cargo.toml --bins --locked",
+      "result": "PASS"
+    },
+    {
+      "command": "cargo bench -p core-workspace --bench m02_workspace --locked",
+      "result": "PASS (7 scenarios; five measured iterations; selected budgets unchanged)"
+    },
+    {
+      "command": "WSL2 cargo fuzz run <seven admitted targets> -- -runs=1000",
+      "result": "PASS (seven bounded campaigns; no crashes)"
+    }
   ],
   "tests": {
     "unit": "PASS (16 core-workspace unit tests)",
@@ -385,22 +492,86 @@
       "m01WindowsResult": "PASS",
       "m01FuzzResult": "PASS",
       "qualificationNote": "Evidence-only head; no source change from qualifying product head 098de069b77aa843248b5a66dd0ca8af4107e879. The qualifying product-head run 35539174568 was fully green."
+    },
+    {
+      "runId": 35541164008,
+      "workflow": "CI",
+      "candidateProductHead": "098de069b77aa843248b5a66dd0ca8af4107e879",
+      "evidenceHead": "2b5ebb412c86278c8834df7091f746a164d05031",
+      "governanceResult": "PASS",
+      "m01UbuntuResult": "PASS",
+      "m01WindowsResult": "PASS",
+      "m01FuzzResult": "PASS",
+      "m02UbuntuResult": "PASS",
+      "m02WindowsResult": "PASS",
+      "m02FuzzResult": "PASS",
+      "qualificationNote": "Final Review 009 exact-head matrix; first attempt contained known M01 timing flake, same-head rerun passed with no product delta."
     }
   ],
   "failuresAndCorrections": [
-    {"correction": "Static validator excluded TOML bench metadata key harness from dependency scan", "commit": "7c6d6b3"},
-    {"correction": "Standalone no-Git inventory now detects content/directory drift and nested repository boundaries", "commit": "7c6d6b3"},
-    {"correction": "Cross-platform lexical normalization rejects Windows-shaped traversal on Unix", "commit": "98615a8", "hostedFailure": "M02 Ubuntu lib test traversal_is_rejected_without_writing_source"},
-    {"correction": "Declared explicit versions for admitted local path dependencies to satisfy cargo-deny wildcard policy", "commit": "1cb2a73", "hostedFailure": "M02 Ubuntu/Windows cargo deny check"},
-    {"correction": "Integrated EIS/CIG dirty state, selective DWS equivalence, broad fallback and PEC L1 provenance", "commit": "09269ec", "finding": "HIGH-1"},
-    {"correction": "Hardened Git ContentHashed safe -z parsing, authority checks, streaming BHC and byte-sensitive fingerprints", "commit": "09269ec", "finding": "HIGH-2"},
-    {"correction": "Made filesystem case semantics conservative and removed Unix-family inference", "commit": "09269ec", "finding": "HIGH-3"},
-    {"correction": "Replaced path-only hash reuse with identity-aware bounded coalescing and deadline cleanup", "commit": "09269ec", "finding": "HIGH-4"},
-    {"correction": "Hardened production Git argv/config, concurrent output draining, deadline kill/reap and fsmonitor isolation", "commit": "09269ec", "finding": "HIGH-5"},
-    {"correction": "Resolved revalidation targets through authority instead of process CWD", "commit": "09269ec", "finding": "HIGH-6"},
-    {"correction": "Removed event-hint/PEC freshness shortcuts; action-boundary evidence is recomputed and selective DWS results are proven equivalent to full recomputation, including nested repository graph drift", "commit": "098de069b77aa843248b5a66dd0ca8af4107e879", "finding": "M02-REVIEW-008 residual 1"},
-    {"correction": "Made BHC deadlines/cancellation terminal inside bounded streaming, propagated typed waiter results, cleaned in-flight state, and added concurrent coalescing/rewrite regression coverage", "commit": "098de069b77aa843248b5a66dd0ca8af4107e879", "finding": "M02-REVIEW-008 residual 2"},
-    {"correction": "Added hostile fsmonitor, capped dual-output, and deadline kill/reap/no-poison Git regressions; nested directory boundaries are represented without opening directories", "commit": "098de069b77aa843248b5a66dd0ca8af4107e879", "finding": "M02-REVIEW-008 residual 3"}
+    {
+      "correction": "Static validator excluded TOML bench metadata key harness from dependency scan",
+      "commit": "7c6d6b3"
+    },
+    {
+      "correction": "Standalone no-Git inventory now detects content/directory drift and nested repository boundaries",
+      "commit": "7c6d6b3"
+    },
+    {
+      "correction": "Cross-platform lexical normalization rejects Windows-shaped traversal on Unix",
+      "commit": "98615a8",
+      "hostedFailure": "M02 Ubuntu lib test traversal_is_rejected_without_writing_source"
+    },
+    {
+      "correction": "Declared explicit versions for admitted local path dependencies to satisfy cargo-deny wildcard policy",
+      "commit": "1cb2a73",
+      "hostedFailure": "M02 Ubuntu/Windows cargo deny check"
+    },
+    {
+      "correction": "Integrated EIS/CIG dirty state, selective DWS equivalence, broad fallback and PEC L1 provenance",
+      "commit": "09269ec",
+      "finding": "HIGH-1"
+    },
+    {
+      "correction": "Hardened Git ContentHashed safe -z parsing, authority checks, streaming BHC and byte-sensitive fingerprints",
+      "commit": "09269ec",
+      "finding": "HIGH-2"
+    },
+    {
+      "correction": "Made filesystem case semantics conservative and removed Unix-family inference",
+      "commit": "09269ec",
+      "finding": "HIGH-3"
+    },
+    {
+      "correction": "Replaced path-only hash reuse with identity-aware bounded coalescing and deadline cleanup",
+      "commit": "09269ec",
+      "finding": "HIGH-4"
+    },
+    {
+      "correction": "Hardened production Git argv/config, concurrent output draining, deadline kill/reap and fsmonitor isolation",
+      "commit": "09269ec",
+      "finding": "HIGH-5"
+    },
+    {
+      "correction": "Resolved revalidation targets through authority instead of process CWD",
+      "commit": "09269ec",
+      "finding": "HIGH-6"
+    },
+    {
+      "correction": "Removed event-hint/PEC freshness shortcuts; action-boundary evidence is recomputed and selective DWS results are proven equivalent to full recomputation, including nested repository graph drift",
+      "commit": "098de069b77aa843248b5a66dd0ca8af4107e879",
+      "finding": "M02-REVIEW-008 residual 1"
+    },
+    {
+      "correction": "Made BHC deadlines/cancellation terminal inside bounded streaming, propagated typed waiter results, cleaned in-flight state, and added concurrent coalescing/rewrite regression coverage",
+      "commit": "098de069b77aa843248b5a66dd0ca8af4107e879",
+      "finding": "M02-REVIEW-008 residual 2"
+    },
+    {
+      "correction": "Added hostile fsmonitor, capped dual-output, and deadline kill/reap/no-poison Git regressions; nested directory boundaries are represented without opening directories",
+      "commit": "098de069b77aa843248b5a66dd0ca8af4107e879",
+      "finding": "M02-REVIEW-008 residual 3"
+    }
   ],
   "residualRisks": [
     "HIVE index/checkpoint is stale for this execution checkout; canonical Git remains truth",
@@ -408,12 +579,24 @@
   ],
   "proposedCheckpointDelta": "Request independent governed Review 009 now that the three Review 008 residual blockers, exact-head hosted matrix, supply-chain/advisory/SBOM/fuzz gates and local evidence are green; do not self-promote or merge, and retain HIVE stale-currentness note.",
   "executorVerdict": "READY_FOR_REVIEW",
-  "reviewerVerdict": null,
+  "reviewerVerdict": "APPROVED",
   "finalPlanningReview": {
     "issue": 35,
     "verdict": "APPROVED",
     "freezePr": 33,
     "workflowRun": 35516261944,
     "promotionMerge": "bae47b2021a897396109dfcf42e8632dde13ec21"
+  },
+  "finalReviewedHead": "2b5ebb412c86278c8834df7091f746a164d05031",
+  "promotionMerge": "5c56eb58ed26f42f196e8045d93f2ff52bd7d87e",
+  "completion": {
+    "review": "M02-REVIEW-009",
+    "issue": 43,
+    "implementationPullRequest": 40,
+    "workflowRun": 35541164008,
+    "finalReviewedHead": "2b5ebb412c86278c8834df7091f746a164d05031",
+    "productCorrectionHead": "098de069b77aa843248b5a66dd0ca8af4107e879",
+    "promotionMerge": "5c56eb58ed26f42f196e8045d93f2ff52bd7d87e",
+    "result": "M02_COMPLETE"
   }
 }
