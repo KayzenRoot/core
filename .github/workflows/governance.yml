@@ -90,3 +90,66 @@ jobs:
           for target in ipc_frames config_toml compatibility journal_records; do
             cargo +nightly fuzz run "$target" -- -runs=1000
           done
+
+  m02:
+    name: M02 workspace adapter
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.12"
+      - name: Validate governance and M02 static boundaries
+        run: |
+          python -m py_compile scripts/validate_governance.py scripts/hive_bootstrap.py scripts/hive_mcp.py scripts/validate_m02.py
+          python scripts/validate_governance.py
+          python scripts/validate_m02.py
+      - name: Rust toolchain
+        run: rustup show active-toolchain
+      - name: Format
+        run: cargo fmt --all -- --check
+      - name: Clippy
+        run: cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
+      - name: Workspace and M02 tests
+        run: cargo test --workspace --all-features --locked
+      - name: Supply-chain tools
+        run: cargo install cargo-deny cargo-audit --locked
+      - name: Dependency policy
+        run: cargo deny check
+      - name: Advisory scan
+        run: cargo audit
+      - name: SBOM
+        run: python scripts/generate_sbom.py --output artifacts/m02-sbom.cdx.json
+      - name: Upload M02 evidence
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
+        with:
+          name: m02-evidence-${{ matrix.os }}
+          path: |
+            artifacts/
+            docs/evidence/M02-*.md
+            .engineering/evidence/CORE-WO-M02-001.json
+
+  m02-fuzz:
+    name: M02 bounded fuzz campaign
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - name: Install nightly toolchain
+        run: rustup toolchain install nightly --profile minimal
+      - name: Install cargo-fuzz
+        run: cargo +nightly install cargo-fuzz --locked
+      - name: Run bounded M02 fuzz targets
+        shell: bash
+        working-directory: fuzz
+        run: |
+          set -euo pipefail
+          for target in m02_path_authority m02_repository_graph m02_git_evidence; do
+            cargo +nightly fuzz run "$target" -- -runs=1000
+          done
