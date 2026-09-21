@@ -531,3 +531,8 @@ Status: `ACTIVE`
 ## CORE-D-128 - WOC/SDF/AEG/CBE/WLG/WSF/WPC are required M03 V0.0 semantic capabilities
 **Decision:** the semantic behaviors of all seven Round 1 mechanisms are part of planned V0.0. Exact Rust implementation/file decomposition remains a later freeze.
 **State:** ACCEPTED
+
+
+## CORE-D-129 - Frozen Work Order objects have no mutable diagnostic subspace
+**Decision:** non-semantic diagnostic/transport/rendering metadata may evolve only outside the immutable FrozenWorkOrder revision. No field stored inside a frozen revision is edited in place under a "diagnostic-only" label.
+**State:** ACCEPTED
