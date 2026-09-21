@@ -68,3 +68,19 @@ M02 threat model details and adversarial fixtures are maintained in `docs/module
 - packet DAG cycles and oversized graph/cardinality are typed failures;
 - semantic changes cannot be relabeled as documentation/evidence-only by text size;
 - UNKNOWN freshness/authority/policy state never becomes ALLOW/READY.
+
+
+## M03 Round 3 security rules
+
+- no hidden I/O from compiler/admission core;
+- no random opaque WorkOrderId allocation inside M03;
+- canonical revision persistence MUST validate LPC parent/store-generation precondition;
+- stale LPC cannot auto-rebase;
+- no internal database is canonical in V0.0;
+- compile memo/cache is disposable and cannot authorize READY;
+- resource failure produces no partial frozen/admitted result;
+- diagnostics are bounded and secret-safe;
+- error retryability cannot trigger hidden authority-changing refresh;
+- canonical projection must reject duplicate IDs/dangling refs/cycles before freeze;
+- external adapter evidence is fingerprinted/provenanced before use;
+- DCR proves compilation inputs/output identity but grants no execution authority.
