@@ -158,8 +158,9 @@ The repository validator and PR CI result are recorded only after execution on t
 
 ## Risks and residuals
 
-- The latest `main` CI has a pre-existing M01 Ubuntu failure. It remains in the required status-check set, so auto-merge cannot advance through that failing gate.
-- The governance PR itself must pass all seven exact check contexts before it can be considered `READY_FOR_REVIEW`; this document must be updated with the PR/head/run result after creation.
+- The latest pre-mutation `main` CI had a pre-existing M01 Ubuntu failure. It remains in the required status-check set and was green on the governance PR run, so auto-merge cannot advance through any failing required gate.
+- The exact governance PR run `35605615596` validated head `afc54df580386f46cee3d29e60b13a3d3a74f8e1`: 6 of 7 required contexts passed; `M02 workspace adapter (windows-latest)` failed in `Workspace and M02 tests` because `tests::multiple_leases_release_in_different_order_without_lost_notifications` reported an active capability lease and `ForceTerminate` at `crates/core-runtime/src/lib.rs:2205`. This is product/runtime scope and is not corrected here.
+- Because one required context failed, the PR is not `READY_FOR_REVIEW`; the ruleset remains fail-closed.
 - Ruleset administration is remote state; independent review and checkpoint promotion remain separate from this executor evidence.
 - No product, M03, dependency, workflow or secret-bearing source change is included.
 
@@ -179,6 +180,8 @@ Record the objectively proven activation of `CORE main protection` id `23769853`
 
 ## PR handoff
 
-- PR: pending creation from `governance/github-hardening`
-- Final branch head: pending commit/push
-- Exact-head Governance result: pending PR CI
+- PR: `#56` - https://github.com/KayzenRoot/core/pull/56
+- Initial governance branch head validated: `afc54df580386f46cee3d29e60b13a3d3a74f8e1`
+- Base head: `499042df143fc519e42c6904461a011b62d26125`
+- Workflow run: `35605615596` - 6/7 required contexts passed; `M02 workspace adapter (windows-latest)` failed
+- PR state: open, not merged; independent review and correction of the runtime failure remain pending

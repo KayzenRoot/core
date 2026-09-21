@@ -370,5 +370,5 @@ Result: M03 Round 2 accepted into discovery baseline. Implementation remains una
 - Worktree/branch: `D:\Projeto Codexx\core-gov-002-c01` / `governance/github-hardening`
 - Ruleset: `CORE main protection`, id `23769853`, active, target `~DEFAULT_BRANCH`, no bypass actors
 - Verification: `gh ruleset view 23769853 -R KayzenRoot/core` and `gh ruleset check main -R KayzenRoot/core` succeeded
-- Residual: pre-existing `M01 (ubuntu-latest)` failure on `hostile_git_deadline_kills_reaps_and_does_not_poison_next_inspection` remains a required CI gate; no product/M03 correction is included here.
+- Residual: exact governance PR run `35605615596` failed `M02 workspace adapter (windows-latest)` at `tests::multiple_leases_release_in_different_order_without_lost_notifications`; the required gate remains active and no product/M03 correction is included here.
 - State: factual GitHub activation recorded; PR review, CI and promotion are not implied.

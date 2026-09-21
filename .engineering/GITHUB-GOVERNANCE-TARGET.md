@@ -23,6 +23,8 @@ Post-activation readback at `2026-09-21T13:22:47Z`:
 
 The latest `main` workflow before this governance PR has a pre-existing failure in `M01 (ubuntu-latest)` at `hostile_git_deadline_kills_reaps_and_does_not_poison_next_inspection`; this is retained as an explicit gate residual and is not weakened or fixed by this governance delta.
 
+On governance PR `#56`, the exact-head workflow `35605615596` passed six of seven required contexts and failed only `M02 workspace adapter (windows-latest)` at `tests::multiple_leases_release_in_different_order_without_lost_notifications`; the failed product/runtime gate remains active and is not corrected in this governance delta.
+
 ## Target `main` policy
 
 - Changes reach `main` through pull requests.
