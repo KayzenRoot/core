@@ -223,3 +223,41 @@ This file contains the frozen foundation requirements plus accepted module-level
 
 - **CORE-R-172 Context Lock anti-circularity:** FrozenWorkOrder semantic identity MUST fingerprint Context Lock requirements/constraints, not a concrete Context Lock fingerprint that itself binds to the Work Order fingerprint; concrete lock identity is bound in admission evidence.
 - **CORE-R-173 Immutable admission receipts:** WorkOrderAdmissionReceiptV1 MUST be immutable evidence of one evaluation; later staleness produces a new evaluation/receipt rather than mutating historical READY proof.
+
+
+## M03 Round 3 requirements
+
+- **CORE-R-174 Stateless compiler core:** M03 V0.0 core compilation/admission semantics MUST be stateless-by-default and MUST NOT require an internal database.
+- **CORE-R-175 No hidden I/O:** core compiler/service operations MUST NOT scan repositories, invoke Git, call HIVE/GitHub/network services or persist Work Orders implicitly.
+- **CORE-R-176 Explicit compile operation:** M03 MUST expose deterministic compile semantics from WorkOrderRequestV1 + explicit CompilationContextV1 to FrozenWorkOrderV1 + compilation proof.
+- **CORE-R-177 Frozen validation operation:** M03 MUST support deterministic validation of an already frozen revision without mutating it.
+- **CORE-R-178 Revision diff operation:** M03 MUST produce deterministic semantic WorkOrderRevisionDiffV1 results.
+- **CORE-R-179 Correction classification operation:** M03 MUST classify ExecutionCorrectionProposalV1 against the frozen CorrectionPolicy without mutating the Work Order.
+- **CORE-R-180 Admission evaluation operation:** M03 MUST evaluate admission only from explicit resolved workspace/lock/governance/source/policy inputs.
+- **CORE-R-181 Handoff materialization operation:** AdmittedWorkOrderV1 MUST be materialized only from an exact FrozenWorkOrder + matching READY immutable admission receipt.
+- **CORE-R-182 Deterministic WorkOrderId creation:** M03 MUST NOT generate opaque random WorkOrderIds internally; IDs are explicit or derived deterministically from a versioned logical key.
+- **CORE-R-183 External lineage snapshot:** semantic revision compilation MUST consume an authoritative LineageSnapshotV1 rather than assume local latest revision state.
+- **CORE-R-184 Lineage CAS precondition:** new revision compilation MUST emit LineagePreconditionCapsuleV1 and canonical persistence MUST verify it before promotion.
+- **CORE-R-185 Lineage conflict fail-closed:** if the external lineage/store generation advanced, persistence MUST fail LINEAGE_CONFLICT and require re-resolution/recompile.
+- **CORE-R-186 Revision numbering discipline:** canonical revisions start at 1, increase monotonically by one, are never reused, and revision number alone MUST NOT prove semantic identity.
+- **CORE-R-187 No internal persistence authority:** M03 MUST NOT commit/push/update checkpoint/self-promote Work Orders; durable repository storage remains external.
+- **CORE-R-188 Single canonical fingerprint stack:** M03 MUST reuse core-identity canonical fingerprint primitives rather than introduce a second generic hash/canonicalization framework.
+- **CORE-R-189 Canonical projection independence:** semantic identity MUST be independent of incidental pretty-print JSON formatting and map iteration order.
+- **CORE-R-190 Packet context plans:** M03 MUST produce packet-specific context source/ref plans without materializing executor prompt text.
+- **CORE-R-191 Shared packet context deduplication:** repeated stable source refs across packets SHOULD be represented once through a canonical shared context mesh with lossless packet reconstruction.
+- **CORE-R-192 Derived compile memo only:** any compilation cache MUST be derived/disposable, keyed by all correctness-relevant compiler/context generations, and MUST NOT become source truth.
+- **CORE-R-193 No persistent compile cache initially:** persistent M03 compile caching is OUT OF SCOPE for V0.0 absent later evidence/admission.
+- **CORE-R-194 Explicit M03 resource budget:** request/payload/cardinality/graph/context/diff/diagnostic/time dimensions MUST be typed and finite before production acceptance.
+- **CORE-R-195 Evidence-derived M03 budget defaults:** numeric M03 resource defaults MUST come from reproducible implementation calibration rather than architecture guesses.
+- **CORE-R-196 No runtime hidden autotuning:** M03 V0.0 MUST NOT silently benchmark/rewrite persistent resource defaults at runtime.
+- **CORE-R-197 Typed error categories:** M03 errors MUST distinguish invalid input, stale/conflict, policy block, resource block and internal invariant categories with machine-readable reason codes.
+- **CORE-R-198 Explicit retryability:** errors MUST carry deterministic retryability semantics; M03 MUST NOT silently refresh lineage/workspace/governance and retry behind the caller.
+- **CORE-R-199 Bounded safe diagnostics:** errors/receipts MAY carry bounded safe IDs/fingerprints/diagnostics but MUST NOT leak raw secret material.
+- **CORE-R-200 One-crate initial direction:** M03 V0.0 planning SHOULD target one focused `core-work-order` crate unless evidence later justifies a split.
+- **CORE-R-201 Synchronous core baseline:** the core compiler/admission baseline SHOULD require no async runtime/Tokio dependency unless a later proof obligation demonstrates necessity.
+- **CORE-R-202 Dependency direction:** core-work-order MAY depend downward on core-contracts/core-identity/core-config/core-workspace but MUST NOT depend on M04+; core-workspace MUST NOT depend back on core-work-order.
+- **CORE-R-203 Compilation determinism proof:** repeated equivalent compile inputs MUST produce identical semantic outputs/fingerprints regardless of cache state or collection iteration order.
+- **CORE-R-204 Admission determinism proof:** identical frozen revision + resolved admission inputs MUST produce identical semantic receipt/status/fingerprint; UNKNOWN MUST never become READY.
+- **CORE-R-205 Deterministic Compilation Receipt:** compilation MUST emit bounded provenance tying request/context/compiler/lineage-precondition/output fingerprints together.
+- **CORE-R-206 Packet Context Mesh reconstruction:** reconstructing each PacketContextPlan from the shared context mesh MUST yield exactly the independently required mandatory source set.
+- **CORE-R-207 No partial output on resource failure:** resource/deadline failure MUST NOT yield a partially FROZEN or READY contract.

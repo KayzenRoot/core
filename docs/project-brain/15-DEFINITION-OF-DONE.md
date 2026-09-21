@@ -112,3 +112,22 @@ The eventual M03 DoD additionally requires:
 - secret-free durable contracts.
 
 M03 remains discovery-only after Round 2.
+
+
+### M03 Round 3 DoD refinements
+
+Final M03 acceptance must additionally prove:
+- stateless no-hidden-I/O compiler core;
+- deterministic compile/validate/diff/classify/admit/handoff services;
+- deterministic logical ID creation;
+- external lineage snapshot + LPC race prevention;
+- no internal database/persistence authority;
+- canonical fingerprint-stack reuse;
+- packet context mesh lossless reconstruction;
+- DCR compiler provenance;
+- explicit calibrated resource budgets;
+- typed error/retryability behavior;
+- dependency direction without M02 reverse cycle;
+- no partial frozen/admitted result under budget/deadline failure.
+
+Round 3 does not authorize implementation.
