@@ -545,3 +545,68 @@ Status: `ACTIVE`
 ## CORE-D-131 - Admission receipts are immutable historical proofs
 **Decision:** a READY receipt never mutates into STALE. Later changed inputs cause a new admission evaluation/receipt, while M04 rejects reuse when recorded preconditions no longer match.
 **State:** ACCEPTED
+
+
+## CORE-D-132 - M03 core is stateless by default
+**Decision:** V0.0 compiler/admission logic owns no internal database or hidden canonical registry. It consumes explicit snapshots/evidence and emits deterministic contracts.
+**State:** ACCEPTED
+
+## CORE-D-133 - M03 core performs no hidden I/O
+**Decision:** repository/Git/HIVE/GitHub/network/persistence work belongs to external adapters/domains; compiler semantics operate on resolved typed inputs.
+**State:** ACCEPTED
+
+## CORE-D-134 - M03 does not generate opaque random WorkOrderIds
+**Decision:** logical IDs are caller-provided or deterministically derived from a versioned logical key through core-identity.
+**State:** ACCEPTED
+
+## CORE-D-135 - LPC provides lineage compare-and-set semantics
+**Decision:** new semantic revisions emit a Lineage Precondition Capsule binding expected parent revision/fingerprint/store generation. Canonical persistence must reject stale preconditions.
+**State:** ACCEPTED
+
+## CORE-D-136 - M03 V0.0 has no internal persistence database
+**Decision:** canonical Work Orders may remain repository/GEF persisted. M03 serializes and validates but does not commit/push/self-promote. Database storage is future/evidence-gated.
+**State:** ACCEPTED
+
+## CORE-D-137 - M03 reuses core-identity canonical fingerprinting
+**Decision:** semantic projection is explicit and sorted; no second generic canonical/hash stack is introduced.
+**State:** ACCEPTED
+
+## CORE-D-138 - Compile memoization is derived and optional
+**Decision:** any L1 compilation memo is disposable and correctness-independent. Persistent compilation cache is not part of V0.0.
+**State:** ACCEPTED
+
+## CORE-D-139 - M03 numeric resource defaults require calibration
+**Decision:** Round 3 freezes dimensions/fixture directions; final finite numeric defaults come from reproducible implementation evidence before production acceptance.
+**State:** ACCEPTED
+
+## CORE-D-140 - M03 V0.0 core is synchronous unless evidence proves async necessity
+**Decision:** no Tokio/async runtime dependency is admitted merely for compiler convenience.
+**State:** ACCEPTED
+
+## CORE-D-141 - M03 starts as one core-work-order crate
+**Decision:** one focused crate is the initial direction. Split requires later evidence and governed change.
+**State:** ACCEPTED
+
+## CORE-D-142 - Dependency direction is M02 -> M03, never reverse
+**Decision:** core-work-order may consume core-workspace public contracts; core-workspace does not depend on core-work-order, and M03 does not depend on M04+.
+**State:** ACCEPTED
+
+## CORE-D-143 - M03 errors expose category, reason and retryability
+**Decision:** errors are machine-readable and bounded, separating invalid input, stale/conflict, policy, resource and internal failures.
+**State:** ACCEPTED
+
+## CORE-D-144 - M03 never performs hidden refresh-and-retry
+**Decision:** lineage/workspace/governance/policy refresh can change authority/semantics and therefore remains explicit caller orchestration.
+**State:** ACCEPTED
+
+## CORE-D-145 - PCM deduplicates packet context references, not obligations
+**Decision:** Packet Context Mesh may share canonical source nodes but each packet's reconstructed mandatory source set must be exact.
+**State:** ACCEPTED
+
+## CORE-D-146 - DCR is required compilation provenance
+**Decision:** every compilation emits a deterministic receipt tying request/context/compiler/lineage-precondition/output fingerprints; it is evidence, not execution authority.
+**State:** ACCEPTED
+
+## CORE-D-147 - Resource failure cannot produce partial FROZEN/READY state
+**Decision:** budget/deadline exhaustion is typed fail-closed and cannot yield partially accepted semantic/admission output.
+**State:** ACCEPTED
