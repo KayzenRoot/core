@@ -15,4 +15,4 @@ CORE V0.0 - Modular Construction
 2 - M03 Product Discovery
 
 ## NEXT STEP
-Continue M03 Round 2 deep planning, focusing on exact Work Order v1 contracts, admission proof, packet/dependency semantics, Context Lock + M02 basis binding, revision compatibility and semantic delta rules. Do not authorize M03 implementation.
+Review/promote M03 Round 2. Then continue Round 3 with compiler/admission service interfaces, lineage persistence disposition, resource budget dimensions, exact error/API semantics and implementation file-map direction. Do not authorize implementation.
