@@ -220,3 +220,6 @@ This file contains the frozen foundation requirements plus accepted module-level
 - **CORE-R-170 Required semantic mechanisms:** WOC, SDF, AEG, CBE, WLG, WSF and WPC semantic capabilities are REQUIRED in the planned M03 V0.0 contract, while implementation shape remains pending.
 
 - **CORE-R-171 Frozen diagnostic separation:** mutable diagnostic/transport/rendering metadata MUST live outside the immutable FrozenWorkOrder revision; no stored frozen field may change in place as a diagnostic-only edit.
+
+- **CORE-R-172 Context Lock anti-circularity:** FrozenWorkOrder semantic identity MUST fingerprint Context Lock requirements/constraints, not a concrete Context Lock fingerprint that itself binds to the Work Order fingerprint; concrete lock identity is bound in admission evidence.
+- **CORE-R-173 Immutable admission receipts:** WorkOrderAdmissionReceiptV1 MUST be immutable evidence of one evaluation; later staleness produces a new evaluation/receipt rather than mutating historical READY proof.
