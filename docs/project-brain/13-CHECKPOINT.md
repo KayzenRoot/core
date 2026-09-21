@@ -13,7 +13,7 @@ CORE V0.0 - Modular Construction
 Continue building CORE as the headless NexLabs action plane that operates standalone and synchronizes deeply with HIVE without duplicating HIVE-owned intelligence.
 
 ## IN PROGRESS
-- M03 Work Order Engine Round 1 discovery baseline is compiled: ownership, state/identity model, canonical source/scope/packet/acceptance/evidence/context semantics, threat model and proprietary mechanism candidates.
+- M03 Work Order Engine Round 2 discovery is active: v1 contract separation, packet DAG, workspace/Context Lock/governance admission, correction semantics, AEG, stop/context/staleness contracts.
 - M04-M24 remain discovery-only until their planning freezes.
 
 ## COMPLETED
@@ -37,7 +37,7 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - M02 canonical closeout exact-head reviewed (Review 010 / Issue #45) and promoted through PR #44.
 
 ## PENDING
-- Continue M03 Work Order Engine Rounds 2+ to freeze public contracts, admission proof, packet/dependency semantics, staleness/delta model, resource budgets, exact file map, tests/benchmarks, DoD, Work Order and Context Lock.
+- Continue M03 Work Order Engine Rounds 3+ to freeze persistence/runtime service boundaries, resource calibration, exact Rust/file/dependency map, property/fuzz/benchmark matrix, final DoD, Work Order and Context Lock.
 - Deep-plan M04 through M24 in dependency order.
 - Freeze each module Requirements/Architecture/DoD/Work Order before implementation authorization.
 - Live local HIVE bootstrap evidence against current main.
@@ -48,7 +48,7 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - M03-M24 implementation remains gated by their respective planning freezes.
 
 ## NEXT STEP
-Continue M03 Round 2 deep planning, focusing on exact Work Order v1 contracts, admission proof, packet/dependency semantics, Context Lock + M02 basis binding, revision compatibility and semantic delta rules. Do not authorize M03 implementation.
+Review/promote M03 Round 2. Then continue Round 3 with compiler/admission service interfaces, lineage persistence disposition, resource budget dimensions, exact error/API semantics and implementation file-map direction. Do not authorize implementation.
 
 ## EVIDENCE
 - `docs/engineering/CORE-MODULAR-DELIVERY-MODEL.md`
@@ -299,3 +299,45 @@ Requirements added: CORE-R-112 through CORE-R-137.
 Decisions added: CORE-D-100 through CORE-D-113.
 
 M03 implementation remains unauthorized. Exact public schemas, resource budgets, file/dependency map, fuzz/benchmark plan, DoD, Work Order and Context Lock remain for later rounds.
+
+
+## M03 Round 1 promotion record
+
+Round: 1
+Governed review: M03 Review 001 / Issue #47 — APPROVED
+Reviewed PR: #46
+Exact reviewed head: `e2c8334f84a85d5f30a91434e91487eaeb3880d1`
+Exact-head workflow: run #115 `35554152316` — Governance, M01 Ubuntu/Windows/fuzz and M02 Ubuntu/Windows/fuzz SUCCESS
+Promotion merge: `c9a148bf7a01c0e7a0f72b83681fa209ff0c4f2b`
+Result: M03 Round 1 accepted into discovery baseline. Implementation remains unauthorized.
+
+
+## M03 Round 2 discovery delta
+
+Round: 2
+Status: DISCOVERY ACTIVE / IMPLEMENTATION UNAUTHORIZED
+
+Round 2 freezes:
+- `M03Envelope<T>` schema/version/kind rule;
+- WorkOrderRequest / FrozenWorkOrder / AdmissionRequest / AdmissionReceipt / AdmittedWorkOrder contract separation;
+- immutable revision/fingerprint/compilation identity laws;
+- bounded acyclic WorkPacket DAG with deterministic topological ordering;
+- WorkspaceRequirementV1 instead of persisted live WorkspaceHandle;
+- fresh M02 basis compatibility admission;
+- ContextLockRequirementV1;
+- external GovernanceAdmissionProof boundary;
+- non-evergreen READY admission receipts and M04 Run-start revalidation inputs;
+- ScopeEnvelope deny precedence and dependency isolation;
+- ExecutionCorrectionProposalV1 versus WorkOrderRevisionDiffV1;
+- same-revision CorrectionPolicy classes;
+- AEG v1 and StopConditionV1;
+- ContextBudgetEnvelope dimensions and no-silent-truncation law;
+- WSF staleness dependency classes;
+- WOC/SDF/AEG/CBE/WLG/WSF/WPC as required V0.0 semantic capabilities.
+
+Requirements added: CORE-R-138 through CORE-R-170.
+Decisions added: CORE-D-114 through CORE-D-128.
+
+Still unresolved: exact Rust API/file map/dependencies, persistence disposition, numeric budgets/calibration, fuzz/property/bench thresholds, final DoD/Work Order/Context Lock.
+
+M03 implementation remains unauthorized.
