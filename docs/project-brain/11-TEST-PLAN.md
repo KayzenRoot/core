@@ -78,3 +78,39 @@ Evidence rules:
 Required calibration dimensions are defined in the M02 module plan. The complete suite must be rerun after the bounded Calibration Delta establishes final numeric defaults.
 
 DWS must prove delta/full recomputation equivalence. WMF is excluded from V0.0 benchmark/acceptance requirements unless separately admitted.
+
+
+## M03 Round 1 validation obligations
+
+Round 1 planning/review must prove the architecture is internally coherent before any product implementation is authorized.
+
+Planning validation must cover:
+- M03/M04 ownership separation;
+- deterministic WorkOrderId/revision/fingerprint model;
+- canonical source/provenance manifest semantics;
+- scope envelope and forbidden-delta behavior;
+- immutable revision/supersession semantics;
+- stable packet identity/order semantics;
+- acceptance criterion to evidence requirement coverage;
+- Context Lock + M02 basis binding;
+- HIVE advisory boundary;
+- zero-LLM compiler/validator direction;
+- compact context/token-economy semantics;
+- initial threat/failure taxonomy.
+
+Later implementation evidence MUST include at minimum:
+- canonicalization determinism/property tests;
+- semantically equivalent request permutations;
+- invalid/unsupported schema rejection;
+- source-fingerprint substitution/stale Context Lock tests;
+- superseded revision rejection;
+- packet cycle/order tests;
+- scope-delta classifier adversarial fixtures;
+- acceptance/evidence gap detection;
+- secret redaction/provenance tests;
+- bounded serialization/cardinality/resource tests;
+- Windows + Ubuntu exact-head CI;
+- fuzz/property testing for parser/canonicalizer/delta classifier;
+- benchmarks for compile/diff/admission latency and serialized/context manifest size.
+
+Exact file map, dependency graph, fuzz targets and numeric budgets remain pending later M03 rounds.
