@@ -1,20 +1,20 @@
 # CORE Checkpoint
 
 ## STATUS
-M01 COMPLETE / M02 IMPLEMENTATION AUTHORIZATION ARMED
+M01 COMPLETE / M02 COMPLETE / M03 DISCOVERY ACTIVE
 
 ## VERSION
 CORE V0.0 - Modular Construction
 
 ## PHASE
-3 - M02 Governed Implementation
+2 - M03 Product Discovery
 
 ## OBJECTIVE
 Continue building CORE as the headless NexLabs action plane that operates standalone and synchronizes deeply with HIVE without duplicating HIVE-owned intelligence.
 
 ## IN PROGRESS
-- CORE-WO-M02-001 execution admission is armed; authorization becomes effective only when this exact admission state is promoted to canonical `origin/main`.
-- M03-M24 remain discovery-only.
+- M03 Work Order Engine deep planning is the next legal product increment.
+- M04-M24 remain discovery-only until their planning freezes.
 
 ## COMPLETED
 - Repository/bootstrap foundation approved and promoted.
@@ -33,22 +33,21 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - M02 Round 5 contract/file-map freeze exact-head reviewed (Review 003 / Issue #30) and promoted through PR #29.
 - M02 Round 6 calibration/technology disposition exact-head reviewed (Review 004 / Issue #32) and promoted through PR #31.
 - M02 final planning freeze exact-head reviewed (Review 005 / Issue #35) and promoted through PR #33.
+- CORE-WO-M02-001 implemented, corrected through Reviews 007/008, independently APPROVED by Review 009 / Issue #43 and promoted through PR #40.
 
 ## PENDING
-- Execute CORE-WO-M02-001 through Codex from the admitted execution base and collect exact-head evidence.
-- Independently review/promote the M02 implementation candidate after executor READY_FOR_REVIEW.
-- Deep-plan M03 through M24 in dependency order.
-- Freeze product Requirements/Architecture/DoD as discovery matures.
+- Deep-plan M03 Work Order Engine using the freeze-before-execution model.
+- Deep-plan M04 through M24 in dependency order.
+- Freeze each module Requirements/Architecture/DoD/Work Order before implementation authorization.
 - Live local HIVE bootstrap evidence against current main.
 - GitHub main ruleset activation when authorized admin mutation is available.
 
 ## BLOCKERS
-- Before admission PR promotion: execution remains blocked because authorization is effective only on canonical `origin/main`.
-- After this exact admission state is promoted to canonical `origin/main`: no known blocker prevents CORE-WO-M02-001 execution.
+- None for M03 planning.
 - M03-M24 implementation remains gated by their respective planning freezes.
 
 ## NEXT STEP
-If this exact admission state is present on canonical `origin/main`, execute CORE-WO-M02-001 using docs/work-orders/CODEX-HANDOFF-M02.md. Otherwise, do not execute. Preserve the frozen architecture and stop only at READY_FOR_REVIEW or BLOCKED under the Work Order.
+Deep-plan M03 Work Order Engine. Do not authorize M03 product implementation until its ownership, contracts, state model, file map, tests, benchmarks, DoD, Work Order, Context Lock and STOP CONDITION are frozen and independently reviewed.
 
 ## EVIDENCE
 - `docs/engineering/CORE-MODULAR-DELIVERY-MODEL.md`
@@ -80,6 +79,23 @@ If this exact admission state is present on canonical `origin/main`, execute COR
 - M02 final-freeze PR #33
 - M02 final-freeze exact-head workflow #84 `35516261944` — Governance, Ubuntu, Windows and fuzz SUCCESS
 - M02 final-freeze promotion merge `bae47b2021a897396109dfcf42e8632dde13ec21`
+
+- M02 Review 009 / Issue #43 — APPROVED implementation
+- M02 implementation PR #40
+- M02 final reviewed head `2b5ebb412c86278c8834df7091f746a164d05031`
+- M02 product correction head `098de069b77aa843248b5a66dd0ca8af4107e879`
+- M02 exact-head workflow #109 `35541164008` — Governance, M01 Ubuntu/Windows/fuzz, M02 Ubuntu/Windows/fuzz SUCCESS
+- M02 implementation promotion merge `5c56eb58ed26f42f196e8045d93f2ff52bd7d87e`
+
+## M02 completion record
+Frozen Work Order: `CORE-WO-M02-001`
+Final governed review head: `2b5ebb412c86278c8834df7091f746a164d05031`
+Product correction head: `098de069b77aa843248b5a66dd0ca8af4107e879`
+Final governed review: Review 009 / Issue #43 — APPROVED
+Implementation PR: #40
+Promotion merge: `5c56eb58ed26f42f196e8045d93f2ff52bd7d87e`
+Exact-head workflow: run #109 `35541164008` — all required jobs SUCCESS after same-head rerun of the known M01 timing flake
+Result: M02 COMPLETE. No unresolved HIGH/CRITICAL finding recorded at final promotion.
 
 ## M01 completion record
 Frozen Work Order: `CORE-WO-M01-001`
