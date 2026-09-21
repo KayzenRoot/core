@@ -141,3 +141,39 @@ To be classified during governed discovery. No future capability is admitted mer
 - Git delivery;
 - final evidence artifact collection;
 - review verdict generation.
+
+
+## M03 Round 3 scope classification
+
+### NECESSARY
+- stateless compiler/service semantics;
+- explicit compile/validate/diff/correction/admission/handoff operations;
+- deterministic logical ID direction;
+- LineageSnapshot + LPC CAS semantics;
+- external persistence boundary;
+- canonical projection/fingerprint reuse;
+- PacketContextPlan + PCM;
+- DCR compilation provenance;
+- M03ResourceBudget dimensions;
+- typed error/retryability taxonomy;
+- one-crate/dependency direction.
+
+### IMPORTANT
+- optional bounded in-memory compile memoization if benchmarks justify it;
+- resource calibration fixture families;
+- safe diagnostics/provenance ergonomics.
+
+### FUTURE
+- persistent compile memo/cache;
+- internal/shared Work Order database;
+- distributed lock/sequence service;
+- network Work Order registry;
+- adaptive runtime resource tuning.
+
+### OUT OF SCOPE
+- hidden repository scans;
+- Git commits/pushes;
+- HIVE/network calls inside core compiler;
+- Run scheduler/state;
+- tool/source execution;
+- final evidence/review engines.
