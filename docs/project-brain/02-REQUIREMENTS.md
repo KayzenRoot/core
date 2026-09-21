@@ -151,3 +151,33 @@ This file contains the frozen foundation requirements plus accepted module-level
 - **CORE-R-110 Calibration preserves zero-LLM:** calibration, budget selection and benchmark evaluation MUST require zero LLM inference.
 
 - **CORE-R-111 Baseline provider proof without forced alternative dependency:** the system-Git V0.0 baseline MUST prove its own contract/security/resource obligations; an alternative provider comparison is required only when an alternative is proposed for admission.
+
+
+## M03 Round 1 requirements
+
+- **CORE-R-112 Machine-verifiable Work Orders:** executable work intent MUST be compiled into a versioned canonical Work Order contract before M04 can instantiate a Run.
+- **CORE-R-113 No direct prose execution:** free-form human/LLM prose MUST NOT itself grant execution authority.
+- **CORE-R-114 Deterministic Work Order compilation:** equivalent semantic inputs MUST compile to the same canonical Work Order payload/fingerprint under the same compiler/policy generation.
+- **CORE-R-115 Immutable revisions:** a frozen Work Order revision MUST be immutable; semantic corrections produce a new revision/fingerprint.
+- **CORE-R-116 Distinct Work Order identities:** WorkOrderId, WorkOrderRevision, WorkOrderFingerprint and WorkOrderCompilationId MUST remain distinct concepts.
+- **CORE-R-117 Explicit source manifest:** canonical inputs MUST be referenced with authority/provenance/fingerprint/freshness semantics.
+- **CORE-R-118 Explicit scope envelope:** allowed and forbidden modules/paths/artifact classes/dependency changes MUST be machine-readable rather than inferred only from prose.
+- **CORE-R-119 M02 basis binding:** M03 MUST consume M02 workspace/basis evidence and MUST NOT rediscover or redefine local workspace authority.
+- **CORE-R-120 Context Lock binding:** admission MUST bind the Work Order revision to the exact applicable Context Lock/fingerprint or fail stale.
+- **CORE-R-121 Governance proof verification:** M03 may verify external governance/admission evidence but MUST NOT invent or self-approve governance authority.
+- **CORE-R-122 Stable packet identities:** declared work packets MUST have stable IDs and deterministic ordering/dependency semantics.
+- **CORE-R-123 M03/M04 state separation:** Work Order declarations MUST NOT contain mutable Run/Attempt/Step execution state.
+- **CORE-R-124 Acceptance-evidence graph:** acceptance criteria MUST map deterministically to explicit evidence requirements or typed evidence-not-applicable rationale.
+- **CORE-R-125 Explicit STOP CONDITION:** every executable Work Order MUST compile a machine-readable final stop condition.
+- **CORE-R-126 Correction delta classification:** semantic revision changes MUST be classified into governed delta classes such as evidence-only, test-only, calibration, implementation, dependency, scope, architecture and security-policy changes.
+- **CORE-R-127 Fail-closed scope delta:** a requested delta outside the revision's allowed correction policy MUST fail typed and require broader governance/new revision.
+- **CORE-R-128 Supersession safety:** superseded/stale revisions MUST NOT be eligible for new Run instantiation.
+- **CORE-R-129 Event/source staleness safety:** uncertain upstream source/workspace/policy change MUST broaden stale classification rather than preserve READY.
+- **CORE-R-130 Compact context manifests:** downstream execution context SHOULD use stable source IDs/fingerprints/packet deltas rather than duplicate complete project documents by default.
+- **CORE-R-131 Context budget completeness:** token/context budgets MAY reduce payload size but MUST NOT omit sources marked mandatory by scope/risk/policy.
+- **CORE-R-132 HIVE advisory boundary:** HIVE may enrich context and provenance but MUST NOT silently rewrite a frozen Work Order or override newer canonical Git/filesystem evidence.
+- **CORE-R-133 Zero-LLM compiler baseline:** canonical parsing, validation, fingerprinting, diff classification and admission checks MUST require zero LLM inference.
+- **CORE-R-134 Bounded Work Order resources:** Work Order cardinality/serialized size/packet graph/context refs MUST operate under explicit finite resource budgets before production acceptance.
+- **CORE-R-135 Canonical collection ordering:** unordered Work Order collections MUST be explicitly sorted before fingerprinting.
+- **CORE-R-136 Secret-safe provenance:** provenance/context manifests MUST reference secrets safely and MUST NOT require durable embedding of raw credentials or secret-bearing payloads.
+- **CORE-R-137 Typed failure taxonomy:** invalid/stale/ambiguous/superseded/forbidden Work Orders MUST fail with machine-readable error classes and MUST NOT silently become READY.
