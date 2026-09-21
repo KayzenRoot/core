@@ -249,3 +249,100 @@ The Calibration Delta cannot change architecture or dependencies. If evidence sh
 DWS is part of the V0.0 architecture using component fingerprints and changed-set reconstruction. WMF is not part of the initial architecture and requires later evidence-backed admission.
 
 Calibration is release/build evidence. M02 does not continuously self-tune in production.
+
+
+## M03 Work Order Engine architecture discovery
+
+M03 is the semantic compiler between M02 workspace truth and M04 runtime execution state.
+
+```text
+human / planner / API intent
+          |
+          v
+ WorkOrderRequest
+          |
+          +--> canonical Project Brain / GEF source refs
+          +--> M02 WorkspaceHandle / WorkspaceBasis refs
+          +--> Context Lock / governance proof refs
+          +--> optional HIVE compact context refs
+          |
+          v
+     M03 Work Order Compiler
+          |
+          +--> schema/normalization
+          +--> scope firewall
+          +--> source/provenance binding
+          +--> packet declarations
+          +--> acceptance/evidence graph
+          +--> correction policy
+          +--> context budget envelope
+          +--> deterministic fingerprint/lineage
+          |
+          v
+   Frozen Work Order Revision
+          |
+      admission proof
+          |
+          v
+    AdmittedWorkOrderV1
+          |
+          v
+ M04 Run / Attempt / Step Engine
+```
+
+M03 never executes the Work Order it compiles. M04 owns mutable execution state. M05-M13 later own host/capability/agent/model/sandbox/tool/mutation behavior. M14-M16 later consume declared verification/evidence/review obligations.
+
+The Work Order revision is immutable. A correction creates a new revision and a typed semantic delta. READY is only an eligibility state for M04 Run instantiation, not proof that execution succeeded.
+
+### M03 canonical layers
+
+1. **Intent layer**
+   - non-executable authoring/request material.
+
+2. **Semantic Work Order layer**
+   - mission, scope, packets, acceptance, evidence, stop condition, correction policy.
+
+3. **Binding layer**
+   - canonical-source manifest, M02 basis requirements, Context Lock, governance proof and provenance.
+
+4. **Admission layer**
+   - exact frozen revision plus freshness/authorization evidence.
+
+5. **Runtime handoff**
+   - immutable AdmittedWorkOrderV1 consumed by M04.
+
+### M03 Round 1 candidate mechanisms
+
+- WOC Work Order Compiler;
+- SDF Scope Delta Firewall;
+- AEG Acceptance Evidence Graph;
+- CBE Context Budget Envelope;
+- WLG Work Order Lineage Graph;
+- WSF Work Staleness Frontier;
+- WPC Work Provenance Capsule.
+
+These are discovery mechanisms, not implementation claims.
+
+### Token-economy architecture
+
+M03 does not duplicate HIVE retrieval intelligence. It packages canonical references and packet-specific context obligations so HIVE or other context providers can supply detail on demand.
+
+Stable project context is represented by fingerprints/refs where possible; packet deltas carry only changed or specifically required inputs. Full raw source remains retrievable but is not duplicated into every compiled packet.
+
+### Security architecture direction
+
+Work Order compilation is treated as a security boundary because downstream execution trusts its scope.
+
+Fail-closed checks include:
+- source fingerprint substitution;
+- stale Context Lock replay;
+- superseded revision execution;
+- semantic scope widening;
+- dependency admission hidden inside small corrections;
+- acceptance/evidence omission;
+- packet cycles;
+- oversized cardinality/resource abuse;
+- secret-bearing provenance material;
+- non-deterministic canonical serialization.
+
+No M03 state may grant path authority beyond M02 or sandbox authority beyond future M11.
