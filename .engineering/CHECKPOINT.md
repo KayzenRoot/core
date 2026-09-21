@@ -15,4 +15,4 @@ CORE V0.0 - Modular Construction
 2 - M03 Product Discovery
 
 ## NEXT STEP
-Review/promote M03 Round 2. Then continue Round 3 with compiler/admission service interfaces, lineage persistence disposition, resource budget dimensions, exact error/API semantics and implementation file-map direction. Do not authorize implementation.
+Continue M03 Round 3 deep planning with compiler/admission service interfaces, lineage persistence disposition, resource budget dimensions, exact error/API semantics and implementation file-map direction. Do not authorize implementation.
