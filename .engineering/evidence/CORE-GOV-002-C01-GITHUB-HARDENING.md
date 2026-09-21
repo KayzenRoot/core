@@ -133,6 +133,10 @@ Sanitized ruleset readback:
 
 The additional approval rule for unattributed Copilot pull requests was explicitly set to `false`; the configured approval count is also exactly zero. No reviewer, CODEOWNERS or last-push approval is required.
 
+## Enforcement boundary
+
+The active ruleset mechanically enforces PR entry, deletion/non-fast-forward protection, strict required checks, review-thread resolution and allowed merge methods. The independent GEF audit verdict and no-HIGH/CRITICAL promotion rule remain separate process gates; no claim is made that GitHub native review approval currently enforces those gates. The ruleset approval count is zero for solo-maintainer compatibility, and auto-merge must only be armed after the governed audit verdict permits promotion.
+
 ## Verification performed
 
 Successful readback/verification commands:
@@ -154,13 +158,13 @@ Local documentation checks before commit:
 git diff --check = PASS
 ```
 
-The repository validator and PR CI result are recorded only after execution on the exact governance branch/head. The final exact-head run is recorded below.
+Repository validation and PR CI are historical execution evidence. The independent reviewer binds the actual final PR head externally after all reviewer-first corrections, because editing this Evidence Bundle necessarily creates a new Git head.
 
 ## Risks and residuals
 
 - The latest pre-mutation `main` CI had a pre-existing M01 Ubuntu failure. It remains in the required status-check set and was green on the governance PR run, so auto-merge cannot advance through any failing required gate.
 - The first governance PR run `35605615596` validated head `afc54df580386f46cee3d29e60b13a3d3a74f8e1`: 6 of 7 required contexts passed; `M02 workspace adapter (windows-latest)` failed in `Workspace and M02 tests` because `tests::multiple_leases_release_in_different_order_without_lost_notifications` reported an active capability lease and `ForceTerminate` at `crates/core-runtime/src/lib.rs:2205`. This historical product/runtime residual was not corrected here.
-- The latest exact governance PR run `35607115931` validated head `eb102eb333e6a36f5b9f24c92548952a89d5092a`: all 7 of 7 required contexts passed, including both M01/M02 operating-system jobs, both bounded fuzz campaigns and Governance. This proves the governance branch's required CI gate green at that exact head; it does not constitute independent review or merge approval.
+- Executor handoff run `35607115931` validated head `eb102eb333e6a36f5b9f24c92548952a89d5092a` with all 7 required contexts passing. A later evidence-only commit `196066c74fc707c18ba7f5a46411923a1ecd3cb9` also passed all seven contexts in run `35608660684`. These are historical same-head proofs; the reviewer must bind the post-correction final head separately.
 - Ruleset administration is remote state; independent review and checkpoint promotion remain separate from this executor evidence.
 - No product, M03, dependency, workflow or secret-bearing source change is included.
 
@@ -181,7 +185,9 @@ Record the objectively proven activation of `CORE main protection` id `23769853`
 ## PR handoff
 
 - PR: `#56` - https://github.com/KayzenRoot/core/pull/56
-- Final governance branch head validated: `eb102eb333e6a36f5b9f24c92548952a89d5092a`
-- Base head: `499042df143fc519e42c6904461a011b62d26125`
-- Workflow run: `35607115931` - 7/7 required contexts passed at the final head
+- Executor handoff head: `eb102eb333e6a36f5b9f24c92548952a89d5092a` - run `35607115931` passed 7/7 required contexts
+- Evidence-only follow-up head: `196066c74fc707c18ba7f5a46411923a1ecd3cb9` - run `35608660684` passed 7/7 required contexts
+- Original administration base: `499042df143fc519e42c6904461a011b62d26125`
+- Reviewer synchronization base: `42f3de287eb51f8887827b62f0b09e918ca9d9c4`
+- Final post-correction exact head/workflow: recorded by independent review outside this self-modifying Evidence Bundle
 - PR state: open, not merged; independent review and checkpoint promotion remain pending

@@ -13,7 +13,7 @@ CORE V0.0 - Modular Construction
 Continue building CORE as the headless NexLabs action plane that operates standalone and synchronizes deeply with HIVE without duplicating HIVE-owned intelligence.
 
 ## IN PROGRESS
-- M03 Work Order Engine Round 2 discovery is active: v1 contract separation, packet DAG, workspace/Context Lock/governance admission, correction semantics, AEG, stop/context/staleness contracts.
+- M03 Work Order Engine Rounds 1-3 are promoted into the discovery baseline; Round 4 planning is next.
 - M04-M24 remain discovery-only until their planning freezes.
 
 ## COMPLETED
@@ -38,7 +38,7 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - CORE-GOV-002-C01 activated the GitHub `main` protection ruleset `CORE main protection` (id `23769853`) with evidence-backed repository settings, required pull requests, deletion/non-fast-forward protection and the current seven-job CI gate; independent review and PR promotion remain pending.
 
 ## PENDING
-- Continue M03 Work Order Engine Rounds 3+ to freeze persistence/runtime service boundaries, resource calibration, exact Rust/file/dependency map, property/fuzz/benchmark matrix, final DoD, Work Order and Context Lock.
+- Continue M03 Work Order Engine Rounds 4+ to freeze exact public Rust contracts, source-resolver/adaptor interfaces, final file/dependency map, property/fuzz/benchmark matrix, production DoD, Work Order and Context Lock.
 - Deep-plan M04 through M24 in dependency order.
 - Freeze each module Requirements/Architecture/DoD/Work Order before implementation authorization.
 - Live local HIVE bootstrap evidence against current main.
@@ -48,7 +48,7 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - M03-M24 implementation remains gated by their respective planning freezes.
 
 ## NEXT STEP
-Continue M03 Round 3 deep planning with compiler/admission service interfaces, lineage persistence disposition, resource budget dimensions, exact error/API semantics and implementation file-map direction. Do not authorize implementation.
+Continue M03 Round 4 deep planning with exact public Rust contracts, final file/dependency admission, external source-resolver/adaptor interfaces, property/fuzz laws, benchmark thresholds and production DoD direction. Do not authorize implementation.
 
 ## EVIDENCE
 - `docs/engineering/CORE-MODULAR-DELIVERY-MODEL.md`
@@ -364,11 +364,51 @@ Promotion merge: `1773615ac812baf476f4d37c7ad16a8f9a48dd05`
 Result: M03 Round 2 accepted into discovery baseline. Implementation remains unauthorized.
 
 
+## M03 Round 3 discovery delta
+
+Round: 3
+Status: PROMOTED DISCOVERY BASELINE / IMPLEMENTATION UNAUTHORIZED
+
+Round 3 freezes:
+- stateless-by-default compiler/admission core;
+- explicit compile/validate/diff/correction/admission/handoff operations;
+- no hidden repository/Git/HIVE/GitHub/network/persistence I/O;
+- deterministic WorkOrderId allocation direction;
+- external LineageSnapshot + LPC compare-and-set semantics;
+- external Git/GEF persistence boundary;
+- canonical projection/fingerprint reuse;
+- PacketContextPlan + Packet Context Mesh semantics;
+- Deterministic Compilation Receipt provenance;
+- typed M03 resource dimensions with evidence-driven calibration;
+- machine-readable error/retryability taxonomy;
+- one-crate core-work-order direction and acyclic dependency rule.
+
+Requirements added: CORE-R-174 through CORE-R-207.
+Decisions added: CORE-D-133 through CORE-D-148.
+
+Still unresolved before implementation freeze: exact public Rust signatures, final file/dependency admission, external source-resolver/adaptor interfaces, fuzz/property laws, benchmark thresholds, final production DoD, Work Order and Context Lock.
+
+M03 implementation remains unauthorized.
+
+
+## M03 Round 3 promotion record
+
+Round: 3
+Governed review: M03 Review 003 / Issue #53 - APPROVED
+Reviewed PR: #52
+Exact reviewed head: `c33c24548fde3a720f4f9b60a2d8cd4ec0efb76a`
+Exact-head workflow: run #128 `35596694929` - Governance, M01 Ubuntu/Windows/fuzz and M02 Ubuntu/Windows/bounded fuzz SUCCESS
+Promotion merge: `499042df143fc519e42c6904461a011b62d26125`
+Reviewer-first correction: stale Round 3 decision IDs were rebased onto current governed main and renumbered to preserve canonical CORE-D-132.
+Result: M03 Round 3 accepted into discovery baseline. Implementation remains unauthorized.
+
+
 ## CORE-GOV-002-C01 governance delta
 
-- Base: `499042df143fc519e42c6904461a011b62d26125` (`origin/main` at preflight)
-- Worktree/branch: `D:\Projeto Codexx\core-gov-002-c01` / `governance/github-hardening`
+- Original administration base: `499042df143fc519e42c6904461a011b62d26125`
+- Review-synchronization base: `42f3de287eb51f8887827b62f0b09e918ca9d9c4`
 - Ruleset: `CORE main protection`, id `23769853`, active, target `~DEFAULT_BRANCH`, no bypass actors
-- Verification: `gh ruleset view 23769853 -R KayzenRoot/core` and `gh ruleset check main -R KayzenRoot/core` succeeded
-- Residual: exact governance PR run `35605615596` failed `M02 workspace adapter (windows-latest)` at `tests::multiple_leases_release_in_different_order_without_lost_notifications`; the required gate remains active and no product/M03 correction is included here.
-- State: factual GitHub activation recorded; PR review, CI and promotion are not implied.
+- Mechanically enforced: pull-request path, deletion protection, non-fast-forward protection, resolved review threads, strict seven-context status gate and allowed merge methods
+- Repository settings verified: squash enabled, merge commit disabled, rebase enabled, auto-merge enabled, update branch enabled and delete-branch-on-merge enabled
+- Independent GEF review/audit remains a separate promotion gate; GitHub-native approval count is zero for solo-maintainer compatibility
+- State: factual GitHub activation recorded; independent review and promotion are pending

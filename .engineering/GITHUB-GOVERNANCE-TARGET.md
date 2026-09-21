@@ -21,10 +21,6 @@ Post-activation readback at `2026-09-21T13:22:47Z`:
 - required status checks are `Governance`, `M01 (ubuntu-latest)`, `M01 (windows-latest)`, `M01 fuzz campaign`, `M02 workspace adapter (ubuntu-latest)`, `M02 workspace adapter (windows-latest)`, and `M02 bounded fuzz campaign`, with strict freshness and enforcement on branch creation;
 - repository settings after mutation: squash merge `true`, merge commit `false`, rebase merge `true`, auto-merge `true`, update branch `true`, delete branch on merge `true`, squash title `PR_TITLE`, squash message `PR_BODY`.
 
-The latest `main` workflow before this governance PR has a pre-existing failure in `M01 (ubuntu-latest)` at `hostile_git_deadline_kills_reaps_and_does_not_poison_next_inspection`; this is retained as an explicit gate residual and is not weakened or fixed by this governance delta.
-
-On governance PR `#56`, the exact-head workflow `35605615596` passed six of seven required contexts and failed only `M02 workspace adapter (windows-latest)` at `tests::multiple_leases_release_in_different_order_without_lost_notifications`; the failed product/runtime gate remains active and is not corrected in this governance delta.
-
 ## Target `main` policy
 
 - Changes reach `main` through pull requests.
@@ -37,6 +33,12 @@ On governance PR `#56`, the exact-head workflow `35605615596` passed six of seve
 - No bypass actor is assumed by default.
 - Squash merge is preferred for governed Work Orders unless a future ADR selects another history policy.
 - Auto-merge may be used only after all required checks and governed review conditions are satisfied.
+
+## Enforcement boundary
+
+The active GitHub ruleset mechanically enforces the repository-hosted controls: pull-request entry to `main`, deletion/non-fast-forward protection, strict required status checks, review-thread resolution, no bypass actor and allowed merge methods.
+
+The GEF independent audit verdict, exact-head review record and the rule that unresolved HIGH/CRITICAL findings block promotion remain process-level governance gates. They are not represented by a separate GitHub-native approval/status context in CORE-GOV-002-C01. Because the repository is currently operated through a solo maintainer identity, the ruleset approval count is intentionally zero rather than creating an impossible self-approval requirement. Auto-merge MUST NOT be enabled on a PR until the governed audit verdict permits promotion.
 
 ## Safe executor tool bootstrap
 
