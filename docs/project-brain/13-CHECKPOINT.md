@@ -35,13 +35,13 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - M02 final planning freeze exact-head reviewed (Review 005 / Issue #35) and promoted through PR #33.
 - CORE-WO-M02-001 implemented, corrected through Reviews 007/008, independently APPROVED by Review 009 / Issue #43 and promoted through PR #40.
 - M02 canonical closeout exact-head reviewed (Review 010 / Issue #45) and promoted through PR #44.
+- CORE-GOV-002-C01 activated the GitHub `main` protection ruleset `CORE main protection` (id `23769853`) with evidence-backed repository settings, required pull requests, deletion/non-fast-forward protection and the current seven-job CI gate; independent review and PR promotion remain pending.
 
 ## PENDING
 - Continue M03 Work Order Engine Rounds 3+ to freeze persistence/runtime service boundaries, resource calibration, exact Rust/file/dependency map, property/fuzz/benchmark matrix, final DoD, Work Order and Context Lock.
 - Deep-plan M04 through M24 in dependency order.
 - Freeze each module Requirements/Architecture/DoD/Work Order before implementation authorization.
 - Live local HIVE bootstrap evidence against current main.
-- GitHub main ruleset activation when authorized admin mutation is available.
 
 ## BLOCKERS
 - None for M03 planning.
@@ -93,6 +93,7 @@ Continue M03 Round 3 deep planning with compiler/admission service interfaces, l
 - M02 closeout exact-head `39c8be29fd898218a86b84667fd446b235f47935`
 - M02 closeout workflow #113 `35552201325` — Governance, M01 Ubuntu/Windows/fuzz, M02 Ubuntu/Windows/fuzz SUCCESS
 - M02 closeout promotion merge `039dd7bf93d637971c486f3ee783988cbee3c7cf`
+- CORE-GOV-002-C01 Evidence Bundle: `.engineering/evidence/CORE-GOV-002-C01-GITHUB-HARDENING.md`
 
 ## M02 completion record
 Frozen Work Order: `CORE-WO-M02-001`
@@ -361,3 +362,13 @@ Exact reviewed head: `f5d52254b1819a83146f6e5406d6f407a09960d0`
 Exact-head workflow: run #124 `35555156282` — Governance, M01 Ubuntu/Windows/fuzz and M02 Ubuntu/Windows/fuzz SUCCESS
 Promotion merge: `1773615ac812baf476f4d37c7ad16a8f9a48dd05`
 Result: M03 Round 2 accepted into discovery baseline. Implementation remains unauthorized.
+
+
+## CORE-GOV-002-C01 governance delta
+
+- Base: `499042df143fc519e42c6904461a011b62d26125` (`origin/main` at preflight)
+- Worktree/branch: `D:\Projeto Codexx\core-gov-002-c01` / `governance/github-hardening`
+- Ruleset: `CORE main protection`, id `23769853`, active, target `~DEFAULT_BRANCH`, no bypass actors
+- Verification: `gh ruleset view 23769853 -R KayzenRoot/core` and `gh ruleset check main -R KayzenRoot/core` succeeded
+- Residual: pre-existing `M01 (ubuntu-latest)` failure on `hostile_git_deadline_kills_reaps_and_does_not_poison_next_inspection` remains a required CI gate; no product/M03 correction is included here.
+- State: factual GitHub activation recorded; PR review, CI and promotion are not implied.
