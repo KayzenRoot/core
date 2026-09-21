@@ -970,7 +970,7 @@ Field-level changes map to classes:
 - WORKSPACE_REQUIREMENT_CHANGE;
 - NON_SEMANTIC_DIAGNOSTIC_CHANGE.
 
-All classes except NON_SEMANTIC_DIAGNOSTIC_CHANGE require a new semantic revision if represented in FrozenWorkOrderV1.
+Any change to a field stored inside `FrozenWorkOrderV1` requires a new immutable object; semantic fields require a new WorkOrderRevision/fingerprint. `NON_SEMANTIC_DIAGNOSTIC_CHANGE` applies only to external diagnostic/transport/rendering metadata that is not stored as mutable content inside the frozen revision and does not alter its semantic fingerprint.
 
 A field cannot be classified as non-semantic merely because its textual diff is small.
 
