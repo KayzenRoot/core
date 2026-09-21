@@ -335,8 +335,8 @@ Round 2 freezes:
 - WSF staleness dependency classes;
 - WOC/SDF/AEG/CBE/WLG/WSF/WPC as required V0.0 semantic capabilities.
 
-Requirements added: CORE-R-138 through CORE-R-170.
-Decisions added: CORE-D-114 through CORE-D-128.
+Requirements added: CORE-R-138 through CORE-R-173.
+Decisions added: CORE-D-114 through CORE-D-131.
 
 Still unresolved: exact Rust API/file map/dependencies, persistence disposition, numeric budgets/calibration, fuzz/property/bench thresholds, final DoD/Work Order/Context Lock.
 
