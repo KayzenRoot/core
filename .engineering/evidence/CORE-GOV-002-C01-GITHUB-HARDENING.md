@@ -19,10 +19,10 @@
 - Original branch: `main`
 - Original HEAD at preflight: `fdb4dbe165e74b009c43df3874b6043c9b94710b`
 - Original dirty state preserved without stash/reset/clean: `AGENTS.md` modified; `.gitattributes` untracked
-- Current remote base: `origin/main` at `499042df143fc519e42c6904461a011b62d26125`
+- Administration preflight remote base: `origin/main` at `499042df143fc519e42c6904461a011b62d26125`
 - Isolated worktree: `D:\Projeto Codexx\core-gov-002-c01`
 - Governance branch: `governance/github-hardening`
-- Worktree base was created cleanly from the current `origin/main`; the original dirty checkout was not used for edits.
+- Worktree base was created cleanly from the administration preflight `origin/main`; the original dirty checkout was not used for edits. Independent review later synchronized the PR onto promoted main `42f3de287eb51f8887827b62f0b09e918ca9d9c4`.
 
 ## Pre-mutation GitHub state
 
@@ -180,7 +180,7 @@ The rollback must preserve the ruleset id and change only `enforcement` to `disa
 
 ## Checkpoint Delta
 
-Record the objectively proven activation of `CORE main protection` id `23769853` on the current `origin/main` base, the exact settings/ruleset readback and the residual M01 Ubuntu failure. Do not record independent approval, merge or product completion.
+Record the objectively proven activation of `CORE main protection` id `23769853`, the exact settings/ruleset readback, the historical pre-mutation CI flakes and the subsequent green exact-head evidence. Do not record independent approval, merge or product completion until review promotes this delta.
 
 ## PR handoff
 
