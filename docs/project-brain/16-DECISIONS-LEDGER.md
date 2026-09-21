@@ -413,3 +413,60 @@ Status: `ACTIVE`
 ## CORE-D-099 - V0.0 system-Git baseline refines earlier provider-neutral evaluation decisions
 **Decision:** CORE-D-087 is the V0.0 implementation refinement of CORE-D-064/075. The admitted system-Git baseline must prove its own semantic/security/resource/cross-platform obligations, but M02 V0.0 does not require adding an unadmitted alternative provider merely to create a comparison. Any future Rust-native/hybrid provider promotion requires differential comparison against the semantic reference and current baseline.
 **State:** ACCEPTED
+
+
+## CORE-D-100 - M03 is a Work Order compiler, not an executor
+**Decision:** M03 compiles/validates/admit-checks immutable Work Order semantics. M04 owns Run/Attempt/Step execution state and no M03 API may execute commands or mutate source.
+**State:** ACCEPTED
+
+## CORE-D-101 - Human/LLM prose is never direct execution authority
+**Decision:** free-form intent must compile into a versioned canonical Work Order revision before M04 may instantiate execution.
+**State:** ACCEPTED
+
+## CORE-D-102 - Frozen Work Order revisions are immutable
+**Decision:** semantic correction creates a new WorkOrderRevision/fingerprint. Existing frozen/admitted revisions are never edited in place.
+**State:** ACCEPTED
+
+## CORE-D-103 - Work Order logical identity is distinct from revision/fingerprint
+**Decision:** WorkOrderId names the logical lineage while WorkOrderRevision, WorkOrderFingerprint and WorkOrderCompilationId identify semantic/compiler states.
+**State:** ACCEPTED
+
+## CORE-D-104 - M03 consumes M02 workspace truth
+**Decision:** M03 binds workspace requirements to M02 Workspace/Basis evidence and does not rediscover or redefine path/repository authority.
+**State:** ACCEPTED
+
+## CORE-D-105 - Governance authority remains external
+**Decision:** M03 verifies governance/admission proof and Context Lock state but cannot self-approve a Work Order.
+**State:** ACCEPTED
+
+## CORE-D-106 - Acceptance and evidence are connected by stable IDs
+**Decision:** M03 declares an Acceptance Evidence Graph. M15 later binds actual evidence artifacts; M03 does not treat command success alone as acceptance proof.
+**State:** ACCEPTED
+
+## CORE-D-107 - Scope changes are semantic, even when presented as small corrections
+**Decision:** SDF classifies revision deltas. Unapproved scope/dependency/architecture/security-policy change fails closed rather than masquerading as evidence/test/documentation-only work.
+**State:** ACCEPTED
+
+## CORE-D-108 - HIVE enriches context but cannot rewrite frozen Work Order semantics
+**Decision:** HIVE context references/provenance may be compiled into the manifest, but canonical source hierarchy and exact Git/filesystem evidence remain authoritative.
+**State:** ACCEPTED
+
+## CORE-D-109 - Context economy uses references plus packet deltas
+**Decision:** compiled Work Orders prefer compact canonical refs/fingerprints/stable-prefix references and packet-specific deltas over repeated full-document copies, while mandatory sources remain retrievable.
+**State:** ACCEPTED
+
+## CORE-D-110 - M03 compiler/admission baseline is zero-LLM
+**Decision:** parsing, validation, canonicalization, semantic diff classification, staleness and admission checks require no LLM inference.
+**State:** ACCEPTED
+
+## CORE-D-111 - Superseded or stale revisions cannot start new Runs
+**Decision:** M04 may instantiate a new Run only from a current admitted Work Order revision. STALE/SUPERSEDED revisions fail typed.
+**State:** ACCEPTED
+
+## CORE-D-112 - Initial lineage is contract-first, not database-first
+**Decision:** WLG lineage semantics are versioned contracts/edges in V0.0 discovery. No persistent database is selected merely to represent Work Order revisions.
+**State:** ACCEPTED
+
+## CORE-D-113 - Event/context hints never prove Work Order freshness by absence
+**Decision:** WSF may use change hints to narrow revalidation, but uncertain/missing evidence broadens STALE and canonical bindings must be verified deterministically.
+**State:** ACCEPTED

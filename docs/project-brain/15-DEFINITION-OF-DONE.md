@@ -68,3 +68,28 @@ M02 cannot satisfy its DoD until:
 - the full test/security/supply-chain/benchmark suite reruns on the new exact head.
 
 WMF is not required for M02 V0.0 DoD. DWS equivalence to full recomputation is required.
+
+
+## M03 - Work Order Engine DoD discovery baseline
+
+M03 implementation is NOT authorized by Round 1.
+
+The eventual M03 DoD must prove, on one governed exact head:
+- versioned canonical Work Order contracts;
+- deterministic compiler/fingerprint semantics;
+- immutable revision and supersession safety;
+- explicit source/provenance and M02 workspace-basis binding;
+- explicit machine-readable scope envelope;
+- correction-delta firewall;
+- packet declarations separated from M04 runtime state;
+- acceptance/evidence graph completeness;
+- explicit stop conditions;
+- Context Lock/governance proof admission;
+- compact context budget manifests without mandatory-source omission;
+- HIVE advisory/context enrichment without authority escalation;
+- bounded resource/cardinality behavior;
+- zero-LLM parser/compiler/admission path;
+- property/adversarial/fuzz/Windows/Ubuntu/security/performance evidence;
+- independent governed review with no unresolved HIGH/CRITICAL finding.
+
+Exact M03 completion criteria remain `PENDING_DISCOVERY` until later rounds freeze contracts, file map, tests, benchmarks and Work Order.

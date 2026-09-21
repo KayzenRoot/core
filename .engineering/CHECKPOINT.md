@@ -15,4 +15,4 @@ CORE V0.0 - Modular Construction
 2 - M03 Product Discovery
 
 ## NEXT STEP
-Deep-plan M03 Work Order Engine. Do not authorize M03 product implementation until its ownership, contracts, state model, file map, tests, benchmarks, DoD, Work Order, Context Lock and STOP CONDITION are frozen and independently reviewed.
+Continue M03 Round 2 deep planning, focusing on exact Work Order v1 contracts, admission proof, packet/dependency semantics, Context Lock + M02 basis binding, revision compatibility and semantic delta rules. Do not authorize M03 implementation.
