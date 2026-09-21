@@ -93,3 +93,22 @@ The eventual M03 DoD must prove, on one governed exact head:
 - independent governed review with no unresolved HIGH/CRITICAL finding.
 
 Exact M03 completion criteria remain `PENDING_DISCOVERY` until later rounds freeze contracts, file map, tests, benchmarks and Work Order.
+
+
+### M03 Round 2 DoD refinements
+
+The eventual M03 DoD additionally requires:
+- explicit v1 envelope and contract-layer separation;
+- immutable frozen revisions with semantic fingerprint law;
+- bounded deterministic packet DAG;
+- fresh M02 workspace admission rather than persisted live handles;
+- Context Lock and external governance-proof compatibility checks;
+- non-evergreen admission receipts with Run-start revalidation inputs;
+- ScopeEnvelope deny precedence and dependency isolation;
+- explicit same-revision CorrectionPolicy plus semantic revision diff;
+- complete AEG and machine-readable StopCondition;
+- no-silent-truncation context budget semantics;
+- WSF fail-closed staleness behavior;
+- secret-free durable contracts.
+
+M03 remains discovery-only after Round 2.
