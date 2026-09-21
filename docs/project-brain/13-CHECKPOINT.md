@@ -48,7 +48,7 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - M03-M24 implementation remains gated by their respective planning freezes.
 
 ## NEXT STEP
-Review/promote M03 Round 2. Then continue Round 3 with compiler/admission service interfaces, lineage persistence disposition, resource budget dimensions, exact error/API semantics and implementation file-map direction. Do not authorize implementation.
+Continue M03 Round 3 deep planning with compiler/admission service interfaces, lineage persistence disposition, resource budget dimensions, exact error/API semantics and implementation file-map direction. Do not authorize implementation.
 
 ## EVIDENCE
 - `docs/engineering/CORE-MODULAR-DELIVERY-MODEL.md`
@@ -350,3 +350,14 @@ Project-wide review rule: when a review finds a defect, the reviewer first fixes
 Codex/another executor is used only when the residual correction genuinely requires broader implementation capability, unavailable local/runtime state, dependency/architecture/scope/security-policy admission, or assurance unavailable to the reviewer.
 
 Canonical policy sources: `AGENTS.md`, `.engineering/gef/GEF-REVIEW-PROTOCOL.md`, `.engineering/gef/GEF-POLICY.md`, and CORE-D-132.
+
+
+## M03 Round 2 promotion record
+
+Round: 2
+Governed review: M03 Review 002 / Issue #49 — APPROVED
+Reviewed PR: #48
+Exact reviewed head: `f5d52254b1819a83146f6e5406d6f407a09960d0`
+Exact-head workflow: run #124 `35555156282` — Governance, M01 Ubuntu/Windows/fuzz and M02 Ubuntu/Windows/fuzz SUCCESS
+Promotion merge: `1773615ac812baf476f4d37c7ad16a8f9a48dd05`
+Result: M03 Round 2 accepted into discovery baseline. Implementation remains unauthorized.
