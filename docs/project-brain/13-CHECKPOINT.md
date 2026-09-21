@@ -341,3 +341,12 @@ Decisions added: CORE-D-114 through CORE-D-131.
 Still unresolved: exact Rust API/file map/dependencies, persistence disposition, numeric budgets/calibration, fuzz/property/bench thresholds, final DoD/Work Order/Context Lock.
 
 M03 implementation remains unauthorized.
+
+
+## Reviewer-first correction policy
+
+Project-wide review rule: when a review finds a defect, the reviewer first fixes it directly when the smallest causal correction is safely implementable within frozen scope using currently available repository/GitHub tools and can be revalidated on a new exact head.
+
+Codex/another executor is used only when the residual correction genuinely requires broader implementation capability, unavailable local/runtime state, dependency/architecture/scope/security-policy admission, or assurance unavailable to the reviewer.
+
+Canonical policy sources: `AGENTS.md`, `.engineering/gef/GEF-REVIEW-PROTOCOL.md`, `.engineering/gef/GEF-POLICY.md`, and CORE-D-132.
