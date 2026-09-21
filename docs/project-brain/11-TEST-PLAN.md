@@ -114,3 +114,42 @@ Later implementation evidence MUST include at minimum:
 - benchmarks for compile/diff/admission latency and serialized/context manifest size.
 
 Exact file map, dependency graph, fuzz targets and numeric budgets remain pending later M03 rounds.
+
+
+## M03 Round 2 validation obligations
+
+Planning review must verify:
+- v1 envelope/version rejection semantics;
+- immutable revision law;
+- semantic-vs-diagnostic fingerprint field classification;
+- authoring/frozen/admission/runtime contract separation;
+- packet DAG acyclicity and deterministic topological ordering;
+- packet scope intersection;
+- fresh M02 basis admission with UNKNOWN fail-closed;
+- Context Lock stale/mismatch rejection;
+- external governance proof binding and replay resistance;
+- READY receipt non-evergreen semantics;
+- ExecutionCorrectionProposal versus WorkOrderRevisionDiff behavior;
+- deny-over-allow scope rules;
+- AEG criterion/evidence completeness;
+- machine-readable StopCondition requirement;
+- context budget no-truncation law;
+- WSF hints as non-authoritative invalidation input;
+- secret-safe durable payload requirements.
+
+Later implementation fixtures MUST include:
+- equivalent semantic request permutations -> identical fingerprints;
+- diagnostic-only metadata differences -> unchanged semantic fingerprint;
+- schema/version downgrade/replay cases;
+- packet-cycle and dangling dependency rejection;
+- child packet scope widening rejection;
+- stale M02 generation / incompatible WorkspaceId cases;
+- stale Context Lock / wrong WorkOrder fingerprint cases;
+- governance proof bound to wrong revision/head cases;
+- admission receipt replay after source/workspace/policy change;
+- same-revision allowed correction fixtures;
+- forbidden dependency/scope/architecture/security correction fixtures;
+- acceptance criterion missing required evidence edge;
+- context-budget mandatory-source truncation attempt;
+- secret canary in provenance/context payload;
+- bounded large packet/source/criterion graphs.
