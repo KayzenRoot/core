@@ -829,6 +829,10 @@ Rules:
 - implementation-authorized flag requirement;
 - staleness rule identity.
 
+Anti-circularity rule:
+- `FrozenWorkOrderV1` fingerprints the *requirements/constraints* for a Context Lock, not the concrete Context Lock fingerprint when that lock itself binds back to the Work Order revision/fingerprint;
+- the concrete Context Lock fingerprint is captured in `WorkOrderAdmissionReceiptV1` after the frozen Work Order already exists.
+
 At admission:
 - lock must be ACTIVE/current where execution requires it;
 - Work Order semantic fingerprint must match the lock binding;
@@ -894,7 +898,7 @@ Admission statuses freeze as:
 - BLOCKED;
 - SUPERSEDED.
 
-A READY receipt proves the evaluation at that basis. M04 MUST re-check the receipt's required freshness/binding preconditions at Run creation; it is not a perpetual capability.
+A receipt is itself immutable evidence of one evaluation. A later change does not mutate an old READY receipt into STALE; a fresh admission evaluation yields a new receipt/status. M04 MUST re-check the receipt's required freshness/binding preconditions at Run creation; it is not a perpetual capability.
 
 ### AdmittedWorkOrderV1
 
