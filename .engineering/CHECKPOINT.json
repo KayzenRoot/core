@@ -5,5 +5,5 @@
   "status": "M01 COMPLETE / M02 COMPLETE / M03 DISCOVERY ACTIVE",
   "version": "CORE V0.0 - Modular Construction",
   "phase": "2 - M03 Product Discovery",
-  "nextStep": "Continue M03 Round 3 deep planning with compiler/admission service interfaces, lineage persistence disposition, resource budget dimensions, exact error/API semantics and implementation file-map direction. Do not authorize implementation."
+  "nextStep": "Continue M03 Round 4 deep planning with exact public Rust contracts, final file/dependency admission, external source-resolver/adaptor interfaces, property/fuzz laws, benchmark thresholds and production DoD direction. Do not authorize implementation."
 }
