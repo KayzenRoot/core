@@ -1124,3 +1124,574 @@ Round 2 is complete when:
 - Acceptance Evidence Graph v1 semantics are explicit;
 - StopCondition/context budget/staleness contracts are explicit;
 - M03 implementation remains unauthorized.
+
+
+## Round 3 - compiler services, lineage concurrency and resource architecture
+
+Round 3 freezes the M03 service model and implementation direction while keeping product implementation unauthorized.
+
+## Stateless compiler/service law
+
+M03 V0.0 is stateless-by-default.
+
+The core Work Order engine:
+- does not own a database;
+- does not own Git persistence;
+- does not allocate mutable Run state;
+- does not maintain a hidden canonical Work Order registry;
+- does not fetch HIVE context on its own;
+- does not scan the repository tree;
+- does not perform network I/O.
+
+It consumes explicit resolved inputs/snapshots and produces deterministic contracts/receipts.
+
+Durability remains with the repository/GEF/source-of-truth domain until a later module explicitly owns a durable registry.
+
+## Round 3 service interfaces
+
+The semantic service surface freezes around these operations.
+
+### compile
+
+```text
+compile(
+  WorkOrderRequestV1,
+  CompilationContextV1
+) -> WorkOrderCompilationV1
+```
+
+`CompilationContextV1` contains only explicit resolved inputs:
+- compiler/policy/config generation;
+- canonical source manifest inputs;
+- current lineage snapshot;
+- project/module namespace;
+- applicable scope/security policy;
+- optional HIVE context refs already resolved by an external context provider.
+
+Output:
+- FrozenWorkOrderV1;
+- WorkOrderCompilationId;
+- LineagePreconditionCapsuleV1;
+- CompilationReceiptV1;
+- deterministic warnings/diagnostics outside frozen semantics.
+
+### validate_frozen
+
+```text
+validate_frozen(FrozenWorkOrderV1) -> WorkOrderValidationReceiptV1
+```
+
+Checks canonical serialization, IDs, packet DAG, scope, AEG, stop condition, correction policy, source manifest and finite resource limits.
+
+### diff_revision
+
+```text
+diff_revision(
+  FrozenWorkOrderV1 before,
+  FrozenWorkOrderV1 after
+) -> WorkOrderRevisionDiffV1
+```
+
+Produces deterministic field/semantic-class deltas.
+
+### classify_correction
+
+```text
+classify_correction(
+  FrozenWorkOrderV1,
+  ExecutionCorrectionProposalV1
+) -> CorrectionClassificationReceiptV1
+```
+
+Returns:
+- ALLOWED_SAME_REVISION;
+- REQUIRES_NEW_REVISION;
+- REQUIRES_DEPENDENCY_ADMISSION;
+- REQUIRES_SECURITY_GOVERNANCE;
+- REJECTED_OUT_OF_SCOPE;
+- BLOCKED_AMBIGUOUS.
+
+It never mutates the Work Order.
+
+### evaluate_admission
+
+```text
+evaluate_admission(
+  FrozenWorkOrderV1,
+  WorkOrderAdmissionInputsV1
+) -> WorkOrderAdmissionReceiptV1
+```
+
+Inputs include already-resolved:
+- M02 WorkspaceHandle/basis evidence;
+- Context Lock evidence;
+- external governance proof;
+- current source-manifest verification;
+- compiler/policy/security/config generations;
+- lineage/supersession snapshot.
+
+### materialize_handoff
+
+```text
+materialize_handoff(
+  FrozenWorkOrderV1,
+  READY WorkOrderAdmissionReceiptV1
+) -> AdmittedWorkOrderV1
+```
+
+Fails if receipt identity does not bind exactly to the frozen revision.
+
+## No hidden I/O rule
+
+The compiler/service core does not open arbitrary repository paths, run Git, call HIVE, query GitHub or write Work Order files.
+
+External adapters resolve those concerns and provide typed evidence.
+
+This:
+- improves determinism;
+- minimizes dependency/supply-chain surface;
+- makes property/fuzz testing easier;
+- avoids duplicated M02/HIVE/Git responsibilities;
+- permits future CLI/API/daemon adapters without changing compiler semantics.
+
+## Work Order logical ID allocation
+
+Round 2's AUTO_NEW direction is refined.
+
+M03 V0.0 MUST NOT generate opaque random WorkOrderIds internally.
+
+A new Work Order uses one of:
+- explicit caller-provided WorkOrderId; or
+- deterministic `WorkOrderLogicalKeyV1` containing project namespace + module/scope namespace + stable logical key.
+
+The compiler derives the ID using the existing core-identity stack.
+
+Sequence-number allocation such as `CORE-WO-M03-001` remains an external repository/governance concern unless a later durable registry is admitted.
+
+This avoids hidden randomness and distributed sequence races inside M03.
+
+## LineageSnapshotV1
+
+To compile a new semantic revision, the caller supplies a trusted lineage snapshot.
+
+Candidate fields:
+- WorkOrderId;
+- latest known revision;
+- latest frozen fingerprint;
+- latest compilation ID;
+- superseded revision set/fingerprint summary;
+- lineage edge summary;
+- source/store generation;
+- provenance/fingerprint.
+
+M03 validates the snapshot but does not own its persistence.
+
+## LPC - Lineage Precondition Capsule
+
+**Problem:** stateless compilers can race: two planners may both derive revision N+1 from the same parent.
+
+**Mechanism:** every compilation that creates a new revision emits `LineagePreconditionCapsuleV1`:
+
+```text
+expected_work_order_id
+expected_parent_revision
+expected_parent_fingerprint
+expected_store_generation
+new_revision
+new_work_order_fingerprint
+lineage_precondition_fingerprint
+```
+
+The external durable writer MUST compare the expected parent/store generation before making the new revision canonical.
+
+If the lineage advanced meanwhile:
+- write fails with LINEAGE_CONFLICT;
+- compiler output is not silently rebased;
+- caller must re-resolve lineage and recompile.
+
+**Expected benefit:** compare-and-set semantics without M03 owning a database/lock service.
+
+**Promotion criterion:** concurrency fixtures prove two competing N+1 candidates cannot both become canonical under the same lineage precondition.
+
+LPC is REQUIRED for V0.0 whenever a new revision is persisted.
+
+## Revision numbering rules
+
+- first semantic revision = 1;
+- subsequent semantic revision = previous canonical revision + 1;
+- no gaps under normal persistence;
+- no revision reuse;
+- rejected/unpersisted candidate revisions do not become canonical history;
+- fingerprint, not revision number, proves semantic identity;
+- external store commits lineage atomically with its precondition where supported.
+
+## External persistence disposition
+
+M03 V0.0 selects NO internal database.
+
+Canonical persisted Work Orders may remain Git-tracked files under the governed repository workflow.
+
+M03 exposes canonical serialization bytes/contracts for an external writer but does not:
+- create commits;
+- push branches;
+- resolve Git conflicts;
+- update checkpoint;
+- self-promote a Work Order.
+
+Future database/index support may be added as a storage adapter only if evidence proves Git/file persistence inadequate.
+
+## Canonical serialization service
+
+M03 reuses core-identity canonical fingerprint primitives.
+
+Round 3 direction:
+- typed structs -> canonical semantic projection;
+- explicitly sorted collections;
+- no map iteration identity;
+- UTF-8 validation;
+- normalized enum/string domains;
+- bounded string/list sizes;
+- deterministic JSON may be used for evidence/display, but fingerprint semantics depend on the canonical projection rather than incidental pretty-print formatting.
+
+No second generic canonical-hash framework is introduced.
+
+## Packet Context Plan
+
+CBE compilation produces a compact `PacketContextPlanV1` for each packet:
+- stable_prefix_source_ids[];
+- packet_required_source_ids[];
+- validate_only_source_ids[];
+- optional_expandable_source_ids[];
+- context_budget dimensions;
+- expansion reasons;
+- PacketContextManifestFingerprint.
+
+This plan does not contain executor prompt text.
+
+M04/M08/HIVE-aware context adapters later materialize actual context from these refs.
+
+### Token-economy invariant
+
+If two packets share stable sources, M03 emits shared refs/fingerprints rather than duplicate raw content.
+
+A source body enters downstream prompt/context only when required by expansion policy.
+
+## Optional derived compile memoization
+
+M03 may expose an in-memory derived compilation memo/cache candidate, but it is never source truth.
+
+Candidate cache key:
+- normalized WorkOrderRequest semantic fingerprint;
+- CompilationContext semantic fingerprint;
+- compiler schema/algorithm version;
+- policy/config generation.
+
+Cache hit must reproduce the identical WorkOrderCompilationV1.
+
+Cache loss/corruption degrades performance only.
+
+Persistent compile cache is OUT OF SCOPE for V0.0.
+
+Whether L1 memoization ships initially remains benchmark-gated; correctness cannot depend on it.
+
+## M03ResourceBudget dimensions
+
+Round 3 freezes resource dimensions, not numeric defaults.
+
+Required dimensions:
+- max_request_bytes;
+- max_frozen_work_order_bytes;
+- max_string_bytes;
+- max_source_manifest_entries;
+- max_packets;
+- max_packet_dependency_edges;
+- max_scope_rules;
+- max_acceptance_criteria;
+- max_evidence_requirements;
+- max_acceptance_evidence_edges;
+- max_lineage_edges;
+- max_context_refs;
+- max_correction_rules;
+- max_semantic_diff_entries;
+- max_diagnostic_entries;
+- max_compile_wall_clock;
+- max_validate_wall_clock;
+- max_diff_wall_clock;
+- max_admission_wall_clock.
+
+Rules:
+- all security-sensitive dimensions are finite after calibration;
+- zero/unlimited sentinel cannot bypass a security bound;
+- budget breach is typed and produces no partially READY Work Order;
+- no automatic persistent self-tuning at runtime;
+- numeric defaults require reproducible calibration evidence.
+
+## M03 Resource Calibration Gate direction
+
+M03 will use an evidence-driven Resource Calibration Gate analogous in principle to M02 but specific to metadata/compiler workloads.
+
+Planning freezes:
+- dimensions;
+- fixture families;
+- measurement semantics;
+- safety rules.
+
+Implementation later measures:
+- compile/validate/diff/admission latency;
+- serialized/canonical payload sizes;
+- memory behavior under graph/cardinality extremes;
+- context manifest size reductions;
+- source/packet/criterion scaling.
+
+Numeric defaults remain an implementation-evidence output before final promotion.
+
+## Resource fixture families
+
+Candidate deterministic synthetic fixtures:
+- minimal valid Work Order;
+- many canonical sources;
+- wide packet DAG;
+- deep-but-bounded packet DAG;
+- dense dependency DAG;
+- many scope allow/deny rules;
+- many criteria/evidence edges;
+- large lineage snapshot;
+- large revision diff;
+- many context refs;
+- near-budget strings;
+- invalid cycles/dangling refs;
+- adversarial repeated IDs;
+- stale admission input matrix.
+
+No network/LLM required.
+
+## Exact error model direction
+
+M03 errors freeze into categories plus machine-readable reason codes.
+
+### INVALID_INPUT
+- UNSUPPORTED_SCHEMA;
+- INVALID_ID;
+- INVALID_REVISION;
+- INVALID_ENUM_VALUE;
+- NON_CANONICAL_INPUT;
+- DUPLICATE_ID;
+- DANGLING_REFERENCE;
+- PACKET_DEPENDENCY_CYCLE;
+- ACCEPTANCE_GAP;
+- EVIDENCE_GAP;
+- INVALID_STOP_CONDITION;
+- INVALID_CONTEXT_BUDGET.
+
+### STALE_OR_CONFLICT
+- SOURCE_STALE;
+- WORKSPACE_STALE;
+- CONTEXT_LOCK_STALE;
+- GOVERNANCE_PROOF_STALE;
+- SUPERSEDED_REVISION;
+- LINEAGE_CONFLICT;
+- COMPILER_POLICY_CHANGED;
+- SECURITY_POLICY_CHANGED.
+
+### POLICY_BLOCK
+- AMBIGUOUS_SCOPE;
+- FORBIDDEN_DELTA;
+- DEPENDENCY_ADMISSION_REQUIRED;
+- SECURITY_GOVERNANCE_REQUIRED;
+- GOVERNANCE_PROOF_MISSING;
+- GOVERNANCE_PROOF_MISMATCH;
+- SECRET_MATERIAL_REJECTED.
+
+### RESOURCE_BLOCK
+- REQUEST_TOO_LARGE;
+- CARDINALITY_LIMIT_EXCEEDED;
+- SERIALIZED_SIZE_EXCEEDED;
+- COMPILATION_DEADLINE_EXCEEDED;
+- ADMISSION_DEADLINE_EXCEEDED.
+
+### INTERNAL
+- COMPILATION_NONDETERMINISM;
+- FINGERPRINT_INVARIANT_VIOLATION;
+- INTERNAL_INVARIANT_VIOLATION.
+
+Errors carry:
+- category;
+- reason code;
+- safe context IDs/fingerprints;
+- bounded diagnostics;
+- retryability class;
+- no raw secret content.
+
+## Retryability model
+
+Candidate values:
+- NON_RETRYABLE_INPUT;
+- RETRY_AFTER_REFRESH;
+- RETRY_AFTER_GOVERNANCE;
+- RETRY_AFTER_RESOURCE_CHANGE;
+- INTERNAL_BUG.
+
+M03 never retries hiddenly because refreshing lineage/workspace/governance can change semantic inputs.
+
+## Initial Rust crate direction
+
+Round 3 chooses a one-crate direction for M03 V0.0:
+
+`crates/core-work-order/`
+
+Candidate source decomposition:
+
+```text
+src/
+  lib.rs
+  contracts.rs
+  errors.rs
+  identity.rs
+  canonical.rs
+  compiler.rs
+  scope.rs
+  packets.rs
+  acceptance.rs
+  context.rs
+  lineage.rs
+  delta.rs
+  admission.rs
+  budget.rs
+  service.rs
+```
+
+Candidate tests:
+
+```text
+tests/
+  compile.rs
+  canonical.rs
+  identity.rs
+  scope.rs
+  packets.rs
+  acceptance.rs
+  lineage.rs
+  delta.rs
+  admission.rs
+  context.rs
+  resources.rs
+  adversarial.rs
+```
+
+Candidate benches:
+- `benches/m03_work_order.rs`
+
+Exact file map remains candidate until later freeze.
+
+## Dependency direction
+
+Candidate direct internal dependencies:
+- core-contracts;
+- core-identity;
+- core-config;
+- core-workspace.
+
+Candidate workspace third-party dependencies:
+- serde;
+- serde_json;
+- sha2;
+- thiserror.
+
+No Tokio is required by the core compiler/service baseline.
+
+No database, async runtime, Git library, watcher framework, graph framework, regex engine, LLM SDK or HIVE runtime dependency is currently justified.
+
+New dependency admission later requires explicit evidence.
+
+## Dependency graph invariant
+
+```text
+core-contracts
+core-identity
+core-config
+core-workspace
+       \   |   /
+        core-work-order
+             |
+             v
+          future M04
+```
+
+`core-workspace` MUST NOT depend back on `core-work-order`.
+
+M03 must not depend on M04+.
+
+## Compiler determinism proof
+
+Implementation must eventually prove:
+- semantically equivalent request permutations compile identically;
+- repeated compile with same context is byte/fingerprint equivalent;
+- cache/no-cache output equivalent;
+- canonical serialization independent of hash-map iteration;
+- diagnostics excluded from semantic identity;
+- adversarial malformed input cannot produce partially frozen output.
+
+## Admission determinism proof
+
+With identical frozen revision + resolved admission inputs:
+- receipt semantic fields/fingerprint are identical;
+- diagnostics/timestamp may differ outside semantic fingerprint;
+- READY decision is deterministic;
+- UNKNOWN never becomes READY.
+
+## Round 3 proprietary additions
+
+### LPC - Lineage Precondition Capsule
+Promoted to REQUIRED semantic mechanism for canonical revision persistence.
+
+### PCM - Packet Context Mesh
+
+**Problem:** packets share many sources but naive manifests duplicate references and future prompt bodies.
+
+**Mechanism:** deduplicate stable source refs across packets into a shared canonical mesh plus per-packet edge sets.
+
+**Expected benefit:** reduced manifest/prompt repetition and deterministic context reuse.
+
+**Primary risk:** hidden source omission through over-deduplication.
+
+**Promotion criterion:** reconstructing each PacketContextPlan from PCM yields exactly the same mandatory source set as independent compilation.
+
+PCM is REQUIRED semantically as the deduplicated representation strategy; exact internal data structure remains implementation-defined.
+
+### DCR - Deterministic Compilation Receipt
+
+**Problem:** reviewers need to know exactly which compiler/policy/source inputs produced a FrozenWorkOrder.
+
+**Mechanism:** `CompilationReceiptV1` records request/context fingerprints, compiler algorithm/schema version, lineage precondition fingerprint, output fingerprint and bounded diagnostics.
+
+**Expected benefit:** reproducible compiler provenance without copying source bodies.
+
+DCR is REQUIRED for V0.0.
+
+## Round 3 unresolved items
+
+Still pending before implementation freeze:
+- final exact Rust file map;
+- final dependency admission;
+- numeric M03ResourceBudget defaults and calibration protocol details;
+- exact public Rust struct/enum signatures;
+- exact source resolver/adaptor interfaces outside core compiler;
+- fuzz target list;
+- property test laws and benchmark thresholds;
+- final production DoD;
+- final Work Order / Context Lock / executor packet.
+
+## Round 3 STOP CONDITION
+
+Round 3 is complete when:
+- stateless core/service law is frozen;
+- compile/validate/diff/classify/admit/handoff operations are frozen;
+- no-hidden-I/O boundary is frozen;
+- deterministic WorkOrderId allocation direction is frozen;
+- external lineage snapshot + LPC concurrency model is frozen;
+- no-internal-database persistence direction is frozen;
+- resource budget dimensions are frozen;
+- error/retryability taxonomy is frozen;
+- one-crate/dependency direction is recorded;
+- PCM and DCR are recorded;
+- implementation remains unauthorized.
