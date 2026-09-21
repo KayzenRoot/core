@@ -52,7 +52,7 @@ fn make_sleep_helper(path: &Path) {
             String::from_utf8_lossy(&output.stderr)
         );
     } else {
-        write_helper(path, "#!/bin/sh\nexec sleep 30\n");
+        write_helper(path, "#!/bin/sh\nPATH=/usr/bin:/bin\nexport PATH\nexec sleep 30\n");
     }
 }
 
