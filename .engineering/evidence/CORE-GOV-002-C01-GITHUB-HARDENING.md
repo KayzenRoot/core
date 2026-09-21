@@ -154,13 +154,13 @@ Local documentation checks before commit:
 git diff --check = PASS
 ```
 
-The repository validator and PR CI result are recorded only after execution on the exact governance branch/head. No secret scan result is claimed until it is run on the final delta.
+The repository validator and PR CI result are recorded only after execution on the exact governance branch/head. The final exact-head run is recorded below.
 
 ## Risks and residuals
 
 - The latest pre-mutation `main` CI had a pre-existing M01 Ubuntu failure. It remains in the required status-check set and was green on the governance PR run, so auto-merge cannot advance through any failing required gate.
-- The exact governance PR run `35605615596` validated head `afc54df580386f46cee3d29e60b13a3d3a74f8e1`: 6 of 7 required contexts passed; `M02 workspace adapter (windows-latest)` failed in `Workspace and M02 tests` because `tests::multiple_leases_release_in_different_order_without_lost_notifications` reported an active capability lease and `ForceTerminate` at `crates/core-runtime/src/lib.rs:2205`. This is product/runtime scope and is not corrected here.
-- Because one required context failed, the PR is not `READY_FOR_REVIEW`; the ruleset remains fail-closed.
+- The first governance PR run `35605615596` validated head `afc54df580386f46cee3d29e60b13a3d3a74f8e1`: 6 of 7 required contexts passed; `M02 workspace adapter (windows-latest)` failed in `Workspace and M02 tests` because `tests::multiple_leases_release_in_different_order_without_lost_notifications` reported an active capability lease and `ForceTerminate` at `crates/core-runtime/src/lib.rs:2205`. This historical product/runtime residual was not corrected here.
+- The latest exact governance PR run `35607115931` validated head `eb102eb333e6a36f5b9f24c92548952a89d5092a`: all 7 of 7 required contexts passed, including both M01/M02 operating-system jobs, both bounded fuzz campaigns and Governance. This proves the governance branch's required CI gate green at that exact head; it does not constitute independent review or merge approval.
 - Ruleset administration is remote state; independent review and checkpoint promotion remain separate from this executor evidence.
 - No product, M03, dependency, workflow or secret-bearing source change is included.
 
@@ -181,7 +181,7 @@ Record the objectively proven activation of `CORE main protection` id `23769853`
 ## PR handoff
 
 - PR: `#56` - https://github.com/KayzenRoot/core/pull/56
-- Initial governance branch head validated: `afc54df580386f46cee3d29e60b13a3d3a74f8e1`
+- Final governance branch head validated: `eb102eb333e6a36f5b9f24c92548952a89d5092a`
 - Base head: `499042df143fc519e42c6904461a011b62d26125`
-- Workflow run: `35605615596` - 6/7 required contexts passed; `M02 workspace adapter (windows-latest)` failed
-- PR state: open, not merged; independent review and correction of the runtime failure remain pending
+- Workflow run: `35607115931` - 7/7 required contexts passed at the final head
+- PR state: open, not merged; independent review and checkpoint promotion remain pending
