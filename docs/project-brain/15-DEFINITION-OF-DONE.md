@@ -131,3 +131,33 @@ Final M03 acceptance must additionally prove:
 - no partial frozen/admitted result under budget/deadline failure.
 
 Round 3 does not authorize implementation.
+
+### M03 Round 4 DoD refinements
+
+Final M03 acceptance must additionally prove:
+- exact `WorkOrderService` public API and v1 data contracts match the Round 4 freeze;
+- exact single-crate file map and final initial dependency set are respected;
+- M03-specific contracts remain module-owned and lower accepted contracts are reused rather than duplicated;
+- core compiler/service operations accept only explicit semantic/resolved evidence inputs and have no hidden I/O authority;
+- FrozenWorkOrder semantic identity excludes mutable diagnostics, timing, receipts and live WorkspaceHandle capability;
+- source/workspace/Context Lock/governance/lineage boundaries fail closed under mismatch/UNKNOWN;
+- deterministic packet topological normalization, ScopeEnvelope deny precedence, AEG completeness and PCM lossless reconstruction;
+- the twenty Round 4 property laws pass;
+- the seven Round 4 fuzz targets pass;
+- Ubuntu + Windows exact-head M03 CI passes;
+- dependency/license/advisory/SBOM/security gates pass;
+- M03 Resource Calibration Gate produces explicit finite M03ResourceBudget defaults and benchmark-derived absolute thresholds;
+- the bounded Calibration Delta changes no contract/dependency/file-map/security/DoD semantics;
+- compatible PRB/regression evidence passes without weakening correctness/security;
+- no-hidden-I/O and zero-LLM core-path proofs pass;
+- exact-head Evidence Bundle and independent review record no unresolved HIGH/CRITICAL finding.
+
+Round 4 still does not authorize implementation.
+
+Remaining before implementation authorization:
+- final production DoD criterion numbering/traceability;
+- final CORE-WO-M03 implementation Work Order;
+- final Context Lock;
+- final planning audit/freeze and exact execution-base binding;
+- numeric budget/default/absolute threshold values remain intentionally implementation-calibrated under the frozen protocol.
+
