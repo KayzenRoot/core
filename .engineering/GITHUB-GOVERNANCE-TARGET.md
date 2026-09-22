@@ -1,10 +1,10 @@
 # CORE GitHub Governance Target
 
-Status: `ENFORCED_PENDING_REVIEW`
+Status: `ENFORCED_PROMOTED`
 
 ## Purpose
 
-Define the GitHub-hosted protection profile CORE uses after repository-administration write capability is available. The current state below is evidence-backed by the GitHub API readback recorded in the CORE-GOV-002-C01 Evidence Bundle; it is not an independent review or merge approval.
+Define the GitHub-hosted protection profile CORE uses after repository-administration write capability is available. The current state below is evidence-backed, independently reviewed and promoted through CORE-GOV-002 Review 001.
 
 ## Current evidence
 
@@ -51,3 +51,12 @@ GitHub is an acceleration/evidence platform. CORE product runtime must not silen
 ## Activation gate
 
 Changing repository rulesets is an administration mutation. This target was activated through the authorized `gh` GitHub administration surface and must remain bound to the returned ruleset id/configuration and the exact evidence bundle. Independent review, PR CI and checkpoint promotion remain separate gates.
+
+## Promotion record
+
+- Governed review: CORE-GOV-002 Review 001 / Issue #57 — APPROVED
+- Reviewed PR: #56
+- Exact reviewed head: `6c2507445142417b92cf296ca9bcc5730a6cc5cd`
+- Exact-head workflow: #136 / run `35611719471` — 7/7 required contexts SUCCESS
+- Promotion merge: `67e496cf7b3e887839138eab0d60370ebb970d0d`
+- Result: GitHub main hardening is promoted and active. M03 product implementation authority is unchanged.
