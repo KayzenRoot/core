@@ -523,8 +523,10 @@ One candidate crate: `core-work-order`.
 
 The core is synchronous and does not require Tokio by default.
 
-Candidate dependency direction:
+Historical Round 3 candidate dependency direction:
 `core-contracts + core-identity + core-config + core-workspace -> core-work-order -> future M04`.
+
+This candidate is superseded by the Round 4 dependency freeze below. `core-config` is not an initial direct M03 dependency, and M03 hashing remains behind `core-identity` rather than a direct hash dependency.
 
 No database/network/Git/HIVE runtime dependency belongs in the compiler core.
 
