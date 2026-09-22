@@ -177,3 +177,44 @@ To be classified during governed discovery. No future capability is admitted mer
 - Run scheduler/state;
 - tool/source execution;
 - final evidence/review engines.
+
+## M03 Round 4 implementation-surface freeze
+
+### NECESSARY for initial M03 V0.0 implementation
+- add the single `crates/core-work-order` crate using the exact Round 4 file map;
+- add root workspace membership/Cargo.lock integration;
+- implement the frozen public WorkOrderService/data contracts;
+- reuse core-identity canonical hashing and core-workspace public evidence types;
+- add the seven frozen M03 fuzz targets;
+- add the frozen M03 unit/integration/property/adversarial/benchmark coverage;
+- extend GitHub CI/governance with M03 exact-head gates;
+- produce M03 execution/calibration/evidence artifacts;
+- perform the bounded M03 Calibration Delta before final acceptance.
+
+### IMPORTANT but not automatically admitted
+- disposable in-memory compile memoization, only if benchmark evidence justifies it;
+- extra diagnostic CLI surfaces, only if required to satisfy a frozen acceptance obligation without expanding product authority.
+
+### FUTURE / CONDITIONAL
+- persistent M03 compilation cache;
+- database-backed Work Order registry;
+- async compiler/service runtime;
+- alternate canonical serializer/hash stack;
+- extra adapter crates;
+- direct HIVE/GitHub/Git/filesystem resolver implementations inside M03;
+- M03 crate split/micro-crates;
+- additional third-party graph/regex/Git/cache/watcher/network libraries.
+
+### OUT OF SCOPE for initial M03
+- M04 Run/Attempt/Step execution;
+- source mutation;
+- Git commit/push/PR/merge;
+- governance approval creation;
+- evidence collection owned by M15;
+- scheduling/parallel execution authority;
+- secret storage;
+- background benchmarking/autotuning;
+- modification of M02 authority semantics.
+
+Any need to modify lower product crates or expand these boundaries during execution requires a governed Correction Delta; green tests alone do not authorize the expansion.
+
