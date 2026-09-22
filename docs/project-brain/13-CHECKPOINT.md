@@ -35,13 +35,13 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - M02 final planning freeze exact-head reviewed (Review 005 / Issue #35) and promoted through PR #33.
 - CORE-WO-M02-001 implemented, corrected through Reviews 007/008, independently APPROVED by Review 009 / Issue #43 and promoted through PR #40.
 - M02 canonical closeout exact-head reviewed (Review 010 / Issue #45) and promoted through PR #44.
+- CORE-GOV-002-C01 activated the GitHub `main` protection ruleset `CORE main protection` (id `23769853`) with evidence-backed repository settings, required pull requests, deletion/non-fast-forward protection and the current seven-job CI gate; independent review and PR promotion remain pending.
 
 ## PENDING
 - Continue M03 Work Order Engine Rounds 4+ to freeze exact public Rust contracts, source-resolver/adaptor interfaces, final file/dependency map, property/fuzz/benchmark matrix, production DoD, Work Order and Context Lock.
 - Deep-plan M04 through M24 in dependency order.
 - Freeze each module Requirements/Architecture/DoD/Work Order before implementation authorization.
 - Live local HIVE bootstrap evidence against current main.
-- GitHub main ruleset activation when authorized admin mutation is available.
 
 ## BLOCKERS
 - None for M03 planning.
@@ -93,6 +93,7 @@ Continue M03 Round 4 deep planning with exact public Rust contracts, final file/
 - M02 closeout exact-head `39c8be29fd898218a86b84667fd446b235f47935`
 - M02 closeout workflow #113 `35552201325` — Governance, M01 Ubuntu/Windows/fuzz, M02 Ubuntu/Windows/fuzz SUCCESS
 - M02 closeout promotion merge `039dd7bf93d637971c486f3ee783988cbee3c7cf`
+- CORE-GOV-002-C01 Evidence Bundle: `.engineering/evidence/CORE-GOV-002-C01-GITHUB-HARDENING.md`
 
 ## M02 completion record
 Frozen Work Order: `CORE-WO-M02-001`
@@ -400,3 +401,14 @@ Exact-head workflow: run #128 `35596694929` - Governance, M01 Ubuntu/Windows/fuz
 Promotion merge: `499042df143fc519e42c6904461a011b62d26125`
 Reviewer-first correction: stale Round 3 decision IDs were rebased onto current governed main and renumbered to preserve canonical CORE-D-132.
 Result: M03 Round 3 accepted into discovery baseline. Implementation remains unauthorized.
+
+
+## CORE-GOV-002-C01 governance delta
+
+- Original administration base: `499042df143fc519e42c6904461a011b62d26125`
+- Review-synchronization base: `42f3de287eb51f8887827b62f0b09e918ca9d9c4`
+- Ruleset: `CORE main protection`, id `23769853`, active, target `~DEFAULT_BRANCH`, no bypass actors
+- Mechanically enforced: pull-request path, deletion protection, non-fast-forward protection, resolved review threads, strict seven-context status gate and allowed merge methods
+- Repository settings verified: squash enabled, merge commit disabled, rebase enabled, auto-merge enabled, update branch enabled and delete-branch-on-merge enabled
+- Independent GEF review/audit remains a separate promotion gate; GitHub-native approval count is zero for solo-maintainer compatibility
+- State: factual GitHub activation recorded; independent review and promotion are pending
