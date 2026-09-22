@@ -1695,3 +1695,928 @@ Round 3 is complete when:
 - one-crate/dependency direction is recorded;
 - PCM and DCR are recorded;
 - implementation remains unauthorized.
+
+## Round 4 - public Rust contract freeze, adapter boundaries and implementation map
+
+Round 4 turns the Round 1-3 semantic model into an executor-addressable Rust contract and exact initial implementation surface without authorizing product implementation.
+
+It freezes:
+- the exact initial `core-work-order` crate/file map;
+- the final initial dependency set;
+- top-level public Rust entry points and contract ownership;
+- external resolution/adaptor data boundaries;
+- semantic/canonical field ownership rules;
+- exact fuzz/property target families;
+- benchmark/calibration protocol and threshold policy;
+- production DoD direction required before the final planning freeze.
+
+Numeric `M03ResourceBudget` defaults remain implementation-evidence outputs. Round 4 freezes how they are measured and admitted; it does not invent production numbers.
+
+### Round 4 contract ownership law
+
+M03 v1 contracts are owned by `core-work-order` unless they already belong to an accepted lower module.
+
+Lower-module types remain reused by reference/type dependency:
+- `core_contracts::SchemaVersion` and shared assurance/runtime primitives;
+- `core_identity::canonical_bytes` / `fingerprint`;
+- M02 public workspace identity/freshness contracts from `core-workspace`.
+
+M03 MUST NOT duplicate M02 workspace identity, canonical hashing, runtime generation, or shared assurance contracts.
+
+M03-specific durable contracts MUST NOT be added to `core-contracts` merely to make them globally visible. They remain in `core-work-order` until a later proven cross-module extraction need exists.
+
+### Public constants
+
+The initial crate exports:
+
+```rust
+pub const M03_SCHEMA: &str = "nexlabs.core.work-order";
+pub const M03_VERSION: u16 = 1;
+pub const M03_COMPILER_ALGORITHM: &str = "m03-woc-v1";
+```
+
+Schema/version mismatch is typed and fail-closed.
+
+### Frozen identity newtypes
+
+Public semantic identities are explicit newtypes rather than raw interchangeable strings:
+
+```rust
+pub struct WorkOrderId(pub String);
+pub struct WorkOrderFingerprint(pub String);
+pub struct WorkOrderCompilationId(pub String);
+pub struct WorkPacketId(pub String);
+pub struct CriterionId(pub String);
+pub struct EvidenceRequirementId(pub String);
+pub struct CanonicalSourceId(pub String);
+pub struct ContextLockRequirementId(pub String);
+pub struct GovernanceRequirementId(pub String);
+pub struct LineageGeneration(pub u64);
+pub struct WorkOrderRevision(pub u64);
+```
+
+Rules:
+- `WorkOrderRevision(0)` is invalid;
+- IDs are bounded UTF-8 strings with contract-specific maximum byte lengths charged against M03 resource budget;
+- semantic IDs are case-sensitive and byte-stable;
+- M03 performs no Unicode case folding or normalization unless a future field-specific policy explicitly admits it;
+- fingerprint newtypes contain lowercase SHA-256 hex produced only through `core-identity`;
+- duplicate logical IDs within a semantic namespace fail before freeze.
+
+### Envelope
+
+Durable/external v1 contracts use:
+
+```rust
+pub struct M03Envelope<T> {
+    pub schema: String,
+    pub version: u16,
+    pub kind: M03ContractKind,
+    pub payload: T,
+}
+
+pub enum M03ContractKind {
+    WorkOrderRequest,
+    FrozenWorkOrder,
+    CompilationReceipt,
+    RevisionDiff,
+    CorrectionProposal,
+    AdmissionReceipt,
+    AdmittedWorkOrder,
+    LineageSnapshot,
+    LineagePrecondition,
+}
+```
+
+The envelope validates schema, version and kind before semantic processing. Unknown version/kind never downgrades into v1.
+
+### Authoring request
+
+`WorkOrderRequestV1` freezes the semantic authoring inputs:
+
+```rust
+pub struct WorkOrderRequestV1 {
+    pub logical_key: WorkOrderLogicalKeyV1,
+    pub explicit_work_order_id: Option<WorkOrderId>,
+    pub objective: BoundedTextV1,
+    pub source_manifest: CanonicalSourceManifestV1,
+    pub scope: ScopeEnvelopeV1,
+    pub packets: Vec<WorkPacketDeclarationV1>,
+    pub acceptance: AcceptanceEvidenceGraphV1,
+    pub context_budget: ContextBudgetEnvelopeV1,
+    pub correction_policy: CorrectionPolicyV1,
+    pub workspace_requirement: WorkspaceRequirementV1,
+    pub context_lock_requirement: ContextLockRequirementV1,
+    pub governance_requirement: GovernanceRequirementV1,
+    pub risk_assurance_profile: RiskAssuranceProfileV1,
+    pub stop_condition: StopConditionV1,
+    pub resource_budget: M03ResourceBudget,
+}
+```
+
+The objective may be human-readable but remains bounded semantic input. It grants no authority outside the machine-readable fields.
+
+### Compilation context
+
+Compilation consumes only explicit resolved state:
+
+```rust
+pub struct CompilationContextV1 {
+    pub compiler_generation: CompilerGenerationV1,
+    pub policy_generation: u64,
+    pub lineage: LineageSnapshotV1,
+    pub resolved_sources: ResolvedSourceSetV1,
+}
+
+pub struct CompilerGenerationV1 {
+    pub algorithm: String,
+    pub schema_version: u16,
+    pub policy_schema_version: u16,
+}
+```
+
+No ambient repository, current branch, HIVE state, GitHub state, filesystem state or clock lookup is legal inside compile.
+
+### Source boundary contracts
+
+`CanonicalSourceManifestV1` is semantic declaration. Resolution is separate evidence.
+
+```rust
+pub struct CanonicalSourceManifestV1 {
+    pub entries: Vec<CanonicalSourceRefV1>,
+}
+
+pub struct ResolvedSourceSetV1 {
+    pub manifest_fingerprint: String,
+    pub entries: Vec<ResolvedSourceEvidenceV1>,
+    pub resolver_generation: String,
+}
+
+pub struct ResolvedSourceEvidenceV1 {
+    pub source_id: CanonicalSourceId,
+    pub semantic_fingerprint: String,
+    pub provenance_fingerprint: String,
+    pub freshness: SourceFreshnessV1,
+    pub secret_classification: SecretClassificationV1,
+}
+```
+
+Round 4 deliberately freezes a **data boundary**, not an I/O trait.
+
+There is no `SourceResolver` trait called by `WorkOrderCompiler` in V0.0. External orchestration resolves Git/filesystem/HIVE/GitHub/document state and passes `ResolvedSourceSetV1`. This prevents an innocent-looking trait implementation from smuggling hidden network/process/filesystem authority into the compiler.
+
+### Workspace admission boundary
+
+Frozen semantics persist only requirements:
+
+```rust
+pub struct WorkspaceRequirementV1 {
+    pub expected_project_binding_id: Option<core_workspace::ProjectBindingId>,
+    pub expected_workspace_id: Option<core_workspace::WorkspaceId>,
+    pub required_profile: core_workspace::BvmProfile,
+    pub required_basis_components: core_workspace::ComponentMask,
+    pub allow_compatible_refresh: bool,
+}
+```
+
+Admission receives ephemeral current M02 evidence separately:
+
+```rust
+pub struct WorkspaceAdmissionEvidenceV1 {
+    pub handle: core_workspace::WorkspaceHandleV1,
+    pub current_basis_fingerprint: String,
+    pub compatibility: WorkspaceCompatibilityV1,
+}
+
+pub enum WorkspaceCompatibilityV1 {
+    ExactMatch,
+    CompatibleRefresh,
+    Incompatible,
+    Unknown,
+}
+```
+
+`WorkspaceHandleV1` never enters the frozen semantic fingerprint.
+
+### Context Lock boundary
+
+```rust
+pub struct ContextLockRequirementV1 {
+    pub requirement_id: ContextLockRequirementId,
+    pub required_schema: u16,
+    pub required_source_manifest_fingerprint: String,
+    pub required_base_fingerprint: Option<String>,
+    pub implementation_authorization_required: bool,
+}
+
+pub struct ContextLockAdmissionProofV1 {
+    pub requirement_id: ContextLockRequirementId,
+    pub concrete_lock_fingerprint: String,
+    pub bound_work_order_id: WorkOrderId,
+    pub bound_work_order_revision: WorkOrderRevision,
+    pub bound_work_order_fingerprint: WorkOrderFingerprint,
+    pub source_manifest_fingerprint: String,
+    pub base_fingerprint: Option<String>,
+    pub implementation_authorized: bool,
+}
+```
+
+The concrete lock fingerprint remains admission evidence and never participates in the frozen fingerprint cycle.
+
+### Governance proof boundary
+
+```rust
+pub struct GovernanceRequirementV1 {
+    pub requirement_id: GovernanceRequirementId,
+    pub required_policy_generation: String,
+    pub required_verdict: GovernanceVerdictV1,
+}
+
+pub struct GovernanceAdmissionProofV1 {
+    pub requirement_id: GovernanceRequirementId,
+    pub verdict: GovernanceVerdictV1,
+    pub policy_generation: String,
+    pub bound_work_order_fingerprint: WorkOrderFingerprint,
+    pub bound_base_fingerprint: Option<String>,
+    pub proof_fingerprint: String,
+}
+
+pub enum GovernanceVerdictV1 {
+    Approved,
+    CorrectionRequired,
+    Blocked,
+}
+```
+
+Only `Approved` can satisfy an execution-capable governance requirement. M03 validates proof shape/binding; it does not mint the proof.
+
+### Lineage contracts
+
+```rust
+pub struct WorkOrderRevisionRefV1 {
+    pub work_order_id: WorkOrderId,
+    pub revision: WorkOrderRevision,
+    pub fingerprint: WorkOrderFingerprint,
+}
+
+pub struct LineageSnapshotV1 {
+    pub work_order_id: WorkOrderId,
+    pub current_revision: Option<WorkOrderRevisionRefV1>,
+    pub store_generation: LineageGeneration,
+}
+
+pub struct LineagePreconditionCapsuleV1 {
+    pub work_order_id: WorkOrderId,
+    pub expected_parent: Option<WorkOrderRevisionRefV1>,
+    pub expected_store_generation: LineageGeneration,
+    pub proposed_revision: WorkOrderRevision,
+    pub precondition_fingerprint: String,
+}
+```
+
+A new logical Work Order requires `current_revision=None` and proposes revision 1. Existing lineage proposes exactly N+1.
+
+### Compilation output
+
+```rust
+pub struct CompileSuccessV1 {
+    pub frozen: FrozenWorkOrderV1,
+    pub lineage_precondition: LineagePreconditionCapsuleV1,
+    pub receipt: CompilationReceiptV1,
+}
+
+pub struct FrozenWorkOrderV1 {
+    pub schema_version: u16,
+    pub work_order_id: WorkOrderId,
+    pub revision: WorkOrderRevision,
+    pub fingerprint: WorkOrderFingerprint,
+    pub semantic: FrozenWorkOrderSemanticV1,
+}
+
+pub struct FrozenWorkOrderSemanticV1 {
+    pub objective: BoundedTextV1,
+    pub source_manifest: CanonicalSourceManifestV1,
+    pub scope: ScopeEnvelopeV1,
+    pub packets: Vec<WorkPacketDeclarationV1>,
+    pub acceptance: AcceptanceEvidenceGraphV1,
+    pub context_budget: ContextBudgetEnvelopeV1,
+    pub correction_policy: CorrectionPolicyV1,
+    pub workspace_requirement: WorkspaceRequirementV1,
+    pub context_lock_requirement: ContextLockRequirementV1,
+    pub governance_requirement: GovernanceRequirementV1,
+    pub risk_assurance_profile: RiskAssuranceProfileV1,
+    pub stop_condition: StopConditionV1,
+    pub packet_context_mesh: PacketContextMeshV1,
+}
+```
+
+The fingerprint is over the explicit semantic projection only. The stored `fingerprint` field itself is not recursively included in its own projection.
+
+### Deterministic Compilation Receipt
+
+```rust
+pub struct CompilationReceiptV1 {
+    pub compilation_id: WorkOrderCompilationId,
+    pub request_fingerprint: String,
+    pub compilation_context_fingerprint: String,
+    pub compiler_generation: CompilerGenerationV1,
+    pub lineage_precondition_fingerprint: String,
+    pub output_fingerprint: WorkOrderFingerprint,
+    pub resource_usage: M03ResourceUsageV1,
+    pub safe_diagnostics: Vec<SafeDiagnosticV1>,
+}
+```
+
+Receipt wall-clock timestamp is intentionally absent from the semantic receipt. Host-side logs may timestamp the operation externally.
+
+### Packet declaration and DAG
+
+```rust
+pub struct WorkPacketDeclarationV1 {
+    pub packet_id: WorkPacketId,
+    pub objective: BoundedTextV1,
+    pub depends_on: Vec<WorkPacketId>,
+    pub scope: PacketScopeV1,
+    pub required_source_ids: Vec<CanonicalSourceId>,
+    pub acceptance_criterion_ids: Vec<CriterionId>,
+    pub required_workspace_profile: Option<core_workspace::BvmProfile>,
+}
+```
+
+Canonical order:
+1. reject duplicate packet IDs;
+2. validate all dependency refs;
+3. validate child scope is a subset/intersection of parent scope;
+4. topologically sort with deterministic packet-ID tie breaking;
+5. persist packets in that canonical topological order.
+
+The compiler never interprets the DAG as permission to run concurrently.
+
+### Acceptance Evidence Graph
+
+```rust
+pub struct AcceptanceCriterionV1 {
+    pub criterion_id: CriterionId,
+    pub description: BoundedTextV1,
+    pub blocking: bool,
+    pub evidence_requirement_ids: Vec<EvidenceRequirementId>,
+}
+
+pub struct EvidenceRequirementV1 {
+    pub evidence_requirement_id: EvidenceRequirementId,
+    pub evidence_class: EvidenceClassV1,
+    pub required: bool,
+}
+
+pub struct AcceptanceEvidenceGraphV1 {
+    pub criteria: Vec<AcceptanceCriterionV1>,
+    pub requirements: Vec<EvidenceRequirementV1>,
+}
+```
+
+Every blocking criterion must have at least one required evidence edge or an explicit typed N/A rule defined by policy.
+
+### Packet Context Mesh
+
+```rust
+pub struct PacketContextMeshV1 {
+    pub shared_sources: Vec<CanonicalSourceId>,
+    pub packet_edges: Vec<PacketContextEdgeV1>,
+}
+
+pub struct PacketContextEdgeV1 {
+    pub packet_id: WorkPacketId,
+    pub stable_prefix_source_ids: Vec<CanonicalSourceId>,
+    pub packet_required_source_ids: Vec<CanonicalSourceId>,
+    pub validate_only_source_ids: Vec<CanonicalSourceId>,
+    pub optional_expandable_source_ids: Vec<CanonicalSourceId>,
+}
+```
+
+All lists are sorted and duplicate-free. Reconstructing one packet must yield exactly the independently required source set for that packet.
+
+### Scope and dependency policy
+
+`ScopeEnvelopeV1` remains deny-first and freezes:
+- allowed modules/crates/packages;
+- allowed paths/path prefixes;
+- forbidden paths/path prefixes;
+- allowed artifact classes;
+- source mutation policy;
+- generated/vendor policy;
+- dependency policy;
+- security-policy mutation policy.
+
+Dependency policy is explicit:
+
+```rust
+pub enum DependencyPolicyV1 {
+    NoDependencyChanges,
+    ExistingOnly,
+    GovernedAdmissionRequired,
+    ExplicitAllowList(Vec<String>),
+}
+```
+
+A path/crate allow never implies dependency authority.
+
+### Correction and semantic delta contracts
+
+```rust
+pub struct ExecutionCorrectionProposalV1 {
+    pub work_order_id: WorkOrderId,
+    pub revision: WorkOrderRevision,
+    pub proposed_classes: Vec<CorrectionClassV1>,
+    pub affected_paths: Vec<String>,
+    pub dependency_changes: Vec<DependencyChangeV1>,
+    pub semantic_claim: NoSemanticChangeClaimV1,
+}
+
+pub struct WorkOrderRevisionDiffV1 {
+    pub from: WorkOrderRevisionRefV1,
+    pub to: WorkOrderRevisionRefV1,
+    pub classes: Vec<SemanticDeltaClassV1>,
+    pub changed_component_ids: Vec<String>,
+    pub semantic_change: bool,
+}
+```
+
+Classification is deterministic from canonical projections, not from prose labels supplied by the caller.
+
+### Admission input and receipt
+
+```rust
+pub struct AdmissionInputsV1 {
+    pub workspace: WorkspaceAdmissionEvidenceV1,
+    pub context_lock: ContextLockAdmissionProofV1,
+    pub governance: GovernanceAdmissionProofV1,
+    pub source_verification: SourceVerificationEvidenceV1,
+    pub current_policy_generation: String,
+}
+
+pub enum AdmissionDecisionV1 {
+    Ready,
+    Stale,
+    Blocked,
+}
+
+pub struct WorkOrderAdmissionReceiptV1 {
+    pub work_order_id: WorkOrderId,
+    pub revision: WorkOrderRevision,
+    pub work_order_fingerprint: WorkOrderFingerprint,
+    pub decision: AdmissionDecisionV1,
+    pub workspace_generation: core_workspace::WorkspaceGeneration,
+    pub workspace_basis_fingerprint: String,
+    pub context_lock_fingerprint: String,
+    pub governance_proof_fingerprint: String,
+    pub source_verification_fingerprint: String,
+    pub policy_generation: String,
+    pub receipt_fingerprint: String,
+    pub reasons: Vec<AdmissionReasonV1>,
+}
+```
+
+A receipt is immutable historical proof. Later staleness creates another evaluation/receipt.
+
+### M04 handoff contract
+
+```rust
+pub struct AdmittedWorkOrderV1 {
+    pub frozen: FrozenWorkOrderV1,
+    pub admission: WorkOrderAdmissionReceiptV1,
+}
+```
+
+Materialization requires:
+- receipt decision `Ready`;
+- exact ID/revision/fingerprint match;
+- all required receipt bindings present;
+- no semantic mutation between frozen object and receipt.
+
+M04 remains responsible for Run-start freshness revalidation.
+
+### Public service API freeze
+
+V0.0 exports a stateless service facade:
+
+```rust
+#[derive(Debug, Default, Clone, Copy)]
+pub struct WorkOrderService;
+
+impl WorkOrderService {
+    pub fn derive_work_order_id(
+        logical_key: &WorkOrderLogicalKeyV1,
+    ) -> Result<WorkOrderId, WorkOrderError>;
+
+    pub fn compile(
+        request: &WorkOrderRequestV1,
+        context: &CompilationContextV1,
+    ) -> Result<CompileSuccessV1, WorkOrderError>;
+
+    pub fn validate_frozen(
+        frozen: &FrozenWorkOrderV1,
+        budget: &M03ResourceBudget,
+    ) -> Result<ValidationReportV1, WorkOrderError>;
+
+    pub fn diff(
+        from: &FrozenWorkOrderV1,
+        to: &FrozenWorkOrderV1,
+        budget: &M03ResourceBudget,
+    ) -> Result<WorkOrderRevisionDiffV1, WorkOrderError>;
+
+    pub fn classify_correction(
+        frozen: &FrozenWorkOrderV1,
+        proposal: &ExecutionCorrectionProposalV1,
+        budget: &M03ResourceBudget,
+    ) -> Result<CorrectionClassificationV1, WorkOrderError>;
+
+    pub fn evaluate_admission(
+        frozen: &FrozenWorkOrderV1,
+        inputs: &AdmissionInputsV1,
+        budget: &M03ResourceBudget,
+    ) -> Result<WorkOrderAdmissionReceiptV1, WorkOrderError>;
+
+    pub fn materialize_handoff(
+        frozen: &FrozenWorkOrderV1,
+        receipt: &WorkOrderAdmissionReceiptV1,
+    ) -> Result<AdmittedWorkOrderV1, WorkOrderError>;
+}
+```
+
+These methods perform no external I/O and accept no resolver/store/network/process handles.
+
+### Error contract freeze
+
+```rust
+pub struct WorkOrderError {
+    pub category: ErrorCategoryV1,
+    pub reason: ErrorReasonV1,
+    pub retryability: RetryabilityV1,
+    pub diagnostics: Vec<SafeDiagnosticV1>,
+}
+
+pub enum ErrorCategoryV1 {
+    InvalidInput,
+    StaleOrConflict,
+    PolicyBlock,
+    ResourceBlock,
+    InternalInvariant,
+}
+
+pub enum RetryabilityV1 {
+    Never,
+    RetrySameInput,
+    RetryAfterSourceRefresh,
+    RetryAfterWorkspaceRefresh,
+    RetryAfterLineageRefresh,
+    RetryAfterGovernance,
+    RetryAfterResourceChange,
+}
+```
+
+Reason codes are a closed v1 enum containing the Round 3 taxonomy. Unknown internal states map to `InternalInvariant` and never to READY.
+
+### M03ResourceBudget exact dimensions
+
+The public budget type freezes these finite fields:
+
+```rust
+pub struct M03ResourceBudget {
+    pub max_request_bytes: u64,
+    pub max_frozen_bytes: u64,
+    pub max_source_manifest_entries: u32,
+    pub max_packet_count: u32,
+    pub max_packet_dependency_edges: u32,
+    pub max_acceptance_criteria: u32,
+    pub max_evidence_requirements: u32,
+    pub max_context_edges: u32,
+    pub max_delta_items: u32,
+    pub max_diagnostics: u32,
+    pub max_total_string_bytes: u64,
+    pub max_operation_millis: u64,
+}
+```
+
+Zero/unlimited sentinels are invalid for production profiles.
+
+`M03ResourceBudget` is owned by `core-work-order`, not `core-config`, because it is part of M03's public semantic/safety contract and must be explicit at call boundaries.
+
+### Resource usage accounting
+
+```rust
+pub struct M03ResourceUsageV1 {
+    pub request_bytes: u64,
+    pub frozen_bytes: u64,
+    pub source_entries: u32,
+    pub packets: u32,
+    pub dependency_edges: u32,
+    pub criteria: u32,
+    pub evidence_requirements: u32,
+    pub context_edges: u32,
+    pub delta_items: u32,
+    pub diagnostic_count: u32,
+    pub total_string_bytes: u64,
+}
+```
+
+Accounting must happen incrementally enough that attacker-controlled input cannot force unbounded allocation before a budget check.
+
+### Exact initial crate/file map
+
+Round 4 freezes the initial implementation topology:
+
+```text
+crates/core-work-order/
+  Cargo.toml
+  src/
+    lib.rs
+    contracts.rs
+    ids.rs
+    errors.rs
+    canonical.rs
+    compiler.rs
+    validation.rs
+    scope.rs
+    packets.rs
+    acceptance.rs
+    context.rs
+    lineage.rs
+    delta.rs
+    admission.rs
+    budget.rs
+    external.rs
+    service.rs
+  tests/
+    compile.rs
+    canonical.rs
+    identity.rs
+    scope.rs
+    packets.rs
+    acceptance.rs
+    context.rs
+    lineage.rs
+    delta.rs
+    admission.rs
+    resources.rs
+    adversarial.rs
+    fixtures/
+      README.md
+  benches/
+    m03_work_order.rs
+```
+
+File ownership:
+- `contracts.rs`: durable/ephemeral DTOs and enums;
+- `ids.rs`: identity newtypes and validation;
+- `errors.rs`: error/retryability/safe diagnostics;
+- `canonical.rs`: M03 semantic projections only; hashing remains delegated to core-identity;
+- `compiler.rs`: request -> frozen + LPC + DCR;
+- `validation.rs`: frozen self-consistency validation;
+- `scope.rs`: deny-first scope/dependency rules;
+- `packets.rs`: DAG validation/topological normalization;
+- `acceptance.rs`: AEG validation;
+- `context.rs`: context budget/PCM;
+- `lineage.rs`: snapshot/LPC validation only;
+- `delta.rs`: semantic diff/correction classification;
+- `admission.rs`: explicit admission evaluation;
+- `budget.rs`: budget validation/accounting;
+- `external.rs`: external evidence/request-response data boundaries only, no I/O adapters;
+- `service.rs`: stateless public facade.
+
+No second M03 crate is admitted initially.
+
+### Repository files expected to change during implementation
+
+Initial M03 Work Order may change only:
+- root `Cargo.toml` to add `crates/core-work-order`;
+- `Cargo.lock`;
+- the exact new `crates/core-work-order/**` map above;
+- `fuzz/Cargo.toml`;
+- the frozen M03 fuzz target files below;
+- `.github/workflows/governance.yml` to add exact M03 validation jobs/gates;
+- M03 execution/calibration evidence documents;
+- canonical checkpoint/DoD/backlog files only through governed evidence/promotion deltas.
+
+`core-workspace`, `core-runtime`, `core-cli`, `core-identity`, `core-contracts` and `core-config` are not expected to require product-code edits for initial M03 implementation. Any need to alter them is a Correction Delta and must prove necessity.
+
+### Final initial dependency admission
+
+`core-work-order` direct internal dependencies:
+- `core-contracts`;
+- `core-identity`;
+- `core-workspace`.
+
+Direct workspace third-party dependencies:
+- `serde`;
+- `serde_json`;
+- `thiserror`.
+
+Not admitted as direct M03 dependencies:
+- `sha2`: hashing remains through core-identity;
+- `core-config`: M03ResourceBudget is M03-owned and explicit;
+- `tokio` or another async runtime;
+- `regex`;
+- `petgraph` or another graph framework;
+- Git libraries;
+- filesystem walkers/glob frameworks;
+- database/cache engines;
+- watcher frameworks;
+- HIVE SDK/runtime;
+- LLM SDKs;
+- HTTP/network clients.
+
+No new third-party crate is required by Round 4.
+
+### Dependency graph freeze
+
+```text
+core-contracts
+      ^
+      |
+core-identity        core-workspace
+      ^                   ^
+       \                 /
+        \               /
+         core-work-order
+              |
+              v
+           future M04+
+```
+
+`core-workspace` remains independent of `core-work-order`.
+M03 cannot depend on M04+.
+No runtime/CLI dependency is allowed into M03 core.
+
+### Fuzz target freeze
+
+The initial implementation must add exactly these M03 fuzz targets unless a governed Correction Delta changes the set:
+
+```text
+fuzz/fuzz_targets/m03_compile_request.rs
+fuzz/fuzz_targets/m03_canonical_projection.rs
+fuzz/fuzz_targets/m03_packet_dag.rs
+fuzz/fuzz_targets/m03_revision_delta.rs
+fuzz/fuzz_targets/m03_lineage_precondition.rs
+fuzz/fuzz_targets/m03_admission.rs
+fuzz/fuzz_targets/m03_context_mesh.rs
+```
+
+Target obligations:
+- never panic/abort on arbitrary bounded bytes;
+- no unbounded allocation before resource rejection;
+- successful parse/compile output passes self-validation;
+- invalid graph/reference/lineage/admission states never become FROZEN/READY.
+
+### Property-law freeze
+
+Implementation property tests must prove at minimum:
+
+1. **Compile replay law:** same semantic request/context -> identical frozen bytes/fingerprint, LPC and semantic DCR fields.
+2. **Permutation law:** permutation of unordered input collections -> identical semantic result.
+3. **Diagnostic exclusion law:** safe non-semantic diagnostic changes -> unchanged WorkOrderFingerprint.
+4. **Round-trip law:** serialize/deserialize supported v1 contract -> semantic equality and stable fingerprint.
+5. **Packet DAG law:** canonical topological order is deterministic; cycles/dangling refs reject.
+6. **Packet scope law:** packet scope never widens parent Work Order scope.
+7. **Deny precedence law:** explicit deny always defeats allow.
+8. **AEG completeness law:** blocking criterion cannot be orphaned from required evidence/N-A policy.
+9. **PCM reconstruction law:** mesh reconstruction equals independently compiled mandatory source set.
+10. **Context completeness law:** budget pressure never silently removes mandatory source refs.
+11. **Lineage successor law:** proposed revision is exactly 1 for empty lineage or N+1 for existing lineage.
+12. **LPC conflict law:** stale parent/store generation cannot be accepted by canonical persistence contract.
+13. **Correction firewall law:** dependency/scope/architecture/security/acceptance/stop semantic changes cannot classify as same-revision correction.
+14. **Admission determinism law:** identical frozen + resolved admission evidence -> identical semantic receipt/decision.
+15. **Unknown fail-closed law:** UNKNOWN workspace/source/lock/governance state never becomes READY.
+16. **Receipt replay law:** changed correctness-relevant generation invalidates reuse.
+17. **Resource atomicity law:** resource/deadline failure yields no partial frozen/admitted success.
+18. **Cache independence law:** if disposable memoization is implemented, hit/miss result equivalence is exact.
+19. **Secret-canary law:** raw secret canaries never appear in durable contracts/safe diagnostics.
+20. **No-hidden-I/O law:** static dependency/API audit plus tests show compile/validate/diff/classify/admit/handoff do not invoke process/network/Git/HIVE/filesystem discovery.
+
+### Benchmark families
+
+Round 4 freezes benchmark families, not production numeric budgets.
+
+`benches/m03_work_order.rs` must measure:
+- request validation;
+- canonical semantic projection;
+- compile;
+- frozen validation;
+- packet DAG normalization;
+- AEG validation;
+- PCM construction/reconstruction;
+- revision diff;
+- correction classification;
+- admission evaluation;
+- serialization/deserialization;
+- optional memo hit/miss if memoization is implemented.
+
+Scaling axes:
+- canonical source entries;
+- packet count;
+- packet dependency edges;
+- criteria/evidence edges;
+- context mesh edges;
+- delta item count;
+- total bounded semantic string bytes.
+
+Benchmark fixtures are synthetic/local and deterministic.
+
+### Benchmark threshold policy
+
+Hard correctness thresholds:
+- zero semantic mismatch across repeated/permuted deterministic cases;
+- zero READY/FROZEN partial success after typed resource failure;
+- zero mandatory-source loss under PCM/context-budget reconstruction;
+- zero secret-canary leakage;
+- zero dependency-cycle or stale-lineage acceptance.
+
+Performance thresholds:
+- exact absolute latency/memory/cardinality defaults are produced by the M03 Resource Calibration Gate during implementation;
+- regression checks use the repository's accepted compatible PRB policy rather than a second arbitrary M03 percentage;
+- a candidate that satisfies latency by weakening correctness/security is rejected;
+- scaling evidence must show no unexplained superlinear cliff relative to the expected algorithmic work: canonical sorting O(N log N), DAG traversal O(V+E), direct indexed lookups O(log N) or amortized equivalent;
+- unsupported fixture scale is recorded as bounded/skipped, never extrapolated to PASS.
+
+### M03 Resource Calibration Gate protocol
+
+The future implementation Work Order must contain:
+
+```text
+Phase A - implement frozen contracts under conservative test-only ceilings
+    |
+    v
+CALIBRATION_ONLY
+    |
+    +--> deterministic fixture matrix
+    +--> benchmark families
+    +--> resource/accounting evidence
+    +--> semantic/property assertions for every candidate profile
+    |
+    v
+M03 Calibration Evidence Bundle
+    |
+    +--> proposed finite M03ResourceBudget defaults
+    +--> proposed absolute acceptance thresholds
+    +--> selected/rejected candidate rationale
+    |
+    v
+bounded Calibration Delta
+    |
+    v
+full exact-head validation rerun
+    |
+    v
+eligible for final M03 implementation review
+```
+
+The bounded Calibration Delta may change only:
+- numeric M03ResourceBudget defaults;
+- benchmark-derived absolute thresholds;
+- fixture metadata/evidence references;
+- explanatory documentation.
+
+It cannot change contracts, file map, dependency graph, semantic ownership, error taxonomy, security invariants, Work Order scope or DoD.
+
+### Round 4 production DoD direction
+
+Before M03 can ever be declared complete, exact-head evidence must additionally prove:
+- the exact public service signatures above;
+- the exact initial file/dependency map;
+- v1 envelope/schema rejection;
+- canonical identity/serialization properties;
+- all 20 property laws;
+- all seven fuzz targets;
+- Windows + Ubuntu exact-head CI;
+- supply-chain/advisory/SBOM gates;
+- M03 Resource Calibration Gate with finite selected defaults;
+- benchmark/regression evidence under compatible repository PRB policy;
+- no-hidden-I/O proof;
+- zero-LLM compile/validate/diff/classify/admit/handoff proof;
+- external source/workspace/Context Lock/governance/lineage inputs cannot escalate authority;
+- executor Evidence Bundle and proposed Checkpoint Delta;
+- independent governed review with no unresolved HIGH/CRITICAL finding.
+
+### Round 4 unresolved items
+
+After Round 4, the only planning items allowed to remain before implementation authorization are:
+- exact numeric M03ResourceBudget defaults, intentionally evidence-derived during implementation;
+- the final M03 production DoD wording/criterion numbering;
+- final implementation Work Order;
+- final Context Lock;
+- final planning audit/freeze and execution-base binding.
+
+No public API/file-map/dependency/fuzz/property-family redesign is expected after Round 4 without a governed Correction Delta.
+
+### Round 4 STOP CONDITION
+
+Round 4 is complete when:
+- exact initial public Rust service/data boundary is frozen;
+- exact crate/file map is frozen;
+- final initial dependency set is frozen;
+- external resolution boundaries are explicit data contracts with no hidden I/O trait;
+- M02 workspace types are reused without persisting live handles in frozen semantics;
+- fuzz targets and property laws are frozen;
+- benchmark/calibration threshold policy is frozen;
+- production DoD direction is explicit;
+- implementation remains unauthorized.
+
