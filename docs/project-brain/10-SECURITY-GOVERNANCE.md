@@ -84,3 +84,25 @@ M02 threat model details and adversarial fixtures are maintained in `docs/module
 - canonical projection must reject duplicate IDs/dangling refs/cycles before freeze;
 - external adapter evidence is fingerprinted/provenanced before use;
 - DCR proves compilation inputs/output identity but grants no execution authority.
+
+## M03 Round 4 security rules
+
+- public WorkOrderService methods accept no process/network/Git/HIVE/filesystem resolver handle or callback;
+- external state crosses the compiler boundary only as typed resolved evidence/snapshots/proofs;
+- source evidence is bound by source ID + semantic/provenance fingerprint + freshness + secret classification;
+- M02 WorkspaceHandleV1 is ephemeral admission evidence and is prohibited from FrozenWorkOrder semantic identity;
+- concrete Context Lock and governance proof fingerprints are admission evidence bound to the exact Work Order revision/fingerprint;
+- M03 never treats external proof presence alone as authority; schema/kind/binding/verdict/policy generation are validated;
+- semantic IDs are bounded, namespace-distinct and duplicate-rejected;
+- hidden Unicode normalization/case folding is prohibited for v1 semantic IDs/text unless future field-specific policy explicitly admits it;
+- attacker-controlled collection/string cardinality is charged against M03ResourceBudget before or during allocation;
+- zero/unlimited production resource sentinels are invalid;
+- DCR excludes wall-clock timestamp from semantic identity and safe diagnostics remain bounded;
+- raw secrets/credentials/provider payloads are prohibited from durable Work Order/source/context/diagnostic fields;
+- packet DAG dangling refs/cycles, child-scope widening and AEG orphan criteria fail closed before freeze;
+- PCM deduplication cannot remove a packet's mandatory source obligation;
+- stale lineage/LPC never auto-rebases; UNKNOWN authority/freshness never becomes READY;
+- calibration cannot change architecture/dependencies/contracts/security/DoD and cannot turn unsupported scales into inferred PASS;
+- initial M03 adds no new third-party dependency; any new dependency requires security/supply-chain/performance justification through governed admission;
+- no-hidden-I/O proof is a release gate, not an architectural assumption.
+
