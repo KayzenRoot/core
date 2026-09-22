@@ -1,6 +1,6 @@
 # CORE Definition of Done
 
-Status: `M01_COMPLETE_PRODUCT_DISCOVERY_ACTIVE`
+Status: `M01_M02_COMPLETE_M03_DISCOVERY_ACTIVE`
 
 ## Bootstrap DoD
 
