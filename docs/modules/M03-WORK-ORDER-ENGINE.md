@@ -1603,6 +1603,8 @@ No database, async runtime, Git library, watcher framework, graph framework, reg
 
 New dependency admission later requires explicit evidence.
 
+**Round 4 refinement:** the Round 3 lists above are historical candidate directions, not the final admitted set. Round 4 supersedes them for initial V0.0 implementation: direct dependencies are limited to `core-contracts`, `core-identity`, `core-workspace`, `serde`, `serde_json` and `thiserror`. `core-config` and direct `sha2` are not admitted into `core-work-order`; resource contracts are M03-owned and hashing is reused through `core-identity`.
+
 ## Dependency graph invariant
 
 ```text
