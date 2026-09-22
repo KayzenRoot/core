@@ -527,3 +527,117 @@ Candidate dependency direction:
 `core-contracts + core-identity + core-config + core-workspace -> core-work-order -> future M04`.
 
 No database/network/Git/HIVE runtime dependency belongs in the compiler core.
+
+## M03 Round 4 architecture freeze
+
+### Pure core / resolved-evidence boundary
+
+M03 V0.0 is one synchronous `core-work-order` crate. Its public service facade accepts only typed semantic contracts and already-resolved evidence.
+
+```text
+external Git/filesystem/HIVE/GitHub/policy/lock/lineage domains
+                  |
+                  v
+      resolved typed evidence / snapshots
+                  |
+                  v
+        core-work-order (M03 pure core)
+          |      |       |       |
+       compile  diff  classify  admit
+                  |
+                  v
+          AdmittedWorkOrderV1
+                  |
+                  v
+              future M04
+```
+
+The compiler does not accept I/O-capable resolver/store traits. This is an architectural guard against hidden authority entering through dependency injection.
+
+### Type ownership
+
+- shared schema/assurance primitives: core-contracts;
+- canonical bytes/fingerprint stack: core-identity;
+- workspace identities/BVM/handle/generation evidence: core-workspace;
+- Work Order semantics, M03ResourceBudget, M03 errors/receipts/lineage/context contracts: core-work-order.
+
+M03-specific contracts remain module-owned rather than being prematurely lifted into core-contracts.
+
+### Dependency freeze
+
+```text
+core-contracts
+      ^
+      |
+core-identity        core-workspace
+      ^                   ^
+       \                 /
+        \               /
+         core-work-order
+              |
+              v
+           future M04+
+```
+
+Direct M03 dependencies are frozen to:
+- core-contracts;
+- core-identity;
+- core-workspace;
+- serde;
+- serde_json;
+- thiserror.
+
+M03 has no direct sha2, core-config, Tokio, graph, regex, Git, database, watcher, network, HIVE or LLM dependency.
+
+### Exact initial implementation topology
+
+`crates/core-work-order` contains the exact Round 4 file map frozen in the module plan. Lower product crates are not expected to change during initial M03 implementation. Root Cargo membership, Cargo.lock, fuzz targets, governance workflow and evidence documents are the only planned repository-level integration surfaces.
+
+### Canonicalization architecture
+
+M03 owns semantic projection and collection normalization, while core-identity owns canonical JSON bytes and hashing.
+
+```text
+typed Work Order contract
+        |
+        v
+M03 semantic projection + stable ordering
+        |
+        v
+core_identity::canonical_bytes/fingerprint
+        |
+        v
+WorkOrderFingerprint / receipt fingerprints
+```
+
+No fingerprint field is included recursively in the projection that produces itself.
+
+### Admission architecture
+
+Frozen semantics and current authority evidence remain separate.
+
+```text
+FrozenWorkOrderV1
+      +
+WorkspaceAdmissionEvidenceV1
+ContextLockAdmissionProofV1
+GovernanceAdmissionProofV1
+SourceVerificationEvidenceV1
+current policy generation
+      |
+      v
+deterministic evaluate_admission()
+      |
+      +--> READY immutable receipt
+      +--> STALE immutable receipt
+      +--> BLOCKED immutable receipt
+```
+
+Historical receipts never mutate. M04 must still perform its required Run-start freshness checks.
+
+### Resource architecture
+
+`M03ResourceBudget` is a public M03 safety contract and is explicit at service call boundaries. Numeric production defaults are supplied only after the implementation-time M03 Resource Calibration Gate.
+
+Resource checks must be incremental enough that hostile cardinality/string input cannot force effectively unbounded allocation before rejection.
+
