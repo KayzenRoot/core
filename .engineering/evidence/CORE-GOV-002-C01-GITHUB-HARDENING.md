@@ -5,7 +5,7 @@
 - Work Order: `CORE-GOV-002-C01`
 - Repository: `KayzenRoot/core`
 - Executor: Codex
-- Current governance state: `ENFORCED_PENDING_REVIEW`
+- Current governance state: `ENFORCED_PROMOTED`
 - Product scope: no M03 implementation or product-source change
 - GitHub account used: `KayzenRoot`
 - GitHub CLI: `gh version 2.101.0 (2026-09-15)`
@@ -189,5 +189,18 @@ Record the objectively proven activation of `CORE main protection` id `23769853`
 - Evidence-only follow-up head: `196066c74fc707c18ba7f5a46411923a1ecd3cb9` - run `35608660684` passed 7/7 required contexts
 - Original administration base: `499042df143fc519e42c6904461a011b62d26125`
 - Reviewer synchronization base: `42f3de287eb51f8887827b62f0b09e918ca9d9c4`
-- Final post-correction exact head/workflow: recorded by independent review outside this self-modifying Evidence Bundle
-- PR state: open, not merged; independent review and checkpoint promotion remain pending
+- Final reviewed head: `6c2507445142417b92cf296ca9bcc5730a6cc5cd`
+- Final exact-head workflow: #136 / run `35611719471` - 7/7 required contexts SUCCESS
+- Independent review: CORE-GOV-002 Review 001 / Issue #57 - APPROVED
+- Promotion merge: `67e496cf7b3e887839138eab0d60370ebb970d0d`
+- PR state: merged/promoted
+
+## Independent review and promotion
+
+- Verdict: APPROVED
+- Review record: Issue #57
+- Exact audited head: `6c2507445142417b92cf296ca9bcc5730a6cc5cd`
+- Exact-head workflow: #136 / run `35611719471`, all seven required contexts SUCCESS
+- Promotion PR: #56
+- Promotion merge: `67e496cf7b3e887839138eab0d60370ebb970d0d`
+- No unresolved HIGH/CRITICAL finding remains from CORE-GOV-002-C01.

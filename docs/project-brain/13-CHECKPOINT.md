@@ -35,7 +35,7 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - M02 final planning freeze exact-head reviewed (Review 005 / Issue #35) and promoted through PR #33.
 - CORE-WO-M02-001 implemented, corrected through Reviews 007/008, independently APPROVED by Review 009 / Issue #43 and promoted through PR #40.
 - M02 canonical closeout exact-head reviewed (Review 010 / Issue #45) and promoted through PR #44.
-- CORE-GOV-002-C01 activated the GitHub `main` protection ruleset `CORE main protection` (id `23769853`) with evidence-backed repository settings, required pull requests, deletion/non-fast-forward protection and the current seven-job CI gate; independent review and PR promotion remain pending.
+- CORE-GOV-002-C01 GitHub hardening independently reviewed (Review 001 / Issue #57) and promoted through PR #56; active ruleset `CORE main protection` id `23769853` protects `main` with no bypass actors and the seven-context strict CI gate.
 
 ## PENDING
 - Continue M03 Work Order Engine Rounds 4+ to freeze exact public Rust contracts, source-resolver/adaptor interfaces, final file/dependency map, property/fuzz/benchmark matrix, production DoD, Work Order and Context Lock.
@@ -411,4 +411,8 @@ Result: M03 Round 3 accepted into discovery baseline. Implementation remains una
 - Mechanically enforced: pull-request path, deletion protection, non-fast-forward protection, resolved review threads, strict seven-context status gate and allowed merge methods
 - Repository settings verified: squash enabled, merge commit disabled, rebase enabled, auto-merge enabled, update branch enabled and delete-branch-on-merge enabled
 - Independent GEF review/audit remains a separate promotion gate; GitHub-native approval count is zero for solo-maintainer compatibility
-- State: factual GitHub activation recorded; independent review and promotion are pending
+- Review: CORE-GOV-002 Review 001 / Issue #57 — APPROVED
+- Exact reviewed head: `6c2507445142417b92cf296ca9bcc5730a6cc5cd`
+- Exact-head workflow: #136 / run `35611719471` — 7/7 required contexts SUCCESS
+- Promotion merge: `67e496cf7b3e887839138eab0d60370ebb970d0d`
+- State: ENFORCED_PROMOTED; M03 implementation authority unchanged
