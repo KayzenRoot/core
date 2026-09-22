@@ -182,3 +182,82 @@ Later implementation evidence MUST include:
 - safe diagnostics secret canaries;
 - fuzz/property tests for canonicalizer, packet DAG, delta classifier, lineage/LPC and admission inputs;
 - benchmark scaling for sources/packets/edges/criteria/lineage/context/diffs.
+
+## M03 Round 4 validation obligations
+
+Planning review must verify:
+- exact WorkOrderService public signatures match the module freeze;
+- M03-specific type ownership does not duplicate lower-module contracts;
+- exact `core-work-order` file map has one crate and no reverse M02 dependency;
+- dependency set is limited to core-contracts/core-identity/core-workspace/serde/serde_json/thiserror;
+- core-work-order has no direct sha2/core-config/Tokio/graph/Git/database/HIVE/network dependency;
+- external resolution uses typed data boundaries and no I/O-capable resolver trait is accepted by the pure service facade;
+- FrozenWorkOrder semantic projection excludes receipts/timing/diagnostics/self-fingerprint;
+- M02 live WorkspaceHandle appears only in admission evidence;
+- Context Lock/governance proofs bind exact revision/fingerprint/base/source/policy fields;
+- packet canonical topological ordering and scope intersection are unambiguous;
+- AEG/PCM structural rules are complete;
+- M03ResourceBudget exact dimensions cover all hostile cardinality/string/time surfaces;
+- fuzz target list and twenty property laws cover the Round 1-4 invariants;
+- benchmark/calibration policy does not invent production numeric defaults;
+- final residual planning set is limited to numeric calibration + final DoD/Work Order/Context Lock/freeze.
+
+Initial implementation fuzz targets:
+- `m03_compile_request`;
+- `m03_canonical_projection`;
+- `m03_packet_dag`;
+- `m03_revision_delta`;
+- `m03_lineage_precondition`;
+- `m03_admission`;
+- `m03_context_mesh`.
+
+Property suites must implement the twenty named Round 4 laws from the M03 module plan. Each law is blocking; replacing a property law with a single example test requires a governed Correction Delta.
+
+Implementation benchmark families:
+- request validation;
+- canonical projection;
+- compile;
+- frozen validation;
+- packet DAG normalization;
+- AEG validation;
+- PCM construction/reconstruction;
+- revision diff;
+- correction classification;
+- admission evaluation;
+- serialization/deserialization;
+- memo hit/miss when memoization exists.
+
+Scaling axes:
+- source count;
+- packet count;
+- dependency-edge count;
+- criteria/evidence-edge count;
+- context-edge count;
+- delta-item count;
+- bounded semantic string bytes.
+
+M03 calibration protocol:
+- deterministic synthetic/local fixtures only;
+- no network;
+- warm-up separated from measured iterations where applicable;
+- at least five measured iterations per selected candidate/scenario after warm-up;
+- correctness/property assertions run for every candidate profile;
+- selected and rejected budget/threshold candidates are recorded;
+- unsupported fixture scales are reported as bounded/skipped rather than extrapolated;
+- the complete exact-head suite reruns after the bounded Calibration Delta.
+
+Implementation exact-head acceptance must include:
+- Ubuntu and Windows M03 test jobs;
+- seven M03 fuzz targets;
+- governance/static dependency-boundary validation;
+- fmt/clippy/build/tests;
+- cargo dependency/license/advisory checks;
+- SBOM evidence;
+- M03 Resource Calibration Report;
+- compatible PRB/regression gate;
+- no-hidden-I/O static/runtime proof;
+- zero-LLM core-path proof;
+- exact-head Evidence Bundle and independent governed review.
+
+A same-SHA rerun may classify an unrelated timing-sensitive legacy test as a CI flake only when the changed surface is demonstrably non-causal and the full required gate passes on the same candidate SHA. Repeated failure requires a separate correction investigation.
+
