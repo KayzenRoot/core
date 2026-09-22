@@ -620,3 +620,52 @@ Status: `ACTIVE`
 ## CORE-D-149 - GitHub main protection is enforced by an active no-bypass ruleset
 **Decision:** CORE `main` uses the active repository ruleset `CORE main protection` (id `23769853`) to require pull-request entry, block deletion/non-fast-forward updates, require resolved review threads and enforce the current strict seven-context CI gate with no bypass actor. GitHub-native approving-review count remains zero for solo-maintainer compatibility; the independent GEF exact-head audit verdict and no-HIGH/CRITICAL promotion rule remain separate mandatory process gates, and auto-merge may be armed only after that governed verdict permits promotion.
 **State:** ACCEPTED
+
+## CORE-D-150 - M03-specific public contracts remain in core-work-order
+**Decision:** Work Order-specific v1 contracts remain owned by core-work-order. Existing lower-module contracts are reused, but M03 types are not prematurely lifted into core-contracts without demonstrated cross-module ownership need.
+**State:** ACCEPTED
+
+## CORE-D-151 - External source resolution is a typed data boundary, not a compiler I/O trait
+**Decision:** V0.0 WorkOrderService consumes already-resolved typed source/evidence inputs. The pure compiler facade does not accept SourceResolver/Git/HIVE/network/filesystem callbacks or I/O-capable traits.
+**State:** ACCEPTED
+
+## CORE-D-152 - M03 final initial dependency set is minimal
+**Decision:** core-work-order direct dependencies are core-contracts, core-identity, core-workspace, serde, serde_json and thiserror. No direct sha2, core-config, Tokio, graph/Git/database/cache/watcher/HIVE/network/LLM dependency is admitted initially.
+**State:** ACCEPTED
+
+## CORE-D-153 - M03ResourceBudget is owned by core-work-order
+**Decision:** M03 resource budget/usage contracts are explicit M03 safety contracts passed at service boundaries. They are not hidden global configuration and do not require core-config as an initial dependency.
+**State:** ACCEPTED
+
+## CORE-D-154 - Round 4 freezes the exact initial core-work-order file map
+**Decision:** the one-crate source/test/bench topology recorded in M03 Round 4 is the initial implementation surface. Extra crate splits/files outside the admitted integration/evidence surfaces require a governed Correction Delta.
+**State:** ACCEPTED
+
+## CORE-D-155 - WorkOrderService is a stateless synchronous facade
+**Decision:** V0.0 public core operations are ID derivation, compile, frozen validation, revision diff, correction classification, admission evaluation and handoff materialization. They are synchronous and accept no ambient authority handles.
+**State:** ACCEPTED
+
+## CORE-D-156 - V1 semantic strings receive no hidden Unicode normalization
+**Decision:** semantic IDs/text are case-sensitive UTF-8 byte sequences unless a future field-specific policy explicitly defines normalization. Hidden case folding/Unicode normalization is prohibited because it can silently change semantic identity.
+**State:** ACCEPTED
+
+## CORE-D-157 - DCR semantic provenance is timestamp-free
+**Decision:** CompilationReceiptV1 semantic fields bind request/context/compiler/lineage/output/resource evidence without wall-clock time. Host logs may timestamp externally; time cannot make equivalent compilation fingerprints differ.
+**State:** ACCEPTED
+
+## CORE-D-158 - Round 4 fuzz/property matrix is part of the implementation contract
+**Decision:** the seven named M03 fuzz targets and twenty named property laws are blocking initial implementation obligations. Reducing/replacing them requires a governed Correction Delta.
+**State:** ACCEPTED
+
+## CORE-D-159 - M03 absolute performance/resource thresholds are calibration outputs
+**Decision:** Round 4 freezes benchmark families, scaling axes and threshold policy but does not invent absolute production latency/memory/budget numbers. Those values come from the mandatory implementation-time M03 Resource Calibration Gate.
+**State:** ACCEPTED
+
+## CORE-D-160 - M03 reuses repository PRB regression policy
+**Decision:** M03 does not create a second arbitrary percentage regression rule. Compatible baseline regressions are evaluated under the governed repository PRB policy while M03-specific absolute limits come from calibration evidence.
+**State:** ACCEPTED
+
+## CORE-D-161 - M03 Calibration Delta cannot redesign M03
+**Decision:** the bounded post-measurement Calibration Delta may change only numeric M03ResourceBudget defaults, benchmark-derived absolute thresholds, fixture metadata/evidence refs and explanatory docs. Contracts, dependencies, file map, security, ownership and DoD changes require normal governed correction.
+**State:** ACCEPTED
+
