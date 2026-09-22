@@ -262,6 +262,8 @@ This file contains the frozen foundation requirements plus accepted module-level
 - **CORE-R-206 Packet Context Mesh reconstruction:** reconstructing each PacketContextPlan from the shared context mesh MUST yield exactly the independently required mandatory source set.
 - **CORE-R-207 No partial output on resource failure:** resource/deadline failure MUST NOT yield a partially FROZEN or READY contract.
 
+**Round 4 dependency refinement:** CORE-R-202 preserves the Round 3 downward-direction rule and its then-permissive candidate set. CORE-R-210 is the controlling final initial dependency admission for V0.0 and intentionally excludes `core-config`; CORE-R-211 separately excludes direct `sha2`.
+
 ## M03 Round 4 requirements
 
 - **CORE-R-208 Exact public service facade:** M03 V0.0 MUST expose the frozen stateless `WorkOrderService` operations for ID derivation, compile, frozen validation, semantic diff, correction classification, admission evaluation and handoff materialization with no external-I/O handles in those signatures.
