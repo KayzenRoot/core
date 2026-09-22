@@ -615,3 +615,8 @@ Status: `ACTIVE`
 ## CORE-D-148 - Resource failure cannot produce partial FROZEN/READY state
 **Decision:** budget/deadline exhaustion is typed fail-closed and cannot yield partially accepted semantic/admission output.
 **State:** ACCEPTED
+
+
+## CORE-D-149 - GitHub main protection is enforced by an active no-bypass ruleset
+**Decision:** CORE `main` uses the active repository ruleset `CORE main protection` (id `23769853`) to require pull-request entry, block deletion/non-fast-forward updates, require resolved review threads and enforce the current strict seven-context CI gate with no bypass actor. GitHub-native approving-review count remains zero for solo-maintainer compatibility; the independent GEF exact-head audit verdict and no-HIGH/CRITICAL promotion rule remain separate mandatory process gates, and auto-merge may be armed only after that governed verdict permits promotion.
+**State:** ACCEPTED
