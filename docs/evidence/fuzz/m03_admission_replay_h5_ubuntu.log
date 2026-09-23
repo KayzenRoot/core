@@ -1,0 +1,39 @@
+   Compiling core-work-order v0.1.0 (/mnt/d/Projects/core-m03-work-order-engine/crates/core-work-order)
+   Compiling core-fuzz v0.0.0 (/mnt/d/Projects/core-m03-work-order-engine/fuzz)
+    Finished `release` profile [optimized + debuginfo] target(s) in 1m 07s
+    Finished `release` profile [optimized + debuginfo] target(s) in 2.62s
+     Running `fuzz/target/x86_64-unknown-linux-gnu/release/m03_admission_replay -artifact_prefix=/mnt/d/Projects/core-m03-work-order-engine/fuzz/artifacts/m03_admission_replay/ -runs=1000 -max_len=32768 -timeout=10 -rss_limit_mb=1024 -verbosity=0 -print_final_stats=1 /mnt/d/Projects/core-m03-work-order-engine/fuzz/corpus/m03_admission_replay`
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO:        1 files found in /mnt/d/Projects/core-m03-work-order-engine/fuzz/corpus/m03_admission_replay
+INFO: seed corpus: files: 1 min: 12556b max: 12556b total: 12556b rss: 34Mb
+	NEW_FUNC[1/9]: 0x5f404db0ae80  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_admission_replay+0x2c5e80) (BuildId: a0d8b4fb7d2bf9ec8e138de8cb6485a07d864159)
+	NEW_FUNC[2/9]: 0x5f404db13d80  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_admission_replay+0x2ced80) (BuildId: a0d8b4fb7d2bf9ec8e138de8cb6485a07d864159)
+	NEW_FUNC[1/3]: 0x5f404db0d8a0  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_admission_replay+0x2c88a0) (BuildId: a0d8b4fb7d2bf9ec8e138de8cb6485a07d864159)
+	NEW_FUNC[2/3]: 0x5f404db0eb30  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_admission_replay+0x2c9b30) (BuildId: a0d8b4fb7d2bf9ec8e138de8cb6485a07d864159)
+	NEW_FUNC[1/1]: 0x5f404dca1500  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_admission_replay+0x45c500) (BuildId: a0d8b4fb7d2bf9ec8e138de8cb6485a07d864159)
+	NEW_FUNC[1/1]: 0x5f404dde4cb0  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_admission_replay+0x59fcb0) (BuildId: a0d8b4fb7d2bf9ec8e138de8cb6485a07d864159)
+	NEW_FUNC[1/7]: 0x5f404dbdea70  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_admission_replay+0x399a70) (BuildId: a0d8b4fb7d2bf9ec8e138de8cb6485a07d864159)
+	NEW_FUNC[2/7]: 0x5f404dbf4ff0  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_admission_replay+0x3afff0) (BuildId: a0d8b4fb7d2bf9ec8e138de8cb6485a07d864159)
+	NEW_FUNC[1/1]: 0x5f404db0e630  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_admission_replay+0x2c9630) (BuildId: a0d8b4fb7d2bf9ec8e138de8cb6485a07d864159)
+	NEW_FUNC[1/1]: 0x5f404dde4b00  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_admission_replay+0x59fb00) (BuildId: a0d8b4fb7d2bf9ec8e138de8cb6485a07d864159)
+	NEW_FUNC[1/2]: 0x5f404dbe1ca0  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_admission_replay+0x39cca0) (BuildId: a0d8b4fb7d2bf9ec8e138de8cb6485a07d864159)
+	NEW_FUNC[2/2]: 0x5f404ddedbc0  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_admission_replay+0x5a8bc0) (BuildId: a0d8b4fb7d2bf9ec8e138de8cb6485a07d864159)
+	NEW_FUNC[1/1]: 0x5f404dbf5e70  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_admission_replay+0x3b0e70) (BuildId: a0d8b4fb7d2bf9ec8e138de8cb6485a07d864159)
+###### Recommended dictionary. ######
+"\260<\024\030\211\010\000\000" # Uses: 15
+"\000\000\000\000" # Uses: 6
+"evidence_id" # Uses: 9
+"allowed_path_p" # Uses: 6
+"\001\000\000\000\000\000\000\000" # Uses: 8
+"objective" # Uses: 3
+"\377\377\377\377" # Uses: 3
+"\001\000\000\000\000\000\000\030" # Uses: 9
+"\002\000\000\000\000\000\000\000" # Uses: 3
+"allowed_expansion_reasons" # Uses: 5
+"\000\000\000\000\000\000\000\000" # Uses: 1
+###### End of recommended dictionary. ######
+stat::number_of_executed_units: 1000
+stat::average_exec_per_sec:     1000
+stat::new_units_added:          136
+stat::slowest_unit_time_sec:    0
+stat::peak_rss_mb:              109

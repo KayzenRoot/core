@@ -11,6 +11,7 @@ members = [
     "crates/core-runtime",
     "crates/core-cli",
     "crates/core-workspace",
+    "crates/core-work-order",
 ]
 
 [workspace.package]

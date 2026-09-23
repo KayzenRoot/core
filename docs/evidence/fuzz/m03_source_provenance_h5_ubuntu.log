@@ -1,0 +1,42 @@
+   Compiling core-fuzz v0.0.0 (/mnt/d/Projects/core-m03-work-order-engine/fuzz)
+    Finished `release` profile [optimized + debuginfo] target(s) in 16.53s
+    Finished `release` profile [optimized + debuginfo] target(s) in 2.50s
+     Running `fuzz/target/x86_64-unknown-linux-gnu/release/m03_source_provenance -artifact_prefix=/mnt/d/Projects/core-m03-work-order-engine/fuzz/artifacts/m03_source_provenance/ -runs=1000 -max_len=32768 -timeout=10 -rss_limit_mb=1024 -verbosity=0 -print_final_stats=1 /mnt/d/Projects/core-m03-work-order-engine/fuzz/corpus/m03_source_provenance`
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO:        1 files found in /mnt/d/Projects/core-m03-work-order-engine/fuzz/corpus/m03_source_provenance
+INFO: seed corpus: files: 1 min: 10412b max: 10412b total: 10412b rss: 34Mb
+	NEW_FUNC[1/9]: 0x5f33785bab10  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_source_provenance+0x2fbb10) (BuildId: 10f0753b340e9dd8f592b489e29eae8c71b3e9ca)
+	NEW_FUNC[2/9]: 0x5f33785c4f40  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_source_provenance+0x305f40) (BuildId: 10f0753b340e9dd8f592b489e29eae8c71b3e9ca)
+	NEW_FUNC[1/1]: 0x5f3378685910  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_source_provenance+0x3c6910) (BuildId: 10f0753b340e9dd8f592b489e29eae8c71b3e9ca)
+	NEW_FUNC[1/9]: 0x5f33785b8a80  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_source_provenance+0x2f9a80) (BuildId: 10f0753b340e9dd8f592b489e29eae8c71b3e9ca)
+	NEW_FUNC[2/9]: 0x5f33785be1b0  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_source_provenance+0x2ff1b0) (BuildId: 10f0753b340e9dd8f592b489e29eae8c71b3e9ca)
+	NEW_FUNC[1/1]: 0x5f33788f9680  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_source_provenance+0x63a680) (BuildId: 10f0753b340e9dd8f592b489e29eae8c71b3e9ca)
+	NEW_FUNC[1/2]: 0x5f3378684c50  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_source_provenance+0x3c5c50) (BuildId: 10f0753b340e9dd8f592b489e29eae8c71b3e9ca)
+	NEW_FUNC[2/2]: 0x5f3378902590  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_source_provenance+0x643590) (BuildId: 10f0753b340e9dd8f592b489e29eae8c71b3e9ca)
+	NEW_FUNC[1/1]: 0x5f33788f94d0  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_source_provenance+0x63a4d0) (BuildId: 10f0753b340e9dd8f592b489e29eae8c71b3e9ca)
+	NEW_FUNC[1/2]: 0x5f3378681620  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_source_provenance+0x3c2620) (BuildId: 10f0753b340e9dd8f592b489e29eae8c71b3e9ca)
+	NEW_FUNC[2/2]: 0x5f3378682520  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_source_provenance+0x3c3520) (BuildId: 10f0753b340e9dd8f592b489e29eae8c71b3e9ca)
+	NEW_FUNC[1/3]: 0x5f33788f7ab0  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_source_provenance+0x638ab0) (BuildId: 10f0753b340e9dd8f592b489e29eae8c71b3e9ca)
+	NEW_FUNC[2/3]: 0x5f33788f9bf0  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_source_provenance+0x63abf0) (BuildId: 10f0753b340e9dd8f592b489e29eae8c71b3e9ca)
+	NEW_FUNC[1/1]: 0x5f337882f7c0  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_source_provenance+0x5707c0) (BuildId: 10f0753b340e9dd8f592b489e29eae8c71b3e9ca)
+###### Recommended dictionary. ######
+"global" # Uses: 12
+"\000\006" # Uses: 2
+"\012\000\000\000\000\000\000\000" # Uses: 7
+"\377\377\377\377" # Uses: 2
+"\001\000\000\000\000\000\000\012" # Uses: 9
+"\001\000\000\000" # Uses: 1
+"\000\000\000\007" # Uses: 4
+"\003\000\000\000\000\000\000\000" # Uses: 6
+"required_basis_compon" # Uses: 3
+"current_fingerprint" # Uses: 1
+"\000\000\000\000\000\000\000\000" # Uses: 6
+"\377\377" # Uses: 4
+"hive_context_refs" # Uses: 4
+"\177\000\000\000\000\000\000\000" # Uses: 0
+###### End of recommended dictionary. ######
+stat::number_of_executed_units: 1000
+stat::average_exec_per_sec:     1000
+stat::new_units_added:          136
+stat::slowest_unit_time_sec:    0
+stat::peak_rss_mb:              97

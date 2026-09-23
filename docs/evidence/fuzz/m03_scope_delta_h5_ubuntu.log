@@ -1,0 +1,39 @@
+   Compiling core-fuzz v0.0.0 (/mnt/d/Projects/core-m03-work-order-engine/fuzz)
+    Finished `release` profile [optimized + debuginfo] target(s) in 17.85s
+    Finished `release` profile [optimized + debuginfo] target(s) in 2.42s
+     Running `fuzz/target/x86_64-unknown-linux-gnu/release/m03_scope_delta -artifact_prefix=/mnt/d/Projects/core-m03-work-order-engine/fuzz/artifacts/m03_scope_delta/ -runs=1000 -max_len=32768 -timeout=10 -rss_limit_mb=1024 -verbosity=0 -print_final_stats=1 /mnt/d/Projects/core-m03-work-order-engine/fuzz/corpus/m03_scope_delta`
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO:        1 files found in /mnt/d/Projects/core-m03-work-order-engine/fuzz/corpus/m03_scope_delta
+INFO: seed corpus: files: 1 min: 10412b max: 10412b total: 10412b rss: 35Mb
+	NEW_FUNC[1/11]: 0x5933e7e1e940  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_scope_delta+0x306940) (BuildId: 6396adef1c77c4f128f384f49ee2ec1841e04f48)
+	NEW_FUNC[2/11]: 0x5933e7e22810  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_scope_delta+0x30a810) (BuildId: 6396adef1c77c4f128f384f49ee2ec1841e04f48)
+	NEW_FUNC[1/8]: 0x5933e7e21570  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_scope_delta+0x309570) (BuildId: 6396adef1c77c4f128f384f49ee2ec1841e04f48)
+	NEW_FUNC[2/8]: 0x5933e7ee82e0  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_scope_delta+0x3d02e0) (BuildId: 6396adef1c77c4f128f384f49ee2ec1841e04f48)
+	NEW_FUNC[1/1]: 0x5933e816f800  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_scope_delta+0x657800) (BuildId: 6396adef1c77c4f128f384f49ee2ec1841e04f48)
+	NEW_FUNC[1/1]: 0x5933e7eeb070  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_scope_delta+0x3d3070) (BuildId: 6396adef1c77c4f128f384f49ee2ec1841e04f48)
+	NEW_FUNC[1/1]: 0x5933e7efddd0  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_scope_delta+0x3e5dd0) (BuildId: 6396adef1c77c4f128f384f49ee2ec1841e04f48)
+	NEW_FUNC[1/2]: 0x5933e7eebe10  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_scope_delta+0x3d3e10) (BuildId: 6396adef1c77c4f128f384f49ee2ec1841e04f48)
+	NEW_FUNC[2/2]: 0x5933e81788c0  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_scope_delta+0x6608c0) (BuildId: 6396adef1c77c4f128f384f49ee2ec1841e04f48)
+	NEW_FUNC[1/3]: 0x5933e7e21a80  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_scope_delta+0x309a80) (BuildId: 6396adef1c77c4f128f384f49ee2ec1841e04f48)
+	NEW_FUNC[2/3]: 0x5933e7e23490  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_scope_delta+0x30b490) (BuildId: 6396adef1c77c4f128f384f49ee2ec1841e04f48)
+###### Recommended dictionary. ######
+"\375\002\000\000\000\000\000\000" # Uses: 23
+"\000\000\000\000\000\000\000\000" # Uses: 9
+"\371\377\377\377" # Uses: 7
+"\011\000" # Uses: 12
+"\014\000\000\000\000\000\000\000" # Uses: 4
+"\377\377\377\377\377\377\377\377" # Uses: 5
+" \000\000\000" # Uses: 4
+"current_compilation" # Uses: 5
+"\376\377\377\377" # Uses: 3
+"\373\377\377\377" # Uses: 3
+"\000\000" # Uses: 0
+"max_hive_refs" # Uses: 0
+"\001\000\000\000\000\000\000\013" # Uses: 1
+"\025\000\000\000\000\000\000\000" # Uses: 1
+###### End of recommended dictionary. ######
+stat::number_of_executed_units: 1000
+stat::average_exec_per_sec:     1000
+stat::new_units_added:          133
+stat::slowest_unit_time_sec:    0
+stat::peak_rss_mb:              88

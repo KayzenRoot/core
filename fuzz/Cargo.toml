@@ -16,6 +16,7 @@ core-identity = { path = "../crates/core-identity" }
 core-ipc = { path = "../crates/core-ipc" }
 core-config = { path = "../crates/core-config" }
 core-workspace = { path = "../crates/core-workspace" }
+core-work-order = { path = "../crates/core-work-order" }
 libfuzzer-sys = "0.4"
 serde_json = "1.0"
 
@@ -64,6 +65,55 @@ bench = false
 [[bin]]
 name = "m02_git_evidence"
 path = "fuzz_targets/m02_git_evidence.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "m03_envelope_canonical"
+path = "fuzz_targets/m03_envelope_canonical.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "m03_packet_dag"
+path = "fuzz_targets/m03_packet_dag.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "m03_scope_delta"
+path = "fuzz_targets/m03_scope_delta.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "m03_lineage_lpc"
+path = "fuzz_targets/m03_lineage_lpc.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "m03_source_provenance"
+path = "fuzz_targets/m03_source_provenance.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "m03_admission_replay"
+path = "fuzz_targets/m03_admission_replay.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "m03_diagnostics_redaction"
+path = "fuzz_targets/m03_diagnostics_redaction.rs"
 test = false
 doc = false
 bench = false

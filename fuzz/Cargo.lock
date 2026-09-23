@@ -69,6 +69,7 @@ dependencies = [
  "core-contracts",
  "core-identity",
  "core-ipc",
+ "core-work-order",
  "core-workspace",
  "libfuzzer-sys",
  "serde_json",
@@ -92,6 +93,16 @@ dependencies = [
  "core-contracts",
  "thiserror",
  "tokio",
+]
+
+[[package]]
+name = "core-work-order"
+version = "0.1.0"
+dependencies = [
+ "core-identity",
+ "serde",
+ "serde_json",
+ "thiserror",
 ]
 
 [[package]]

@@ -1,0 +1,40 @@
+    Finished `release` profile [optimized + debuginfo] target(s) in 2.54s
+    Finished `release` profile [optimized + debuginfo] target(s) in 2.57s
+     Running `fuzz/target/x86_64-unknown-linux-gnu/release/m03_envelope_canonical -artifact_prefix=/mnt/d/Projects/core-m03-work-order-engine/fuzz/artifacts/m03_envelope_canonical/ -runs=1000 -max_len=32768 -timeout=10 -rss_limit_mb=1024 -verbosity=0 -print_final_stats=1 /mnt/d/Projects/core-m03-work-order-engine/fuzz/corpus/m03_envelope_canonical`
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO:        1 files found in /mnt/d/Projects/core-m03-work-order-engine/fuzz/corpus/m03_envelope_canonical
+INFO: seed corpus: files: 1 min: 8583b max: 8583b total: 8583b rss: 34Mb
+	NEW_FUNC[1/2]: 0x5fa99b155530  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_envelope_canonical+0x2a6530) (BuildId: bbf1f6caa29c921709925d3f502edeab7a7648f3)
+	NEW_FUNC[2/2]: 0x5fa99b155cb0  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_envelope_canonical+0x2a6cb0) (BuildId: bbf1f6caa29c921709925d3f502edeab7a7648f3)
+	NEW_FUNC[1/9]: 0x5fa99b1fa300  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_envelope_canonical+0x34b300) (BuildId: bbf1f6caa29c921709925d3f502edeab7a7648f3)
+	NEW_FUNC[2/9]: 0x5fa99b21c050  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_envelope_canonical+0x36d050) (BuildId: bbf1f6caa29c921709925d3f502edeab7a7648f3)
+	NEW_FUNC[1/18]: 0x5fa99b21e9b0  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_envelope_canonical+0x36f9b0) (BuildId: bbf1f6caa29c921709925d3f502edeab7a7648f3)
+	NEW_FUNC[2/18]: 0x5fa99b22cb50  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_envelope_canonical+0x37db50) (BuildId: bbf1f6caa29c921709925d3f502edeab7a7648f3)
+	NEW_FUNC[1/1]: 0x5fa99b3d2e30  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_envelope_canonical+0x523e30) (BuildId: bbf1f6caa29c921709925d3f502edeab7a7648f3)
+	NEW_FUNC[1/4]: 0x5fa99b217890  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_envelope_canonical+0x368890) (BuildId: bbf1f6caa29c921709925d3f502edeab7a7648f3)
+	NEW_FUNC[2/4]: 0x5fa99b21ed90  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_envelope_canonical+0x36fd90) (BuildId: bbf1f6caa29c921709925d3f502edeab7a7648f3)
+	NEW_FUNC[1/1]: 0x5fa99b3d2fe0  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_envelope_canonical+0x523fe0) (BuildId: bbf1f6caa29c921709925d3f502edeab7a7648f3)
+	NEW_FUNC[1/6]: 0x5fa99b21f160  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_envelope_canonical+0x370160) (BuildId: bbf1f6caa29c921709925d3f502edeab7a7648f3)
+	NEW_FUNC[2/6]: 0x5fa99b21f530  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_envelope_canonical+0x370530) (BuildId: bbf1f6caa29c921709925d3f502edeab7a7648f3)
+###### Recommended dictionary. ######
+"\007\000\000\000" # Uses: 11
+"criterion_id" # Uses: 11
+"locator_kind" # Uses: 13
+"exact_head_requi" # Uses: 14
+"\026\000\000\000\000\000\000\000" # Uses: 4
+"\015\000\000\000\000\000\000\000" # Uses: 3
+"\377\377\377\377" # Uses: 3
+"edges" # Uses: 1
+"\001\000\000\000\000\000@\000" # Uses: 1
+"require_current_fr" # Uses: 3
+"\001@\000\000\000\000\000\000" # Uses: 0
+"\377\020" # Uses: 1
+"expansion_policy" # Uses: 0
+"\005\000\000\000\000\000\000\000" # Uses: 0
+"@\000\000\000" # Uses: 1
+###### End of recommended dictionary. ######
+stat::number_of_executed_units: 1000
+stat::average_exec_per_sec:     0
+stat::new_units_added:          107
+stat::slowest_unit_time_sec:    0
+stat::peak_rss_mb:              72

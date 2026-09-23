@@ -3,7 +3,7 @@
   "increment": "CORE-M03-FREEZE-001",
   "workOrder": "CORE-WO-M03-001",
   "repository": "KayzenRoot/core",
-  "status": "POST_ADMISSION_SYNC_PENDING_REVIEW",
+  "status": "LOCAL_CANDIDATE_PENDING_HOSTED_CHECKS_AND_INDEPENDENT_REVIEW",
   "planningCandidate": {
     "branch": "planning/m03-final-freeze-round5",
     "planningBase": "786ad33a27d45eb435bc6e63f22174de74b0bb71",
@@ -56,99 +56,456 @@
     "note": "No CORE HIVE project/checkpoint proof was available for this planning candidate; no other project status is attributed to CORE."
   },
   "implementation": {
-    "status": "NOT_STARTED_ADMISSION_ARMED",
+    "status": "LOCAL_CANDIDATE_PENDING_HOSTED_CHECKS_AND_INDEPENDENT_REVIEW",
     "authorizedBase": "ac90b1f48c5551e65ecadace95c59f7f0647062f",
-    "finalHead": null,
-    "productFilesCreated": false,
-    "changedFiles": [],
+    "finalHead": "de6a829bd2f9402214c371446615fc364431f515",
+    "productFilesCreated": true,
+    "changedFiles": [
+      "Cargo.lock",
+      "Cargo.toml",
+      "benches/m03_work_order.rs",
+      "crates/core-work-order/Cargo.toml",
+      "crates/core-work-order/src/acceptance.rs",
+      "crates/core-work-order/src/adapters.rs",
+      "crates/core-work-order/src/admission.rs",
+      "crates/core-work-order/src/budget.rs",
+      "crates/core-work-order/src/canonical.rs",
+      "crates/core-work-order/src/compiler.rs",
+      "crates/core-work-order/src/context.rs",
+      "crates/core-work-order/src/contracts.rs",
+      "crates/core-work-order/src/delta.rs",
+      "crates/core-work-order/src/errors.rs",
+      "crates/core-work-order/src/identity.rs",
+      "crates/core-work-order/src/lib.rs",
+      "crates/core-work-order/src/lineage.rs",
+      "crates/core-work-order/src/packets.rs",
+      "crates/core-work-order/src/scope.rs",
+      "crates/core-work-order/src/service.rs",
+      "crates/core-work-order/src/source.rs",
+      "crates/core-work-order/tests/acceptance_context.rs",
+      "crates/core-work-order/tests/adapters_no_io.rs",
+      "crates/core-work-order/tests/admission_replay.rs",
+      "crates/core-work-order/tests/canonical_identity.rs",
+      "crates/core-work-order/tests/common/mod.rs",
+      "crates/core-work-order/tests/lineage_corrections.rs",
+      "crates/core-work-order/tests/public_contracts.rs",
+      "crates/core-work-order/tests/resources_redaction.rs",
+      "crates/core-work-order/tests/scope_packets.rs",
+      "crates/core-work-order/tests/source_workspace.rs",
+      "fuzz/Cargo.lock",
+      "fuzz/Cargo.toml",
+      "fuzz/corpus/m03_admission_replay/admission.json",
+      "fuzz/corpus/m03_diagnostics_redaction/canary-regression.txt",
+      "fuzz/corpus/m03_diagnostics_redaction/canary.txt",
+      "fuzz/corpus/m03_diagnostics_redaction/payload-subject-regression.txt",
+      "fuzz/corpus/m03_envelope_canonical/request.json",
+      "fuzz/corpus/m03_lineage_lpc/compile.json",
+      "fuzz/corpus/m03_packet_dag/compile.json",
+      "fuzz/corpus/m03_scope_delta/compile.json",
+      "fuzz/corpus/m03_source_provenance/compile.json",
+      "fuzz/fuzz_targets/m03_admission_replay.rs",
+      "fuzz/fuzz_targets/m03_diagnostics_redaction.rs",
+      "fuzz/fuzz_targets/m03_envelope_canonical.rs",
+      "fuzz/fuzz_targets/m03_lineage_lpc.rs",
+      "fuzz/fuzz_targets/m03_packet_dag.rs",
+      "fuzz/fuzz_targets/m03_scope_delta.rs",
+      "fuzz/fuzz_targets/m03_source_provenance.rs"
+    ],
     "tests": {
-      "status": "PENDING_IMPLEMENTATION",
-      "commands": [],
-      "results": []
+      "status": "PASS_M03_BOTH_PLATFORMS; WINDOWS_WORKSPACE_PASS; UBUNTU_HAS_3_REPRODUCED_BASELINE_M02_FAILURES",
+      "commands": [
+        "cargo test -p core-work-order",
+        "cargo test --workspace",
+        "cargo clippy -p core-work-order --all-targets -- -D warnings",
+        "cargo fmt -p core-work-order --check",
+        "rustfmt --edition 2021 --check benches/m03_work_order.rs fuzz/fuzz_targets/m03_*.rs",
+        "python scripts/validate_governance.py"
+      ],
+      "results": [
+        "Windows H5 de6a829bd2f9402214c371446615fc364431f515: 40 M03 tests passed; full workspace 143 passed, 0 failed.",
+        "Ubuntu H5 de6a829bd2f9402214c371446615fc364431f515: 40 M03 tests passed; full workspace 140 passed and 3 failed only in existing core-workspace/tests/service.rs cases; same failures were reproduced on authorized base 6cae77e1d8814121df6646dec48bca1020119226.",
+        "Clippy with -D warnings and targeted M03 formatting checks passed on Windows and Ubuntu.",
+        "Seven bounded fuzz targets passed 1,000 executions each on Ubuntu; details and exact logs are recorded under docs/evidence/fuzz/.",
+        "Governance validator: PASS for 27 required artifacts, with GEF/HIVE source bridges consistent.",
+        "Exact-base reproduction: cargo test -p core-workspace --test service from an ext4 archive of 6cae77e1d8814121df6646dec48bca1020119226 reproduced the same three named failures; see docs/evidence/M03-WORKSPACE-BASE-H5-UBUNTU.log."
+      ]
     },
     "propertyAdversarialFuzz": {
-      "status": "PENDING_IMPLEMENTATION",
-      "laws": [],
-      "targets": [],
-      "results": []
+      "status": "PASS_H5_BOUNDED_FUZZ_AND_DETERMINISTIC_LAWS",
+      "laws": [
+        "Canonical permutations preserve semantic bytes and fingerprints.",
+        "Typed IDs and revisions reject invalid values; logical WorkOrderId derivation is deterministic and domain-separated.",
+        "Admission replay, substitution, stale evidence, and caller-timeout late results fail closed.",
+        "Scope, DAG, AEG/PCM, lineage/LPC, and correction boundaries are exercised by named integration tests."
+      ],
+      "targets": [
+        {
+          "target": "m03_admission_replay",
+          "platform": "Ubuntu 26.04 / WSL2",
+          "runs": 1000,
+          "result": "PASS",
+          "log": "docs/evidence/fuzz/m03_admission_replay_h5_ubuntu.log"
+        },
+        {
+          "target": "m03_diagnostics_redaction",
+          "platform": "Ubuntu 26.04 / WSL2",
+          "runs": 1000,
+          "result": "PASS",
+          "log": "docs/evidence/fuzz/m03_diagnostics_redaction_h5_ubuntu.log"
+        },
+        {
+          "target": "m03_envelope_canonical",
+          "platform": "Ubuntu 26.04 / WSL2",
+          "runs": 1000,
+          "result": "PASS",
+          "log": "docs/evidence/fuzz/m03_envelope_canonical_h5_ubuntu.log"
+        },
+        {
+          "target": "m03_lineage_lpc",
+          "platform": "Ubuntu 26.04 / WSL2",
+          "runs": 1000,
+          "result": "PASS",
+          "log": "docs/evidence/fuzz/m03_lineage_lpc_h5_ubuntu.log"
+        },
+        {
+          "target": "m03_packet_dag",
+          "platform": "Ubuntu 26.04 / WSL2",
+          "runs": 1000,
+          "result": "PASS",
+          "log": "docs/evidence/fuzz/m03_packet_dag_h5_ubuntu.log"
+        },
+        {
+          "target": "m03_scope_delta",
+          "platform": "Ubuntu 26.04 / WSL2",
+          "runs": 1000,
+          "result": "PASS",
+          "log": "docs/evidence/fuzz/m03_scope_delta_h5_ubuntu.log"
+        },
+        {
+          "target": "m03_source_provenance",
+          "platform": "Ubuntu 26.04 / WSL2",
+          "runs": 1000,
+          "result": "PASS",
+          "log": "docs/evidence/fuzz/m03_source_provenance_h5_ubuntu.log"
+        }
+      ],
+      "results": [
+        "All seven targets: 1,000 executions, max_len=32,768, timeout=10 seconds, rss_limit=1,024 MiB; no crash or timeout. Maximum observed peak RSS was 109 MiB."
+      ]
     },
     "security": {
-      "status": "PENDING_IMPLEMENTATION",
-      "secretCanaries": [],
-      "results": []
+      "status": "PASS_H5_REDACTION_REGRESSION_AND_FUZZ",
+      "secretCanaries": [
+        "Synthetic credential/API-key markers in fuzz/corpus/m03_diagnostics_redaction/canary.txt and canary-regression.txt.",
+        "Payload-subject regression for cpayloadary_api_ in fuzz/corpus/m03_diagnostics_redaction/payload-subject-regression.txt."
+      ],
+      "results": [
+        "Subject validation now rejects prompt and payload markers after fuzzing found the cpayloadary_api_ substring gap.",
+        "M03 resources/redaction tests passed on Windows and Ubuntu; H5 diagnostics-redaction fuzz completed 1,000 executions.",
+        "Typed errors and diagnostics do not echo raw external payloads or synthetic secret canaries."
+      ]
     },
     "zeroLlm": {
-      "status": "PENDING_IMPLEMENTATION",
-      "proof": null
+      "status": "PASS_STATIC_VALUE_ONLY_PATHS",
+      "proof": "Parsing, compilation, validation, canonicalization, diff, correction, admission, and handoff are deterministic value-only code paths. Static dependency/source evidence: docs/evidence/M03-DEPENDENCY-NO-IO-H5.txt; timeout discard is covered by admission_replay.rs."
     },
     "dependencyAndIo": {
-      "status": "PENDING_IMPLEMENTATION",
-      "graph": null,
-      "noIoProof": null
+      "status": "PASS_H5_STATIC_GRAPH_AND_CALLSITE_SCAN",
+      "graph": "docs/evidence/M03-DEPENDENCY-NO-IO-H5.txt; cargo tree -p core-work-order --edges normal.",
+      "noIoProof": "A scan of 19 Rust files under crates/core-work-order/src, crates/core-identity/src, and crates/core-contracts/src found zero filesystem, environment/cwd, process, network, clock, database, or LLM inference API call-site matches."
     },
     "supplyChain": {
-      "status": "PENDING_IMPLEMENTATION",
-      "advisory": null,
-      "license": null,
-      "provenance": null,
-      "sbom": null
+      "status": "PASS_H5_LOCKFILE_POLICY; SBOM_DEPENDENCY_CLOSURE_UNCHANGED",
+      "advisory": {
+        "status": "PASS",
+        "lockedDependencies": 69,
+        "advisories": 0,
+        "artifactPath": "docs/evidence/M03-CARGO-AUDIT-H5.json"
+      },
+      "license": {
+        "status": "PASS",
+        "policyChecks": [
+          "advisories",
+          "bans",
+          "licenses",
+          "sources"
+        ],
+        "artifactPath": "docs/evidence/M03-CARGO-DENY-H5.txt"
+      },
+      "provenance": {
+        "status": "PASS",
+        "command": "cargo tree -p core-work-order --edges normal",
+        "artifactPath": "docs/evidence/M03-DEPENDENCY-NO-IO-H5.txt"
+      },
+      "sbom": {
+        "status": "PASS",
+        "format": "SPDX-2.3",
+        "packages": 26,
+        "relationships": 44,
+        "artifactPath": "docs/evidence/M03-SBOM.spdx.json",
+        "cargoLockSha256": "ea0391226f57b7985d53b1c916042d5c99f1cb0d753ca4bf05574908bcfbcf97",
+        "note": "Cargo.lock has not changed since the SBOM was generated."
+      }
     },
     "calibration": {
-      "status": "PENDING_IMPLEMENTATION",
-      "report": null,
-      "measurementRuns": [],
-      "selectedCandidates": [],
-      "rejectedCandidates": [],
-      "unsupportedScales": [],
-      "finalFiniteBudgets": null,
+      "status": "PASS_H5_SYNTHETIC_WINDOWS_UBUNTU_BOUNDARIES",
+      "report": "docs/evidence/M03-PACK-H-CALIBRATION.md",
+      "measurementRuns": [
+        {
+          "platform": "Windows 11 Pro 26200",
+          "host": "AMD Ryzen 3 4300GE",
+          "rustc": "1.98.1 (48a229cea 2026-09-01)",
+          "cargo": "1.98.1 (797e8a9bc 2026-08-05)",
+          "command": "cargo bench -p core-work-order --bench m03_work_order",
+          "logs": [
+            "docs/evidence/M03-BENCH-H5-WINDOWS.log",
+            "docs/evidence/M03-BENCH-H5-WINDOWS-REPEAT.log"
+          ],
+          "result": "PASS"
+        },
+        {
+          "platform": "Ubuntu 26.04 / WSL2 kernel 6.18.33.2-microsoft-standard-WSL2",
+          "host": "AMD Ryzen 3 4300GE",
+          "rustc": "1.98.1 (48a229cea 2026-09-01)",
+          "cargo": "1.98.1 (797e8a9bc 2026-08-05)",
+          "command": "cargo bench -p core-work-order --bench m03_work_order",
+          "logs": [
+            "docs/evidence/M03-BENCH-H5-UBUNTU.log",
+            "docs/evidence/M03-BENCH-H5-UBUNTU-REPEAT.log"
+          ],
+          "result": "PASS"
+        }
+      ],
+      "selectedCandidates": [
+        {
+          "dimension": "max_request_bytes",
+          "value": 78333
+        },
+        {
+          "dimension": "max_frozen_bytes",
+          "value": 78898
+        },
+        {
+          "dimension": "max_string_bytes",
+          "value": 4096
+        },
+        {
+          "dimension": "max_source_refs",
+          "value": 32
+        },
+        {
+          "dimension": "max_packets",
+          "value": 32
+        },
+        {
+          "dimension": "max_packet_edges",
+          "value": 31
+        },
+        {
+          "dimension": "max_scope_rules",
+          "value": 64
+        },
+        {
+          "dimension": "max_criteria",
+          "value": 32
+        },
+        {
+          "dimension": "max_evidence_requirements",
+          "value": 32
+        },
+        {
+          "dimension": "max_acceptance_evidence_edges",
+          "value": 32
+        },
+        {
+          "dimension": "max_lineage_edges",
+          "value": 32
+        },
+        {
+          "dimension": "max_context_refs",
+          "value": 32
+        },
+        {
+          "dimension": "max_correction_rules",
+          "value": 64
+        },
+        {
+          "dimension": "max_diff_entries",
+          "value": 3
+        },
+        {
+          "dimension": "max_diagnostic_entries",
+          "value": 4
+        },
+        {
+          "dimension": "max_parse_depth",
+          "value": 7
+        }
+      ],
+      "rejectedCandidates": [
+        {
+          "dimension": "max_request_bytes",
+          "candidate": 78334,
+          "result": "REJECTED"
+        },
+        {
+          "dimension": "max_frozen_bytes",
+          "candidate": 78899,
+          "result": "REJECTED"
+        },
+        {
+          "dimension": "max_string_bytes",
+          "candidate": 4097,
+          "result": "REJECTED"
+        },
+        {
+          "dimension": "max_source_refs",
+          "candidate": 33,
+          "result": "REJECTED"
+        },
+        {
+          "dimension": "max_packets",
+          "candidate": 33,
+          "result": "REJECTED"
+        },
+        {
+          "dimension": "max_packet_edges",
+          "candidate": 32,
+          "result": "REJECTED"
+        },
+        {
+          "dimension": "max_scope_rules",
+          "candidate": 65,
+          "result": "REJECTED"
+        },
+        {
+          "dimension": "max_criteria",
+          "candidate": 33,
+          "result": "REJECTED"
+        },
+        {
+          "dimension": "max_evidence_requirements",
+          "candidate": 33,
+          "result": "REJECTED"
+        },
+        {
+          "dimension": "max_acceptance_evidence_edges",
+          "candidate": 33,
+          "result": "REJECTED"
+        },
+        {
+          "dimension": "max_lineage_edges",
+          "candidate": 33,
+          "result": "REJECTED"
+        },
+        {
+          "dimension": "max_context_refs",
+          "candidate": 33,
+          "result": "REJECTED"
+        },
+        {
+          "dimension": "max_correction_rules",
+          "candidate": 65,
+          "result": "REJECTED"
+        },
+        {
+          "dimension": "max_diff_entries",
+          "candidate": 4,
+          "result": "REJECTED"
+        },
+        {
+          "dimension": "max_diagnostic_entries",
+          "candidate": 5,
+          "result": "REJECTED"
+        },
+        {
+          "dimension": "max_parse_depth",
+          "candidate": 8,
+          "result": "REJECTED"
+        }
+      ],
+      "unsupportedScales": [
+        "Any input above the selected profile ceiling; any unmeasured cross-product of all per-dimension maxima; real-world payload distributions, parallel throughput, I/O, and production SLA."
+      ],
+      "finalFiniteBudgets": {
+        "max_request_bytes": 78333,
+        "max_frozen_bytes": 78898,
+        "max_string_bytes": 4096,
+        "max_source_refs": 32,
+        "max_packets": 32,
+        "max_packet_edges": 31,
+        "max_scope_rules": 64,
+        "max_criteria": 32,
+        "max_evidence_requirements": 32,
+        "max_acceptance_evidence_edges": 32,
+        "max_lineage_edges": 32,
+        "max_context_refs": 32,
+        "max_correction_rules": 64,
+        "max_diff_entries": 3,
+        "max_diagnostic_entries": 4,
+        "max_parse_depth": 7,
+        "calibration_state": "calibrated"
+      },
       "planningInventedNumericProductionValues": false
     },
     "ci": {
-      "status": "PENDING_IMPLEMENTATION",
-      "exactHead": null,
+      "status": "PENDING_HOSTED_CHECKS",
+      "exactHead": "de6a829bd2f9402214c371446615fc364431f515",
       "requiredStatuses": [
         {
           "context": "Governance",
-          "status": "PENDING_IMPLEMENTATION"
+          "status": "PENDING_HOSTED_CHECKS"
         },
         {
           "context": "M01 (ubuntu-latest)",
-          "status": "PENDING_IMPLEMENTATION"
+          "status": "PENDING_HOSTED_CHECKS"
         },
         {
           "context": "M01 (windows-latest)",
-          "status": "PENDING_IMPLEMENTATION"
+          "status": "PENDING_HOSTED_CHECKS"
         },
         {
           "context": "M01 fuzz campaign",
-          "status": "PENDING_IMPLEMENTATION"
+          "status": "PENDING_HOSTED_CHECKS"
         },
         {
           "context": "M02 workspace adapter (ubuntu-latest)",
-          "status": "PENDING_IMPLEMENTATION"
+          "status": "PENDING_HOSTED_CHECKS"
         },
         {
           "context": "M02 workspace adapter (windows-latest)",
-          "status": "PENDING_IMPLEMENTATION"
+          "status": "PENDING_HOSTED_CHECKS"
         },
         {
           "context": "M02 bounded fuzz campaign",
-          "status": "PENDING_IMPLEMENTATION"
+          "status": "PENDING_HOSTED_CHECKS"
         }
       ]
     },
     "risks": {
-      "status": "PENDING_IMPLEMENTATION",
-      "items": []
+      "status": "KNOWN_BOUNDED_RISKS_PENDING_EXTERNAL_GATES",
+      "items": [
+        "Ubuntu full workspace has three pre-existing M02 core-workspace service failures; the same named failures were reproduced on the authorized canonical base. M03 package tests pass.",
+        "HIVE v1.0.0 did not resolve KayzenRoot/core; execution used the Work-Order-authorized SOLO_GIT_CANONICAL degraded mode and claims no CORE HIVE evidence.",
+        "Hosted exact-head checks and the independent EV-025 review have not yet completed.",
+        "Synthetic benchmark timing varied across repeats; the report preserves both runs and makes no production latency or throughput claim."
+      ]
     },
     "corrections": {
-      "status": "PENDING_IMPLEMENTATION",
-      "items": []
+      "status": "CLOSED_WITH_LOCAL_EVIDENCE",
+      "items": [
+        "Diagnostics fuzz exposed the synthetic subject marker cpayloadary_api_; prompt and payload markers are now rejected and regression seeds/tests are retained.",
+        "A stale uncalibrated fuzz-harness budget was corrected to use the calibrated profile.",
+        "H5 benchmark fixture was corrected to keep the 32-packet workload within 32 context references; the cap-plus-one source fixture now keeps unrelated budget fields valid so it exercises the intended typed limit.",
+        "The H4 benchmark bring-up errors were harness configuration failures; final H5 benchmark runs and all 16 cap-plus-one checks pass."
+      ]
     },
     "proposedCheckpointDelta": {
-      "status": "PENDING_IMPLEMENTATION",
-      "content": null
-    }
+      "status": "PROPOSAL_ONLY_PENDING_INDEPENDENT_REVIEW",
+      "content": "After EV-025 approves exact head de6a829bd2f9402214c371446615fc364431f515, promote the M03 Work Order Engine v1 public contract, finite calibrated profile, and M04 handoff preconditions in the canonical checkpoint. This execution made no checkpoint promotion and does not authorize M04 implementation."
+    },
+    "canonicalBranchBase": "6cae77e1d8814121df6646dec48bca1020119226",
+    "executionBranch": "feat/m03-work-order-engine"
   },
   "acceptanceEvidenceGraph": {
     "status": "DECLARED_NOT_SATISFIED",
@@ -164,7 +521,7 @@
           "EV-021",
           "EV-022"
         ],
-        "status": "PENDING_IMPLEMENTATION"
+        "status": "PASS_LOCAL_EXACT_H5"
       },
       {
         "criterionId": "AC-002",
@@ -175,7 +532,7 @@
           "EV-004",
           "EV-019"
         ],
-        "status": "PENDING_IMPLEMENTATION"
+        "status": "PASS_LOCAL_EXACT_H5"
       },
       {
         "criterionId": "AC-003",
@@ -186,7 +543,7 @@
           "EV-004",
           "EV-019"
         ],
-        "status": "PENDING_IMPLEMENTATION"
+        "status": "PASS_LOCAL_EXACT_H5"
       },
       {
         "criterionId": "AC-004",
@@ -196,7 +553,7 @@
           "EV-004",
           "EV-019"
         ],
-        "status": "PENDING_IMPLEMENTATION"
+        "status": "PASS_LOCAL_EXACT_H5"
       },
       {
         "criterionId": "AC-005",
@@ -207,7 +564,7 @@
           "EV-018",
           "EV-019"
         ],
-        "status": "PENDING_IMPLEMENTATION"
+        "status": "PASS_LOCAL_EXACT_H5"
       },
       {
         "criterionId": "AC-006",
@@ -217,7 +574,7 @@
           "EV-006",
           "EV-019"
         ],
-        "status": "PENDING_IMPLEMENTATION"
+        "status": "PASS_LOCAL_EXACT_H5"
       },
       {
         "criterionId": "AC-007",
@@ -227,7 +584,7 @@
           "EV-007",
           "EV-019"
         ],
-        "status": "PENDING_IMPLEMENTATION"
+        "status": "PASS_LOCAL_EXACT_H5"
       },
       {
         "criterionId": "AC-008",
@@ -237,7 +594,7 @@
           "EV-008",
           "EV-019"
         ],
-        "status": "PENDING_IMPLEMENTATION"
+        "status": "PASS_LOCAL_EXACT_H5"
       },
       {
         "criterionId": "AC-009",
@@ -247,7 +604,7 @@
           "EV-009",
           "EV-019"
         ],
-        "status": "PENDING_IMPLEMENTATION"
+        "status": "PASS_LOCAL_EXACT_H5"
       },
       {
         "criterionId": "AC-010",
@@ -257,7 +614,7 @@
           "EV-010",
           "EV-019"
         ],
-        "status": "PENDING_IMPLEMENTATION"
+        "status": "PASS_LOCAL_EXACT_H5"
       },
       {
         "criterionId": "AC-011",
@@ -267,7 +624,7 @@
           "EV-011",
           "EV-019"
         ],
-        "status": "PENDING_IMPLEMENTATION"
+        "status": "PASS_LOCAL_EXACT_H5"
       },
       {
         "criterionId": "AC-012",
@@ -277,7 +634,7 @@
           "EV-012",
           "EV-019"
         ],
-        "status": "PENDING_IMPLEMENTATION"
+        "status": "PASS_LOCAL_EXACT_H5"
       },
       {
         "criterionId": "AC-013",
@@ -287,7 +644,7 @@
           "EV-013",
           "EV-019"
         ],
-        "status": "PENDING_IMPLEMENTATION"
+        "status": "PASS_LOCAL_EXACT_H5"
       },
       {
         "criterionId": "AC-014",
@@ -297,7 +654,7 @@
           "EV-014",
           "EV-019"
         ],
-        "status": "PENDING_IMPLEMENTATION"
+        "status": "PASS_LOCAL_EXACT_H5"
       },
       {
         "criterionId": "AC-015",
@@ -308,7 +665,7 @@
           "EV-024",
           "EV-019"
         ],
-        "status": "PENDING_IMPLEMENTATION"
+        "status": "PASS_LOCAL_EXACT_H5"
       },
       {
         "criterionId": "AC-016",
@@ -318,7 +675,7 @@
           "EV-016",
           "EV-019"
         ],
-        "status": "PENDING_IMPLEMENTATION"
+        "status": "PASS_LOCAL_EXACT_H5"
       },
       {
         "criterionId": "AC-017",
@@ -328,7 +685,7 @@
           "EV-017",
           "EV-018"
         ],
-        "status": "PENDING_IMPLEMENTATION"
+        "status": "PASS_LOCAL_EXACT_H5"
       },
       {
         "criterionId": "AC-018",
@@ -337,7 +694,7 @@
         "requiredEvidenceIds": [
           "EV-018"
         ],
-        "status": "PENDING_IMPLEMENTATION"
+        "status": "PASS_LOCAL_EXACT_H5"
       },
       {
         "criterionId": "AC-019",
@@ -347,7 +704,7 @@
           "EV-019",
           "EV-020"
         ],
-        "status": "PENDING_IMPLEMENTATION"
+        "status": "PASS_LOCAL_EXACT_H5"
       },
       {
         "criterionId": "AC-020",
@@ -357,7 +714,7 @@
           "EV-021",
           "EV-022"
         ],
-        "status": "PENDING_IMPLEMENTATION"
+        "status": "PASS_M03_EXACT_HEAD_CHECKS; UBUNTU_WORKSPACE_HAS_3_BASELINE_M02_FAILURES"
       },
       {
         "criterionId": "AC-021",
@@ -366,7 +723,7 @@
         "requiredEvidenceIds": [
           "EV-023"
         ],
-        "status": "PENDING_IMPLEMENTATION"
+        "status": "PASS_H5_SUPPLY_CHAIN"
       },
       {
         "criterionId": "AC-022",
@@ -375,7 +732,7 @@
         "requiredEvidenceIds": [
           "EV-024"
         ],
-        "status": "PENDING_IMPLEMENTATION"
+        "status": "PASS_H5_CALIBRATION"
       },
       {
         "criterionId": "AC-023",
@@ -384,7 +741,7 @@
         "requiredEvidenceIds": [
           "EV-025"
         ],
-        "status": "PENDING_IMPLEMENTATION"
+        "status": "PENDING_INDEPENDENT_EXACT_HEAD_REVIEW"
       }
     ],
     "evidenceRequirementCount": 25,
@@ -399,9 +756,9 @@
           "Windows",
           "Ubuntu"
         ],
-        "status": "PENDING_IMPLEMENTATION",
-        "artifactPath": null,
-        "validatedHead": null
+        "status": "PASS_LOCAL_EXACT_H5",
+        "artifactPath": "crates/core-work-order/tests/public_contracts.rs",
+        "validatedHead": "de6a829bd2f9402214c371446615fc364431f515"
       },
       {
         "evidenceId": "EV-002",
@@ -413,9 +770,9 @@
           "Windows",
           "Ubuntu"
         ],
-        "status": "PENDING_IMPLEMENTATION",
-        "artifactPath": null,
-        "validatedHead": null
+        "status": "PASS_LOCAL_EXACT_H5",
+        "artifactPath": "crates/core-work-order/src/identity.rs; crates/core-work-order/tests/public_contracts.rs",
+        "validatedHead": "de6a829bd2f9402214c371446615fc364431f515"
       },
       {
         "evidenceId": "EV-003",
@@ -427,9 +784,9 @@
           "Windows",
           "Ubuntu"
         ],
-        "status": "PENDING_IMPLEMENTATION",
-        "artifactPath": null,
-        "validatedHead": null
+        "status": "PASS_LOCAL_EXACT_H5",
+        "artifactPath": "crates/core-work-order/src/canonical.rs; crates/core-work-order/tests/canonical_identity.rs",
+        "validatedHead": "de6a829bd2f9402214c371446615fc364431f515"
       },
       {
         "evidenceId": "EV-004",
@@ -441,9 +798,9 @@
           "Windows",
           "Ubuntu"
         ],
-        "status": "PENDING_IMPLEMENTATION",
-        "artifactPath": null,
-        "validatedHead": null
+        "status": "PASS_LOCAL_EXACT_H5",
+        "artifactPath": "crates/core-work-order/tests/canonical_identity.rs; crates/core-identity/src/lib.rs",
+        "validatedHead": "de6a829bd2f9402214c371446615fc364431f515"
       },
       {
         "evidenceId": "EV-005",
@@ -455,9 +812,9 @@
           "Windows",
           "Ubuntu"
         ],
-        "status": "PENDING_IMPLEMENTATION",
-        "artifactPath": null,
-        "validatedHead": null
+        "status": "PASS_LOCAL_EXACT_H5",
+        "artifactPath": "crates/core-work-order/src/service.rs; crates/core-work-order/tests/admission_replay.rs",
+        "validatedHead": "de6a829bd2f9402214c371446615fc364431f515"
       },
       {
         "evidenceId": "EV-006",
@@ -469,9 +826,9 @@
           "Windows",
           "Ubuntu"
         ],
-        "status": "PENDING_IMPLEMENTATION",
-        "artifactPath": null,
-        "validatedHead": null
+        "status": "PASS_LOCAL_EXACT_H5",
+        "artifactPath": "crates/core-work-order/src/source.rs; crates/core-work-order/tests/source_workspace.rs",
+        "validatedHead": "de6a829bd2f9402214c371446615fc364431f515"
       },
       {
         "evidenceId": "EV-007",
@@ -483,9 +840,9 @@
           "Windows",
           "Ubuntu"
         ],
-        "status": "PENDING_IMPLEMENTATION",
-        "artifactPath": null,
-        "validatedHead": null
+        "status": "PASS_LOCAL_EXACT_H5",
+        "artifactPath": "crates/core-work-order/src/adapters.rs; crates/core-work-order/tests/source_workspace.rs; crates/core-work-order/tests/adapters_no_io.rs",
+        "validatedHead": "de6a829bd2f9402214c371446615fc364431f515"
       },
       {
         "evidenceId": "EV-008",
@@ -497,9 +854,9 @@
           "Windows",
           "Ubuntu"
         ],
-        "status": "PENDING_IMPLEMENTATION",
-        "artifactPath": null,
-        "validatedHead": null
+        "status": "PASS_LOCAL_EXACT_H5",
+        "artifactPath": "crates/core-work-order/src/admission.rs; crates/core-work-order/tests/admission_replay.rs; docs/evidence/M03-PREFLIGHT.md",
+        "validatedHead": "de6a829bd2f9402214c371446615fc364431f515"
       },
       {
         "evidenceId": "EV-009",
@@ -511,9 +868,9 @@
           "Windows",
           "Ubuntu"
         ],
-        "status": "PENDING_IMPLEMENTATION",
-        "artifactPath": null,
-        "validatedHead": null
+        "status": "PASS_LOCAL_EXACT_H5",
+        "artifactPath": "crates/core-work-order/src/packets.rs; crates/core-work-order/src/scope.rs; crates/core-work-order/tests/scope_packets.rs",
+        "validatedHead": "de6a829bd2f9402214c371446615fc364431f515"
       },
       {
         "evidenceId": "EV-010",
@@ -525,9 +882,9 @@
           "Windows",
           "Ubuntu"
         ],
-        "status": "PENDING_IMPLEMENTATION",
-        "artifactPath": null,
-        "validatedHead": null
+        "status": "PASS_LOCAL_EXACT_H5",
+        "artifactPath": "crates/core-work-order/src/acceptance.rs; crates/core-work-order/src/context.rs; crates/core-work-order/tests/acceptance_context.rs",
+        "validatedHead": "de6a829bd2f9402214c371446615fc364431f515"
       },
       {
         "evidenceId": "EV-011",
@@ -539,9 +896,9 @@
           "Windows",
           "Ubuntu"
         ],
-        "status": "PENDING_IMPLEMENTATION",
-        "artifactPath": null,
-        "validatedHead": null
+        "status": "PASS_LOCAL_EXACT_H5",
+        "artifactPath": "crates/core-work-order/src/lineage.rs; crates/core-work-order/tests/lineage_corrections.rs",
+        "validatedHead": "de6a829bd2f9402214c371446615fc364431f515"
       },
       {
         "evidenceId": "EV-012",
@@ -553,9 +910,9 @@
           "Windows",
           "Ubuntu"
         ],
-        "status": "PENDING_IMPLEMENTATION",
-        "artifactPath": null,
-        "validatedHead": null
+        "status": "PASS_LOCAL_EXACT_H5",
+        "artifactPath": "crates/core-work-order/src/delta.rs; crates/core-work-order/tests/lineage_corrections.rs",
+        "validatedHead": "de6a829bd2f9402214c371446615fc364431f515"
       },
       {
         "evidenceId": "EV-013",
@@ -567,9 +924,9 @@
           "Windows",
           "Ubuntu"
         ],
-        "status": "PENDING_IMPLEMENTATION",
-        "artifactPath": null,
-        "validatedHead": null
+        "status": "PASS_LOCAL_EXACT_H5",
+        "artifactPath": "crates/core-work-order/src/admission.rs; crates/core-work-order/tests/admission_replay.rs",
+        "validatedHead": "de6a829bd2f9402214c371446615fc364431f515"
       },
       {
         "evidenceId": "EV-014",
@@ -581,9 +938,9 @@
           "Windows",
           "Ubuntu"
         ],
-        "status": "PENDING_IMPLEMENTATION",
-        "artifactPath": null,
-        "validatedHead": null
+        "status": "PASS_LOCAL_EXACT_H5",
+        "artifactPath": "crates/core-work-order/src/admission.rs; crates/core-work-order/tests/admission_replay.rs",
+        "validatedHead": "de6a829bd2f9402214c371446615fc364431f515"
       },
       {
         "evidenceId": "EV-015",
@@ -595,9 +952,9 @@
           "Windows",
           "Ubuntu"
         ],
-        "status": "PENDING_IMPLEMENTATION",
-        "artifactPath": null,
-        "validatedHead": null
+        "status": "PASS_LOCAL_EXACT_H5",
+        "artifactPath": "crates/core-work-order/src/budget.rs; crates/core-work-order/tests/resources_redaction.rs; docs/evidence/M03-PACK-H-CALIBRATION.md",
+        "validatedHead": "de6a829bd2f9402214c371446615fc364431f515"
       },
       {
         "evidenceId": "EV-016",
@@ -609,9 +966,9 @@
           "Windows",
           "Ubuntu"
         ],
-        "status": "PENDING_IMPLEMENTATION",
-        "artifactPath": null,
-        "validatedHead": null
+        "status": "PASS_LOCAL_EXACT_H5",
+        "artifactPath": "crates/core-work-order/tests/resources_redaction.rs; fuzz/corpus/m03_diagnostics_redaction/",
+        "validatedHead": "de6a829bd2f9402214c371446615fc364431f515"
       },
       {
         "evidenceId": "EV-017",
@@ -623,9 +980,9 @@
           "Windows",
           "Ubuntu"
         ],
-        "status": "PENDING_IMPLEMENTATION",
-        "artifactPath": null,
-        "validatedHead": null
+        "status": "PASS_LOCAL_EXACT_H5",
+        "artifactPath": "docs/evidence/M03-DEPENDENCY-NO-IO-H5.txt; docs/evidence/M03-PACK-G.md",
+        "validatedHead": "de6a829bd2f9402214c371446615fc364431f515"
       },
       {
         "evidenceId": "EV-018",
@@ -637,9 +994,9 @@
           "Windows",
           "Ubuntu"
         ],
-        "status": "PENDING_IMPLEMENTATION",
-        "artifactPath": null,
-        "validatedHead": null
+        "status": "PASS_LOCAL_EXACT_H5",
+        "artifactPath": "docs/evidence/M03-DEPENDENCY-NO-IO-H5.txt",
+        "validatedHead": "de6a829bd2f9402214c371446615fc364431f515"
       },
       {
         "evidenceId": "EV-019",
@@ -651,9 +1008,9 @@
           "Windows",
           "Ubuntu"
         ],
-        "status": "PENDING_IMPLEMENTATION",
-        "artifactPath": null,
-        "validatedHead": null
+        "status": "PASS_LOCAL_EXACT_H5",
+        "artifactPath": "docs/evidence/M03-PACK-G.md; docs/evidence/M03-TEST-H5-WINDOWS.log; docs/evidence/M03-TEST-H5-UBUNTU.log",
+        "validatedHead": "de6a829bd2f9402214c371446615fc364431f515"
       },
       {
         "evidenceId": "EV-020",
@@ -664,9 +1021,9 @@
         "platforms": [
           "Ubuntu"
         ],
-        "status": "PENDING_IMPLEMENTATION",
-        "artifactPath": null,
-        "validatedHead": null
+        "status": "PASS_7_TARGETS_1000_RUNS_H5",
+        "artifactPath": "docs/evidence/fuzz/*_h5_ubuntu.log",
+        "validatedHead": "de6a829bd2f9402214c371446615fc364431f515"
       },
       {
         "evidenceId": "EV-021",
@@ -677,9 +1034,9 @@
         "platforms": [
           "Windows"
         ],
-        "status": "PENDING_IMPLEMENTATION",
-        "artifactPath": null,
-        "validatedHead": null
+        "status": "PASS_WINDOWS_LOCAL; HOSTED_CHECKS_PENDING",
+        "artifactPath": "docs/evidence/M03-TEST-H5-WINDOWS.log; docs/evidence/M03-WORKSPACE-H5-WINDOWS.log; docs/evidence/M03-CLIPPY-H5-WINDOWS.log; docs/evidence/M03-GOVERNANCE-H5.log",
+        "validatedHead": "de6a829bd2f9402214c371446615fc364431f515"
       },
       {
         "evidenceId": "EV-022",
@@ -690,9 +1047,9 @@
         "platforms": [
           "Ubuntu"
         ],
-        "status": "PENDING_IMPLEMENTATION",
-        "artifactPath": null,
-        "validatedHead": null
+        "status": "PASS_M03_UBUNTU_LOCAL; 3_BASELINE_M02_WORKSPACE_FAILURES; HOSTED_CHECKS_PENDING",
+        "artifactPath": "docs/evidence/M03-TEST-H5-UBUNTU.log; docs/evidence/M03-WORKSPACE-H5-UBUNTU.log; docs/evidence/M03-CLIPPY-H5-UBUNTU.log; docs/evidence/M03-WORKSPACE-BASE-H5-UBUNTU.log",
+        "validatedHead": "de6a829bd2f9402214c371446615fc364431f515"
       },
       {
         "evidenceId": "EV-023",
@@ -704,9 +1061,9 @@
           "Windows",
           "Ubuntu"
         ],
-        "status": "PENDING_IMPLEMENTATION",
-        "artifactPath": null,
-        "validatedHead": null
+        "status": "PASS_H5_SUPPLY_CHAIN",
+        "artifactPath": "docs/evidence/M03-CARGO-AUDIT-H5.json; docs/evidence/M03-CARGO-DENY-H5.txt; docs/evidence/M03-SBOM.spdx.json",
+        "validatedHead": "de6a829bd2f9402214c371446615fc364431f515"
       },
       {
         "evidenceId": "EV-024",
@@ -718,9 +1075,9 @@
           "Windows",
           "Ubuntu"
         ],
-        "status": "PENDING_IMPLEMENTATION",
-        "artifactPath": null,
-        "validatedHead": null
+        "status": "PASS_H5_CALIBRATION",
+        "artifactPath": "docs/evidence/M03-PACK-H-CALIBRATION.md; docs/evidence/M03-BENCH-H5-*.log",
+        "validatedHead": "de6a829bd2f9402214c371446615fc364431f515"
       },
       {
         "evidenceId": "EV-025",
@@ -731,14 +1088,14 @@
         "platforms": [
           "Governance"
         ],
-        "status": "PENDING_IMPLEMENTATION",
+        "status": "PENDING_INDEPENDENT_REVIEW",
         "artifactPath": null,
         "validatedHead": null
       }
     ]
   },
   "independentReview": {
-    "status": "PENDING_IMPLEMENTATION",
+    "status": "PENDING_INDEPENDENT_EXACT_HEAD_REVIEW",
     "issue": null,
     "pullRequest": null,
     "verdict": null,
@@ -797,9 +1154,17 @@
   "postAdmissionSynchronization": {
     "increment": "CORE-M03-SYNC-001",
     "branch": "fix/m03-post-admission-state-sync",
-    "status": "PENDING_INDEPENDENT_REVIEW_AND_PROMOTION",
+    "status": "APPROVED_PROMOTED",
     "reason": "Canonical Checkpoint and Decisions Ledger still described admission as pending after PR #68 promotion. This bounded governance-only delta synchronizes canonical state and recompiles lock/evidence fingerprints before product execution.",
     "productPacksImplemented": false,
-    "productTestsExecuted": false
+    "productTestsExecuted": false,
+    "promotionEvidence": {
+      "issue": 71,
+      "verdict": "APPROVED",
+      "pullRequest": 70,
+      "reviewedHead": "2e453a5f54809ca8c1ff03a394416eda228c4b74",
+      "workflowRun": 35853588487,
+      "promotionMerge": "6cae77e1d8814121df6646dec48bca1020119226"
+    }
   }
 }

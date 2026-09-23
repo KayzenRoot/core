@@ -1,0 +1,106 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.40s
+     Running unittests src/lib.rs (target/debug/deps/core_work_order-aec8d0f2ba21c742)
+
+running 4 tests
+test budget::tests::zero_or_unbounded_sentinel_budgets_are_rejected ... ok
+test budget::tests::calibrated_profile_accepts_its_ceiling_and_rejects_every_larger_dimension ... ok
+test identity::tests::typed_ids_and_revisions_reject_invalid_values ... ok
+test identity::tests::logical_key_identity_is_deterministic_and_domain_separated ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/acceptance_context.rs (target/debug/deps/acceptance_context-558c327d3c389557)
+
+running 3 tests
+test blocking_criteria_require_resolvable_evidence_edges ... ok
+test unexplained_orphans_and_packet_obligation_mismatches_fail_closed ... ok
+test mandatory_pcm_reconstruction_is_lossless_and_bounded ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running tests/adapters_no_io.rs (target/debug/deps/adapters_no_io-6dfdaae76d3d300e)
+
+running 2 tests
+test service_uses_only_explicit_values_after_outer_resolution ... ok
+test external_interfaces_are_separate_from_public_service_inputs ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.14s
+
+     Running tests/admission_replay.rs (target/debug/deps/admission_replay-a10aebee7668386d)
+
+running 5 tests
+test caller_deadline_discards_late_compilation_before_admission ... ok
+test blocked_receipt_cannot_materialize_a_handoff ... ok
+test admission_receipts_are_deterministic_and_handoff_binds_all_revalidation_fields ... ok
+test receipt_identity_mismatch_and_serialized_tampering_are_rejected ... ok
+test stale_unknown_substituted_and_mismatched_proofs_never_become_ready ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.14s
+
+     Running tests/canonical_identity.rs (target/debug/deps/canonical_identity-01972a30ac2021eb)
+
+running 5 tests
+test diagnostic_changes_are_outside_frozen_semantic_identity ... ok
+test hive_context_is_advisory_and_only_changes_compilation_provenance ... ok
+test compilation_context_generation_changes_only_compilation_identity ... ok
+test semantic_input_permutations_preserve_bytes_and_fingerprints ... ok
+test semantic_change_alters_work_order_fingerprint_and_is_revision_scoped ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+
+     Running tests/lineage_corrections.rs (target/debug/deps/lineage_corrections-709c79c818ad81fa)
+
+running 4 tests
+test stale_lineage_snapshot_and_invalid_next_revision_are_rejected ... ok
+test lineage_edges_reject_dangling_endpoints_and_duplicate_ids ... ok
+test lineage_capsules_bind_monotonic_revisions_and_external_cas ... ok
+test semantic_diff_requires_next_revision_and_same_revision_corrections_are_policy_bound ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+
+     Running tests/public_contracts.rs (target/debug/deps/public_contracts-a9b792d7bea93702)
+
+running 5 tests
+test typed_ids_and_revisions_are_bounded_and_positive ... ok
+test parser_rejects_unknown_schema_version_kind_and_enum ... ok
+test malformed_duplicate_packet_ids_fail_without_partial_compilation ... ok
+test request_envelope_round_trips_and_services_are_public ... ok
+test logical_key_allocates_a_repeatable_work_order_id ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s
+
+     Running tests/resources_redaction.rs (target/debug/deps/resources_redaction-cd9983802ac03051)
+
+running 4 tests
+test safe_subjects_and_diagnostics_do_not_serialize_secret_canaries ... ok
+test parser_enforces_bounded_depth_and_never_returns_partial_values ... ok
+test malformed_external_payload_is_not_echoed_by_typed_errors ... ok
+test finite_positive_budgets_and_cap_plus_one_fail_atomically ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
+
+     Running tests/scope_packets.rs (target/debug/deps/scope_packets-840f5780317e1be3)
+
+running 4 tests
+test path_prefix_matching_respects_segment_boundaries ... ok
+test denied_rules_override_allow_and_empty_allow_sets_are_ambiguous ... ok
+test dangling_edges_cycles_and_widening_context_are_rejected ... ok
+test packet_scope_is_intersected_with_parent_and_dag_order_is_stable ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s
+
+     Running tests/source_workspace.rs (target/debug/deps/source_workspace-d5ecc3515151fe25)
+
+running 4 tests
+test missing_and_extra_source_entries_fail_closed ... ok
+test source_locators_reject_traversal_and_uri_credentials_without_blocking_at_signs ... ok
+test source_evidence_rejects_stale_unknown_substituted_and_unbound_values ... ok
+test workspace_schema_profile_components_and_proof_are_bound ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+
+   Doc-tests core_work_order
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s

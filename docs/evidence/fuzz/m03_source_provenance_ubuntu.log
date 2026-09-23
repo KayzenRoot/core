@@ -1,0 +1,37 @@
+    Finished `release` profile [optimized + debuginfo] target(s) in 3.57s
+    Finished `release` profile [optimized + debuginfo] target(s) in 3.01s
+     Running `fuzz/target/x86_64-unknown-linux-gnu/release/m03_source_provenance -artifact_prefix=/mnt/d/Projects/core-m03-work-order-engine/fuzz/artifacts/m03_source_provenance/ -runs=1000 -max_len=32768 -timeout=10 -rss_limit_mb=1024 -verbosity=0 -print_final_stats=1 /mnt/d/Projects/core-m03-work-order-engine/fuzz/corpus/m03_source_provenance`
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO:        1 files found in /mnt/d/Projects/core-m03-work-order-engine/fuzz/corpus/m03_source_provenance
+INFO: seed corpus: files: 1 min: 10412b max: 10412b total: 10412b rss: 34Mb
+	NEW_FUNC[1/9]: 0x613b208aec10  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_source_provenance+0x2fcc10) (BuildId: 14a3c1140b95de36d709bda52a96343d55d113da)
+	NEW_FUNC[2/9]: 0x613b208b9040  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_source_provenance+0x307040) (BuildId: 14a3c1140b95de36d709bda52a96343d55d113da)
+	NEW_FUNC[1/11]: 0x613b208acb80  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_source_provenance+0x2fab80) (BuildId: 14a3c1140b95de36d709bda52a96343d55d113da)
+	NEW_FUNC[2/11]: 0x613b208b22b0  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_source_provenance+0x3002b0) (BuildId: 14a3c1140b95de36d709bda52a96343d55d113da)
+	NEW_FUNC[1/1]: 0x613b20bee170  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_source_provenance+0x63c170) (BuildId: 14a3c1140b95de36d709bda52a96343d55d113da)
+	NEW_FUNC[1/1]: 0x613b20bedfc0  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_source_provenance+0x63bfc0) (BuildId: 14a3c1140b95de36d709bda52a96343d55d113da)
+	NEW_FUNC[1/1]: 0x613b2098c5b0  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_source_provenance+0x3da5b0) (BuildId: 14a3c1140b95de36d709bda52a96343d55d113da)
+###### Recommended dictionary. ######
+"\013\000\000\000\000\000\000\000" # Uses: 9
+"\000\020" # Uses: 8
+"\377\377\377\377\377\377#\373" # Uses: 11
+"superseded_re" # Uses: 7
+"\372\377\377\377" # Uses: 6
+"\001\000\000\000\000\000\000\000" # Uses: 10
+"\377\377\377\377\377\377\377\004" # Uses: 8
+"\000\000\000!" # Uses: 5
+"\000\000\000\000\000\000\000\000" # Uses: 7
+"\377\377\377\377\377\377\377\377" # Uses: 5
+"context_budget" # Uses: 4
+"policy_generation" # Uses: 1
+"mandatory_source" # Uses: 2
+"source_revision" # Uses: 2
+"\367\377\377\377" # Uses: 2
+"\027\000\000\000\000\000\000\000" # Uses: 0
+"observed_" # Uses: 0
+###### End of recommended dictionary. ######
+stat::number_of_executed_units: 1000
+stat::average_exec_per_sec:     1000
+stat::new_units_added:          118
+stat::slowest_unit_time_sec:    0
+stat::peak_rss_mb:              86
