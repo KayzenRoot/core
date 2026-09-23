@@ -3,14 +3,14 @@
 ## Execution basis
 
 - Increment: `CORE-M03-DISC-004`
-- Captured: 2026-09-22 21:41 -03:00; exact PR head and CI addendum to be resolved from the linked PR after publication.
+- Captured: 2026-09-22 21:42 -03:00; the final exact-head CI addendum is linked from the PR after the evidence update is pushed.
 - Repository: `KayzenRoot/core` (`https://github.com/KayzenRoot/core`)
 - Canonical base: `main` at `9773d84bee119db8f964feb64ed06a2acd4456c8`
 - Branch: `planning/m03-round-4-contracts-validation`
 - Worktree: `D:\Projects\core-m03-round4`, clean when created at the exact base.
-- Final PR head SHA: the exact SHA shown by the PR's source-branch metadata and repeated in its body. This evidence file is committed on that branch; embedding the hash of its own containing commit in the file would be self-referential. The PR body is the linked exact-head evidence record.
+- Initial published PR head SHA: `1f896f9d6fbc7042d0f65d871c950a47a2fedb32`. The exact final source SHA is shown by PR #62's source-branch metadata and repeated in its body. This evidence file is committed on that branch; embedding the hash of its own containing commit in the file would be self-referential. The PR body/check record is the linked exact-head evidence record.
 - Executor environment: Windows PowerShell; Git 2.55.0.windows.3; Python 3.12.10 (`C:/Users/csn19/AppData/Local/Programs/Python/Python312/python.exe`); rustc 1.98.1 and Cargo 1.98.1 from the installed stable MSVC toolchain. Cargo is invoked by its installed absolute path because it is not on PATH; `RUSTC` is set to the matching installed rustc for Cargo-launched helper processes.
-- PR: pending creation after push. The PR number, URL, final source SHA, and exact-head CI run/context IDs will be added here through the PR-linked final evidence record; no merge is authorized.
+- PR: #62, open against `main`, https://github.com/KayzenRoot/core/pull/62. The final source SHA and exact-head CI run/context IDs are recorded in the PR metadata/body/checks after the evidence update is pushed; no merge is authorized.
 
 ## Preflight and HIVE result
 
@@ -66,7 +66,7 @@ No product source, tests, Cargo manifest, lockfile, active protection rule, or g
 | `python -m unittest discover -s tests -p "test_*.py" -v` | PASS; 6 tests. |
 | `cargo test --workspace --all-targets` | First attempt could not find `rustc` in PATH from an existing Git helper test. Reran the same gate with `RUSTC` set to the installed Rust 1.98.1 executable; PASS, 103 tests across the workspace. Existing M01/M02 harness-false benchmark executables ran; no M03 performance result is claimed. |
 | `cargo clippy --workspace --all-targets -- -D warnings` with installed `RUSTC` | PASS; finished with no warnings. |
-| Exact-head GitHub Actions | Pending final push/PR head. Historical workflows are not substituted. Record all seven required contexts and run IDs below before handoff. |
+| Exact-head GitHub Actions | Pending the final evidence-update push. Historical workflows are not substituted. Record all seven required contexts and run IDs in PR #62 before handoff. |
 
 ## Acceptance checklist
 
@@ -91,7 +91,7 @@ No product source, tests, Cargo manifest, lockfile, active protection rule, or g
 19. PASS - checkpoint, backlog, module map, and module status agree on review-candidate state and unauthorized implementation.
 20. PASS WITH LINKED EXACT-HEAD ADDENDUM - this bundle records the exact base and links to the PR record for the final self-containing commit SHA and exact-head CI identifiers.
 21. PASS - no unresolved HIGH/CRITICAL planning inconsistency was identified during the bounded consistency review; independent audit remains pending.
-22. PENDING - one PR to `main` must be opened from this branch, its final head recorded, and exact-head required CI inspected; no merge will be performed.
+22. PASS - exactly one PR (#62) is open from this branch to `main`; it is unmerged. Its final source SHA and required CI will be bound to the final evidence-update head before handoff.
 
 ## Risks and proposed checkpoint delta
 
@@ -103,4 +103,4 @@ No product source, tests, Cargo manifest, lockfile, active protection rule, or g
 
 ## PR exact-head and CI addendum
 
-To be completed from the opened PR after the final evidence commit. Record PR number/URL, exact base and source SHA, and each required context with run/workflow identifier and terminal status. `READY_FOR_REVIEW` is allowed only if the exact final head is open against `main`, all seven required contexts succeeded, and this evidence bundle is complete. Do not merge or promote the checkpoint.
+PR #62: https://github.com/KayzenRoot/core/pull/62. The PR source-branch metadata is the authoritative record of the final source SHA; its body will repeat that SHA and list each required context with run/workflow identifier and terminal status after the final evidence-update push. `READY_FOR_REVIEW` is allowed only if the exact final head is open against `main`, all seven required contexts succeeded, and this evidence bundle is complete. Do not merge or promote the checkpoint.
