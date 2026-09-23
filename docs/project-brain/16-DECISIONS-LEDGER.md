@@ -675,3 +675,8 @@ Status: `ACTIVE`
 ## CORE-D-162 - M03 Round 4 is promoted and final planning freeze is the next legal action
 **Decision:** after Review 004 / Issue #63 approved exact head `8fd3f085f93b342373b06e4471088dc7b843fac4` and PR #62 was promoted as merge `78daa752760ba19b3c36c7e2a7574bb3cfd03501`, M03 Rounds 1-4 are canonical planning truth. The next legal increment is the Round 5 final planning freeze that compiles the implementation Work Order, pending Context Lock, acceptance/evidence mapping, Calibration Gate and executor handoff. Product implementation remains unauthorized until that freeze is independently reviewed/promoted and a separate execution-admission delta binds canonical main.
 **State:** ACCEPTED
+
+
+## CORE-D-163 - M03 Round 5 final planning freeze is a review candidate
+**Decision:** CORE-M03-FREEZE-001 packages the future M03 implementation Work Order, pending Context Lock, Evidence Bundle skeleton, eight packets, Calibration Gate, 23-criterion AEG, and executor handoff on the exact planning base. This candidate does not authorize implementation. Independent exact-head review/promotion and a separate execution-admission delta binding canonical main are required before product work.
+**State:** PROPOSED; pending independent exact-head review.

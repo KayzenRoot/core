@@ -1,6 +1,6 @@
 # CORE Definition of Done
 
-Status: `M01_M02_COMPLETE_M03_DISCOVERY_ACTIVE`
+Status: `M01_M02_COMPLETE_M03_FINAL_PLANNING_FREEZE_IN_REVIEW_IMPLEMENTATION_UNAUTHORIZED`
 
 ## Bootstrap DoD
 
@@ -92,7 +92,7 @@ The eventual M03 DoD must prove, on one governed exact head:
 - property/adversarial/fuzz/Windows/Ubuntu/security/performance evidence;
 - independent governed review with no unresolved HIGH/CRITICAL finding.
 
-Exact M03 completion criteria remain `PENDING_DISCOVERY` until later rounds freeze contracts, file map, tests, benchmarks and Work Order.
+CORE-M03-FREEZE-001 now records the final planning-freeze candidate and its future implementation criteria/evidence map. Those criteria remain pending implementation evidence and independent final-freeze review/promotion; the candidate does not satisfy the M03 DoD or authorize product work.
 
 
 ### M03 Round 2 DoD refinements
@@ -150,3 +150,8 @@ The future M03 V0.0 implementation is complete only when all of the following ar
 - advisory/license/supply-chain/SBOM evidence passes, the AEG covers every blocking DoD obligation, and an independent governed exact-head review finds no unresolved HIGH/CRITICAL defect.
 
 M03 Round 4 is an independently reviewed and promoted planning baseline (Review 004 / Issue #63; PR #62; exact head `8fd3f085f93b342373b06e4471088dc7b843fac4`; workflow #147 / run `35805683331`; promotion merge `78daa752760ba19b3c36c7e2a7574bb3cfd03501`). Implementation remains unauthorized. The next gate is the M03 final planning freeze (Round 5 candidate), followed by its own review/promotion and a separate execution-admission delta.
+
+
+### M03 Round 5 final planning freeze candidate status
+
+CORE-M03-FREEZE-001 records a final planning-freeze candidate from the promoted Round 1–4 baseline. Its 23 blocking future implementation criteria are mapped to explicit Evidence Requirement IDs. The Context Lock remains PENDING_PROMOTION with no authorized base and implementation authorization false. This candidate is not M03 product completion, approval, promotion, or execution admission. Independent exact-head review/promotion and a separate canonical-main admission delta remain required; all implementation DoD evidence remains pending.

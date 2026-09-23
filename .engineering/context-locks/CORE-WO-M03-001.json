@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "core-context-lock-v1",
+  "workOrder": "CORE-WO-M03-001",
+  "status": "PENDING_PROMOTION",
+  "repository": "KayzenRoot/core",
+  "planningBase": "786ad33a27d45eb435bc6e63f22174de74b0bb71",
+  "authorizedBase": null,
+  "executionBranch": "feat/m03-work-order-engine",
+  "scopeClass": "M03_WORK_ORDER_ENGINE",
+  "assuranceMode": "ELEVATED",
+  "productImplementationAuthorized": false,
+  "canonicalSources": {
+    "docs/project-brain/13-CHECKPOINT.md": "21e17accac6e7b11404a6f3f953610a249c0a16f",
+    "docs/project-brain/16-DECISIONS-LEDGER.md": "ce8db92f758995968f17b695cb2528b542f60b27",
+    "docs/project-brain/03-SCOPE.md": "f2df9200f88bd0fcc77d9b4a02ad7a039d2f429d",
+    "docs/project-brain/15-DEFINITION-OF-DONE.md": "b0b8c099f847e85ceef2ad597f614baa025d3a62",
+    "docs/project-brain/04-ARCHITECTURE.md": "d9bd9609e81e57862715ea18fa176e9531287e35",
+    "docs/project-brain/02-REQUIREMENTS.md": "2148eb95b408827a1d7c12a6ca059eba48062ce1",
+    "docs/project-brain/10-SECURITY-GOVERNANCE.md": "4c7a102a6229de12d4721507db5cfc18a914b59b",
+    "docs/project-brain/11-TEST-PLAN.md": "dac0fa9a886de823f21c7516a05075e2b3cf3ca5",
+    "docs/modules/M03-WORK-ORDER-ENGINE.md": "c6a45a983d29090b59c961cd173c95e9f8ae9aed"
+  },
+  "upstream": {
+    "gef": {
+      "version": "1.0.0",
+      "commit": "866fe3af8cccc65c929aaf6a47a924401fa448b3"
+    },
+    "hive": {
+      "version": "1.0.0",
+      "commit": "a53b5b9fcf55c32a5696180fb1b1ef80ccd1edcf"
+    }
+  },
+  "stalenessRule": "Any material change to authorized base, any of the nine canonical source blobs, CORE-WO-M03-001, or governing GEF policy makes this pending planning lock stale; recompile before any separate execution admission.",
+  "promotionRule": "Independent exact-head final planning review and promotion are required first. A separate later execution-admission delta on canonical main must bind the then-current source blobs and authorizedBase before implementation authorization may be activated.",
+  "workOrderSource": {
+    "path": ".engineering/work-orders/CORE-WO-M03-001.md",
+    "blobSha": "6741aeb793ae6e03f52a1906cb8f3570474c7a4b"
+  },
+  "authorizationEffectiveOnlyOnCanonicalMain": true,
+  "canonicalMain": "origin/main",
+  "activationRule": "This lock is planning-only and never activates from this candidate branch. Authorization can become effective only when an exact ACTIVE lock and separate governed admission delta are promoted to canonical origin/main.",
+  "executionStartRule": "After canonical-main admission, create feat/m03-work-order-engine from post-admission origin/main; authorizedBase must be an ancestor, and intervening commits may contain governance/admission metadata only.",
+  "finalPlanningReview": {
+    "status": "PENDING_INDEPENDENT_REVIEW",
+    "issue": null,
+    "verdict": null,
+    "pullRequest": null,
+    "workflowRun": null,
+    "promotionMerge": null
+  },
+  "evidence": ".engineering/evidence/CORE-WO-M03-001.json",
+  "executionStatus": "NOT_ADMITTED"
+}

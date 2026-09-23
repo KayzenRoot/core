@@ -17,7 +17,7 @@ python -m unittest discover -s tests -p "test_*.py" -v
 ```
 
 ## Product validation
-Product validation is frozen progressively by module and risk. M01 and M02 have promoted exact-head completion evidence; M03 obligations are being frozen during deep planning, with Rounds 1-4 promoted and the final planning freeze (Round 5) next; M04+ unit, integration, E2E, security, performance, recovery, compatibility and benchmark obligations remain `PENDING_DISCOVERY` until their owning plans are accepted.
+Product validation is frozen progressively by module and risk. M01 and M02 have promoted exact-head completion evidence; M03 Rounds 1-4 are promoted and CORE-M03-FREEZE-001 is the Round 5 final planning-freeze candidate pending independent exact-head review. No M03 product implementation or new product test result is claimed by this candidate. M04+ obligations remain `PENDING_DISCOVERY` until their owning plans are accepted.
 
 Historical green evidence never automatically proves a changed head.
 
@@ -230,3 +230,8 @@ Finite positive M03ResourceBudget defaults and any acceptance thresholds remain 
 ### M03 V0.0 production evidence gates
 
 Production acceptance requires one exact final head with Windows and Ubuntu CI, contract/property/integration/adversarial/fuzz coverage, M03 calibration report, finite budget selection rationale, no-hidden-I/O and acyclic dependency proof, security/advisory/license/SBOM checks, deterministic serialization evidence, complete AEG-to-evidence traceability and independent exact-head review with no unresolved HIGH/CRITICAL finding. Any later commit invalidates the head-bound results and requires the applicable suite to rerun.
+
+
+## M03 Round 5 final-freeze candidate validation status
+
+CORE-M03-FREEZE-001 freezes the future implementation Work Order, pending Context Lock, Evidence Bundle skeleton, executor handoff, eight construction packets, rule-only Calibration Gate, and a 23-criterion machine-readable AEG. All implementation Evidence Requirements remain PENDING_IMPLEMENTATION. Planning validation covers artifact consistency, exact source bindings, authorization flags, JSON/Markdown structure, deterministic governance validation, and exact-head hosted CI. It does not claim M03 product tests, benchmarks, calibration values, or implementation success. Independent exact-head review and promotion remain pending.
