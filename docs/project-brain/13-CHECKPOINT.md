@@ -13,8 +13,9 @@ CORE V0.0 - Modular Construction
 Continue building CORE as the headless NexLabs action plane that operates standalone and synchronizes deeply with HIVE without duplicating HIVE-owned intelligence.
 
 ## IN PROGRESS
-- CORE-WO-M03-001 Packs A-H were implemented, exact-head reviewed by M03-REVIEW-009 / Issue #73, and promoted through PR #72 as canonical merge `c63df6ad581c44bac66a8b1dab9a86522ce7fe3b`.
-- M04-M24 remain discovery-only until their planning freezes.
+- M03 canonical closeout was promoted through PR #74 as merge `2fdf595cc6b450d1be0038eb67d0a5160035d9bd` after M03-REVIEW-010 / Issue #75.
+- M04 Round 1 discovery candidate defines the Run / Attempt / Step authority boundary, lifecycle direction and initial RAS/TLG/CER/RJR/BRC/ICF/ASF mechanisms. M04 implementation remains unauthorized.
+- M05-M24 remain discovery-only until their planning freezes.
 
 ## COMPLETED
 - Repository/bootstrap foundation approved and promoted.
@@ -38,7 +39,7 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - CORE-GOV-002-C01 GitHub hardening independently reviewed (Review 001 / Issue #57) and promoted through PR #56; active ruleset `CORE main protection` id `23769853` protects `main` with no bypass actors and the seven-context strict CI gate.
 
 ## PENDING
-- Synchronize this M03 completion delta through independent exact-head review/promotion, then begin M04 planning only.
+- Independently review/promote M04 Round 1 discovery; then continue M04 Round 2 transition/event/concurrency semantics.
 - Deep-plan M04 through M24 in dependency order.
 - Freeze each module Requirements/Architecture/DoD/Work Order before implementation authorization.
 - Live local HIVE bootstrap evidence against current main.
@@ -48,7 +49,7 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - M04-M24 implementation remains gated by their own planning freezes and admissions.
 
 ## NEXT STEP
-Independently review and promote CORE-M03-CLOSE-001; after promotion, begin M04 discovery/planning. Do not authorize M04 implementation before its own freeze and admission.
+Independently review/promote CORE-M04-DISC-001 Round 1; if approved, continue M04 Round 2. M04 implementation remains unauthorized.
 
 ## EVIDENCE
 - `docs/engineering/CORE-MODULAR-DELIVERY-MODEL.md`
