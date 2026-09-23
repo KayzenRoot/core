@@ -10,8 +10,8 @@
   "assuranceMode": "ELEVATED",
   "productImplementationAuthorized": true,
   "canonicalSources": {
-    "docs/project-brain/13-CHECKPOINT.md": "3a3e52773c753880f7ad830c4b768ddb6326325a",
-    "docs/project-brain/16-DECISIONS-LEDGER.md": "7966559d08f3d35a5be5776e83f1fc6e0b014e01",
+    "docs/project-brain/13-CHECKPOINT.md": "96e1e33dfb5a0f3636160ec0f0eeaa707bb21b3f",
+    "docs/project-brain/16-DECISIONS-LEDGER.md": "d7d78a378b66f11213fe9e35addf5e6214ac702b",
     "docs/project-brain/03-SCOPE.md": "f2df9200f88bd0fcc77d9b4a02ad7a039d2f429d",
     "docs/project-brain/15-DEFINITION-OF-DONE.md": "3ffb3f27c57ec7d9b6810fe601c3944d3529a323",
     "docs/project-brain/04-ARCHITECTURE.md": "d9bd9609e81e57862715ea18fa176e9531287e35",
@@ -31,15 +31,15 @@
     }
   },
   "stalenessRule": "Any material change to authorizedBase, any of the nine canonical source blobs, CORE-WO-M03-001, or governing GEF policy makes this active lock STALE and blocks execution until a new governed admission is compiled and promoted.",
-  "promotionRule": "M03 final planning freeze Review 006 / Issue #67 is promoted. This ACTIVE lock becomes execution authority only when the exact CORE-M03-ADMIT-001 admission state is independently reviewed and promoted to canonical origin/main.",
+  "promotionRule": "CORE-M03-ADMIT-001 was independently APPROVED by Review 007 / Issue #69 at exact head 36f18d1dc53faf9af9d3c06355ebe07384e4e1f7 and promoted through PR #68 as merge abe21ed4564978d24b2f41bca13b6f052daa3b17. This recompilation synchronizes post-promotion canonical state; execution authority becomes effective only after this synchronization delta is independently reviewed and promoted to canonical origin/main.",
   "workOrderSource": {
     "path": ".engineering/work-orders/CORE-WO-M03-001.md",
     "blobSha": "8801c91f1c946c80d3af7996ff5b8b14944440f6"
   },
   "authorizationEffectiveOnlyOnCanonicalMain": true,
   "canonicalMain": "origin/main",
-  "activationRule": "Authorization is effective only when this exact ACTIVE lock and synchronized CORE-M03-ADMIT-001 state are present on canonical origin/main after independent review/promotion. Presence on an admission PR branch never authorizes execution.",
-  "executionStartRule": "After admission promotion, create feat/m03-work-order-engine from post-admission canonical origin/main; authorizedBase ac90b1f48c5551e65ecadace95c59f7f0647062f must be an ancestor, and every intervening commit must contain governance/admission metadata only.",
+  "activationRule": "Authorization is effective only when this recompiled ACTIVE lock and synchronized post-admission canonical state are present on origin/main after independent review/promotion. Presence only on fix/m03-post-admission-state-sync does not authorize execution.",
+  "executionStartRule": "After CORE-M03-SYNC-001 promotion, create feat/m03-work-order-engine from the synchronized canonical origin/main; authorizedBase ac90b1f48c5551e65ecadace95c59f7f0647062f and admission promotion merge abe21ed4564978d24b2f41bca13b6f052daa3b17 must be ancestors, with intervening changes limited to governed admission/state-synchronization metadata.",
   "finalPlanningReview": {
     "status": "APPROVED_PROMOTED",
     "issue": 67,
@@ -50,7 +50,17 @@
     "promotionMerge": "ac90b1f48c5551e65ecadace95c59f7f0647062f"
   },
   "evidence": ".engineering/evidence/CORE-WO-M03-001.json",
-  "executionStatus": "READY_FOR_EXECUTION_ON_CANONICAL_MAIN_PROMOTION",
+  "executionStatus": "READY_FOR_EXECUTION_ON_SYNC_PROMOTION",
   "admissionIncrement": "CORE-M03-ADMIT-001",
-  "admissionBranch": "planning/m03-execution-admission"
+  "admissionBranch": "planning/m03-execution-admission",
+  "postAdmissionSynchronization": {
+    "increment": "CORE-M03-SYNC-001",
+    "branch": "fix/m03-post-admission-state-sync",
+    "status": "PENDING_INDEPENDENT_REVIEW_AND_PROMOTION",
+    "admissionReviewIssue": 69,
+    "admissionPullRequest": 68,
+    "admissionReviewedHead": "36f18d1dc53faf9af9d3c06355ebe07384e4e1f7",
+    "admissionWorkflowRun": 35845550610,
+    "admissionPromotionMerge": "abe21ed4564978d24b2f41bca13b6f052daa3b17"
+  }
 }
