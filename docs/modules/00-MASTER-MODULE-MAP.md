@@ -1,6 +1,6 @@
 # CORE Master Module Map
 
-Status: `M02_COMPLETE_M03_IMPLEMENTATION_AUTHORIZATION_ARMED`
+Status: `M01_M02_M03_COMPLETE_M04_DISCOVERY_ACTIVE`
 
 ## Product boundary
 
@@ -88,5 +88,6 @@ The order may be refined by dependency evidence, but a later module must not sil
 ## Current progression
 - M01 Core Runtime & Lifecycle — COMPLETE / PROMOTED.
 - M02 Project / Workspace Adapter — COMPLETE / PROMOTED.
-- M03 Work Order Engine — ROUNDS 1-5 PLANNING PROMOTED / EXECUTION ADMISSION ARMED (CORE-M03-ADMIT-001) / EFFECTIVE ONLY AFTER CANONICAL-MAIN PROMOTION.
-- M04-M24 — discovery-only until their planning freezes.
+- M03 Work Order Engine — COMPLETE / PROMOTED.
+- M04 Run / Attempt / Step Engine — ROUND 1 DISCOVERY CANDIDATE / IMPLEMENTATION UNAUTHORIZED.
+- M05-M24 — discovery-only until their planning freezes.

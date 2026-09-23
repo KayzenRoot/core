@@ -15,4 +15,4 @@ CORE V0.0 - Modular Construction
 3 - M03 Complete / M04 Planning Gate
 
 ## NEXT STEP
-Independently review and promote CORE-M03-CLOSE-001; after promotion, begin M04 discovery/planning. Do not authorize M04 implementation before its own freeze and admission.
+Independently review/promote CORE-M04-DISC-001 Round 1; if approved, continue M04 Round 2. M04 implementation remains unauthorized.
