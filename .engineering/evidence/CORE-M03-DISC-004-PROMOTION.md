@@ -19,6 +19,7 @@ Post-audit Checkpoint Delta for the approved and merged M03 Round 4 planning bas
 - Round 3 finite time-budget/deadline taxonomy reconciled without reopening accepted semantics.
 
 ## Checkpoint Delta
+- CORE-D-162 records the promotion transition without rewriting the historical CORE-D-161 candidate-state decision.
 - M03 Rounds 1-4 are promoted planning truth.
 - Product implementation remains unauthorized.
 - Next legal action: M03 Round 5 final planning freeze.
