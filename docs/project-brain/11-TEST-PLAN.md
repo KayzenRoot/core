@@ -182,3 +182,51 @@ Later implementation evidence MUST include:
 - safe diagnostics secret canaries;
 - fuzz/property tests for canonicalizer, packet DAG, delta classifier, lineage/LPC and admission inputs;
 - benchmark scaling for sources/packets/edges/criteria/lineage/context/diffs.
+
+
+## M03 Round 4 planning and implementation validation
+
+Round 4 planning review checks the M03 contract, adapter and file/dependency map against the acceptance criteria. The planning review does not claim that future product tests or measurements have run.
+
+The future implementation evidence must map each blocking acceptance criterion to an exact evidence obligation. At minimum:
+
+| Area | Required exact-head proof |
+| --- | --- |
+| Contracts/schema | Public V1 envelope round-trip, unsupported schema/version/kind rejection, typed ID validation and no downgrade. |
+| Fingerprints | Golden vectors; semantic-versus-diagnostic field projection; equivalent permutations and map-order independence; stable WorkOrderId/revision behavior. |
+| Pure operations | Public API tests for parse, compile, validate, diff, classify, admission and handoff; replay-equivalent inputs yield equal semantic outputs. |
+| Source/adapters | Resolver outputs bind requested source identity to observed fingerprint, authority, freshness and provenance; substitution/staleness/UNKNOWN do not become current. |
+| M02 / Context Lock / GEF | Wrong schema, WorkspaceId/generation/basis/profile, lock fingerprint/base/source-set, governance verdict/head/scope/policy and replay fixtures all fail closed. |
+| Packet/scope | Permuted valid DAGs produce one order; cycle/dangling/budget failures are typed; deny precedence and child-scope intersection prevent widening. |
+| AEG/PCM | Missing blocking evidence, dangling edges and silent mandatory-source loss fail; reconstructed packet source sets equal independent requirements. |
+| Lineage/correction | Stale LPC and competing N+1 CAS behavior; semantic deltas require a new revision; same-revision changes stay inside CorrectionPolicy. |
+| Atomic resources | At-limit, over-limit and deadline cases return typed results; failure never returns partial FrozenWorkOrder, READY receipt or handoff. |
+| Security | Secret canaries, bounded diagnostics, no hidden I/O, no secret-bearing durable fields, schema downgrade, stale receipt and authority-changing retry attempts. |
+
+### M03 Round 4 property and fuzz targets
+
+The implementation must cover the law matrix in M03-WORK-ORDER-ENGINE.md using deterministic generated property cases in the standard Rust test harness. Round 4 adds no property-testing dependency. Required laws include canonical permutation/replay, schema/version rejection, packet DAG order/acyclicity, scope non-widening, AEG completeness, PCM reconstruction, lineage/LPC compare-and-set, semantic-diff/correction classes, source substitution/staleness, Context Lock and governance replay, admission non-evergreen behavior, finite resource failure, no partial output and diagnostic redaction.
+
+The existing separate fuzz package already uses libfuzzer-sys. Add bounded M03 fuzz targets for:
+
+1. arbitrary V1 envelope/parser/canonicalizer input;
+2. packet DAG identifiers and edge sets;
+3. scope rules and semantic/correction deltas;
+4. lineage snapshots and LPC preconditions;
+5. source fingerprints, authority/provenance and freshness states;
+6. workspace/lock/governance admission and receipt replay;
+7. hostile diagnostic fields and secret canaries.
+
+Fuzz targets operate only on in-memory bounded inputs, have no network/filesystem/process access, and fail on panic, hang, memory amplification, partial contract output or secret echo. Seeds are synthetic and contain no repository data.
+
+### M03 Round 4 benchmark and resource calibration
+
+No current M03 benchmark has run, so Round 4 reports no measured latency, memory or scale value. The later calibration gate varies source count and source bytes; packet count, DAG width/depth and edges; scope rules and semantic delta fields; criteria, evidence and AEG edges; shared context references and PCM reconstruction; lineage edges/revision diffs; admission source/workspace/lock/governance/policy inputs; and canonical output size.
+
+Use deterministic local synthetic fixtures and assert semantics for every candidate. Run on Windows and Ubuntu, warm once, collect at least five measured iterations per scenario, and report median/min/max, exact commands, source SHA, OS, toolchain, CPU and fixture generator/version. Exercise candidate limits and cap-plus-one failures for every security-sensitive dimension. Cold/warm/cache equivalence applies only if an optional derived compile memo is separately admitted; the baseline is uncached.
+
+Finite positive M03ResourceBudget defaults and any acceptance thresholds remain calibration-gated until implementation evidence exists. Unsupported scales are marked skipped/unsupported rather than extrapolated. Calibration failure, timeout, overflow or absent required scenario blocks production acceptance; no measurements or defaults may be invented in a planning document.
+
+### M03 V0.0 production evidence gates
+
+Production acceptance requires one exact final head with Windows and Ubuntu CI, contract/property/integration/adversarial/fuzz coverage, M03 calibration report, finite budget selection rationale, no-hidden-I/O and acyclic dependency proof, security/advisory/license/SBOM checks, deterministic serialization evidence, complete AEG-to-evidence traceability and independent exact-head review with no unresolved HIGH/CRITICAL finding. Any later commit invalidates the head-bound results and requires the applicable suite to rerun.

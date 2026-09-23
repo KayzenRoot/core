@@ -13,7 +13,7 @@ CORE V0.0 - Modular Construction
 Continue building CORE as the headless NexLabs action plane that operates standalone and synchronizes deeply with HIVE without duplicating HIVE-owned intelligence.
 
 ## IN PROGRESS
-- M03 Work Order Engine Rounds 1-3 are promoted into the discovery baseline; Round 4 planning is next.
+- M03 Work Order Engine Rounds 1-3 are promoted into the discovery baseline; Round 4 is a planning review candidate pending independent exact-head audit.
 - M04-M24 remain discovery-only until their planning freezes.
 
 ## COMPLETED
@@ -38,7 +38,8 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - CORE-GOV-002-C01 GitHub hardening independently reviewed (Review 001 / Issue #57) and promoted through PR #56; active ruleset `CORE main protection` id `23769853` protects `main` with no bypass actors and the seven-context strict CI gate.
 
 ## PENDING
-- Continue M03 Work Order Engine Rounds 4+ to freeze exact public Rust contracts, source-resolver/adaptor interfaces, final file/dependency map, property/fuzz/benchmark matrix, production DoD, Work Order and Context Lock.
+- Independently audit the M03 Round 4 planning candidate on its exact PR head; do not promote it or authorize implementation before the canonical review gate.
+- M03 implementation Work Order and Context Lock remain later gated artifacts and are not created or authorized by Round 4.
 - Deep-plan M04 through M24 in dependency order.
 - Freeze each module Requirements/Architecture/DoD/Work Order before implementation authorization.
 - Live local HIVE bootstrap evidence against current main.
@@ -48,7 +49,7 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - M03-M24 implementation remains gated by their respective planning freezes.
 
 ## NEXT STEP
-Continue M03 Round 4 deep planning with exact public Rust contracts, final file/dependency admission, external source-resolver/adaptor interfaces, property/fuzz laws, benchmark thresholds and production DoD direction. Do not authorize implementation.
+Run the independent exact-head review of the M03 Round 4 planning candidate against Scope, Architecture, Requirements, Security, Test Plan, DoD and the Round 4 acceptance criteria. Keep M03 implementation unauthorized until the canonical review/promotion gate.
 
 ## EVIDENCE
 - `docs/engineering/CORE-MODULAR-DELIVERY-MODEL.md`
@@ -94,6 +95,7 @@ Continue M03 Round 4 deep planning with exact public Rust contracts, final file/
 - M02 closeout workflow #113 `35552201325` — Governance, M01 Ubuntu/Windows/fuzz, M02 Ubuntu/Windows/fuzz SUCCESS
 - M02 closeout promotion merge `039dd7bf93d637971c486f3ee783988cbee3c7cf`
 - CORE-GOV-002-C01 Evidence Bundle: `.engineering/evidence/CORE-GOV-002-C01-GITHUB-HARDENING.md`
+- CORE-M03-DISC-004 Round 4 planning evidence bundle: `.engineering/evidence/CORE-M03-DISC-004.md` (candidate only; exact PR head and CI are recorded by the review handoff).
 
 ## M02 completion record
 Frozen Work Order: `CORE-WO-M02-001`
@@ -416,3 +418,13 @@ Result: M03 Round 3 accepted into discovery baseline. Implementation remains una
 - Exact-head workflow: #136 / run `35611719471` — 7/7 required contexts SUCCESS
 - Promotion merge: `67e496cf7b3e887839138eab0d60370ebb970d0d`
 - State: ENFORCED_PROMOTED; M03 implementation authority unchanged
+
+
+## M03 Round 4 planning review candidate - NOT PROMOTED
+
+- Increment: CORE-M03-DISC-004
+- Planning base: 9773d84bee119db8f964feb64ed06a2acd4456c8
+- Branch: planning/m03-round-4-contracts-validation
+- Candidate state: planning surfaces frozen on the PR branch; independent exact-head audit pending.
+- Scope: public V1 contracts, external evidence adapters, file/dependency map, property/fuzz/benchmark policy, security and production DoD direction.
+- Authority: no M03 product implementation, merge, checkpoint promotion or release is authorized by this candidate.

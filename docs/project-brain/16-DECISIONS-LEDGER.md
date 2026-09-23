@@ -620,3 +620,53 @@ Status: `ACTIVE`
 ## CORE-D-149 - GitHub main protection is enforced by an active no-bypass ruleset
 **Decision:** CORE `main` uses the active repository ruleset `CORE main protection` (id `23769853`) to require pull-request entry, block deletion/non-fast-forward updates, require resolved review threads and enforce the current strict seven-context CI gate with no bypass actor. GitHub-native approving-review count remains zero for solo-maintainer compatibility; the independent GEF exact-head audit verdict and no-HIGH/CRITICAL promotion rule remain separate mandatory process gates, and auto-merge may be armed only after that governed verdict permits promotion.
 **State:** ACCEPTED
+
+
+## CORE-D-150 - M03 V0.0 public contracts are frozen as versioned V1 types
+**Decision:** the public M03 schema identifier is nexlabs.core.work-order version 1. Durable request, frozen, admission and handoff payloads use a closed kind envelope and distinct typed IDs/revisions/fingerprints. Unsupported or ambiguous versions fail typed.
+**State:** ACCEPTED FOR ROUND 4 PLANNING; independent audit/promotion pending; implementation remains unauthorized.
+
+## CORE-D-151 - Semantic identity is an explicit canonical projection
+**Decision:** WorkOrderFingerprint covers only explicitly enumerated immutable semantic fields. Diagnostics, timestamps, transport/rendering state and future runtime/evidence data remain outside the frozen semantic projection. Unordered collections are explicitly sorted before reusing core-identity canonical_bytes/fingerprint.
+**State:** ACCEPTED FOR ROUND 4 PLANNING; independent audit/promotion pending; implementation remains unauthorized.
+
+## CORE-D-152 - M03 services consume resolved evidence and perform no hidden I/O
+**Decision:** parse/compile/validate/diff/correction/admission/handoff are synchronous pure operations over explicit bounded values and budgets. Caller-owned resolvers run outside the core; the M03 functions never call adapters, refresh, retry, persist or access ambient state.
+**State:** ACCEPTED FOR ROUND 4 PLANNING; independent audit/promotion pending; implementation remains unauthorized.
+
+## CORE-D-153 - M02 proof crosses a narrow value-only adapter boundary
+**Decision:** M03 binds versioned M02 workspace/basis identity, generation, fingerprint, required BVM profile/components and provenance through a bounded M03 evidence DTO. M03 does not duplicate M02 truth or directly depend on core-workspace; external host code maps the public M02 evidence into the DTO.
+**Rationale:** base cargo metadata shows core-workspace enables Tokio filesystem/network/process features for M02 services, which are unnecessary in the compiler dependency closure.
+**State:** ACCEPTED FOR ROUND 4 PLANNING; independent audit/promotion pending; implementation remains unauthorized.
+
+## CORE-D-154 - Context Lock and governance evidence remain externally verified
+**Decision:** M03 consumes versioned Context Lock evidence and externally verified governance proof bound to WorkOrderId/revision/fingerprint, source/base/head, scope and policy generation. M03 checks compatibility but never mints approval or implementation authority.
+**State:** ACCEPTED FOR ROUND 4 PLANNING; independent audit/promotion pending; implementation remains unauthorized.
+
+## CORE-D-155 - M03 V0.0 remains one crate with a minimal direct dependency set
+**Decision:** one core-work-order crate contains contracts, identity, canonicalization, source/evidence DTOs, pure services, budgets and errors. Direct dependencies are core-identity plus existing serde, serde_json and thiserror. core-workspace/core-config/core-contracts/sha2 are not direct M03 dependencies; the optional M02 adapter is outside the crate. No direct Tokio, process/network, Git/HIVE/GitHub, database, cache, graph or regex dependency is admitted.
+**State:** ACCEPTED FOR ROUND 4 PLANNING; independent audit/promotion pending; implementation remains unauthorized.
+
+## CORE-D-156 - M03 errors are typed and retries remain caller-owned
+**Decision:** closed error categories/codes cover schema, source/provenance, scope, packet graph, acceptance/evidence, lineage, admission/staleness, resources and internal invariants. Retryability names only an explicit caller action and never authorizes hidden refresh or retry.
+**State:** ACCEPTED FOR ROUND 4 PLANNING; independent audit/promotion pending; implementation remains unauthorized.
+
+## CORE-D-157 - Resource limits are finite and calibration-gated
+**Decision:** all security-sensitive M03 resource dimensions must have finite positive values before production acceptance. Round 4 freezes dimensions, fixtures, measurement protocol and fail-closed selection rules; it assigns no numeric defaults or measured performance claims.
+**State:** ACCEPTED FOR ROUND 4 PLANNING; independent audit/promotion pending; implementation remains unauthorized.
+
+## CORE-D-158 - M03 property and fuzz laws are explicit V0.0 obligations
+**Decision:** deterministic property laws cover canonical replay/permutations, packet DAGs, scope, AEG/PCM, lineage/LPC, correction classes, provenance, admission freshness/replay, atomic resource failure and diagnostic redaction. Fuzzing reuses the existing libfuzzer-sys package with bounded targets; Round 4 adds no property-testing dependency.
+**State:** ACCEPTED FOR ROUND 4 PLANNING; independent audit/promotion pending; implementation remains unauthorized.
+
+## CORE-D-159 - M03 benchmarks use reproducible synthetic calibration
+**Decision:** source/packet/edge/criteria/evidence/context/diff/admission scaling is measured on Windows and Ubuntu using local deterministic fixtures and the existing built-in bench harness. Cache comparisons apply only if a cache is separately admitted. Unsupported scales are reported, never extrapolated.
+**State:** ACCEPTED FOR ROUND 4 PLANNING; independent audit/promotion pending; implementation remains unauthorized.
+
+## CORE-D-160 - M03 production DoD is exact-head and evidence-traceable
+**Decision:** completion requires versioned contracts, deterministic serialization, property/fuzz/security/resource/supply-chain and cross-platform evidence, no-hidden-I/O/dependency proof, complete AEG evidence and independent exact-head review with no unresolved HIGH/CRITICAL finding.
+**State:** ACCEPTED FOR ROUND 4 PLANNING; independent audit/promotion pending; implementation remains unauthorized.
+
+## CORE-D-161 - Round 4 checkpoint status remains unpromoted
+**Decision:** this branch records Round 4 as a planning review candidate only. M03 implementation, checkpoint promotion, merge, release and the next planning increment remain unauthorized until the independent exact-head review and canonical governance gate permit progression.
+**State:** ACCEPTED FOR ROUND 4 PLANNING; independent audit/promotion pending; implementation remains unauthorized.

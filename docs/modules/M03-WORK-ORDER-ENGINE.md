@@ -1,6 +1,6 @@
 # M03 - Work Order Engine
 
-Status: `DISCOVERY_IN_PROGRESS`
+Status: `ROUND_4_REVIEW_CANDIDATE / IMPLEMENTATION_UNAUTHORIZED`
 
 ## Mission
 
@@ -1695,3 +1695,550 @@ Round 3 is complete when:
 - one-crate/dependency direction is recorded;
 - PCM and DCR are recorded;
 - implementation remains unauthorized.
+
+
+## Round 4 - public contracts, adapters and validation freeze
+
+Status: PLANNING REVIEW CANDIDATE. Rounds 1-3 remain accepted. This section does not authorize M03 implementation.
+
+### Round 4 preservation rules
+
+Round 4 preserves the compiler/admission boundary, immutable revisions, zero-LLM semantics, M02 ownership, no hidden I/O, external lineage/LPC, HIVE's advisory role, the bounded packet DAG, complete AEG, non-evergreen admission and CORE-D-132 reviewer-first correction policy. It freezes the public and validation surfaces only. There is no source code, dependency, lockfile, runtime, registry or persistence change in this planning round.
+
+The exact names and field ownership below are normative for the later M03 V0.0 implementation Work Order. The types are contracts, not a claim that those Rust files or functions already exist.
+
+### Public Rust schema and identity
+
+Every public durable payload is wrapped with the exact schema identifier nexlabs.core.work-order, version 1, and a closed kind enum. Unknown schema, version, kind, enum value or required field is a typed error; no downgrade or best-effort reinterpretation is allowed.
+
+~~~rust
+pub const M03_SCHEMA: &str = "nexlabs.core.work-order";
+pub const M03_VERSION: u16 = 1;
+
+pub struct WorkOrderEnvelope<T> {
+    pub schema: String,
+    pub version: u16,
+    pub kind: WorkOrderContractKindV1,
+    pub payload: T,
+}
+
+pub struct WorkOrderId(String);
+pub struct WorkOrderRevision(u32);
+pub struct WorkOrderFingerprint(String); // lowercase SHA-256 hex from core-identity
+pub struct WorkOrderCompilationId(String); // lowercase SHA-256 hex from core-identity
+pub struct EvidenceFingerprintV1(String); // lowercase SHA-256 hex from core-identity
+pub struct SourceRefId(String);
+pub struct WorkPacketId(String);
+pub struct AcceptanceCriterionId(String);
+pub struct EvidenceRequirementId(String);
+pub struct ContextRefId(String);
+pub struct GovernanceProofId(String);
+pub struct LineageEdgeId(String);
+
+pub struct WorkOrderLogicalKeyV1 {
+    pub project_namespace: String,
+    pub module_namespace: String,
+    pub stable_key: String,
+}
+
+pub struct WorkOrderRequestV1 {
+    pub requested_work_order_id: Option<WorkOrderId>,
+    pub logical_key: Option<WorkOrderLogicalKeyV1>,
+    pub objective: String,
+    pub sources: Vec<CanonicalSourceRefV1>,
+    pub workspace: WorkspaceRequirementV1,
+    pub context_lock: ContextLockRequirementV1,
+    pub governance: GovernanceRequirementV1,
+    pub scope: ScopeEnvelopeV1,
+    pub packets: Vec<WorkPacketSpecV1>,
+    pub acceptance: AcceptanceEvidenceGraphV1,
+    pub context_budget: ContextBudgetEnvelopeV1,
+    pub correction_policy: CorrectionPolicyV1,
+    pub stop_condition: StopConditionV1,
+    pub risk_assurance: RiskAssuranceProfileV1,
+    pub parent: Option<WorkOrderRevisionRefV1>,
+}
+
+pub struct FrozenWorkOrderV1 {
+    work_order_id: WorkOrderId,
+    revision: WorkOrderRevision,
+    fingerprint: WorkOrderFingerprint,
+    compilation_id: WorkOrderCompilationId,
+    semantic: WorkOrderSemanticV1,
+    source_manifest: Vec<CanonicalSourceRefV1>,
+    workspace_requirement: WorkspaceRequirementV1,
+    context_lock_requirement: ContextLockRequirementV1,
+    governance_requirement: GovernanceRequirementV1,
+    lineage: WorkOrderLineageRefV1,
+}
+
+pub struct WorkOrderCompilationV1 {
+    frozen: FrozenWorkOrderV1,
+    receipt: DeterministicCompilationReceiptV1,
+    lineage_precondition: Option<LineagePreconditionCapsuleV1>,
+    diagnostics: Vec<DiagnosticV1>,
+}
+~~~
+
+The supporting envelope and resolved-evidence DTO shapes are also frozen:
+
+~~~rust
+pub enum WorkOrderContractKindV1 {
+    Request,
+    Frozen,
+    AdmissionRequest,
+    AdmissionReceipt,
+    AdmittedHandoff,
+}
+
+pub struct CompilationContextV1 {
+    pub compiler_contract_version: u16,
+    pub algorithm_version: String,
+    pub policy_generation: u64,
+    pub security_generation: u64,
+    pub config_generation: u64,
+    pub sources: SourceResolutionBatchV1,
+    pub lineage: LineageSnapshotV1,
+    pub hive_context_refs: Vec<HiveContextRefV1>,
+}
+
+pub struct SourceResolutionBatchV1 {
+    pub resolver_schema: String,
+    pub resolver_version: u16,
+    pub entries: Vec<SourceResolutionEvidenceV1>,
+    pub batch_fingerprint: EvidenceFingerprintV1,
+}
+
+pub struct WorkspaceAdmissionEvidenceV1 {
+    pub m02_schema: String,
+    pub m02_version: u16,
+    pub project_binding_id: Option<String>,
+    pub workspace_id: String,
+    pub runtime_epoch: u64,
+    pub generation: u64,
+    pub basis_fingerprint: EvidenceFingerprintV1,
+    pub required_profile: WorkspaceFreshnessProfileV1,
+    pub satisfied_components: Vec<String>,
+    pub compatibility: BasisCompatibilityV1,
+    pub freshness: EvidenceFreshnessV1,
+    pub provenance_fingerprint: EvidenceFingerprintV1,
+    pub proof_fingerprint: EvidenceFingerprintV1,
+}
+
+pub struct ContextLockEvidenceV1 {
+    pub schema: String,
+    pub version: u16,
+    pub lock_fingerprint: EvidenceFingerprintV1,
+    pub work_order_id: WorkOrderId,
+    pub revision: WorkOrderRevision,
+    pub work_order_fingerprint: WorkOrderFingerprint,
+    pub authorized_base_fingerprint: EvidenceFingerprintV1,
+    pub source_set_fingerprint: EvidenceFingerprintV1,
+    pub implementation_authorized: bool,
+    pub freshness: EvidenceFreshnessV1,
+    pub verifier_provenance: EvidenceFingerprintV1,
+    pub proof_fingerprint: EvidenceFingerprintV1,
+}
+
+pub struct VerifiedGovernanceProofV1 {
+    pub schema: String,
+    pub version: u16,
+    pub proof_id: GovernanceProofId,
+    pub project_repository_fingerprint: EvidenceFingerprintV1,
+    pub work_order_id: WorkOrderId,
+    pub revision: WorkOrderRevision,
+    pub work_order_fingerprint: WorkOrderFingerprint,
+    pub exact_base: String,
+    pub exact_head: Option<String>,
+    pub verdict: ExternalGovernanceVerdictV1,
+    pub authorized_scope_fingerprint: EvidenceFingerprintV1,
+    pub policy_generation: u64,
+    pub freshness: EvidenceFreshnessV1,
+    pub verifier_provenance: EvidenceFingerprintV1,
+    pub proof_fingerprint: EvidenceFingerprintV1,
+}
+
+pub struct WorkOrderAdmissionRequestV1 {
+    pub work_order_id: WorkOrderId,
+    pub revision: WorkOrderRevision,
+    pub work_order_fingerprint: WorkOrderFingerprint,
+    pub requested_mode: AdmissionModeV1,
+    pub sources: SourceResolutionBatchV1,
+    pub workspace: WorkspaceAdmissionEvidenceV1,
+    pub context_lock: Option<ContextLockEvidenceV1>,
+    pub governance: Option<VerifiedGovernanceProofV1>,
+    pub policy_generation: u64,
+    pub security_generation: u64,
+    pub config_generation: u64,
+}
+
+pub enum WorkOrderAdmissionStatusV1 {
+    Ready,
+    Rejected,
+    Stale,
+    Blocked,
+    Superseded,
+}
+
+pub struct HiveContextRefV1 {
+    pub context_id: ContextRefId,
+    pub hive_project_id: String,
+    pub content_fingerprint: EvidenceFingerprintV1,
+    pub snapshot_id: String,
+    pub freshness: EvidenceFreshnessV1,
+    pub provenance_fingerprint: EvidenceFingerprintV1,
+    pub advisory_only: bool, // must be true
+}
+
+pub struct M03ResourceBudgetV1 {
+    pub max_request_bytes: u64,
+    pub max_frozen_bytes: u64,
+    pub max_string_bytes: u64,
+    pub max_source_refs: u64,
+    pub max_packets: u64,
+    pub max_packet_edges: u64,
+    pub max_scope_rules: u64,
+    pub max_criteria: u64,
+    pub max_evidence_requirements: u64,
+    pub max_acceptance_evidence_edges: u64,
+    pub max_lineage_edges: u64,
+    pub max_context_refs: u64,
+    pub max_correction_rules: u64,
+    pub max_diff_entries: u64,
+    pub max_diagnostic_entries: u64,
+    pub max_parse_depth: u32,
+    pub compile_deadline_ms: u64,
+    pub validate_deadline_ms: u64,
+    pub diff_deadline_ms: u64,
+    pub admission_deadline_ms: u64,
+    pub calibration_state: ResourceCalibrationStateV1,
+}
+
+pub struct WorkOrderErrorV1 {
+    pub category: WorkOrderErrorCategoryV1,
+    pub code: WorkOrderErrorCodeV1,
+    pub retryability: RetryabilityV1,
+    pub subjects: Vec<SafeSubjectRefV1>,
+    pub diagnostics: Vec<DiagnosticV1>,
+}
+
+pub struct WorkOrderAdmissionReceiptV1 {
+    work_order_id: WorkOrderId,
+    revision: WorkOrderRevision,
+    work_order_fingerprint: WorkOrderFingerprint,
+    compilation_id: WorkOrderCompilationId,
+    status: WorkOrderAdmissionStatusV1,
+    source_batch_fingerprint: EvidenceFingerprintV1,
+    workspace_id: String,
+    workspace_generation: u64,
+    workspace_basis_fingerprint: EvidenceFingerprintV1,
+    context_lock_fingerprint: Option<EvidenceFingerprintV1>,
+    governance_proof_fingerprint: Option<EvidenceFingerprintV1>,
+    policy_generation: u64,
+    security_generation: u64,
+    config_generation: u64,
+    reason_codes: Vec<WorkOrderErrorCodeV1>,
+    receipt_fingerprint: EvidenceFingerprintV1,
+}
+
+pub struct AdmittedWorkOrderV1 {
+    work_order_id: WorkOrderId,
+    revision: WorkOrderRevision,
+    work_order_fingerprint: WorkOrderFingerprint,
+    compilation_id: WorkOrderCompilationId,
+    admission_receipt_fingerprint: EvidenceFingerprintV1,
+    packet_dag: WorkPacketDagV1,
+    scope: ScopeEnvelopeV1,
+    acceptance_criterion_ids: Vec<AcceptanceCriterionId>,
+    evidence_requirement_ids: Vec<EvidenceRequirementId>,
+    context_plan: PacketContextPlanV1,
+    stop_condition: StopConditionV1,
+}
+~~~
+
+Additional enum domains are closed V1 types: WorkspaceFreshnessProfileV1 mirrors only the named M02 BVM profiles; BasisCompatibilityV1 is EXACT_MATCH/COMPATIBLE_REFRESH/INCOMPATIBLE/UNKNOWN; EvidenceFreshnessV1 is CURRENT/STALE/UNKNOWN/SUBSTITUTED; ExternalGovernanceVerdictV1 is an externally verified accepted/rejected/blocked result; AdmissionModeV1 is the requested policy class; ResourceCalibrationStateV1 is UNCALIBRATED/CALIBRATED; EvidenceFingerprintV1 is a validated lowercase 64-character digest; and SafeSubjectRefV1 contains a typed subject kind plus a bounded safe ID/fingerprint. Every ID/fingerprint wrapper uses `#[serde(transparent)]`; all public contract structs/enums derive Serialize/Deserialize, closed enums serialize in snake_case, and required contract fields have no silent defaults.
+
+M03ResourceBudgetV1 has no Default implementation and every value must be finite and positive. Deadline fields are execution guards only: they are excluded from semantic identity, cannot mint a partial result, and are recorded as typed RESOURCE errors when exhausted. Under-budget identical inputs have identical semantic outputs; deadline variation cannot change an output that was returned successfully.
+
+All ID and fingerprint wrappers are distinct Rust types with private validated constructors and stable serialized string representations. FrozenWorkOrderV1, WorkOrderAdmissionReceiptV1 and AdmittedWorkOrderV1 have private fields and read-only accessors, with no in-place mutation API. IDs are non-empty, bounded, domain-separated values. Revision is a positive u32 and advances by exactly one for a newly canonical semantic revision. Fingerprints are validated lowercase 64-character SHA-256 hex strings. WorkOrderId is caller supplied or derived deterministically from WorkOrderLogicalKeyV1 through core-identity; M03 never uses random UUIDs, clocks, branch names, cwd, map iteration or host identity to mint IDs.
+
+The remaining durable V1 contracts have these exact public fields and meanings:
+
+- WorkOrderSemanticV1: objective, explicit scope, packet DAG, acceptance/evidence graph, context budget, correction policy, stop condition and risk/assurance profile.
+- CanonicalSourceRefV1: source_id, source_class, authority_domain, locator_kind, explicit locator, expected semantic fingerprint, required_for_compile, required_for_admission, required_packet_ids, freshness_policy, provenance_class, secret_classification and expansion_policy.
+- SourceResolutionEvidenceV1: source_id, requested_fingerprint, observed_fingerprint, authority_domain, source_revision, resolver_schema/version, freshness_state, provenance_fingerprint and evidence_fingerprint. It carries references and fingerprints only; raw source bytes and credentials are not durable payloads.
+- WorkspaceRequirementV1: expected workspace/project-binding identity constraints, required M02 BVM profile, required basis components, compatibility policy, standalone/HIVE assurance requirement, dirty/untracked policy and required M02 schema/version.
+- ContextLockRequirementV1: required lock schema/version, work-order binding, authorized base constraint, canonical source-set fingerprint, implementation-authorized requirement and staleness policy.
+- GovernanceRequirementV1: required external verdict class, exact work-order/base/head/scope binding, policy generation and freshness requirement. It cannot encode self-approval.
+- ScopeEnvelopeV1: allow and deny sets for modules, crates/packages, path prefixes and artifact classes; source/documentation/evidence/generated-artifact policies; dependency policy; correction classes; maximum scope class. Deny wins, ambiguity blocks, and each packet receives only the intersection with this envelope.
+- WorkPacketSpecV1: packet_id, objective, prerequisite_packet_ids, required_source_ids, workspace freshness profile, packet scope, criterion IDs, evidence IDs, context budget and packet stop condition. WorkPacketDagV1 contains the packet records and deterministic topological_order.
+- AcceptanceEvidenceGraphV1: criteria, evidence requirements and explicit criterion-to-evidence edges. A blocking criterion has one or more required evidence edges unless deterministic N/A applies; dangling and unexplained orphan nodes fail validation.
+- ContextBudgetEnvelopeV1: finite per-manifest/per-packet inline and expansion dimensions, mandatory-source set, expansion policy and allowed expansion reasons. It never weakens obligations or silently truncates a mandatory source.
+- CorrectionPolicyV1 and ExecutionCorrectionProposalV1: explicit same-revision change classes and the proposed path/artifact/dependency/acceptance/stop-condition delta. WorkOrderRevisionDiffV1 separately classifies changes to frozen semantic fields.
+- LineageSnapshotV1: work_order_id, optional current revision/fingerprint, store_generation, bounded superseded revision/fingerprint references, bounded lineage edges and snapshot/provenance fingerprints.
+- LineagePreconditionCapsuleV1: work_order_id, expected parent revision/fingerprint, expected store_generation, proposed revision/fingerprint and precondition_fingerprint. It is an external compare-and-set input, not a persistence command.
+- DeterministicCompilationReceiptV1: request, context, compiler contract/algorithm, policy/config/security generations, lineage-precondition and output fingerprints. Diagnostics are bounded and outside the frozen semantic projection.
+- WorkOrderAdmissionRequestV1: work_order_id/revision/fingerprint, requested admission mode, resolved source evidence, M02 workspace evidence, Context Lock evidence, external governance proof and current policy/security/config generations.
+- WorkOrderAdmissionReceiptV1: exact work-order identity, compilation_id, status, source verification fingerprint, M02 workspace/generation/basis fingerprint, Context Lock fingerprint, governance proof fingerprint, policy generations, reason codes and receipt fingerprint. It is immutable evidence of one evaluation.
+- AdmittedWorkOrderV1: frozen Work Order reference/fingerprint, exact READY receipt reference/fingerprint, packet DAG, scope, acceptance/evidence IDs, context plan and stop condition. It contains no Run/Attempt/Step state.
+- DiagnosticV1: bounded diagnostic code, severity, safe subject IDs/fingerprints and optional redaction class. Raw prompt/source text, credentials, secret-bearing provider payloads and unbounded OS/process messages are forbidden.
+
+Enums are closed, versioned and serialized in snake_case. The minimum enum domains are: admission status READY/REJECTED/STALE/BLOCKED/SUPERSEDED; evidence freshness CURRENT/STALE/UNKNOWN/SUBSTITUTED; basis compatibility EXACT_MATCH/COMPATIBLE_REFRESH/INCOMPATIBLE/UNKNOWN; scope effect ALLOW/DENY; delta class values from the Round 2 semantic delta model; and the error/retryability domains below. Unrecognized values fail closed.
+
+### Semantic projection and canonical identity
+
+WorkOrderFingerprint covers only the versioned semantic projection: envelope schema/version/kind; WorkOrderId and revision; compiler contract generation; objective; source identities, expected fingerprints, authority/provenance/freshness and expansion obligations; workspace, Context Lock and governance requirements; allow/deny and dependency policy; risk/assurance; packet nodes/edges/scopes; acceptance/evidence nodes/edges; context limits/mandatory references; correction policy; stop condition; and semantic lineage parent.
+
+WorkOrderFingerprint excludes mutable diagnostics, timestamps, wall durations, UI/rendering order, transport IDs, PR URLs, raw context bodies, actual future evidence artifacts, and all M04 runtime identities. Diagnostic and transport data do not live inside FrozenWorkOrderV1. WorkOrderCompilationId additionally binds the WorkOrderFingerprint to compiler schema/algorithm, relevant policy/config/security generations and resolved compilation-context fingerprint. AdmissionReceipt fingerprint separately binds current freshness and authority evidence.
+
+All unordered collections are explicitly sorted by their typed stable key before calling core-identity canonical_bytes/fingerprint. core-identity sorts JSON object keys but preserves array order; M03 must therefore sort source, packet, edge, criterion, evidence, policy and lineage collections itself. Canonical semantic bytes are independent of pretty-print formatting. Equivalent semantic permutations yield identical bytes/fingerprints; diagnostic-only differences leave WorkOrderFingerprint unchanged.
+
+### Pure service API
+
+The later crate exports these synchronous functions. They receive all evidence and budgets explicitly, have no global/config/cwd state and return no partially frozen or READY object on error.
+
+~~~rust
+pub fn parse_request(
+    input: &[u8],
+    budget: &M03ResourceBudgetV1,
+) -> Result<WorkOrderEnvelope<WorkOrderRequestV1>, WorkOrderErrorV1>;
+
+pub fn compile(
+    request: &WorkOrderRequestV1,
+    context: &CompilationContextV1,
+    budget: &M03ResourceBudgetV1,
+) -> Result<WorkOrderCompilationV1, WorkOrderErrorV1>;
+
+pub fn validate_frozen(
+    frozen: &FrozenWorkOrderV1,
+    budget: &M03ResourceBudgetV1,
+) -> Result<WorkOrderValidationReceiptV1, WorkOrderErrorV1>;
+
+pub fn diff_revision(
+    before: &FrozenWorkOrderV1,
+    after: &FrozenWorkOrderV1,
+    budget: &M03ResourceBudgetV1,
+) -> Result<WorkOrderRevisionDiffV1, WorkOrderErrorV1>;
+
+pub fn classify_correction(
+    frozen: &FrozenWorkOrderV1,
+    proposal: &ExecutionCorrectionProposalV1,
+    budget: &M03ResourceBudgetV1,
+) -> Result<CorrectionClassificationReceiptV1, WorkOrderErrorV1>;
+
+pub fn evaluate_admission(
+    frozen: &FrozenWorkOrderV1,
+    request: &WorkOrderAdmissionRequestV1,
+    budget: &M03ResourceBudgetV1,
+) -> Result<WorkOrderAdmissionReceiptV1, WorkOrderErrorV1>;
+
+pub fn materialize_handoff(
+    frozen: &FrozenWorkOrderV1,
+    receipt: &WorkOrderAdmissionReceiptV1,
+    budget: &M03ResourceBudgetV1,
+) -> Result<AdmittedWorkOrderV1, WorkOrderErrorV1>;
+
+pub fn canonical_semantic_bytes(
+    frozen: &FrozenWorkOrderV1,
+) -> Result<Vec<u8>, WorkOrderErrorV1>;
+~~~
+
+CompilationContextV1 contains compiler_contract_version, algorithm_version, policy_generation, security_generation, config_generation, SourceResolutionBatchV1, authoritative LineageSnapshotV1 and optional HiveContextRefV1 values already resolved by a caller. It does not contain resolver objects or filesystem/network handles. evaluate_admission consumes already-resolved proof snapshots. materialize_handoff accepts only the exact matching READY immutable receipt. No service performs path reads, Git, HIVE, GitHub, network, process execution, refresh, retry, storage, commit, push or checkpoint update.
+
+### External resolver and evidence adapter seams
+
+The following caller-implemented traits define the external boundary. Their implementation may perform its separately authorized resolution work. M03 service functions never accept or invoke these traits; an outer host calls adapters first and passes bounded evidence DTOs to the pure functions.
+
+~~~rust
+pub trait CanonicalSourceResolverV1 {
+    fn resolve(
+        &self,
+        refs: &[CanonicalSourceRefV1],
+        budget: &AdapterBudgetV1,
+    ) -> Result<SourceResolutionBatchV1, AdapterFailureV1>;
+}
+
+pub trait M02WorkspaceEvidenceResolverV1 {
+    fn resolve(
+        &self,
+        requirement: &WorkspaceRequirementV1,
+        request: &WorkspaceEvidenceRequestV1,
+    ) -> Result<WorkspaceAdmissionEvidenceV1, AdapterFailureV1>;
+}
+
+pub trait ContextLockEvidenceResolverV1 {
+    fn resolve(
+        &self,
+        requirement: &ContextLockRequirementV1,
+        identity: &WorkOrderIdentityRefV1,
+    ) -> Result<ContextLockEvidenceV1, AdapterFailureV1>;
+}
+
+pub trait GovernanceProofResolverV1 {
+    fn resolve(
+        &self,
+        requirement: &GovernanceRequirementV1,
+        identity: &WorkOrderIdentityRefV1,
+        target: &ExactBaseHeadV1,
+    ) -> Result<VerifiedGovernanceProofV1, AdapterFailureV1>;
+}
+
+pub trait HiveContextResolverV1 {
+    fn resolve(
+        &self,
+        request: &HiveContextRequestV1,
+        budget: &AdapterBudgetV1,
+    ) -> Result<Vec<HiveContextRefV1>, AdapterFailureV1>;
+}
+
+pub trait ExternalLineageStoreV1 {
+    fn snapshot(
+        &self,
+        work_order_id: &WorkOrderId,
+    ) -> Result<LineageSnapshotV1, AdapterFailureV1>;
+
+    fn compare_and_set(
+        &self,
+        capsule: &LineagePreconditionCapsuleV1,
+    ) -> Result<LineageCasResultV1, AdapterFailureV1>;
+}
+~~~
+
+WorkspaceAdmissionEvidenceV1 is a narrow value snapshot, not a second workspace model: it carries producer schema/version, ProjectBindingId and WorkspaceId values, M02 generation, basis fingerprint, required BVM profile and satisfied component references, compatibility/freshness state, provenance fingerprint and proof fingerprint. The external adapter maps the current M02 public evidence into this DTO. It does not copy paths, repository inventories, live handles or Git output. Wrong schema/version, missing required basis components, mismatch, replay or UNKNOWN blocks admission.
+
+ContextLockEvidenceV1 carries lock schema/version/fingerprint, WorkOrderId/revision/fingerprint binding, authorized base/source-set fingerprints, implementation_authorized, status/freshness, verifier provenance and proof fingerprint. VerifiedGovernanceProofV1 carries project/repository identity, WorkOrderId/revision/fingerprint, exact base/head, external verdict, authorized scope fingerprint, policy generation, status/freshness, proof fingerprint and external verifier provenance. Only the external governance adapter verifies authority; M03 checks compatibility and cannot mint approval.
+
+HiveContextRefV1 carries only HIVE project/context identity, content fingerprint, retrieval snapshot/provenance reference, freshness and an explicit advisory-only marker. It has no canonical authority and cannot override Git or M02 evidence. If optional HIVE lookup is unavailable, the adapter reports that state; it cannot fabricate a reference or change Work Order semantics.
+
+Adapter errors use bounded codes and safe evidence references only. Adapter traits accept explicit identities/requirements and finite AdapterBudgetV1; ambient cwd, global clients, credentials and raw secret payloads are not part of M03 contracts.
+
+### Typed errors and explicit retryability
+
+WorkOrderErrorV1 contains category, code, retryability, bounded safe subject references and bounded diagnostics. Categories and required reason-code families are:
+
+- SCHEMA_VERSION: UNSUPPORTED_SCHEMA, UNSUPPORTED_VERSION, INVALID_KIND, INVALID_ENVELOPE.
+- SOURCE_PROVENANCE: SOURCE_MISSING, SOURCE_STALE, SOURCE_SUBSTITUTED, SOURCE_AUTHORITY_MISMATCH, SOURCE_EVIDENCE_UNKNOWN.
+- SCOPE_DELTA: AMBIGUOUS_SCOPE, DENY_OVERRIDES_ALLOW, PACKET_SCOPE_WIDENING, FORBIDDEN_DELTA, DEPENDENCY_ADMISSION_REQUIRED.
+- PACKET_GRAPH: DUPLICATE_ID, DANGLING_REFERENCE, CYCLE, GRAPH_LIMIT_EXCEEDED, NONDETERMINISTIC_ORDER.
+- ACCEPTANCE_EVIDENCE: ACCEPTANCE_GAP, EVIDENCE_GAP, UNEXPLAINED_ORPHAN.
+- LINEAGE: SNAPSHOT_STALE, REVISION_NOT_NEXT, SUPERSEDED_REVISION, LINEAGE_CONFLICT, LPC_MISMATCH.
+- ADMISSION_STALENESS: WORKSPACE_MISMATCH, BASIS_INCOMPATIBLE, CONTEXT_LOCK_STALE, GOVERNANCE_PROOF_MISSING, GOVERNANCE_PROOF_MISMATCH, POLICY_STALE, RECEIPT_REPLAY, UNKNOWN_NOT_ADMISSIBLE.
+- RESOURCE: REQUEST_TOO_LARGE, SERIALIZED_SIZE_EXCEEDED, CARDINALITY_LIMIT_EXCEEDED, GRAPH_LIMIT_EXCEEDED, CONTEXT_LIMIT_EXCEEDED, DEADLINE_EXCEEDED.
+- INTERNAL_INVARIANT: NONDETERMINISTIC_COMPILATION, FINGERPRINT_MISMATCH, PARTIAL_OUTPUT_FORBIDDEN, INTERNAL_INVARIANT_VIOLATION.
+
+Retryability values are NEVER, AFTER_EXPLICIT_REFRESH, AFTER_GOVERNANCE, AFTER_RESOURCE_CHANGE and INTERNAL_BUG. The value describes a caller action only. M03 never performs the refresh, governance change, resource change or retry. A failed check that might change authority cannot be hidden behind a retry.
+
+### Frozen M03 V0.0 file and dependency map
+
+M03 is one focused crate. The following is the implementation map, not files created by Round 4.
+
+| Future path | Responsibility |
+| --- | --- |
+| Cargo.toml | Add crates/core-work-order as one root workspace member; preserve lockfile discipline. |
+| Cargo.lock | Regenerate through Cargo only if adding the workspace member changes the resolved workspace package entries; never hand-edit. |
+| crates/core-work-order/Cargo.toml | Declare the minimal direct dependencies below. |
+| src/lib.rs | Public V1 exports, schema constants and pure service boundary. |
+| src/contracts.rs | Envelopes, request/frozen/admission/handoff, source/scope/context/packet/AEG/lineage/evidence DTOs. |
+| src/identity.rs | Typed IDs, validation and deterministic logical-key allocation. |
+| src/canonical.rs | Semantic projection, explicit ordering, canonical bytes and fingerprint wrappers. |
+| src/source.rs | Source manifest, bounded provenance and freshness rules. |
+| src/adapters.rs | External resolver trait and adapter evidence interfaces; no adapter implementation or I/O. |
+| src/compiler.rs | Parse/compile/freeze and validation orchestration over explicit values. |
+| src/scope.rs | Allow/deny, scope intersection and correction firewall. |
+| src/packets.rs | Bounded DAG validation and deterministic topological ordering. |
+| src/acceptance.rs | AEG completeness, edge and N/A validation. |
+| src/context.rs | Context budgets, source expansion and lossless PCM reconstruction. |
+| src/lineage.rs | Snapshot/LPC validation and external CAS result classification. |
+| src/delta.rs | Semantic revision diff and same-revision correction classification. |
+| src/admission.rs | Explicit source/M02/lock/governance freshness admission and handoff checks. |
+| src/budget.rs | Finite M03ResourceBudgetV1 validation and budget checks. |
+| src/errors.rs | Closed error categories, codes, safe diagnostics and retryability. |
+| src/service.rs | The pure public functions listed above. |
+| tests/public_contracts.rs, tests/canonical_identity.rs | Public API/version round-trip, semantic projection, stable IDs and canonical vectors. |
+| tests/source_workspace.rs, tests/adapters_no_io.rs | Source provenance, M02 snapshot bindings, freshness and external adapter boundary. |
+| tests/scope_packets.rs, tests/acceptance_context.rs | Deny/intersection, DAG order, AEG completeness and PCM reconstruction. |
+| tests/lineage_corrections.rs, tests/admission_replay.rs | LPC CAS, semantic deltas, correction policy, stale/replayed admission and handoff. |
+| tests/resources_redaction.rs | Finite limits, no partial output and secret-safe bounded diagnostics. |
+| fuzz/Cargo.toml | Add one core-work-order path dependency and explicit target declarations to the existing separate cargo-fuzz package; reuse libfuzzer-sys. |
+| fuzz/Cargo.lock | Regenerate through Cargo only if the separate fuzz package resolution changes; never hand-edit. |
+| fuzz/fuzz_targets/m03_*.rs | Bounded parser/canonicalizer, packet DAG, scope/delta, lineage/LPC, source provenance and admission/replay harnesses. |
+| benches/m03_work_order.rs | Stable built-in bench harness for deterministic synthetic fixtures; no Criterion dependency. |
+
+Unit laws live beside their modules; integration/property laws exercise only public contracts and service functions. Property cases use deterministic bounded generators/exhaustive permutations in the existing Rust test harness, so Round 4 admits no property-testing dependency. Fuzzing extends the existing libfuzzer-sys harness rather than adding a second fuzz runtime. Benchmarking uses the repository's existing harness=false plus std::time pattern, not Criterion.
+
+### Dependency admission and acyclic rule
+
+Deterministic inspection at base 9773d84 found ten workspace members and no core-work-order crate. The existing core-workspace manifest directly depends on core-config, core-contracts, core-identity, serde, serde_json, sha2, thiserror and Tokio with fs/io/macros/net/process/rt-multi-thread/sync/time features. M03 only needs M02 evidence values; linking the whole M02 service crate would import unnecessary process/network-capable transitive surface into the compiler boundary.
+
+The frozen direct dependency set is therefore:
+
+- Internal: core-identity only, for canonical_bytes/fingerprint and the already accepted SHA-256 identity stack. M02 evidence is adapted outside M03 into the bounded versioned DTOs above; core-workspace and core-config are not direct dependencies.
+- Existing workspace third-party dependencies: serde with derive, serde_json for bounded JSON parsing/serialization, and thiserror for typed errors. sha2 is not direct because core-identity owns the fingerprint implementation.
+- Fuzz-only: existing libfuzzer-sys in fuzz/Cargo.toml; no new fuzz engine.
+- No proptest, Criterion, Tokio, Git library, graph library, regex engine, HIVE/GitHub SDK, network/process/filesystem crate, database, cache store or cryptography crate is admitted.
+
+The transitive core-identity closure observed at this base is core-contracts, serde, serde_json, sha2 and thiserror; it has no process/network/database dependency. If an implementation proposal needs a different dependency or direct M02 type, it requires separate dependency/architecture admission with a new exact-head review. This narrows the Round 3 candidate list without changing its accepted ownership or evidence semantics.
+
+The graph is acyclic: core-contracts/core-identity/core-config/core-workspace remain on their current downward graph; core-work-order depends only on core-identity plus serialization/error crates; the external host/adapters may depend on core-workspace and core-work-order to translate evidence; M04 may consume core-work-order. No dependency points from M02 to M03, from M03 to M04+, or from the pure M03 core back to an adapter/host.
+
+### Property and adversarial law matrix
+
+Every law is an implementation acceptance obligation. The planning round does not claim these tests have been implemented.
+
+| Surface | Required law |
+| --- | --- |
+| Envelope/version | V1 round-trips; unknown schema/version/kind, duplicate required IDs and unsupported enum values fail typed with no downgrade. |
+| Canonical identity | Equivalent field/map/collection permutations yield equal semantic bytes and fingerprints; diagnostics, timestamps and rendering changes do not. |
+| IDs/revisions | Explicit or logical-key IDs are deterministic; revision starts at one, advances by one, is never reused, and never substitutes for fingerprint equality. |
+| Packet DAG | All valid edge permutations yield one topological order; dangling IDs, duplicate IDs, self edges, cycles and budget overflow fail. |
+| Scope firewall | Deny overrides allow; every packet scope is a subset/intersection of parent scope; ambiguity and hidden dependency changes block. |
+| AEG/PCM | Every blocking criterion has complete evidence edges; no dangling/hidden obligation; reconstructing every packet context from PCM equals the independently required mandatory source set. |
+| Lineage/LPC | Two competing N+1 capsules from one snapshot cannot both pass external CAS; stale store_generation is LINEAGE_CONFLICT; M03 performs no write/rebase. |
+| Diff/corrections | Same-revision changes are limited to explicit policy classes; semantic, acceptance, scope, stop, dependency or security changes require a new revision; textual smallness cannot downgrade the class. |
+| Source provenance | Altered identity/fingerprint/authority, missing proof, substitution, stale or UNKNOWN evidence cannot preserve freshness or READY. |
+| Workspace/lock/governance | Wrong M02 schema, workspace/generation/basis/profile, Context Lock fingerprint, authorized base, governance verdict/head/scope/policy or replayed receipt fails closed. |
+| Admission | Identical frozen revision and evidence yield identical semantic receipt; changed or unknown required evidence yields non-READY; old receipts are immutable and non-evergreen. |
+| Diagnostics/secrets | Secret canaries, raw prompt/source bodies and raw adapter/process errors never appear in durable contracts or diagnostics; diagnostic differences never alter semantic identity. |
+| Resource/atomicity | All budgets are finite and positive; exact-bound inputs are handled according to policy; over-limit/deadline cases produce typed errors and no partial FROZEN, READY or handoff object. |
+| No hidden I/O | Public services can be replayed from value inputs alone and do not read files, invoke Git/HIVE/GitHub/process/network, access cwd/global clients or persist lineage. |
+
+### Fuzz target matrix
+
+Harnesses are pure, bounded and have no filesystem/network/process access. Each target caps byte input, nesting, collection cardinality and execution work through the supplied budget; panics, hangs, memory amplification, partial outputs and secret leakage are failures.
+
+| Target | Input boundary and oracle |
+| --- | --- |
+| m03_envelope_canonical | Arbitrary bytes, JSON envelopes, schema/version/kind, duplicate IDs and canonical serialization; no panic and typed rejection. |
+| m03_packet_dag | Packet IDs and edge lists; terminate within graph budget, reject cycles/dangling edges, stable order for equivalent graphs. |
+| m03_scope_delta | Allow/deny rules and proposal deltas; deny precedence, intersection and no hidden scope/dependency widening. |
+| m03_lineage_lpc | Revision/fingerprint/store-generation tuples; deterministic capsule, stale-CAS rejection and no internal persistence. |
+| m03_source_provenance | Source refs/evidence/freshness/provenance combinations; substitution, authority mismatch and UNKNOWN never become current. |
+| m03_admission_replay | Workspace, Context Lock, governance, policy and receipt bindings; any mismatch/replay/unknown required input is non-READY. |
+| m03_diagnostics_redaction | Bounded hostile strings and secret canaries; output is bounded and redacted with no raw payload echo. |
+
+Fuzz corpus seeds are synthetic public-schema samples and malformed boundary cases only; no real user repository contents or secrets.
+
+### Benchmark and finite-resource calibration policy
+
+No measured M03 result or numeric production default is claimed in Round 4. M03ResourceBudgetV1 has explicit finite positive fields for request/frozen bytes, string bytes, source refs, packets, DAG edges, scope rules, criteria, evidence nodes/edges, lineage edges, context refs, correction rules, diff entries, diagnostics, parser depth and operation deadlines. There is no zero/unlimited sentinel, implicit host default or runtime self-tuning. Exact values remain CALIBRATION_GATED until code and reproducible fixtures exist.
+
+The deterministic synthetic benchmark matrix varies:
+
+- compile and validate by canonical sources, bytes and nested source references;
+- packet DAG validation by packet nodes, edge count, width/depth and cycle checks;
+- scope/correction classification by allow/deny rules, delta entries and changed semantic fields;
+- AEG/PCM by criteria, evidence nodes/edges, shared refs and reconstructed mandatory sources;
+- lineage/diff by prior revisions/edges and changed versus unchanged semantic fields;
+- admission/handoff by source, M02, Context Lock, governance and policy evidence counts;
+- serialization/context size by inline versus referenced material and deduplication ratio;
+- resource boundary scenarios at the measured candidate cap and cap-plus-one rejection for every security-sensitive dimension.
+
+Cold/warm/cache-hit/cache-miss cases apply only if a separately justified disposable L1 compile memo is later admitted. The baseline has no cache and no cache benchmark obligation. Cache and no-cache output must remain semantically identical if introduced.
+
+Use deterministic local fixtures, no network, no HIVE calls and no LLM. Warm once, record at least five measured iterations per scenario, and report median/min/max alongside exact command, toolchain, OS, CPU, fixture generator/version, candidate SHA and semantic assertion results. Run the same relevant matrix on Windows and Ubuntu. Resource selection must be reproducible, finite, safe for supported inputs, reject unsupported scales rather than extrapolate, and include selected/rejected candidate rationale. Any hard thresholds/defaults enter only through the implementation Work Order's bounded Calibration Gate and committed report; a timeout/overflow or missing scenario blocks production acceptance and never yields partial success.
+
+### Production DoD direction and stop state
+
+M03 V0.0 later completes only when the exact planned contract/file/dependency map is implemented without scope drift; every public contract is V1-versioned; deterministic serialization/fingerprint golden vectors and all property/fuzz laws pass; all six service operations and adapter evidence are exact-head covered; M02/Context Lock/governance replay and freshness tests fail closed; diagnostic redaction is proven; no-hidden-I/O and dependency graph checks pass; every finite resource dimension is calibrated with a reproducible report; required performance/resource scenarios pass on Windows and Ubuntu; fuzz campaigns are bounded and successful; supply-chain/advisory/license/SBOM checks pass; AEG evidence binds every blocking DoD criterion; and independent exact-head review records no unresolved HIGH/CRITICAL defect.
+
+Round 4 ends at a planning review candidate only. Independent exact-head audit and the existing governance gate must approve before checkpoint promotion. This section grants no M03 code implementation, Work Order execution, release, merge or next-round authority.
