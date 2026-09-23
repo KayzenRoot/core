@@ -3,7 +3,7 @@
   "increment": "CORE-M03-FREEZE-001",
   "workOrder": "CORE-WO-M03-001",
   "repository": "KayzenRoot/core",
-  "status": "EXECUTION_ADMISSION_ARMED",
+  "status": "POST_ADMISSION_SYNC_PENDING_REVIEW",
   "planningCandidate": {
     "branch": "planning/m03-final-freeze-round5",
     "planningBase": "786ad33a27d45eb435bc6e63f22174de74b0bb71",
@@ -25,8 +25,8 @@
     },
     "candidateCanonicalSourceBlobShaKind": "git_blob_sha1",
     "candidateCanonicalSourceBlobShas": {
-      "docs/project-brain/13-CHECKPOINT.md": "21e17accac6e7b11404a6f3f953610a249c0a16f",
-      "docs/project-brain/16-DECISIONS-LEDGER.md": "ce8db92f758995968f17b695cb2528b542f60b27",
+      "docs/project-brain/13-CHECKPOINT.md": "96e1e33dfb5a0f3636160ec0f0eeaa707bb21b3f",
+      "docs/project-brain/16-DECISIONS-LEDGER.md": "d7d78a378b66f11213fe9e35addf5e6214ac702b",
       "docs/project-brain/03-SCOPE.md": "f2df9200f88bd0fcc77d9b4a02ad7a039d2f429d",
       "docs/project-brain/15-DEFINITION-OF-DONE.md": "b0b8c099f847e85ceef2ad597f614baa025d3a62",
       "docs/project-brain/04-ARCHITECTURE.md": "d9bd9609e81e57862715ea18fa176e9531287e35",
@@ -40,10 +40,10 @@
   "contextLock": {
     "path": ".engineering/context-locks/CORE-WO-M03-001.json",
     "status": "ACTIVE",
-    "blobSha": "e784c7fa1aad560f92244fcf61547d2514d47657",
+    "blobSha": "5a71fc05cfa1e6b13c847c6a52a36512149f9dca",
     "authorizedBase": "ac90b1f48c5551e65ecadace95c59f7f0647062f",
     "productImplementationAuthorized": true,
-    "executionStatus": "READY_FOR_EXECUTION_ON_CANONICAL_MAIN_PROMOTION"
+    "executionStatus": "READY_FOR_EXECUTION_ON_SYNC_PROMOTION"
   },
   "planningHiveObservation": {
     "hiveVersion": "1.0.0",
@@ -749,7 +749,7 @@
     "increment": "CORE-M03-ADMIT-001",
     "branch": "planning/m03-execution-admission",
     "authorizedBase": "ac90b1f48c5551e65ecadace95c59f7f0647062f",
-    "status": "EFFECTIVE_ONLY_ON_CANONICAL_MAIN_PROMOTION",
+    "status": "APPROVED_PROMOTED",
     "authorizedScope": "M03_WORK_ORDER_ENGINE",
     "assuranceMode": "ELEVATED",
     "authorizationEffectiveOnlyOnCanonicalMain": true,
@@ -763,8 +763,8 @@
     },
     "sourceBlobShaKind": "git_blob_sha1",
     "canonicalSourceBlobShas": {
-      "docs/project-brain/13-CHECKPOINT.md": "3a3e52773c753880f7ad830c4b768ddb6326325a",
-      "docs/project-brain/16-DECISIONS-LEDGER.md": "7966559d08f3d35a5be5776e83f1fc6e0b014e01",
+      "docs/project-brain/13-CHECKPOINT.md": "96e1e33dfb5a0f3636160ec0f0eeaa707bb21b3f",
+      "docs/project-brain/16-DECISIONS-LEDGER.md": "d7d78a378b66f11213fe9e35addf5e6214ac702b",
       "docs/project-brain/03-SCOPE.md": "f2df9200f88bd0fcc77d9b4a02ad7a039d2f429d",
       "docs/project-brain/15-DEFINITION-OF-DONE.md": "3ffb3f27c57ec7d9b6810fe601c3944d3529a323",
       "docs/project-brain/04-ARCHITECTURE.md": "d9bd9609e81e57862715ea18fa176e9531287e35",
@@ -774,7 +774,15 @@
       "docs/modules/M03-WORK-ORDER-ENGINE.md": "bd394a9f3609f5658a730613e83ddc33015d2fe5"
     },
     "workOrderBlobSha": "8801c91f1c946c80d3af7996ff5b8b14944440f6",
-    "contextLockBlobSha": "e784c7fa1aad560f92244fcf61547d2514d47657"
+    "contextLockBlobSha": "5a71fc05cfa1e6b13c847c6a52a36512149f9dca",
+    "review": {
+      "issue": 69,
+      "verdict": "APPROVED",
+      "pullRequest": 68,
+      "reviewedHead": "36f18d1dc53faf9af9d3c06355ebe07384e4e1f7",
+      "workflowRun": 35845550610,
+      "promotionMerge": "abe21ed4564978d24b2f41bca13b6f052daa3b17"
+    }
   },
   "finalPlanningReview": {
     "status": "APPROVED_PROMOTED",
@@ -785,5 +793,13 @@
     "workflowRun": 35813591063,
     "promotionMerge": "ac90b1f48c5551e65ecadace95c59f7f0647062f",
     "note": "Exact candidate-head binding is external GitHub review evidence to avoid self-referential commit hashing."
+  },
+  "postAdmissionSynchronization": {
+    "increment": "CORE-M03-SYNC-001",
+    "branch": "fix/m03-post-admission-state-sync",
+    "status": "PENDING_INDEPENDENT_REVIEW_AND_PROMOTION",
+    "reason": "Canonical Checkpoint and Decisions Ledger still described admission as pending after PR #68 promotion. This bounded governance-only delta synchronizes canonical state and recompiles lock/evidence fingerprints before product execution.",
+    "productPacksImplemented": false,
+    "productTestsExecuted": false
   }
 }
