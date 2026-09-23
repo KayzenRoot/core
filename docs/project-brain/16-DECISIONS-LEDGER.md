@@ -623,7 +623,7 @@ Status: `ACTIVE`
 
 
 ## CORE-D-150 - M03 V0.0 public contracts are frozen as versioned V1 types
-**Decision:** the public M03 schema identifier is nexlabs.core.work-order version 1. Durable request, frozen, admission and handoff payloads use a closed kind envelope and distinct typed IDs/revisions/fingerprints. Unsupported or ambiguous versions fail typed.
+**Decision:** the public M03 schema identifier is nexlabs.core.work-order version 1. Durable root request, frozen, compilation, validation, revision-diff, correction-classification, admission and handoff payloads use a closed kind envelope and distinct typed IDs/revisions/fingerprints. Unsupported or ambiguous versions fail typed.
 **State:** ACCEPTED FOR ROUND 4 PLANNING; independent audit/promotion pending; implementation remains unauthorized.
 
 ## CORE-D-151 - Semantic identity is an explicit canonical projection

@@ -1734,6 +1734,7 @@ pub struct EvidenceRequirementId(String);
 pub struct ContextRefId(String);
 pub struct GovernanceProofId(String);
 pub struct LineageEdgeId(String);
+pub struct SemanticFieldIdV1(String); // validated closed canonical semantic-field identifier
 
 pub struct WorkOrderLogicalKeyV1 {
     pub project_namespace: String,
@@ -1955,7 +1956,7 @@ pub struct WorkOrderRevisionDiffV1 {
     pub before_fingerprint: WorkOrderFingerprint,
     pub after_revision: WorkOrderRevision,
     pub after_fingerprint: WorkOrderFingerprint,
-    pub changed_semantic_fields: Vec<String>, // bounded canonical field identifiers
+    pub changed_semantic_fields: Vec<SemanticFieldIdV1>,
     pub requires_new_revision: bool,
     pub forbidden_reason_codes: Vec<WorkOrderErrorCodeV1>,
     pub diff_fingerprint: EvidenceFingerprintV1,
@@ -1992,7 +1993,7 @@ pub struct AdmittedWorkOrderV1 {
 }
 ~~~
 
-Additional enum domains are closed V1 types: WorkspaceFreshnessProfileV1 mirrors only the named M02 BVM profiles; BasisCompatibilityV1 is EXACT_MATCH/COMPATIBLE_REFRESH/INCOMPATIBLE/UNKNOWN; EvidenceFreshnessV1 is CURRENT/STALE/UNKNOWN/SUBSTITUTED; ExternalGovernanceVerdictV1 is an externally verified accepted/rejected/blocked result; AdmissionModeV1 is the requested policy class; ResourceCalibrationStateV1 is UNCALIBRATED/CALIBRATED; EvidenceFingerprintV1 is a validated lowercase 64-character digest; and SafeSubjectRefV1 contains a typed subject kind plus a bounded safe ID/fingerprint. Every ID/fingerprint wrapper uses `#[serde(transparent)]`; all public contract structs/enums derive Serialize/Deserialize, closed enums serialize in snake_case, and required contract fields have no silent defaults.
+Additional enum domains are closed V1 types: SemanticFieldIdV1 is accepted only from the frozen canonical semantic-field registry; WorkspaceFreshnessProfileV1 mirrors only the named M02 BVM profiles; BasisCompatibilityV1 is EXACT_MATCH/COMPATIBLE_REFRESH/INCOMPATIBLE/UNKNOWN; EvidenceFreshnessV1 is CURRENT/STALE/UNKNOWN/SUBSTITUTED; ExternalGovernanceVerdictV1 is an externally verified accepted/rejected/blocked result; AdmissionModeV1 is the requested policy class; ResourceCalibrationStateV1 is UNCALIBRATED/CALIBRATED; EvidenceFingerprintV1 is a validated lowercase 64-character digest; and SafeSubjectRefV1 contains a typed subject kind plus a bounded safe ID/fingerprint. Every ID/fingerprint wrapper uses `#[serde(transparent)]`; all public contract structs/enums derive Serialize/Deserialize, closed enums serialize in snake_case, and required contract fields have no silent defaults.
 
 M03ResourceBudgetV1 has no Default implementation and every value must be finite and positive. It contains deterministic size, depth and cardinality limits only. Wall-clock deadlines are caller-owned orchestration guards outside the pure core: core-work-order never reads a host clock or ambient timer. If a caller deadline expires, the caller MUST discard any concurrent/late result and record a typed M03_CALL_DEADLINE_EXCEEDED host failure; a timed-out invocation cannot yield an accepted FROZEN, READY or handoff object. This preserves CORE-R-207 / CORE-D-148 without making identical value inputs depend on scheduler or machine timing.
 
