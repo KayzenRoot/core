@@ -1,6 +1,6 @@
 # CODEX HANDOFF — CORE-WO-M03-001
 
-Status: NOT_AUTHORIZED / PENDING_PROMOTION
+Status: AUTHORIZATION_ARMED / EFFECTIVE_ONLY_ON_CANONICAL_MAIN_PROMOTION
 Increment: CORE-M03-FREEZE-001
 Work Order: .engineering/work-orders/CORE-WO-M03-001.md
 Context Lock: .engineering/context-locks/CORE-WO-M03-001.json
@@ -8,12 +8,12 @@ Evidence Bundle: .engineering/evidence/CORE-WO-M03-001.json
 Module: M03 — Work Order Engine
 Future execution branch: feat/m03-work-order-engine
 Planning base: 786ad33a27d45eb435bc6e63f22174de74b0bb71
+Frozen authorized base: ac90b1f48c5551e65ecadace95c59f7f0647062f
+Admission increment: CORE-M03-ADMIT-001
 
 ## Hard authorization gate
 
-Do not begin product implementation, create the execution branch, or modify Rust/Cargo/fuzz/product-CI files while the Context Lock is PENDING_PROMOTION, authorizedBase is null, or productImplementationAuthorized is false. This is the current state.
-
-Proceed only after a separate governed execution-admission delta is independently reviewed and promoted to canonical origin/main, and the exact Context Lock on that canonical main is ACTIVE with a concrete authorizedBase and productImplementationAuthorized true. Confirm the lock's Work Order/source blob bindings match the current canonical files. A lock present only on a planning PR, an approval in chat, a stale fingerprint, or a local edit does not satisfy the gate.
+Do not begin product implementation while this admission state exists only on a PR branch. Proceed only after CORE-M03-ADMIT-001 is independently reviewed and promoted to canonical origin/main, and the exact Context Lock on that canonical main is ACTIVE with authorizedBase `ac90b1f48c5551e65ecadace95c59f7f0647062f`, productImplementationAuthorized=true, and authorizationEffectiveOnlyOnCanonicalMain=true. Confirm the lock's Work Order/source blob bindings match the current canonical files. A lock present only on an admission PR, an approval in chat, a stale fingerprint, or a local edit does not satisfy the gate.
 
 If any gate is absent, ambiguous, stale, conflicting, or unknown, STOP and report NOT_AUTHORIZED / STALE. Do not activate or repair the lock yourself.
 
@@ -41,4 +41,4 @@ If any gate is absent, ambiguous, stale, conflicting, or unknown, STOP and repor
 
 Return in Brazilian Portuguese with exact authorized base/final head, lock and source fingerprints, Work Order and branch, files, Pack A–H results, all 23 AC-to-EV mappings, truthful HIVE result, tests/property/adversarial/fuzz/security/supply-chain/SBOM, calibration report and selected/rejected candidates, Windows/Ubuntu results, seven required hosted status contexts, failures/corrections, risks, proposed Checkpoint Delta, PR, and READY_FOR_REVIEW or BLOCKED.
 
-Never return APPROVED. That verdict belongs to the independent governed reviewer. This handoff does not authorize work until the hard gate above is satisfied.
+Never return APPROVED. That verdict belongs to the independent governed reviewer. This handoff is armed but does not authorize work until the exact CORE-M03-ADMIT-001 state is present on canonical origin/main and the hard gate above is satisfied.
