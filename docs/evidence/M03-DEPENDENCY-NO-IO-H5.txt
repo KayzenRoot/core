@@ -1,0 +1,48 @@
+exact_head=de6a829bd2f9402214c371446615fc364431f515
+command=cargo tree -p core-work-order --edges normal
+normal_dependency_graph:
+core-work-order v0.1.0 (D:\Projects\core-m03-work-order-engine\crates\core-work-order)
+├── core-identity v0.1.0 (D:\Projects\core-m03-work-order-engine\crates\core-identity)
+│   ├── core-contracts v0.1.0 (D:\Projects\core-m03-work-order-engine\crates\core-contracts)
+│   │   ├── serde v1.0.229
+│   │   │   ├── serde_core v1.0.229
+│   │   │   └── serde_derive v1.0.229 (proc-macro)
+│   │   │       ├── proc-macro2 v1.0.107
+│   │   │       │   └── unicode-ident v1.0.26
+│   │   │       ├── quote v1.0.47
+│   │   │       │   └── proc-macro2 v1.0.107 (*)
+│   │   │       └── syn v3.0.6
+│   │   │           ├── proc-macro2 v1.0.107 (*)
+│   │   │           ├── quote v1.0.47 (*)
+│   │   │           └── unicode-ident v1.0.26
+│   │   ├── serde_json v1.0.151
+│   │   │   ├── itoa v1.0.18
+│   │   │   ├── memchr v2.8.3
+│   │   │   ├── serde_core v1.0.229
+│   │   │   └── zmij v1.0.23
+│   │   └── thiserror v2.0.20
+│   │       └── thiserror-impl v2.0.20 (proc-macro)
+│   │           ├── proc-macro2 v1.0.107 (*)
+│   │           ├── quote v1.0.47 (*)
+│   │           └── syn v3.0.6 (*)
+│   ├── serde v1.0.229 (*)
+│   ├── serde_json v1.0.151 (*)
+│   ├── sha2 v0.10.9
+│   │   ├── cfg-if v1.0.5
+│   │   ├── cpufeatures v0.2.17
+│   │   └── digest v0.10.7
+│   │       ├── block-buffer v0.10.4
+│   │       │   └── generic-array v0.14.7
+│   │       │       └── typenum v1.20.1
+│   │       └── crypto-common v0.1.7
+│   │           ├── generic-array v0.14.7 (*)
+│   │           └── typenum v1.20.1
+│   └── thiserror v2.0.20 (*)
+├── serde v1.0.229 (*)
+├── serde_json v1.0.151 (*)
+└── thiserror v2.0.20 (*)
+
+scan_paths=crates/core-work-order/src, crates/core-identity/src, crates/core-contracts/src
+scan_patterns=std::fs|std::env|std::process|std::net|std::time::SystemTime|current_dir\s*\(|Command::new|reqwest|tokio::|hyper::|rusqlite|sqlx::|openai|anthropic|inference
+scanned_rust_files=19
+scan_result=0 filesystem, environment/cwd, process, network, clock, database, or LLM inference API call-site matches

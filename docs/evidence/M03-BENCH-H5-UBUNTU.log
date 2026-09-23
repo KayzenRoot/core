@@ -1,0 +1,109 @@
+   Compiling core-work-order v0.1.0 (/mnt/d/Projects/core-m03-work-order-engine/crates/core-work-order)
+    Finished `bench` profile [optimized] target(s) in 45.63s
+     Running ../../benches/m03_work_order.rs (target/release/deps/m03_work_order-dbbf37108e0bfb1c)
+scenario=parse_request_2_sources_2_packets sample=1 ns_per_op=195872
+scenario=parse_request_2_sources_2_packets sample=2 ns_per_op=230736
+scenario=parse_request_2_sources_2_packets sample=3 ns_per_op=202090
+scenario=parse_request_2_sources_2_packets sample=4 ns_per_op=187008
+scenario=parse_request_2_sources_2_packets sample=5 ns_per_op=195424
+summary scenario=parse_request_2_sources_2_packets warmups=1 measured=5 operations_per_sample=10 min_ns_per_op=187008 median_ns_per_op=195872 max_ns_per_op=230736
+scenario=compile_2_sources_2_packets sample=1 ns_per_op=665779
+scenario=compile_2_sources_2_packets sample=2 ns_per_op=666511
+scenario=compile_2_sources_2_packets sample=3 ns_per_op=682912
+scenario=compile_2_sources_2_packets sample=4 ns_per_op=655881
+scenario=compile_2_sources_2_packets sample=5 ns_per_op=705169
+summary scenario=compile_2_sources_2_packets warmups=1 measured=5 operations_per_sample=10 min_ns_per_op=655881 median_ns_per_op=666511 max_ns_per_op=705169
+scenario=compile_32_sources sample=1 ns_per_op=2137576
+scenario=compile_32_sources sample=2 ns_per_op=2143596
+scenario=compile_32_sources sample=3 ns_per_op=2088434
+scenario=compile_32_sources sample=4 ns_per_op=2104136
+scenario=compile_32_sources sample=5 ns_per_op=2090700
+summary scenario=compile_32_sources warmups=1 measured=5 operations_per_sample=10 min_ns_per_op=2088434 median_ns_per_op=2104136 max_ns_per_op=2143596
+scenario=compile_32_packets_32_aeg_width sample=1 ns_per_op=5224841
+scenario=compile_32_packets_32_aeg_width sample=2 ns_per_op=5171495
+scenario=compile_32_packets_32_aeg_width sample=3 ns_per_op=5463871
+scenario=compile_32_packets_32_aeg_width sample=4 ns_per_op=5685297
+scenario=compile_32_packets_32_aeg_width sample=5 ns_per_op=5921627
+summary scenario=compile_32_packets_32_aeg_width warmups=1 measured=5 operations_per_sample=10 min_ns_per_op=5171495 median_ns_per_op=5463871 max_ns_per_op=5921627
+scenario=compile_32_packets_32_aeg_depth sample=1 ns_per_op=5719811
+scenario=compile_32_packets_32_aeg_depth sample=2 ns_per_op=5811803
+scenario=compile_32_packets_32_aeg_depth sample=3 ns_per_op=6137748
+scenario=compile_32_packets_32_aeg_depth sample=4 ns_per_op=6684777
+scenario=compile_32_packets_32_aeg_depth sample=5 ns_per_op=5884873
+summary scenario=compile_32_packets_32_aeg_depth warmups=1 measured=5 operations_per_sample=10 min_ns_per_op=5719811 median_ns_per_op=5884873 max_ns_per_op=6684777
+scenario=compile_scope_64_rules sample=1 ns_per_op=780299
+scenario=compile_scope_64_rules sample=2 ns_per_op=777344
+scenario=compile_scope_64_rules sample=3 ns_per_op=758852
+scenario=compile_scope_64_rules sample=4 ns_per_op=767791
+scenario=compile_scope_64_rules sample=5 ns_per_op=716898
+summary scenario=compile_scope_64_rules warmups=1 measured=5 operations_per_sample=10 min_ns_per_op=716898 median_ns_per_op=767791 max_ns_per_op=780299
+scenario=parse_request_4096_byte_string sample=1 ns_per_op=215929
+scenario=parse_request_4096_byte_string sample=2 ns_per_op=198460
+scenario=parse_request_4096_byte_string sample=3 ns_per_op=204521
+scenario=parse_request_4096_byte_string sample=4 ns_per_op=216074
+scenario=parse_request_4096_byte_string sample=5 ns_per_op=228868
+summary scenario=parse_request_4096_byte_string warmups=1 measured=5 operations_per_sample=10 min_ns_per_op=198460 median_ns_per_op=215929 max_ns_per_op=228868
+scenario=compile_4096_byte_string sample=1 ns_per_op=721745
+scenario=compile_4096_byte_string sample=2 ns_per_op=697387
+scenario=compile_4096_byte_string sample=3 ns_per_op=690894
+scenario=compile_4096_byte_string sample=4 ns_per_op=691225
+scenario=compile_4096_byte_string sample=5 ns_per_op=724883
+summary scenario=compile_4096_byte_string warmups=1 measured=5 operations_per_sample=10 min_ns_per_op=690894 median_ns_per_op=697387 max_ns_per_op=724883
+scenario=validate_frozen_2_packets sample=1 ns_per_op=228988
+scenario=validate_frozen_2_packets sample=2 ns_per_op=217903
+scenario=validate_frozen_2_packets sample=3 ns_per_op=247923
+scenario=validate_frozen_2_packets sample=4 ns_per_op=255099
+scenario=validate_frozen_2_packets sample=5 ns_per_op=238212
+summary scenario=validate_frozen_2_packets warmups=1 measured=5 operations_per_sample=10 min_ns_per_op=217903 median_ns_per_op=238212 max_ns_per_op=255099
+scenario=canonical_semantic_bytes_2_packets sample=1 ns_per_op=86571
+scenario=canonical_semantic_bytes_2_packets sample=2 ns_per_op=86353
+scenario=canonical_semantic_bytes_2_packets sample=3 ns_per_op=85692
+scenario=canonical_semantic_bytes_2_packets sample=4 ns_per_op=83204
+scenario=canonical_semantic_bytes_2_packets sample=5 ns_per_op=88531
+summary scenario=canonical_semantic_bytes_2_packets warmups=1 measured=5 operations_per_sample=10 min_ns_per_op=83204 median_ns_per_op=86353 max_ns_per_op=88531
+scenario=revision_diff_two_changed_fields sample=1 ns_per_op=618500
+scenario=revision_diff_two_changed_fields sample=2 ns_per_op=604513
+scenario=revision_diff_two_changed_fields sample=3 ns_per_op=610498
+scenario=revision_diff_two_changed_fields sample=4 ns_per_op=622456
+scenario=revision_diff_two_changed_fields sample=5 ns_per_op=597162
+summary scenario=revision_diff_two_changed_fields warmups=1 measured=5 operations_per_sample=10 min_ns_per_op=597162 median_ns_per_op=610498 max_ns_per_op=622456
+scenario=correction_classification sample=1 ns_per_op=268529
+scenario=correction_classification sample=2 ns_per_op=248276
+scenario=correction_classification sample=3 ns_per_op=264144
+scenario=correction_classification sample=4 ns_per_op=253140
+scenario=correction_classification sample=5 ns_per_op=243933
+summary scenario=correction_classification warmups=1 measured=5 operations_per_sample=10 min_ns_per_op=243933 median_ns_per_op=253140 max_ns_per_op=268529
+scenario=lineage_compile_32_edges sample=1 ns_per_op=1044206
+scenario=lineage_compile_32_edges sample=2 ns_per_op=1033487
+scenario=lineage_compile_32_edges sample=3 ns_per_op=1053169
+scenario=lineage_compile_32_edges sample=4 ns_per_op=1025574
+scenario=lineage_compile_32_edges sample=5 ns_per_op=989544
+summary scenario=lineage_compile_32_edges warmups=1 measured=5 operations_per_sample=10 min_ns_per_op=989544 median_ns_per_op=1033487 max_ns_per_op=1053169
+scenario=admission_ready sample=1 ns_per_op=299205
+scenario=admission_ready sample=2 ns_per_op=276297
+scenario=admission_ready sample=3 ns_per_op=281433
+scenario=admission_ready sample=4 ns_per_op=279710
+scenario=admission_ready sample=5 ns_per_op=285636
+summary scenario=admission_ready warmups=1 measured=5 operations_per_sample=10 min_ns_per_op=276297 median_ns_per_op=281433 max_ns_per_op=299205
+scenario=handoff_ready sample=1 ns_per_op=272881
+scenario=handoff_ready sample=2 ns_per_op=250476
+scenario=handoff_ready sample=3 ns_per_op=246160
+scenario=handoff_ready sample=4 ns_per_op=244973
+scenario=handoff_ready sample=5 ns_per_op=272010
+summary scenario=handoff_ready warmups=1 measured=5 operations_per_sample=10 min_ns_per_op=244973 median_ns_per_op=250476 max_ns_per_op=272881
+boundary dimension=request_bytes candidate=78333 cap_plus_one=78334 result=PASS
+boundary dimension=frozen_bytes candidate=78898 cap_plus_one=78899 result=PASS
+boundary dimension=string_bytes candidate=4096 cap_plus_one=4097 result=PASS
+boundary dimension=source_refs candidate=32 cap_plus_one=33 result=PASS
+boundary dimension=packets candidate=32 cap_plus_one=33 result=PASS
+boundary dimension=packet_edges candidate=31 cap_plus_one=32 result=PASS
+boundary dimension=scope_rules candidate=8 cap_plus_one=9 result=PASS
+boundary dimension=scope_rules_scaled candidate=64 cap_plus_one=65 result=PASS
+boundary dimensions=criteria,evidence_nodes,aeg_edges candidate=32 cap_plus_one=33 result=PASS
+boundary dimension=lineage_edges candidate=32 cap_plus_one=33 result=PASS
+boundary dimension=context_refs candidate=32 cap_plus_one=33 result=PASS
+boundary dimension=correction_rules candidate=64 cap_plus_one=65 result=PASS
+boundary dimension=diff_entries candidate=3 cap_plus_one=4 result=PASS
+boundary dimension=diagnostic_entries candidate=4 cap_plus_one=5 result=PASS
+boundary dimension=parse_depth candidate=7 cap_plus_one=8 result=PASS
+fixture_generator=synthetic-core-work-order-v1 source_count=32 packet_width=32 packet_depth=32 acceptance_criteria=32 evidence_nodes=32 lineage_edges=32 scope_rules=64 correction_paths=64 measured_samples=5 operations_per_sample=10

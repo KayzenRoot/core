@@ -1,0 +1,557 @@
+   Compiling core-work-order v0.1.0 (/mnt/d/Projects/core-m03-work-order-engine/crates/core-work-order)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 42.16s
+     Running unittests src/main.rs (target/debug/deps/core-9be4d70c6c5c5047)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/core_config-c4c57c4e172c0926)
+
+running 4 tests
+test tests::precedence_is_default_file_env_cli ... ok
+test tests::safe_reload_advances_only_configuration_generation ... ok
+test tests::invalid_safety_key_fails_closed ... ok
+test tests::diagnostics_do_not_contain_secret_value ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running unittests src/lib.rs (target/debug/deps/core_contracts-1dce34ea01b6c06e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/core_health-56dfd1392de2c162)
+
+running 5 tests
+test tests::critical_pressure_closes_admission ... ok
+test tests::quality_floor_blocks_unsafe_fallback ... ok
+test tests::observability_is_delta_based ... ok
+test tests::stale_health_cannot_authorize_safety_transition ... ok
+test tests::probe_herd_runs_once ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src/lib.rs (target/debug/deps/core_identity-5efd1c4f80f3bd77)
+
+running 5 tests
+test tests::golden_vector_is_stable ... ok
+test tests::content_handles_are_immutable_identity ... ok
+test tests::dependency_and_policy_changes_invalidate_security_evidence ... ok
+test tests::map_order_is_canonical ... ok
+test tests::safety_identity_rejects_same_count_different_content ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src/lib.rs (target/debug/deps/core_ipc-5d6e2f425e5acc2a)
+
+running 4 tests
+test tests::handshake_uses_common_minor_and_rejects_epoch_mismatch ... ok
+test tests::malformed_and_allocation_bomb_frames_fail_before_allocation ... ok
+test tests::round_trip_is_bounded_and_epoch_bound ... ok
+test tests::unix_domain_socket_round_trip_uses_bounded_framing ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src/lib.rs (target/debug/deps/core_journal-23cd7d2f58386aae)
+
+running 3 tests
+test tests::hash_chain_and_recovery_survive_reopen ... ok
+test tests::truncation_fails_closed ... ok
+test tests::bounded_compaction_rebuilds_the_chain ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src/lib.rs (target/debug/deps/core_registry-4ae038abe47dcaa5)
+
+running 15 tests
+test tests::failed_registration_rolls_back_only_inserted_module ... ok
+test tests::dependency_cycle_fails_closed ... ok
+test tests::cloned_registries_cannot_acquire_after_admission_closes ... ok
+test tests::generation_coherence_reports_each_dimension_without_scalar_comparison ... ok
+test tests::acs_applies_policy_authority_and_deterministic_tie_breaks ... ok
+test tests::hive_provider_wins_without_llm ... ok
+test tests::lease_expiration_is_monotonic_and_enforced ... ok
+test tests::provider_flap_and_generation_coherence_are_bounded ... ok
+test tests::old_generation_remains_valid_until_lease_release ... ok
+test tests::preferred_provider_is_a_preference_and_can_fall_back ... ok
+test tests::stale_epoch_lease_is_rejected ... ok
+test tests::sir_calculates_dependency_radius_and_cache_affinity ... ok
+test tests::concurrent_readers_keep_old_lease_generation_coherent_during_substitution ... ok
+test tests::lease_change_notifications_cover_lifecycle_and_boundaries ... ok
+test tests::concurrent_acquire_and_close_have_one_registry_linearization_point ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running unittests src/lib.rs (target/debug/deps/core_runtime-c98180cf2b54458f)
+
+running 20 tests
+test tests::cancellation_propagates_hierarchically ... ok
+test tests::bootstrap_is_zero_llm_and_ready_only_with_receipt ... ok
+test tests::crash_loop_quarantines_and_explicit_reset_reenters_worker ... ok
+test tests::forced_shutdown_records_residuals ... ok
+test tests::lease_expiration_completes_before_shutdown_deadline ... ok
+test tests::qvm_detects_active_lease_without_caller_claim ... ok
+test tests::registry_clone_cannot_admit_after_qds_closes_capability_admission ... ok
+test tests::required_hive_blocks_without_false_success ... ok
+test tests::rlc_returns_typed_allow_deny_and_defer_without_mutation ... ok
+test tests::shutdown_completion_records_follow_proof ... ok
+test tests::safety_receipt_fingerprint_tracks_semantic_configuration ... ok
+test tests::lease_released_from_separate_task_wakes_qds_before_deadline ... ok
+test tests::multiple_workers_report_completion_without_lost_notifications ... ok
+test tests::shutdown_timeout_escalates_only_after_deadline ... ok
+test tests::worker_admission_cannot_bypass_backoff_or_quarantine ... ok
+test tests::multiple_leases_release_in_different_order_without_lost_notifications ... ok
+test tests::worker_finishes_after_cancel_before_shutdown_deadline ... ok
+test tests::worker_completion_at_deadline_boundary_is_fail_closed ... ok
+test tests::unreleased_lease_times_out_only_after_shutdown_deadline ... ok
+test tests::in_drain_clone_acquire_is_rejected_during_repeated_shutdowns ... ok
+
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.28s
+
+     Running unittests src/lib.rs (target/debug/deps/core_work_order-bf8f08123e2bf9d8)
+
+running 4 tests
+test budget::tests::calibrated_profile_accepts_its_ceiling_and_rejects_every_larger_dimension ... ok
+test budget::tests::zero_or_unbounded_sentinel_budgets_are_rejected ... ok
+test identity::tests::typed_ids_and_revisions_reject_invalid_values ... ok
+test identity::tests::logical_key_identity_is_deterministic_and_domain_separated ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/acceptance_context.rs (target/debug/deps/acceptance_context-9116064ea2474d01)
+
+running 3 tests
+test blocking_criteria_require_resolvable_evidence_edges ... ok
+test unexplained_orphans_and_packet_obligation_mismatches_fail_closed ... ok
+test mandatory_pcm_reconstruction_is_lossless_and_bounded ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests/adapters_no_io.rs (target/debug/deps/adapters_no_io-7e42542a640c38ce)
+
+running 2 tests
+test service_uses_only_explicit_values_after_outer_resolution ... ok
+test external_interfaces_are_separate_from_public_service_inputs ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/admission_replay.rs (target/debug/deps/admission_replay-3638a32a0d2e1823)
+
+running 5 tests
+test caller_deadline_discards_late_compilation_before_admission ... ok
+test blocked_receipt_cannot_materialize_a_handoff ... ok
+test receipt_identity_mismatch_and_serialized_tampering_are_rejected ... ok
+test admission_receipts_are_deterministic_and_handoff_binds_all_revalidation_fields ... ok
+test stale_unknown_substituted_and_mismatched_proofs_never_become_ready ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+
+     Running tests/canonical_identity.rs (target/debug/deps/canonical_identity-c1ed8f720b4499bc)
+
+running 5 tests
+test diagnostic_changes_are_outside_frozen_semantic_identity ... ok
+test compilation_context_generation_changes_only_compilation_identity ... ok
+test hive_context_is_advisory_and_only_changes_compilation_provenance ... ok
+test semantic_input_permutations_preserve_bytes_and_fingerprints ... ok
+test semantic_change_alters_work_order_fingerprint_and_is_revision_scoped ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running tests/lineage_corrections.rs (target/debug/deps/lineage_corrections-e3b81a75419ad7a7)
+
+running 4 tests
+test stale_lineage_snapshot_and_invalid_next_revision_are_rejected ... ok
+test lineage_edges_reject_dangling_endpoints_and_duplicate_ids ... ok
+test lineage_capsules_bind_monotonic_revisions_and_external_cas ... ok
+test semantic_diff_requires_next_revision_and_same_revision_corrections_are_policy_bound ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+
+     Running tests/public_contracts.rs (target/debug/deps/public_contracts-aa0e0f62f40e34b1)
+
+running 5 tests
+test typed_ids_and_revisions_are_bounded_and_positive ... ok
+test malformed_duplicate_packet_ids_fail_without_partial_compilation ... ok
+test parser_rejects_unknown_schema_version_kind_and_enum ... ok
+test request_envelope_round_trips_and_services_are_public ... ok
+test logical_key_allocates_a_repeatable_work_order_id ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running tests/resources_redaction.rs (target/debug/deps/resources_redaction-677061f5b7c5a40d)
+
+running 4 tests
+test safe_subjects_and_diagnostics_do_not_serialize_secret_canaries ... ok
+test parser_enforces_bounded_depth_and_never_returns_partial_values ... ok
+test malformed_external_payload_is_not_echoed_by_typed_errors ... ok
+test finite_positive_budgets_and_cap_plus_one_fail_atomically ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/scope_packets.rs (target/debug/deps/scope_packets-f5f650834811d81a)
+
+running 4 tests
+test path_prefix_matching_respects_segment_boundaries ... ok
+test denied_rules_override_allow_and_empty_allow_sets_are_ambiguous ... ok
+test dangling_edges_cycles_and_widening_context_are_rejected ... ok
+test packet_scope_is_intersected_with_parent_and_dag_order_is_stable ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/source_workspace.rs (target/debug/deps/source_workspace-7bfd91a2d61e890b)
+
+running 4 tests
+test missing_and_extra_source_entries_fail_closed ... ok
+test source_locators_reject_traversal_and_uri_credentials_without_blocking_at_signs ... ok
+test source_evidence_rejects_stale_unknown_substituted_and_unbound_values ... ok
+test workspace_schema_profile_components_and_proof_are_bound ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running unittests src/lib.rs (target/debug/deps/core_workspace-3f839478051e60e0)
+
+running 16 tests
+test authority::tests::filesystem_case_semantics_do_not_follow_unix_family ... ok
+test authority::tests::non_existing_path_requires_use_time_revalidation ... ok
+test authority::tests::traversal_is_rejected_without_writing_source ... ok
+test hashing::tests::timestamp_independent_content_proof_changes_on_content ... ok
+test authority::tests::relative_collision_uses_authority_resolved_target ... ok
+test identity::tests::linked_worktrees_are_distinct_but_repository_is_shared ... ok
+test identity::tests::remote_is_not_repository_identity ... ok
+test invalidation::tests::overflow_broadens_invalidation ... ok
+test invalidation::tests::zero_events_do_not_create_freshness ... ok
+test cache::tests::cache_hit_has_provenance_and_generation_invalidation ... ok
+test state::tests::illegal_transition_is_typed ... ok
+test state::tests::legal_attach_lifecycle_is_explicit ... ok
+test hashing::tests::conveyor_revalidates_same_path_after_rewrite ... ok
+test repository::tests::graph_fingerprint_is_order_independent ... ok
+test hashing::tests::conveyor_deadline_does_not_poison_following_hash ... ok
+test hashing::tests::concurrent_same_path_requests_share_one_hash_and_leave_no_pending_entry ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.40s
+
+     Running tests/adversarial.rs (target/debug/deps/adversarial-4e1f6d95cf8c4762)
+
+running 3 tests
+test external_object_store_is_denied_by_default ... ok
+test no_forbidden_path_authority_transitivity_is_encoded ... ok
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: will change to "main" in Git 3.0. To configure the initial branch name
+hint: to use in all of your new repositories, which will suppress this warning,
+hint: call:
+hint:
+hint: 	git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint: 	git branch -m <name>
+hint:
+hint: Disable this message with "git config set advice.defaultBranchName false"
+Initialized empty Git repository in /tmp/m02-hostile-git-1649/.git/
+test hostile_git_config_does_not_execute_external_helper ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+
+     Running tests/attach.rs (target/debug/deps/attach-3abfd94c037c2748)
+
+running 4 tests
+test attach_request_rejects_unbounded_budget ... ok
+test lifecycle_does_not_skip_validation ... ok
+test receipt_cannot_mint_live_handle ... ok
+test unsupported_envelope_version_fails_closed ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/cache.rs (target/debug/deps/cache-7ed250d4a743c1ff)
+
+running 1 test
+test cache_is_disposable_derived_evidence ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/drift.rs (target/debug/deps/drift-a3ac74ecfcfd7240)
+
+running 1 test
+test changed_component_produces_reconstructable_diff ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/git_system.rs (target/debug/deps/git_system-98a175b5e92773fa)
+
+running 6 tests
+test remote_credentials_are_redacted_before_evidence ... ok
+test hostile_dual_output_is_capped_without_deadlock ... ok
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: will change to "main" in Git 3.0. To configure the initial branch name
+hint: to use in all of your new repositories, which will suppress this warning,
+hint: call:
+hint: will change to "main" in Git 3.0. To configure the initial branch name
+hint:
+hint: to use in all of your new repositories, which will suppress this warning,
+hint: 	git config --global init.defaultBranch <name>
+hint: call:
+hint:
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 	git config --global init.defaultBranch <name>
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 	git branch -m <name>
+hint:
+hint: 'development'. The just-created branch can be renamed via this command:
+hint: Disable this message with "git config set advice.defaultBranchName false"
+hint:
+hint: 	git branch -m <name>
+hint:
+hint: Disable this message with "git config set advice.defaultBranchName false"
+Initialized empty Git repository in /tmp/m02-git-fsmonitor-1699/.git/
+Initialized empty Git repository in /tmp/m02-git-untracked-1699/.git/
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: will change to "main" in Git 3.0. To configure the initial branch name
+hint: to use in all of your new repositories, which will suppress this warning,
+hint: call:
+hint:
+hint: 	git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint: 	git branch -m <name>
+hint:
+hint: Disable this message with "git config set advice.defaultBranchName false"
+Initialized empty Git repository in /tmp/m02-git-1699/.git/
+[master (root-commit) 7fc5889] fixture
+ 1 file changed, 1 insertion(+)
+ create mode 100644 file.txt
+test hostile_fsmonitor_configuration_never_executes_a_canary ... ok
+test content_hashed_untracked_bytes_change_the_git_basis ... ok
+test system_git_inspects_a_local_repository_without_network_or_mutation ... ok
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: will change to "main" in Git 3.0. To configure the initial branch name
+hint: to use in all of your new repositories, which will suppress this warning,
+hint: call:
+hint:
+hint: 	git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint: 	git branch -m <name>
+hint:
+hint: Disable this message with "git config set advice.defaultBranchName false"
+Initialized empty Git repository in /tmp/m02-git-after-deadline-1699/.git/
+test hostile_git_deadline_kills_reaps_and_does_not_poison_next_inspection ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.57s
+
+     Running tests/hashing.rs (target/debug/deps/hashing-193a3f6c1bf5131e)
+
+running 2 tests
+test single_file_limit_is_typed ... ok
+test conveyor_reuses_equivalent_proof_without_unbounded_memory ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+
+     Running tests/identity.rs (target/debug/deps/identity-dd8930a924d0b3c8)
+
+running 2 tests
+test conservative_fsc_does_not_guess_windows_case_semantics ... ok
+test bvm_profiles_are_deterministic_and_non_empty ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/invalidation.rs (target/debug/deps/invalidation-fea510d50bfcf223)
+
+running 1 test
+test git_index_hint_only_invalidates_index ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/reconciliation.rs (target/debug/deps/reconciliation-19c8011840b1f931)
+
+running 2 tests
+test contradictory_hive_evidence_is_explicit_conflict ... ok
+test unavailable_hive_keeps_standalone_binding ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/repository_graph.rs (target/debug/deps/repository_graph-08c00f9252bff9ed)
+
+running 2 tests
+test graph_contains_separate_repository_and_worktree_nodes ... ok
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: will change to "main" in Git 3.0. To configure the initial branch name
+hint: to use in all of your new repositories, which will suppress this warning,
+hint: call:
+hint:
+hint: 	git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint: 	git branch -m <name>
+hint:
+hint: Disable this message with "git config set advice.defaultBranchName false"
+Initialized empty Git repository in /tmp/m02-nested-1905/nested/.git/
+test standalone_graph_represents_nested_repository_boundary ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+
+     Running tests/service.rs (target/debug/deps/service-b74ab2a5c2e752cf)
+
+running 7 tests
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: will change to "main" in Git 3.0. To configure the initial branch name
+hint: to use in all of your new repositories, which will suppress this warning,
+hint: call:
+hint:
+hint: 	git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint: 	git branch -m <name>
+hint:
+hint: Disable this message with "git config set advice.defaultBranchName false"
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: will change to "main" in Git 3.0. To configure the initial branch name
+hint: will change to "main" in Git 3.0. To configure the initial branch name
+hint: to use in all of your new repositories, which will suppress this warning,
+hint: to use in all of your new repositories, which will suppress this warning,
+hint: call:
+hint: call:
+hint:
+hint: 	git config --global init.defaultBranch <name>
+hint:
+hint:
+hint: 	git config --global init.defaultBranch <name>
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint:
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint: 	git branch -m <name>
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint:
+hint: Disable this message with "git config set advice.defaultBranchName false"
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint: 	git branch -m <name>
+hint:
+hint: Disable this message with "git config set advice.defaultBranchName false"
+Initialized empty Git repository in /tmp/m02-service-1942/.git/
+Initialized empty Git repository in /tmp/m02-service-bhc-1942/.git/
+Initialized empty Git repository in /tmp/m02-service-dws-equivalence-1942/.git/
+Initialized empty Git repository in /tmp/m02-service-selective-1942/.git/
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: will change to "main" in Git 3.0. To configure the initial branch name
+hint: to use in all of your new repositories, which will suppress this warning,
+hint: call:
+hint:
+hint: 	git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint: 	git branch -m <name>
+hint:
+hint: Disable this message with "git config set advice.defaultBranchName false"
+test invalidation_overflow_broadens_and_blocks_freshness ... ok
+Initialized empty Git repository in /tmp/m02-service-nested-drift-1942/.git/
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: will change to "main" in Git 3.0. To configure the initial branch name
+hint: to use in all of your new repositories, which will suppress this warning,
+hint: call:
+hint:
+hint: 	git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint: 	git branch -m <name>
+hint:
+hint: Disable this message with "git config set advice.defaultBranchName false"
+test no_git_content_change_invalidates_standalone_binding ... FAILED
+[master (root-commit) 3d3b06d] fixture
+ 1 file changed, 1 insertion(+)
+ create mode 100644 tracked.txt
+[master (root-commit) b41f316] fixture
+ 1 file changed, 1 insertion(+)
+ create mode 100644 tracked.txt
+[master (root-commit) 3d3b06d] fixture
+ 1 file changed, 1 insertion(+)
+ create mode 100644 tracked.txt
+test git_content_hashing_uses_the_service_conveyor ... ok
+[master (root-commit) 3d3b06d] fixture
+ 1 file changed, 1 insertion(+)
+ create mode 100644 tracked.txt
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: will change to "main" in Git 3.0. To configure the initial branch name
+hint: to use in all of your new repositories, which will suppress this warning,
+hint: call:
+hint:
+hint: 	git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint: 	git branch -m <name>
+hint:
+hint: Disable this message with "git config set advice.defaultBranchName false"
+Initialized empty Git repository in /tmp/m02-service-nested-drift-1942/nested/.git/
+test attach_path_revalidate_and_detach_are_explicit ... FAILED
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: will change to "main" in Git 3.0. To configure the initial branch name
+hint: to use in all of your new repositories, which will suppress this warning,
+hint: call:
+hint:
+hint: 	git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint: 	git branch -m <name>
+hint:
+hint: Disable this message with "git config set advice.defaultBranchName false"
+Initialized empty Git repository in /tmp/m02-service-dws-equivalence-1942/nested/.git/
+test selective_metadata_revalidation_preserves_source_dirtiness ... ok
+test unrelated_event_hint_cannot_hide_nested_repository_graph_drift ... FAILED
+test selective_revalidation_matches_full_recomputation_for_same_mask ... ok
+
+failures:
+
+---- no_git_content_change_invalidates_standalone_binding stdout ----
+
+thread 'no_git_content_change_invalidates_standalone_binding' (1946) panicked at crates/core-workspace/tests/service.rs:133:5:
+assertion `left == right` failed
+  left: RebindRequired
+ right: UpdatedCompatible
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- attach_path_revalidate_and_detach_are_explicit stdout ----
+
+thread 'attach_path_revalidate_and_detach_are_explicit' (1943) panicked at crates/core-workspace/tests/service.rs:90:5:
+assertion `left == right` failed
+  left: RebindRequired
+ right: UpdatedCompatible
+
+---- unrelated_event_hint_cannot_hide_nested_repository_graph_drift stdout ----
+
+thread 'unrelated_event_hint_cannot_hide_nested_repository_graph_drift' (1976) panicked at crates/core-workspace/tests/service.rs:196:10:
+graph drift must produce a delta
+
+
+failures:
+    attach_path_revalidate_and_detach_are_explicit
+    no_git_content_change_invalidates_standalone_binding
+    unrelated_event_hint_cannot_hide_nested_repository_graph_drift
+
+test result: FAILED. 4 passed; 3 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.39s
+
+error: test failed, to rerun pass `-p core-workspace --test service`

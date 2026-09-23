@@ -1,0 +1,202 @@
+source_commit=6cae77e1d8814121df6646dec48bca1020119226
+source_method=git archive from /mnt/d/Projects/core, extracted under Ubuntu 26.04 WSL2 ext4 /tmp
+command=cargo test -p core-workspace --test service
+expected_base_exit=101; three named M02 failures reproduced
+
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling unicode-ident v1.0.26
+   Compiling serde_core v1.0.229
+   Compiling serde v1.0.229
+   Compiling version_check v0.9.5
+   Compiling libc v0.2.189
+   Compiling generic-array v0.14.7
+   Compiling zmij v1.0.23
+   Compiling typenum v1.20.1
+   Compiling thiserror v2.0.20
+   Compiling serde_json v1.0.151
+   Compiling syn v3.0.6
+   Compiling itoa v1.0.18
+   Compiling hashbrown v0.17.1
+   Compiling equivalent v1.0.2
+   Compiling memchr v2.8.3
+   Compiling crypto-common v0.1.7
+   Compiling block-buffer v0.10.4
+   Compiling winnow v0.7.15
+   Compiling indexmap v2.14.2
+   Compiling toml_write v0.1.2
+   Compiling digest v0.10.7
+   Compiling errno v0.3.14
+   Compiling cfg-if v1.0.5
+   Compiling cpufeatures v0.2.17
+   Compiling signal-hook-registry v1.4.8
+   Compiling sha2 v0.10.9
+   Compiling socket2 v0.6.5
+   Compiling mio v1.2.3
+   Compiling pin-project-lite v0.2.17
+   Compiling bytes v1.12.1
+   Compiling serde_derive v1.0.229
+   Compiling thiserror-impl v2.0.20
+   Compiling tokio-macros v2.7.2
+   Compiling tokio v1.53.1
+   Compiling serde_spanned v0.6.9
+   Compiling toml_datetime v0.6.11
+   Compiling core-contracts v0.1.0 (/tmp/core-m03-workspace-base-6cae77e1-h5/crates/core-contracts)
+   Compiling toml_edit v0.22.27
+   Compiling core-identity v0.1.0 (/tmp/core-m03-workspace-base-6cae77e1-h5/crates/core-identity)
+   Compiling toml v0.8.23
+   Compiling core-config v0.1.0 (/tmp/core-m03-workspace-base-6cae77e1-h5/crates/core-config)
+   Compiling core-workspace v0.1.0 (/tmp/core-m03-workspace-base-6cae77e1-h5/crates/core-workspace)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 19.69s
+     Running tests/service.rs (target/debug/deps/service-b74ab2a5c2e752cf)
+
+running 7 tests
+Initialized empty Git repository in /tmp/m02-service-selective-1558/.git/
+Initialized empty Git repository in /tmp/m02-service-dws-equivalence-1558/.git/
+Initialized empty Git repository in /tmp/m02-service-bhc-1558/.git/
+Initialized empty Git repository in /tmp/m02-service-1558/.git/
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: will change to "main" in Git 3.0. To configure the initial branch name
+hint: will change to "main" in Git 3.0. To configure the initial branch name
+hint: to use in all of your new repositories, which will suppress this warning,
+hint: to use in all of your new repositories, which will suppress this warning,
+hint: call:
+hint: call:
+hint:
+hint:
+hint: 	git config --global init.defaultBranch <name>
+hint: 	git config --global init.defaultBranch <name>
+hint:
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint:
+hint: 	git branch -m <name>
+hint: 	git branch -m <name>
+hint:
+hint:
+hint: Disable this message with "git config set advice.defaultBranchName false"
+hint: Disable this message with "git config set advice.defaultBranchName false"
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: will change to "main" in Git 3.0. To configure the initial branch name
+hint: to use in all of your new repositories, which will suppress this warning,
+hint: call:
+hint:
+hint: 	git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint: 	git branch -m <name>
+hint:
+hint: Disable this message with "git config set advice.defaultBranchName false"
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: will change to "main" in Git 3.0. To configure the initial branch name
+hint: to use in all of your new repositories, which will suppress this warning,
+hint: call:
+hint:
+hint: 	git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint: 	git branch -m <name>
+hint:
+hint: Disable this message with "git config set advice.defaultBranchName false"
+test invalidation_overflow_broadens_and_blocks_freshness ... ok
+test no_git_content_change_invalidates_standalone_binding ... FAILED
+Initialized empty Git repository in /tmp/m02-service-nested-drift-1558/.git/
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: will change to "main" in Git 3.0. To configure the initial branch name
+hint: to use in all of your new repositories, which will suppress this warning,
+hint: call:
+hint:
+hint: 	git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint: 	git branch -m <name>
+hint:
+hint: Disable this message with "git config set advice.defaultBranchName false"
+[master (root-commit) ec14cd9] fixture
+ 1 file changed, 1 insertion(+)
+ create mode 100644 tracked.txt
+[master (root-commit) ec14cd9] fixture
+ 1 file changed, 1 insertion(+)
+ create mode 100644 tracked.txt
+[master (root-commit) ec14cd9] fixture
+ 1 file changed, 1 insertion(+)
+ create mode 100644 tracked.txt
+[master (root-commit) 3ac9909] fixture
+ 1 file changed, 1 insertion(+)
+ create mode 100644 tracked.txt
+test git_content_hashing_uses_the_service_conveyor ... ok
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: will change to "main" in Git 3.0. To configure the initial branch name
+hint: to use in all of your new repositories, which will suppress this warning,
+hint: call:
+hint:
+hint: 	git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint: 	git branch -m <name>
+hint:
+hint: Disable this message with "git config set advice.defaultBranchName false"
+Initialized empty Git repository in /tmp/m02-service-nested-drift-1558/nested/.git/
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: will change to "main" in Git 3.0. To configure the initial branch name
+hint: to use in all of your new repositories, which will suppress this warning,
+hint: call:
+hint:
+hint: 	git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint: 	git branch -m <name>
+hint:
+hint: Disable this message with "git config set advice.defaultBranchName false"
+Initialized empty Git repository in /tmp/m02-service-dws-equivalence-1558/nested/.git/
+test attach_path_revalidate_and_detach_are_explicit ... FAILED
+test selective_metadata_revalidation_preserves_source_dirtiness ... ok
+test unrelated_event_hint_cannot_hide_nested_repository_graph_drift ... FAILED
+test selective_revalidation_matches_full_recomputation_for_same_mask ... ok
+
+failures:
+
+---- no_git_content_change_invalidates_standalone_binding stdout ----
+
+thread 'no_git_content_change_invalidates_standalone_binding' (1562) panicked at crates/core-workspace/tests/service.rs:133:5:
+assertion `left == right` failed
+  left: RebindRequired
+ right: UpdatedCompatible
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- attach_path_revalidate_and_detach_are_explicit stdout ----
+
+thread 'attach_path_revalidate_and_detach_are_explicit' (1559) panicked at crates/core-workspace/tests/service.rs:90:5:
+assertion `left == right` failed
+  left: RebindRequired
+ right: UpdatedCompatible
+
+---- unrelated_event_hint_cannot_hide_nested_repository_graph_drift stdout ----
+
+thread 'unrelated_event_hint_cannot_hide_nested_repository_graph_drift' (1580) panicked at crates/core-workspace/tests/service.rs:196:10:
+graph drift must produce a delta
+
+
+failures:
+    attach_path_revalidate_and_detach_are_explicit
+    no_git_content_change_invalidates_standalone_binding
+    unrelated_event_hint_cannot_hide_nested_repository_graph_drift
+
+test result: FAILED. 4 passed; 3 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.35s
+
+error: test failed, to rerun pass `-p core-workspace --test service`
