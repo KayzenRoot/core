@@ -694,3 +694,28 @@ Status: `ACTIVE`
 ## CORE-D-166 - M03 implementation is promoted and M04 planning is the next legal product increment
 **Decision:** M03-REVIEW-009 / Issue #73 APPROVED CORE-WO-M03-001 at exact head `b92f14514e4cf615ed76fa87915539a835b6a85b`. Workflow run `35905315953` completed all 10 jobs SUCCESS, including M03 Windows, M03 Ubuntu and the seven-target bounded fuzz campaign. PR #72 was squash-promoted as canonical merge `c63df6ad581c44bac66a8b1dab9a86522ce7fe3b`. EV-025 is satisfied by the independent exact-head review and no unresolved HIGH/CRITICAL finding remains. This closeout delta changes governance/project state only. After its independent review and promotion, M04 discovery/planning is the next legal product increment; M04 implementation remains unauthorized until its own planning freeze and execution admission.
 **State:** ACCEPTED
+
+
+## CORE-D-167 - M04 owns execution state, not execution side effects
+**Decision:** M04 owns deterministic Run / Attempt / Step identities, lifecycle transitions, lineage, terminal-state semantics, replayable execution-state records and continuation boundaries. Host/model/tool execution, mutations, verification, recovery policy, delivery and telemetry transport remain owned by later modules. M04 implementation remains unauthorized.
+**State:** PROPOSED; M04 Round 1 discovery candidate.
+
+## CORE-D-168 - M04 starts only from revalidated M03 READY authority
+**Decision:** creation/admission of a Run requires a current M03 READY handoff whose work-order, workspace/basis, Context Lock/governance and policy bindings are revalidated at the start boundary. UNKNOWN or stale authority fails closed.
+**State:** PROPOSED; M04 Round 1 discovery candidate.
+
+## CORE-D-169 - M04 history is append-only and retries create new Attempts
+**Decision:** Attempts and Steps are immutable historical lineage records once terminal. Retry or continuation creates a new bounded child/epoch rather than rewriting prior execution history.
+**State:** PROPOSED; M04 Round 1 discovery candidate.
+
+## CORE-D-170 - Semantic ordering is causal, not wall-clock based
+**Decision:** M04 uses explicit monotonic semantic generations/sequences for ordering and compare-and-set behavior. Timestamps may be diagnostic metadata but cannot alone establish execution truth.
+**State:** PROPOSED; M04 Round 1 discovery candidate.
+
+## CORE-D-171 - M04 replay and state publication fail closed
+**Decision:** canonical event replay must reconstruct identical semantic state. Reordered, duplicated where non-idempotent, truncated, corrupt or stale-generation histories fail typed. Storage adapters must prevent valid partial advancement through an atomic semantic state fence.
+**State:** PROPOSED; M04 Round 1 discovery candidate.
+
+## CORE-D-172 - M04 core is backend-neutral, zero-LLM and hidden-I/O-free
+**Decision:** Round 1 freezes no persistence backend. Core state-machine semantics consume explicit values/evidence and perform no hidden filesystem, process, network, database, HIVE/GitHub or LLM operation.
+**State:** PROPOSED; M04 Round 1 discovery candidate.
