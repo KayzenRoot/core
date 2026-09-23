@@ -1699,7 +1699,7 @@ Round 3 is complete when:
 
 ## Round 4 - public contracts, adapters and validation freeze
 
-Status: PLANNING REVIEW CANDIDATE. Rounds 1-3 remain accepted. This section does not authorize M03 implementation.
+Status: PROMOTED PLANNING BASELINE. Rounds 1-4 are accepted. This section does not authorize M03 implementation.
 
 ### Round 4 preservation rules
 
