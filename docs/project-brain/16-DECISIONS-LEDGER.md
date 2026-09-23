@@ -627,11 +627,11 @@ Status: `ACTIVE`
 **State:** ACCEPTED FOR ROUND 4 PLANNING; independent audit/promotion pending; implementation remains unauthorized.
 
 ## CORE-D-151 - Semantic identity is an explicit canonical projection
-**Decision:** WorkOrderFingerprint covers only explicitly enumerated immutable semantic fields. Diagnostics, timestamps, transport/rendering state and future runtime/evidence data remain outside the frozen semantic projection. Unordered collections are explicitly sorted before reusing core-identity canonical_bytes/fingerprint.
+**Decision:** WorkOrderFingerprint covers only explicitly enumerated immutable semantic fields. Diagnostics, timestamps, transport/rendering state, future runtime/evidence data and compiler/canonicalizer/policy/config/security implementation generations remain outside the frozen semantic projection. Unordered collections are explicitly sorted before reusing core-identity canonical_bytes/fingerprint; compiler implementation identity is bound separately by WorkOrderCompilationId.
 **State:** ACCEPTED FOR ROUND 4 PLANNING; independent audit/promotion pending; implementation remains unauthorized.
 
 ## CORE-D-152 - M03 services consume resolved evidence and perform no hidden I/O
-**Decision:** parse/compile/validate/diff/correction/admission/handoff are synchronous pure operations over explicit bounded values and budgets. Caller-owned resolvers run outside the core; the M03 functions never call adapters, refresh, retry, persist or access ambient state.
+**Decision:** parse/compile/validate/diff/correction/admission/handoff are synchronous pure operations over explicit bounded values and deterministic budgets. Caller-owned resolvers and wall-clock deadline guards run outside the core; M03 functions never call adapters, read a host clock, refresh, retry, persist or access ambient state. A timed-out caller must discard any late result.
 **State:** ACCEPTED FOR ROUND 4 PLANNING; independent audit/promotion pending; implementation remains unauthorized.
 
 ## CORE-D-153 - M02 proof crosses a narrow value-only adapter boundary
@@ -652,7 +652,7 @@ Status: `ACTIVE`
 **State:** ACCEPTED FOR ROUND 4 PLANNING; independent audit/promotion pending; implementation remains unauthorized.
 
 ## CORE-D-157 - Resource limits are finite and calibration-gated
-**Decision:** all security-sensitive M03 resource dimensions must have finite positive values before production acceptance. Round 4 freezes dimensions, fixtures, measurement protocol and fail-closed selection rules; it assigns no numeric defaults or measured performance claims.
+**Decision:** all security-sensitive deterministic M03 core resource dimensions must have finite positive values before production acceptance. Round 4 freezes dimensions, fixtures, measurement protocol and fail-closed selection rules; it assigns no numeric defaults or measured performance claims. Wall-clock deadlines are caller-owned orchestration guards outside the pure core and cannot make semantic output depend on host scheduling.
 **State:** ACCEPTED FOR ROUND 4 PLANNING; independent audit/promotion pending; implementation remains unauthorized.
 
 ## CORE-D-158 - M03 property and fuzz laws are explicit V0.0 obligations

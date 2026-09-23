@@ -200,7 +200,7 @@ The future implementation evidence must map each blocking acceptance criterion t
 | Packet/scope | Permuted valid DAGs produce one order; cycle/dangling/budget failures are typed; deny precedence and child-scope intersection prevent widening. |
 | AEG/PCM | Missing blocking evidence, dangling edges and silent mandatory-source loss fail; reconstructed packet source sets equal independent requirements. |
 | Lineage/correction | Stale LPC and competing N+1 CAS behavior; semantic deltas require a new revision; same-revision changes stay inside CorrectionPolicy. |
-| Atomic resources | At-limit, over-limit and deadline cases return typed results; failure never returns partial FrozenWorkOrder, READY receipt or handoff. |
+| Atomic resources | At-limit and over-limit core cases return typed results; failure never returns partial FrozenWorkOrder, READY receipt or handoff. A caller-owned deadline test must prove a timed-out/late service result is discarded and cannot be admitted. |
 | Security | Secret canaries, bounded diagnostics, no hidden I/O, no secret-bearing durable fields, schema downgrade, stale receipt and authority-changing retry attempts. |
 
 ### M03 Round 4 property and fuzz targets
@@ -225,7 +225,7 @@ No current M03 benchmark has run, so Round 4 reports no measured latency, memory
 
 Use deterministic local synthetic fixtures and assert semantics for every candidate. Run on Windows and Ubuntu, warm once, collect at least five measured iterations per scenario, and report median/min/max, exact commands, source SHA, OS, toolchain, CPU and fixture generator/version. Exercise candidate limits and cap-plus-one failures for every security-sensitive dimension. Cold/warm/cache equivalence applies only if an optional derived compile memo is separately admitted; the baseline is uncached.
 
-Finite positive M03ResourceBudget defaults and any acceptance thresholds remain calibration-gated until implementation evidence exists. Unsupported scales are marked skipped/unsupported rather than extrapolated. Calibration failure, timeout, overflow or absent required scenario blocks production acceptance; no measurements or defaults may be invented in a planning document.
+Finite positive M03ResourceBudget defaults and any acceptance thresholds remain calibration-gated until implementation evidence exists. Unsupported scales are marked skipped/unsupported rather than extrapolated. Calibration failure, caller-owned timeout, overflow or absent required scenario blocks production acceptance; no measurements or defaults may be invented in a planning document. Deadline tests must verify the core itself performs no ambient clock read and the caller discards any late result.
 
 ### M03 V0.0 production evidence gates
 

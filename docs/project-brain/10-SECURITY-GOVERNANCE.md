@@ -90,12 +90,12 @@ M02 threat model details and adversarial fixtures are maintained in `docs/module
 
 - Every public durable M03 contract is explicitly schema/version/kind bound; unsupported versions and downgrade/replay attempts fail typed.
 - The semantic fingerprint projection is field-explicit, sorted and secret-free. Diagnostics, timestamps, transport/rendering fields and raw source/context bodies cannot mutate a frozen revision or enter its fingerprint.
-- The core compiler/admission crate receives bounded typed evidence only. It has no hidden filesystem, cwd, Git, GitHub, HIVE, network, process, database, refresh, retry or persistence authority.
+- The core compiler/admission crate receives bounded typed evidence only. It has no hidden filesystem, cwd, clock/timer, Git, GitHub, HIVE, network, process, database, refresh, retry or persistence authority.
 - Resolver/adaptor implementations are outside the pure core. M03 never calls them; their evidence includes schema/version, source/workspace/lock/governance identity, fingerprint, provenance, freshness and bounded status.
 - M02 snapshot mismatch, missing required basis components, stale generation, source substitution, Context Lock replay, governance proof replay, lineage CAS conflict or UNKNOWN state fails closed and cannot produce READY.
 - M03 verifies external governance proof compatibility but cannot mint approval. HIVE references are advisory-only and cannot substitute for canonical Git, M02 or GEF proof.
 - Scope deny rules override allow rules, child packet scope is intersected with parent scope, dependency admission is independent, and ambiguous or authority-changing retries fail closed.
 - WorkOrderId allocation uses explicit caller identity or deterministic versioned logical keys; random values, clocks, branch names, cwd, host state and map iteration are excluded.
-- M03ResourceBudget values must be finite and positive after calibration. Parser depth, serialized size, graph cardinality, diagnostics and operation time are bounded; exhaustion returns typed failure without partial FROZEN/READY/handoff state.
+- M03ResourceBudget values must be finite and positive after calibration. Parser depth, serialized size, graph cardinality and diagnostics are deterministically bounded inside the core; exhaustion returns typed failure without partial FROZEN/READY/handoff state. Wall-clock deadlines are enforced only by caller-owned orchestration, which must discard late results and emit typed timeout evidence.
 - Diagnostics expose only bounded safe codes, IDs/fingerprints and redaction classes. Raw prompts, source bodies, secrets, credentials, HIVE payloads and unbounded external/process error strings are forbidden.
 - External lineage persistence uses LPC compare-and-set. M03 cannot write, auto-rebase, commit, push, update the checkpoint or turn stale evidence into current authority.

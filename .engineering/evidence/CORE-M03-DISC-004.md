@@ -104,3 +104,14 @@ No product source, tests, Cargo manifest, lockfile, active protection rule, or g
 ## PR exact-head and CI addendum
 
 PR #62: https://github.com/KayzenRoot/core/pull/62. The PR source-branch metadata is the authoritative record of the final source SHA; its body will repeat that SHA and list each required context with run/workflow identifier and terminal status after the final evidence-update push. `READY_FOR_REVIEW` is allowed only if the exact final head is open against `main`, all seven required contexts succeeded, and this evidence bundle is complete. Do not merge or promote the checkpoint.
+
+
+## Reviewer-first Correction Delta - Review 001 pre-approval
+
+Independent review found three planning inconsistencies that were directly correctable inside the admitted documentation-only scope:
+
+1. **Pure-core deadline contradiction:** the candidate placed wall-clock millisecond deadline fields inside `M03ResourceBudgetV1` while also requiring synchronous value-replay purity and no ambient state. Correction: core budgets are deterministic size/depth/cardinality limits only; wall-clock deadlines are caller-owned orchestration guards, the core reads no clock, and any timed-out/late result is discarded before it can become FROZEN/READY/handoff evidence.
+2. **Semantic/compiler identity overlap:** the candidate included compiler contract generation inside `WorkOrderFingerprint` while `WorkOrderCompilationId` is the accepted compiler-identity layer. Correction: compiler/canonicalizer/policy/config/security implementation generations are excluded from WorkOrderFingerprint and remain bound by WorkOrderCompilationId.
+3. **Incomplete public service-result freeze:** validation/diff/correction return types were referenced by public signatures without sufficiently frozen root/result shapes. Correction: root contract kinds now include compilation/validation/diff/correction results and exact result fields/disposition are frozen sufficiently for a mechanical implementation Work Order.
+
+These corrections do not add product code, dependencies, implementation authority, scope, runtime behavior, or new module ownership. They preserve CORE-D-132 reviewer-first correction policy and invalidate prior exact-head CI. The PR source-branch metadata is the authoritative corrected head; fresh seven-context exact-head CI is required before an APPROVED verdict.

@@ -1709,7 +1709,7 @@ The exact names and field ownership below are normative for the later M03 V0.0 i
 
 ### Public Rust schema and identity
 
-Every public durable payload is wrapped with the exact schema identifier nexlabs.core.work-order, version 1, and a closed kind enum. Unknown schema, version, kind, enum value or required field is a typed error; no downgrade or best-effort reinterpretation is allowed.
+Every root payload that crosses a durable or external M03 boundary is wrapped with the exact schema identifier nexlabs.core.work-order, version 1, and a closed kind enum. Nested DTOs inherit the root M03 schema/version or carry their explicitly named producer schema/version where stated. Bare service return structs are in-memory values; before persistence or transport they MUST be wrapped with the corresponding root kind below. Unknown schema, version, kind, enum value or required field is a typed error; no downgrade or best-effort reinterpretation is allowed.
 
 ~~~rust
 pub const M03_SCHEMA: &str = "nexlabs.core.work-order";
@@ -1786,6 +1786,10 @@ The supporting envelope and resolved-evidence DTO shapes are also frozen:
 pub enum WorkOrderContractKindV1 {
     Request,
     Frozen,
+    Compilation,
+    ValidationReceipt,
+    RevisionDiff,
+    CorrectionClassification,
     AdmissionRequest,
     AdmissionReceipt,
     AdmittedHandoff,
@@ -1907,10 +1911,6 @@ pub struct M03ResourceBudgetV1 {
     pub max_diff_entries: u64,
     pub max_diagnostic_entries: u64,
     pub max_parse_depth: u32,
-    pub compile_deadline_ms: u64,
-    pub validate_deadline_ms: u64,
-    pub diff_deadline_ms: u64,
-    pub admission_deadline_ms: u64,
     pub calibration_state: ResourceCalibrationStateV1,
 }
 
@@ -1941,6 +1941,42 @@ pub struct WorkOrderAdmissionReceiptV1 {
     receipt_fingerprint: EvidenceFingerprintV1,
 }
 
+pub struct WorkOrderValidationReceiptV1 {
+    pub work_order_id: WorkOrderId,
+    pub revision: WorkOrderRevision,
+    pub work_order_fingerprint: WorkOrderFingerprint,
+    pub semantic_projection_fingerprint: EvidenceFingerprintV1,
+    pub receipt_fingerprint: EvidenceFingerprintV1,
+}
+
+pub struct WorkOrderRevisionDiffV1 {
+    pub work_order_id: WorkOrderId,
+    pub before_revision: WorkOrderRevision,
+    pub before_fingerprint: WorkOrderFingerprint,
+    pub after_revision: WorkOrderRevision,
+    pub after_fingerprint: WorkOrderFingerprint,
+    pub changed_semantic_fields: Vec<String>, // bounded canonical field identifiers
+    pub requires_new_revision: bool,
+    pub forbidden_reason_codes: Vec<WorkOrderErrorCodeV1>,
+    pub diff_fingerprint: EvidenceFingerprintV1,
+}
+
+pub enum CorrectionDispositionV1 {
+    AllowedSameRevision,
+    RequiresNewRevision,
+    Forbidden,
+}
+
+pub struct CorrectionClassificationReceiptV1 {
+    pub work_order_id: WorkOrderId,
+    pub revision: WorkOrderRevision,
+    pub work_order_fingerprint: WorkOrderFingerprint,
+    pub proposal_fingerprint: EvidenceFingerprintV1,
+    pub disposition: CorrectionDispositionV1,
+    pub reason_codes: Vec<WorkOrderErrorCodeV1>,
+    pub receipt_fingerprint: EvidenceFingerprintV1,
+}
+
 pub struct AdmittedWorkOrderV1 {
     work_order_id: WorkOrderId,
     revision: WorkOrderRevision,
@@ -1958,7 +1994,7 @@ pub struct AdmittedWorkOrderV1 {
 
 Additional enum domains are closed V1 types: WorkspaceFreshnessProfileV1 mirrors only the named M02 BVM profiles; BasisCompatibilityV1 is EXACT_MATCH/COMPATIBLE_REFRESH/INCOMPATIBLE/UNKNOWN; EvidenceFreshnessV1 is CURRENT/STALE/UNKNOWN/SUBSTITUTED; ExternalGovernanceVerdictV1 is an externally verified accepted/rejected/blocked result; AdmissionModeV1 is the requested policy class; ResourceCalibrationStateV1 is UNCALIBRATED/CALIBRATED; EvidenceFingerprintV1 is a validated lowercase 64-character digest; and SafeSubjectRefV1 contains a typed subject kind plus a bounded safe ID/fingerprint. Every ID/fingerprint wrapper uses `#[serde(transparent)]`; all public contract structs/enums derive Serialize/Deserialize, closed enums serialize in snake_case, and required contract fields have no silent defaults.
 
-M03ResourceBudgetV1 has no Default implementation and every value must be finite and positive. Deadline fields are execution guards only: they are excluded from semantic identity, cannot mint a partial result, and are recorded as typed RESOURCE errors when exhausted. Under-budget identical inputs have identical semantic outputs; deadline variation cannot change an output that was returned successfully.
+M03ResourceBudgetV1 has no Default implementation and every value must be finite and positive. It contains deterministic size, depth and cardinality limits only. Wall-clock deadlines are caller-owned orchestration guards outside the pure core: core-work-order never reads a host clock or ambient timer. If a caller deadline expires, the caller MUST discard any concurrent/late result and record a typed M03_CALL_DEADLINE_EXCEEDED host failure; a timed-out invocation cannot yield an accepted FROZEN, READY or handoff object. This preserves CORE-R-207 / CORE-D-148 without making identical value inputs depend on scheduler or machine timing.
 
 All ID and fingerprint wrappers are distinct Rust types with private validated constructors and stable serialized string representations. FrozenWorkOrderV1, WorkOrderAdmissionReceiptV1 and AdmittedWorkOrderV1 have private fields and read-only accessors, with no in-place mutation API. IDs are non-empty, bounded, domain-separated values. Revision is a positive u32 and advances by exactly one for a newly canonical semantic revision. Fingerprints are validated lowercase 64-character SHA-256 hex strings. WorkOrderId is caller supplied or derived deterministically from WorkOrderLogicalKeyV1 through core-identity; M03 never uses random UUIDs, clocks, branch names, cwd, map iteration or host identity to mint IDs.
 
@@ -1987,7 +2023,7 @@ Enums are closed, versioned and serialized in snake_case. The minimum enum domai
 
 ### Semantic projection and canonical identity
 
-WorkOrderFingerprint covers only the versioned semantic projection: envelope schema/version/kind; WorkOrderId and revision; compiler contract generation; objective; source identities, expected fingerprints, authority/provenance/freshness and expansion obligations; workspace, Context Lock and governance requirements; allow/deny and dependency policy; risk/assurance; packet nodes/edges/scopes; acceptance/evidence nodes/edges; context limits/mandatory references; correction policy; stop condition; and semantic lineage parent.
+WorkOrderFingerprint covers only the versioned semantic projection: envelope schema/version/kind; WorkOrderId and revision; objective; source identities, expected fingerprints, authority/provenance/freshness and expansion obligations; workspace, Context Lock and governance requirements; allow/deny and dependency policy; risk/assurance; packet nodes/edges/scopes; acceptance/evidence nodes/edges; context limits/mandatory references; correction policy; stop condition; and semantic lineage parent. Compiler implementation identity, canonicalization algorithm version and policy/config/security generations are deliberately excluded from WorkOrderFingerprint and are bound by WorkOrderCompilationId instead.
 
 WorkOrderFingerprint excludes mutable diagnostics, timestamps, wall durations, UI/rendering order, transport IDs, PR URLs, raw context bodies, actual future evidence artifacts, and all M04 runtime identities. Diagnostic and transport data do not live inside FrozenWorkOrderV1. WorkOrderCompilationId additionally binds the WorkOrderFingerprint to compiler schema/algorithm, relevant policy/config/security generations and resolved compilation-context fingerprint. AdmissionReceipt fingerprint separately binds current freshness and authority evidence.
 
@@ -1995,7 +2031,7 @@ All unordered collections are explicitly sorted by their typed stable key before
 
 ### Pure service API
 
-The later crate exports these synchronous functions. They receive all evidence and budgets explicitly, have no global/config/cwd state and return no partially frozen or READY object on error.
+The later crate exports these synchronous functions. They receive all semantic evidence and deterministic resource budgets explicitly, have no global/config/cwd/clock state and return no partially frozen or READY object on error. Caller-owned wall-clock timeout enforcement wraps these calls outside core-work-order and must discard any result from an invocation whose deadline has expired.
 
 ~~~rust
 pub fn parse_request(
@@ -2123,10 +2159,10 @@ WorkOrderErrorV1 contains category, code, retryability, bounded safe subject ref
 - ACCEPTANCE_EVIDENCE: ACCEPTANCE_GAP, EVIDENCE_GAP, UNEXPLAINED_ORPHAN.
 - LINEAGE: SNAPSHOT_STALE, REVISION_NOT_NEXT, SUPERSEDED_REVISION, LINEAGE_CONFLICT, LPC_MISMATCH.
 - ADMISSION_STALENESS: WORKSPACE_MISMATCH, BASIS_INCOMPATIBLE, CONTEXT_LOCK_STALE, GOVERNANCE_PROOF_MISSING, GOVERNANCE_PROOF_MISMATCH, POLICY_STALE, RECEIPT_REPLAY, UNKNOWN_NOT_ADMISSIBLE.
-- RESOURCE: REQUEST_TOO_LARGE, SERIALIZED_SIZE_EXCEEDED, CARDINALITY_LIMIT_EXCEEDED, GRAPH_LIMIT_EXCEEDED, CONTEXT_LIMIT_EXCEEDED, DEADLINE_EXCEEDED.
+- RESOURCE: REQUEST_TOO_LARGE, SERIALIZED_SIZE_EXCEEDED, CARDINALITY_LIMIT_EXCEEDED, GRAPH_LIMIT_EXCEEDED, CONTEXT_LIMIT_EXCEEDED.
 - INTERNAL_INVARIANT: NONDETERMINISTIC_COMPILATION, FINGERPRINT_MISMATCH, PARTIAL_OUTPUT_FORBIDDEN, INTERNAL_INVARIANT_VIOLATION.
 
-Retryability values are NEVER, AFTER_EXPLICIT_REFRESH, AFTER_GOVERNANCE, AFTER_RESOURCE_CHANGE and INTERNAL_BUG. The value describes a caller action only. M03 never performs the refresh, governance change, resource change or retry. A failed check that might change authority cannot be hidden behind a retry.
+Retryability values are NEVER, AFTER_EXPLICIT_REFRESH, AFTER_GOVERNANCE, AFTER_RESOURCE_CHANGE and INTERNAL_BUG. The value describes a caller action only. M03 never performs the refresh, governance change, resource change or retry. A failed check that might change authority cannot be hidden behind a retry. Wall-clock timeout is not a WorkOrderErrorV1 generated by the pure core; the caller records typed M03_CALL_DEADLINE_EXCEEDED orchestration evidence and rejects any late result.
 
 ### Frozen M03 V0.0 file and dependency map
 
@@ -2199,7 +2235,7 @@ Every law is an implementation acceptance obligation. The planning round does no
 | Workspace/lock/governance | Wrong M02 schema, workspace/generation/basis/profile, Context Lock fingerprint, authorized base, governance verdict/head/scope/policy or replayed receipt fails closed. |
 | Admission | Identical frozen revision and evidence yield identical semantic receipt; changed or unknown required evidence yields non-READY; old receipts are immutable and non-evergreen. |
 | Diagnostics/secrets | Secret canaries, raw prompt/source bodies and raw adapter/process errors never appear in durable contracts or diagnostics; diagnostic differences never alter semantic identity. |
-| Resource/atomicity | All budgets are finite and positive; exact-bound inputs are handled according to policy; over-limit/deadline cases produce typed errors and no partial FROZEN, READY or handoff object. |
+| Resource/atomicity | All core budgets are finite and positive; exact-bound inputs are handled according to policy; over-limit core cases produce typed errors and no partial FROZEN, READY or handoff object. Caller-owned wall-clock timeout discards any late result and records typed timeout evidence without changing pure-core determinism. |
 | No hidden I/O | Public services can be replayed from value inputs alone and do not read files, invoke Git/HIVE/GitHub/process/network, access cwd/global clients or persist lineage. |
 
 ### Fuzz target matrix
@@ -2220,7 +2256,7 @@ Fuzz corpus seeds are synthetic public-schema samples and malformed boundary cas
 
 ### Benchmark and finite-resource calibration policy
 
-No measured M03 result or numeric production default is claimed in Round 4. M03ResourceBudgetV1 has explicit finite positive fields for request/frozen bytes, string bytes, source refs, packets, DAG edges, scope rules, criteria, evidence nodes/edges, lineage edges, context refs, correction rules, diff entries, diagnostics, parser depth and operation deadlines. There is no zero/unlimited sentinel, implicit host default or runtime self-tuning. Exact values remain CALIBRATION_GATED until code and reproducible fixtures exist.
+No measured M03 result or numeric production default is claimed in Round 4. M03ResourceBudgetV1 has explicit finite positive fields for request/frozen bytes, string bytes, source refs, packets, DAG edges, scope rules, criteria, evidence nodes/edges, lineage edges, context refs, correction rules, diff entries, diagnostics and parser depth. There is no zero/unlimited sentinel, implicit host default or runtime self-tuning. Wall-clock deadline policy is measured and enforced by the caller/host boundary, never by reading time inside the pure core. Exact values remain CALIBRATION_GATED until code and reproducible fixtures exist.
 
 The deterministic synthetic benchmark matrix varies:
 
