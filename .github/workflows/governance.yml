@@ -153,3 +153,55 @@ jobs:
           for target in m02_path_authority m02_repository_graph m02_git_evidence; do
             cargo +nightly fuzz run "$target" -- -runs=1000
           done
+
+
+  m03:
+    name: M03 work-order engine (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - name: Rust toolchain
+        run: rustup show active-toolchain
+      - name: Format
+        run: cargo fmt --all -- --check
+      - name: Clippy M03
+        run: cargo clippy -p core-work-order --all-targets --locked -- -D warnings
+      - name: M03 tests
+        run: cargo test -p core-work-order --all-targets --locked
+      - name: Supply-chain tools
+        run: cargo install cargo-deny cargo-audit --locked
+      - name: Dependency policy
+        run: cargo deny check
+      - name: Advisory scan
+        run: cargo audit
+      - name: Upload M03 evidence
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
+        with:
+          name: m03-evidence-${{ matrix.os }}
+          path: |
+            docs/evidence/M03-*
+            .engineering/evidence/CORE-WO-M03-001.json
+
+  m03-fuzz:
+    name: M03 bounded fuzz campaign
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - name: Install nightly toolchain
+        run: rustup toolchain install nightly --profile minimal
+      - name: Install cargo-fuzz
+        run: cargo +nightly install cargo-fuzz --locked
+      - name: Run bounded M03 fuzz targets
+        shell: bash
+        working-directory: fuzz
+        run: |
+          set -euo pipefail
+          for target in m03_admission_replay m03_diagnostics_redaction m03_envelope_canonical m03_lineage_lpc m03_packet_dag m03_scope_delta m03_source_provenance; do
+            cargo +nightly fuzz run "$target" -- -runs=1000
+          done
