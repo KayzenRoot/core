@@ -2,8 +2,8 @@
   "schemaVersion": "core-gef-checkpoint-bridge-v1",
   "viewStatus": "DERIVED_VIEW",
   "canonicalCheckpoint": "docs/project-brain/13-CHECKPOINT.md",
-  "status": "M01 COMPLETE / M02 COMPLETE / M03 FINAL PLANNING FREEZE IN REVIEW / IMPLEMENTATION UNAUTHORIZED",
+  "status": "M01 COMPLETE / M02 COMPLETE / M03 IMPLEMENTATION AUTHORIZATION ARMED",
   "version": "CORE V0.0 - Modular Construction",
-  "phase": "2 - M03 Final Planning Freeze Review",
-  "nextStep": "Independent exact-head audit/review of CORE-M03-FREEZE-001 on planning/m03-final-freeze-round5. Keep implementation unauthorized; any implementation admission requires a later delta on canonical origin/main."
+  "phase": "3 - M03 Governed Implementation",
+  "nextStep": "Independently audit CORE-M03-ADMIT-001 on planning/m03-execution-admission. If APPROVED and promoted unchanged, execute CORE-WO-M03-001 from post-admission canonical origin/main; otherwise do not execute."
 }
