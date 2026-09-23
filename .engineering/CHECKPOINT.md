@@ -6,7 +6,7 @@ Canonical source: `docs/project-brain/13-CHECKPOINT.md`
 This file is a GEF continuity view. It is not a second source of product truth. Shared fields are validated deterministically against the canonical HIVE-compatible checkpoint.
 
 ## STATUS
-M01 COMPLETE / M02 COMPLETE / M03 IMPLEMENTATION AUTHORIZATION ARMED
+M01 COMPLETE / M02 COMPLETE / M03 IMPLEMENTATION AUTHORIZED
 
 ## VERSION
 CORE V0.0 - Modular Construction
@@ -15,4 +15,4 @@ CORE V0.0 - Modular Construction
 3 - M03 Governed Implementation
 
 ## NEXT STEP
-Independently audit CORE-M03-ADMIT-001 on `planning/m03-execution-admission`. If APPROVED and promoted unchanged, execute CORE-WO-M03-001 from post-admission canonical `origin/main`; otherwise do not execute.
+Execute CORE-WO-M03-001 from post-admission canonical `origin/main` under the active Context Lock, then collect exact-head evidence and stop for independent audit before merge.
