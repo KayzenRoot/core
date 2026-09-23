@@ -1,6 +1,6 @@
 # M03 - Work Order Engine
 
-Status: `ROUNDS_1_4_PROMOTED / FINAL_PLANNING_FREEZE_NEXT / IMPLEMENTATION_UNAUTHORIZED`
+Status: `ROUNDS_1_4_PROMOTED / FINAL_PLANNING_FREEZE_IN_REVIEW / IMPLEMENTATION_UNAUTHORIZED`
 
 ## Mission
 
@@ -2281,3 +2281,20 @@ Use deterministic local fixtures, no network, no HIVE calls and no LLM. Warm onc
 M03 V0.0 later completes only when the exact planned contract/file/dependency map is implemented without scope drift; every public contract is V1-versioned; deterministic serialization/fingerprint golden vectors and all property/fuzz laws pass; all six service operations and adapter evidence are exact-head covered; M02/Context Lock/governance replay and freshness tests fail closed; diagnostic redaction is proven; no-hidden-I/O and dependency graph checks pass; every finite resource dimension is calibrated with a reproducible report; required performance/resource scenarios pass on Windows and Ubuntu; fuzz campaigns are bounded and successful; supply-chain/advisory/license/SBOM checks pass; AEG evidence binds every blocking DoD criterion; and independent exact-head review records no unresolved HIGH/CRITICAL defect.
 
 Round 4 is now an independently reviewed and promoted planning baseline (Review 004 / Issue #63; PR #62; exact head `8fd3f085f93b342373b06e4471088dc7b843fac4`; workflow #147 / run `35805683331`; promotion merge `78daa752760ba19b3c36c7e2a7574bb3cfd03501`). It grants no M03 implementation authority. The next legal increment is the final planning freeze (Round 5 candidate), which may compile the Work Order, pending Context Lock, acceptance/evidence matrix, Calibration Gate and executor handoff, but must still leave product implementation unauthorized until its own review/promotion and separate execution-admission delta.
+
+
+## Round 5 - final planning freeze candidate
+
+Increment: CORE-M03-FREEZE-001
+Planning base: 786ad33a27d45eb435bc6e63f22174de74b0bb71
+Candidate branch: planning/m03-final-freeze-round5
+Future implementation Work Order: .engineering/work-orders/CORE-WO-M03-001.md, status FINAL_FREEZE_CANDIDATE / IMPLEMENTATION_UNAUTHORIZED.
+Pending Context Lock: .engineering/context-locks/CORE-WO-M03-001.json; planningBase is the required canonical base, authorizedBase is null, and productImplementationAuthorized is false.
+Evidence skeleton: .engineering/evidence/CORE-WO-M03-001.json.
+Executor handoff: docs/work-orders/CODEX-HANDOFF-M03.md; the handoff hard-stops until a later admission delta activates the exact lock on canonical main.
+
+Round 5 compiles the promoted Round 1–4 baseline into one future implementation Work Order with eight ordered construction packets (A–H), the exact Round 4 product file/dependency map, a complete 23-criterion AEG, implementation test/evidence obligations, a bounded CALIBRATION_ONLY rule, and a machine-readable final stop condition. The evidence skeleton declares future requirements but contains no implementation PASS, test, CI, benchmark, calibration, or review result.
+
+The Calibration Gate freezes dimensions, deterministic synthetic fixtures, measurement and reporting rules, and the only permitted numeric Calibration Delta. It supplies no production resource values or performance thresholds. Selection requires measured implementation evidence; unsupported scales remain unsupported.
+
+Status is FINAL PLANNING FREEZE IN REVIEW. This section is a candidate until an independent exact-head audit/review and governed promotion. No product implementation, Context Lock activation, authorized base, checkpoint promotion, merge, release, or completion is authorized. A later, separate execution-admission delta on canonical main must bind the current source fingerprints and authorized base before the future executor may start.

@@ -2,8 +2,8 @@
   "schemaVersion": "core-gef-checkpoint-bridge-v1",
   "viewStatus": "DERIVED_VIEW",
   "canonicalCheckpoint": "docs/project-brain/13-CHECKPOINT.md",
-  "status": "M01 COMPLETE / M02 COMPLETE / M03 DISCOVERY ACTIVE",
+  "status": "M01 COMPLETE / M02 COMPLETE / M03 FINAL PLANNING FREEZE IN REVIEW / IMPLEMENTATION UNAUTHORIZED",
   "version": "CORE V0.0 - Modular Construction",
-  "phase": "2 - M03 Product Discovery",
-  "nextStep": "Compile M03 Round 5 final planning freeze from the promoted Round 4 baseline: Work Order, pending Context Lock, full acceptance/evidence mapping, Calibration Gate, executor packet and STOP CONDITION. Do not authorize implementation in the freeze candidate."
+  "phase": "2 - M03 Final Planning Freeze Review",
+  "nextStep": "Independent exact-head audit/review of CORE-M03-FREEZE-001 on planning/m03-final-freeze-round5. Keep implementation unauthorized; any implementation admission requires a later delta on canonical origin/main."
 }

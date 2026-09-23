@@ -1,19 +1,19 @@
 # CORE Checkpoint
 
 ## STATUS
-M01 COMPLETE / M02 COMPLETE / M03 DISCOVERY ACTIVE
+M01 COMPLETE / M02 COMPLETE / M03 FINAL PLANNING FREEZE IN REVIEW / IMPLEMENTATION UNAUTHORIZED
 
 ## VERSION
 CORE V0.0 - Modular Construction
 
 ## PHASE
-2 - M03 Product Discovery
+2 - M03 Final Planning Freeze Review
 
 ## OBJECTIVE
 Continue building CORE as the headless NexLabs action plane that operates standalone and synchronizes deeply with HIVE without duplicating HIVE-owned intelligence.
 
 ## IN PROGRESS
-- M03 Work Order Engine Rounds 1-4 are promoted into the discovery baseline; the next legal action is the M03 final planning freeze (Round 5 candidate).
+- M03 Rounds 1-4 are promoted; CORE-M03-FREEZE-001 is the Round 5 final planning-freeze candidate on planning/m03-final-freeze-round5 from the exact required base. Independent exact-head review is pending; implementation remains unauthorized.
 - M04-M24 remain discovery-only until their planning freezes.
 
 ## COMPLETED
@@ -38,18 +38,17 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - CORE-GOV-002-C01 GitHub hardening independently reviewed (Review 001 / Issue #57) and promoted through PR #56; active ruleset `CORE main protection` id `23769853` protects `main` with no bypass actors and the seven-context strict CI gate.
 
 ## PENDING
-- Compile the M03 final planning freeze (Round 5 candidate): frozen implementation Work Order, pending Context Lock, AEG/acceptance matrix, Calibration Gate, executor evidence skeleton and handoff packet.
-- Keep M03 implementation unauthorized until that final planning-freeze candidate is independently reviewed, promoted, and followed by a separate execution-admission delta that binds canonical main.
+- Independently review and promote the CORE-M03-FREEZE-001 final planning-freeze candidate, then require a separate execution-admission delta before any M03 implementation.
 - Deep-plan M04 through M24 in dependency order.
 - Freeze each module Requirements/Architecture/DoD/Work Order before implementation authorization.
 - Live local HIVE bootstrap evidence against current main.
 
 ## BLOCKERS
-- None for M03 planning.
-- M03-M24 implementation remains gated by their respective planning freezes.
+- CORE-M03-FREEZE-001 remains unapproved until independent exact-head review; its seven-context hosted CI must stay bound to the open PR head.
+- M03-M24 implementation remains gated by their respective planning freezes and execution admissions.
 
 ## NEXT STEP
-Compile M03 Round 5 final planning freeze from the promoted Round 4 baseline: Work Order, pending Context Lock, full acceptance/evidence mapping, Calibration Gate, executor packet and STOP CONDITION. Do not authorize implementation in the freeze candidate.
+Independent exact-head audit/review of CORE-M03-FREEZE-001 on planning/m03-final-freeze-round5. Keep implementation unauthorized; any implementation admission requires a later delta on canonical origin/main.
 
 ## EVIDENCE
 - `docs/engineering/CORE-MODULAR-DELIVERY-MODEL.md`
@@ -444,14 +443,16 @@ Promotion merge: `78daa752760ba19b3c36c7e2a7574bb3cfd03501`
 Reviewer-first corrections: caller-owned wall-clock deadline boundary; WorkOrderFingerprint/WorkOrderCompilationId separation; exact public validation/diff/correction result contracts; typed semantic-field IDs; Round 3 time-budget compatibility clarification.
 Result: Round 4 accepted into the M03 discovery baseline. No unresolved HIGH/CRITICAL finding remains. M03 implementation remains unauthorized.
 
-## M03 remaining planning gate
+## M03 Round 5 final planning freeze candidate
 
-Round 4 froze the public contracts, pure service boundary, external adapter evidence seams, file/dependency map, property/adversarial/fuzz matrix, benchmark/resource-calibration protocol and production DoD direction.
-
-The remaining planning work before implementation admission is the final M03 freeze package:
-- `.engineering/work-orders/CORE-WO-M03-001.md`;
-- pending `.engineering/context-locks/CORE-WO-M03-001.json`;
-- Evidence Bundle skeleton and exact acceptance/evidence matrix;
-- bounded M03 Calibration Gate authorizing only evidence-derived numeric resource defaults/thresholds after implementation measurements;
-- executor handoff with Context Lock/Source Pack read order, packets, tests, deliverables and STOP CONDITION;
-- explicit rule that implementation remains unauthorized until final-freeze review/promotion and a later execution-admission delta binds canonical main.
+Increment: CORE-M03-FREEZE-001
+Planning base: 786ad33a27d45eb435bc6e63f22174de74b0bb71
+Branch: planning/m03-final-freeze-round5
+Future implementation Work Order: .engineering/work-orders/CORE-WO-M03-001.md — FINAL_FREEZE_CANDIDATE / IMPLEMENTATION_UNAUTHORIZED
+Context Lock: .engineering/context-locks/CORE-WO-M03-001.json — PENDING_PROMOTION; authorizedBase is null; implementation authorization is false.
+Evidence skeleton: .engineering/evidence/CORE-WO-M03-001.json
+Executor handoff: docs/work-orders/CODEX-HANDOFF-M03.md — refuses execution until a separate admission delta activates the lock on canonical main.
+Acceptance graph: 23 blocking criteria, each mapped to future Evidence Requirement IDs.
+Construction packets: A–H, including a rule-only Resource Calibration Gate with no invented production values.
+HIVE planning preflight: read-only HIVE v1.0.0 MCP was reachable, but KayzenRoot/core and its checkpoint did not resolve; canonical Git sources were used in SOLO mode. The future executor must repeat preflight.
+Candidate review: PENDING. No M03 implementation, promotion, merge, release, or completion is authorized.
