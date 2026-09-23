@@ -719,3 +719,28 @@ Status: `ACTIVE`
 ## CORE-D-172 - M04 core is backend-neutral, zero-LLM and hidden-I/O-free
 **Decision:** Round 1 freezes no persistence backend. Core state-machine semantics consume explicit values/evidence and perform no hidden filesystem, process, network, database, HIVE/GitHub or LLM operation.
 **State:** PROPOSED; M04 Round 1 discovery candidate.
+
+
+## CORE-D-173 - M04 Round 2 freezes closed lifecycle matrices and immutable terminal history
+**Decision:** Run, Attempt and Step use the explicit legal transition matrices in the canonical M04 module plan. Initial states are durable; terminal states never transition back to active. Continuation after interruption creates a new Attempt/epoch. SKIPPED is pre-ACTIVE only and requires explicit authority/reason.
+**State:** PROPOSED; M04 Round 2 candidate.
+
+## CORE-D-174 - Run generation is M04's serialization fence
+**Decision:** every semantic M04 commit advances the Run generation exactly once under compare-and-set. Attempt/Step ordinals and local sequences remain bounded lineage/order facts, but wall-clock time never resolves concurrency. State, journal, root and generation publication are one atomic semantic fence.
+**State:** PROPOSED; M04 Round 2 candidate.
+
+## CORE-D-175 - Idempotency is fingerprint-bound and conflicting reuse fails closed
+**Decision:** idempotency is scoped by Run, operation domain and caller key. Exact replay of the same canonical request returns its recorded result; reuse with a different semantic fingerprint is IDEMPOTENCY_CONFLICT and produces no state advancement.
+**State:** PROPOSED; M04 Round 2 candidate.
+
+## CORE-D-176 - Cancellation is monotonic and generation-ordered
+**Decision:** once cancellation is durably accepted, later child admission/activation is rejected except explicitly bounded closeout. Earlier committed child history remains immutable and is driven to terminal closeout rather than erased.
+**State:** PROPOSED; M04 Round 2 candidate.
+
+## CORE-D-177 - M04 canonical journal is bounded, contiguous and replay-authoritative
+**Decision:** durable events form a domain-separated contiguous sequence with prior/result journal roots and generation bindings. Reorder, truncation, substitution, wrong lineage/domain or root mismatch fails closed. Derived views never supersede the canonical bounded journal.
+**State:** PROPOSED; M04 Round 2 candidate.
+
+## CORE-D-178 - Continuation revalidates exact M03 authority and creates a new epoch
+**Decision:** ICF continuation binds the last semantic M04 boundary and BRC binds exact M03 admission/workspace/Context Lock/governance authority. Resume validates all bindings and creates a new Attempt/epoch. Changed, UNKNOWN or unverifiable authority becomes STALE/BLOCKED.
+**State:** PROPOSED; M04 Round 2 candidate.
