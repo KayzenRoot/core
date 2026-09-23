@@ -9,10 +9,15 @@
   "productImplementationAuthorized": true,
   "canonicalCheckpoint": "docs/project-brain/13-CHECKPOINT.md",
   "lastCompletedWorkOrder": "CORE-WO-M02-001",
-  "lastPromotedMerge": "ac90b1f48c5551e65ecadace95c59f7f0647062f",
+  "lastPromotedMerge": "abe21ed4564978d24b2f41bca13b6f052daa3b17",
   "authorizedScope": "M03_WORK_ORDER_ENGINE",
   "activeWorkOrder": "CORE-WO-M03-001",
   "authorizationEffectiveOnlyOnCanonicalMain": true,
-  "admissionCandidateBranch": "planning/m03-execution-admission",
-  "frozenAuthorizedBase": "ac90b1f48c5551e65ecadace95c59f7f0647062f"
+  "admissionCandidateBranch": null,
+  "frozenAuthorizedBase": "ac90b1f48c5551e65ecadace95c59f7f0647062f",
+  "admissionStatus": "APPROVED_PROMOTED",
+  "admissionReviewIssue": 69,
+  "admissionPullRequest": 68,
+  "admissionReviewedHead": "36f18d1dc53faf9af9d3c06355ebe07384e4e1f7",
+  "admissionWorkflowRun": 35845550610
 }
