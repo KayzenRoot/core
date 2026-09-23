@@ -220,6 +220,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "core-work-order"
+version = "0.1.0"
+dependencies = [
+ "core-identity",
+ "serde",
+ "serde_json",
+ "thiserror",
+]
+
+[[package]]
 name = "core-workspace"
 version = "0.1.0"
 dependencies = [

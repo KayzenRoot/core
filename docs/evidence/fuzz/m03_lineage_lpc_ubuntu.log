@@ -1,0 +1,30 @@
+    Finished `release` profile [optimized + debuginfo] target(s) in 2.58s
+    Finished `release` profile [optimized + debuginfo] target(s) in 2.53s
+     Running `fuzz/target/x86_64-unknown-linux-gnu/release/m03_lineage_lpc -artifact_prefix=/mnt/d/Projects/core-m03-work-order-engine/fuzz/artifacts/m03_lineage_lpc/ -runs=1000 -max_len=32768 -timeout=10 -rss_limit_mb=1024 -verbosity=0 -print_final_stats=1 /mnt/d/Projects/core-m03-work-order-engine/fuzz/corpus/m03_lineage_lpc`
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO:        1 files found in /mnt/d/Projects/core-m03-work-order-engine/fuzz/corpus/m03_lineage_lpc
+INFO: seed corpus: files: 1 min: 10412b max: 10412b total: 10412b rss: 34Mb
+	NEW_FUNC[1/9]: 0x611e3dbe46d0  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_lineage_lpc+0x2fb6d0) (BuildId: 26fa5fb313e2af9cf73969d82bf510b9a47dcba4)
+	NEW_FUNC[2/9]: 0x611e3dbec5e0  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_lineage_lpc+0x3035e0) (BuildId: 26fa5fb313e2af9cf73969d82bf510b9a47dcba4)
+	NEW_FUNC[1/9]: 0x611e3dbe2640  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_lineage_lpc+0x2f9640) (BuildId: 26fa5fb313e2af9cf73969d82bf510b9a47dcba4)
+	NEW_FUNC[2/9]: 0x611e3dbe5a90  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_lineage_lpc+0x2fca90) (BuildId: 26fa5fb313e2af9cf73969d82bf510b9a47dcba4)
+	NEW_FUNC[1/1]: 0x611e3df21530  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_lineage_lpc+0x638530) (BuildId: 26fa5fb313e2af9cf73969d82bf510b9a47dcba4)
+	NEW_FUNC[1/1]: 0x611e3dcbf0f0  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_lineage_lpc+0x3d60f0) (BuildId: 26fa5fb313e2af9cf73969d82bf510b9a47dcba4)
+	NEW_FUNC[1/1]: 0x611e3df21380  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_lineage_lpc+0x638380) (BuildId: 26fa5fb313e2af9cf73969d82bf510b9a47dcba4)
+	NEW_FUNC[1/2]: 0x611e3dcae9f0  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_lineage_lpc+0x3c59f0) (BuildId: 26fa5fb313e2af9cf73969d82bf510b9a47dcba4)
+	NEW_FUNC[2/2]: 0x611e3df2a440  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_lineage_lpc+0x641440) (BuildId: 26fa5fb313e2af9cf73969d82bf510b9a47dcba4)
+###### Recommended dictionary. ######
+"\274\004\000\000\000\000\000\000" # Uses: 15
+"\003\000\000\000" # Uses: 9
+"\013\000\000\000\000\000\000\000" # Uses: 9
+"\242\000\000\000\000\000\000\000" # Uses: 7
+"\003\000" # Uses: 6
+"statemen" # Uses: 7
+"\001\000\000\000\000\000\000\000" # Uses: 4
+"source_re" # Uses: 0
+###### End of recommended dictionary. ######
+stat::number_of_executed_units: 1000
+stat::average_exec_per_sec:     1000
+stat::new_units_added:          111
+stat::slowest_unit_time_sec:    0
+stat::peak_rss_mb:              81

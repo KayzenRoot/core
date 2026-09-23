@@ -1,0 +1,47 @@
+    Finished `release` profile [optimized + debuginfo] target(s) in 2.78s
+    Finished `release` profile [optimized + debuginfo] target(s) in 2.73s
+     Running `fuzz/target/x86_64-unknown-linux-gnu/release/m03_admission_replay -artifact_prefix=/mnt/d/Projects/core-m03-work-order-engine/fuzz/artifacts/m03_admission_replay/ -runs=1000 -max_len=32768 -timeout=10 -rss_limit_mb=1024 -verbosity=0 -print_final_stats=1 /mnt/d/Projects/core-m03-work-order-engine/fuzz/corpus/m03_admission_replay`
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO:        1 files found in /mnt/d/Projects/core-m03-work-order-engine/fuzz/corpus/m03_admission_replay
+INFO: seed corpus: files: 1 min: 12556b max: 12556b total: 12556b rss: 34Mb
+	NEW_FUNC[1/10]: 0x652f06bc6dc0  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_admission_replay+0x2cbdc0) (BuildId: d505dd89c2ee773dcf492cfcd76002665ea3d7e4)
+	NEW_FUNC[2/10]: 0x652f06bca840  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_admission_replay+0x2cf840) (BuildId: d505dd89c2ee773dcf492cfcd76002665ea3d7e4)
+	NEW_FUNC[1/7]: 0x652f06c9ca40  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_admission_replay+0x3a1a40) (BuildId: d505dd89c2ee773dcf492cfcd76002665ea3d7e4)
+	NEW_FUNC[2/7]: 0x652f06cb3990  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_admission_replay+0x3b8990) (BuildId: d505dd89c2ee773dcf492cfcd76002665ea3d7e4)
+	NEW_FUNC[1/1]: 0x652f06ea4960  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_admission_replay+0x5a9960) (BuildId: d505dd89c2ee773dcf492cfcd76002665ea3d7e4)
+	NEW_FUNC[1/1]: 0x652f06ea47b0  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_admission_replay+0x5a97b0) (BuildId: d505dd89c2ee773dcf492cfcd76002665ea3d7e4)
+	NEW_FUNC[1/3]: 0x652f06bc9ab0  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_admission_replay+0x2ceab0) (BuildId: d505dd89c2ee773dcf492cfcd76002665ea3d7e4)
+	NEW_FUNC[2/3]: 0x652f06bcad40  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_admission_replay+0x2cfd40) (BuildId: d505dd89c2ee773dcf492cfcd76002665ea3d7e4)
+	NEW_FUNC[1/1]: 0x652f06d60940  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_admission_replay+0x465940) (BuildId: d505dd89c2ee773dcf492cfcd76002665ea3d7e4)
+	NEW_FUNC[1/1]: 0x652f06ca0580  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_admission_replay+0x3a5580) (BuildId: d505dd89c2ee773dcf492cfcd76002665ea3d7e4)
+	NEW_FUNC[1/1]: 0x652f06cb52a0  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_admission_replay+0x3ba2a0) (BuildId: d505dd89c2ee773dcf492cfcd76002665ea3d7e4)
+	NEW_FUNC[1/2]: 0x652f06c9cce0  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_admission_replay+0x3a1ce0) (BuildId: d505dd89c2ee773dcf492cfcd76002665ea3d7e4)
+	NEW_FUNC[2/2]: 0x652f06c9d4f0  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_admission_replay+0x3a24f0) (BuildId: d505dd89c2ee773dcf492cfcd76002665ea3d7e4)
+	NEW_FUNC[1/2]: 0x652f06c9fca0  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_admission_replay+0x3a4ca0) (BuildId: d505dd89c2ee773dcf492cfcd76002665ea3d7e4)
+	NEW_FUNC[2/2]: 0x652f06ead870  (/mnt/d/Projects/core-m03-work-order-engine/fuzz/target/x86_64-unknown-linux-gnu/release/m03_admission_replay+0x5b2870) (BuildId: d505dd89c2ee773dcf492cfcd76002665ea3d7e4)
+###### Recommended dictionary. ######
+"\000\000\000\000\000\0001\014" # Uses: 6
+"\377\377\377\377" # Uses: 8
+"\012\000\000\000\000\000\000\000" # Uses: 5
+"\001\000\000\000" # Uses: 5
+"governa" # Uses: 10
+"\015\000\000\000" # Uses: 5
+"\000\000\000\000\000\000\000\000" # Uses: 6
+" \000\000\000" # Uses: 8
+"\000\000\000\376" # Uses: 4
+"max_expanded_source_" # Uses: 4
+"staleness_policy" # Uses: 2
+"\014\000\000\000\000\000\000\000" # Uses: 6
+"\377\377\377\377\377\377\377\024" # Uses: 1
+"\006\000\000\000\000\000\000\000" # Uses: 2
+"context_budget" # Uses: 3
+"\001\000\000\000\000\000\000\004" # Uses: 2
+"\000\000\000\000\000\000\000\013" # Uses: 2
+"\011\000\000\000" # Uses: 1
+"platform_requirements" # Uses: 0
+###### End of recommended dictionary. ######
+stat::number_of_executed_units: 1000
+stat::average_exec_per_sec:     1000
+stat::new_units_added:          138
+stat::slowest_unit_time_sec:    0
+stat::peak_rss_mb:              111

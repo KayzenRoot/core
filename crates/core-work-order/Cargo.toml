@@ -1,0 +1,17 @@
+[package]
+name = "core-work-order"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+core-identity = { path = "../core-identity", version = "0.1.0" }
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+
+[[bench]]
+name = "m03_work_order"
+path = "../../benches/m03_work_order.rs"
+harness = false
