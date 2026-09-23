@@ -149,4 +149,4 @@ The future M03 V0.0 implementation is complete only when all of the following ar
 - required unit, integration, deterministic property, adversarial, fuzz and benchmark/resource evidence passes on Windows and Ubuntu exact-head CI;
 - advisory/license/supply-chain/SBOM evidence passes, the AEG covers every blocking DoD obligation, and an independent governed exact-head review finds no unresolved HIGH/CRITICAL defect.
 
-M03 Round 4 is a planning review candidate only. Implementation stays unauthorized until this planning delta is independently reviewed and promoted through the canonical governance process; this DoD direction itself is not implementation acceptance or checkpoint promotion.
+M03 Round 4 is an independently reviewed and promoted planning baseline (Review 004 / Issue #63; PR #62; exact head `8fd3f085f93b342373b06e4471088dc7b843fac4`; workflow #147 / run `35805683331`; promotion merge `78daa752760ba19b3c36c7e2a7574bb3cfd03501`). Implementation remains unauthorized. The next gate is the M03 final planning freeze (Round 5 candidate), followed by its own review/promotion and a separate execution-admission delta.

@@ -17,7 +17,7 @@ python -m unittest discover -s tests -p "test_*.py" -v
 ```
 
 ## Product validation
-Product validation is frozen progressively by module and risk. M01 and M02 have promoted exact-head completion evidence; M03 obligations are being frozen during deep planning, with Rounds 1-3 promoted and Round 4 next; M04+ unit, integration, E2E, security, performance, recovery, compatibility and benchmark obligations remain `PENDING_DISCOVERY` until their owning plans are accepted.
+Product validation is frozen progressively by module and risk. M01 and M02 have promoted exact-head completion evidence; M03 obligations are being frozen during deep planning, with Rounds 1-4 promoted and the final planning freeze (Round 5) next; M04+ unit, integration, E2E, security, performance, recovery, compatibility and benchmark obligations remain `PENDING_DISCOVERY` until their owning plans are accepted.
 
 Historical green evidence never automatically proves a changed head.
 

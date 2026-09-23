@@ -13,7 +13,7 @@ CORE V0.0 - Modular Construction
 Continue building CORE as the headless NexLabs action plane that operates standalone and synchronizes deeply with HIVE without duplicating HIVE-owned intelligence.
 
 ## IN PROGRESS
-- M03 Work Order Engine Rounds 1-3 are promoted into the discovery baseline; Round 4 is a planning review candidate pending independent exact-head audit.
+- M03 Work Order Engine Rounds 1-4 are promoted into the discovery baseline; the next legal action is the M03 final planning freeze (Round 5 candidate).
 - M04-M24 remain discovery-only until their planning freezes.
 
 ## COMPLETED
@@ -38,8 +38,8 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - CORE-GOV-002-C01 GitHub hardening independently reviewed (Review 001 / Issue #57) and promoted through PR #56; active ruleset `CORE main protection` id `23769853` protects `main` with no bypass actors and the seven-context strict CI gate.
 
 ## PENDING
-- Independently audit the M03 Round 4 planning candidate on its exact PR head; do not promote it or authorize implementation before the canonical review gate.
-- M03 implementation Work Order and Context Lock remain later gated artifacts and are not created or authorized by Round 4.
+- Compile the M03 final planning freeze (Round 5 candidate): frozen implementation Work Order, pending Context Lock, AEG/acceptance matrix, Calibration Gate, executor evidence skeleton and handoff packet.
+- Keep M03 implementation unauthorized until that final planning-freeze candidate is independently reviewed, promoted, and followed by a separate execution-admission delta that binds canonical main.
 - Deep-plan M04 through M24 in dependency order.
 - Freeze each module Requirements/Architecture/DoD/Work Order before implementation authorization.
 - Live local HIVE bootstrap evidence against current main.
@@ -49,7 +49,7 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - M03-M24 implementation remains gated by their respective planning freezes.
 
 ## NEXT STEP
-Run the independent exact-head review of the M03 Round 4 planning candidate against Scope, Architecture, Requirements, Security, Test Plan, DoD and the Round 4 acceptance criteria. Keep M03 implementation unauthorized until the canonical review/promotion gate.
+Compile M03 Round 5 final planning freeze from the promoted Round 4 baseline: Work Order, pending Context Lock, full acceptance/evidence mapping, Calibration Gate, executor packet and STOP CONDITION. Do not authorize implementation in the freeze candidate.
 
 ## EVIDENCE
 - `docs/engineering/CORE-MODULAR-DELIVERY-MODEL.md`
@@ -95,7 +95,10 @@ Run the independent exact-head review of the M03 Round 4 planning candidate agai
 - M02 closeout workflow #113 `35552201325` — Governance, M01 Ubuntu/Windows/fuzz, M02 Ubuntu/Windows/fuzz SUCCESS
 - M02 closeout promotion merge `039dd7bf93d637971c486f3ee783988cbee3c7cf`
 - CORE-GOV-002-C01 Evidence Bundle: `.engineering/evidence/CORE-GOV-002-C01-GITHUB-HARDENING.md`
-- CORE-M03-DISC-004 Round 4 planning evidence bundle: `.engineering/evidence/CORE-M03-DISC-004.md` (candidate only; exact PR head and CI are recorded by the review handoff).
+- CORE-M03-DISC-004 Round 4 planning evidence bundle: `.engineering/evidence/CORE-M03-DISC-004.md`.
+- M03 Review 004 / Issue #63 — APPROVED at exact head `8fd3f085f93b342373b06e4471088dc7b843fac4`.
+- M03 Round 4 PR #62; workflow #147 / run `35805683331` — all seven required contexts SUCCESS.
+- M03 Round 4 promotion merge `78daa752760ba19b3c36c7e2a7574bb3cfd03501`.
 
 ## M02 completion record
 Frozen Work Order: `CORE-WO-M02-001`
@@ -428,3 +431,27 @@ Result: M03 Round 3 accepted into discovery baseline. Implementation remains una
 - Candidate state: planning surfaces frozen on the PR branch; independent exact-head audit pending.
 - Scope: public V1 contracts, external evidence adapters, file/dependency map, property/fuzz/benchmark policy, security and production DoD direction.
 - Authority: no M03 product implementation, merge, checkpoint promotion or release is authorized by this candidate.
+
+
+## M03 Round 4 promotion record
+
+Round promoted: 4
+Governed review: M03 Review 004 / Issue #63 — APPROVED
+Reviewed PR: #62
+Exact reviewed head: `8fd3f085f93b342373b06e4471088dc7b843fac4`
+Exact-head workflow: run #147 `35805683331` — Governance, M01 Ubuntu/Windows/fuzz and M02 Ubuntu/Windows/fuzz SUCCESS
+Promotion merge: `78daa752760ba19b3c36c7e2a7574bb3cfd03501`
+Reviewer-first corrections: caller-owned wall-clock deadline boundary; WorkOrderFingerprint/WorkOrderCompilationId separation; exact public validation/diff/correction result contracts; typed semantic-field IDs; Round 3 time-budget compatibility clarification.
+Result: Round 4 accepted into the M03 discovery baseline. No unresolved HIGH/CRITICAL finding remains. M03 implementation remains unauthorized.
+
+## M03 remaining planning gate
+
+Round 4 froze the public contracts, pure service boundary, external adapter evidence seams, file/dependency map, property/adversarial/fuzz matrix, benchmark/resource-calibration protocol and production DoD direction.
+
+The remaining planning work before implementation admission is the final M03 freeze package:
+- `.engineering/work-orders/CORE-WO-M03-001.md`;
+- pending `.engineering/context-locks/CORE-WO-M03-001.json`;
+- Evidence Bundle skeleton and exact acceptance/evidence matrix;
+- bounded M03 Calibration Gate authorizing only evidence-derived numeric resource defaults/thresholds after implementation measurements;
+- executor handoff with Context Lock/Source Pack read order, packets, tests, deliverables and STOP CONDITION;
+- explicit rule that implementation remains unauthorized until final-freeze review/promotion and a later execution-admission delta binds canonical main.

@@ -1,6 +1,6 @@
 # M03 - Work Order Engine
 
-Status: `ROUND_4_REVIEW_CANDIDATE / IMPLEMENTATION_UNAUTHORIZED`
+Status: `ROUNDS_1_4_PROMOTED / FINAL_PLANNING_FREEZE_NEXT / IMPLEMENTATION_UNAUTHORIZED`
 
 ## Mission
 
@@ -1699,7 +1699,7 @@ Round 3 is complete when:
 
 ## Round 4 - public contracts, adapters and validation freeze
 
-Status: PLANNING REVIEW CANDIDATE. Rounds 1-3 remain accepted. This section does not authorize M03 implementation.
+Status: PROMOTED PLANNING BASELINE. Rounds 1-4 are accepted. This section does not authorize M03 implementation.
 
 ### Round 4 preservation rules
 
@@ -2280,4 +2280,4 @@ Use deterministic local fixtures, no network, no HIVE calls and no LLM. Warm onc
 
 M03 V0.0 later completes only when the exact planned contract/file/dependency map is implemented without scope drift; every public contract is V1-versioned; deterministic serialization/fingerprint golden vectors and all property/fuzz laws pass; all six service operations and adapter evidence are exact-head covered; M02/Context Lock/governance replay and freshness tests fail closed; diagnostic redaction is proven; no-hidden-I/O and dependency graph checks pass; every finite resource dimension is calibrated with a reproducible report; required performance/resource scenarios pass on Windows and Ubuntu; fuzz campaigns are bounded and successful; supply-chain/advisory/license/SBOM checks pass; AEG evidence binds every blocking DoD criterion; and independent exact-head review records no unresolved HIGH/CRITICAL defect.
 
-Round 4 ends at a planning review candidate only. Independent exact-head audit and the existing governance gate must approve before checkpoint promotion. This section grants no M03 code implementation, Work Order execution, release, merge or next-round authority.
+Round 4 is now an independently reviewed and promoted planning baseline (Review 004 / Issue #63; PR #62; exact head `8fd3f085f93b342373b06e4471088dc7b843fac4`; workflow #147 / run `35805683331`; promotion merge `78daa752760ba19b3c36c7e2a7574bb3cfd03501`). It grants no M03 implementation authority. The next legal increment is the final planning freeze (Round 5 candidate), which may compile the Work Order, pending Context Lock, acceptance/evidence matrix, Calibration Gate and executor handoff, but must still leave product implementation unauthorized until its own review/promotion and separate execution-admission delta.
