@@ -15,4 +15,4 @@ CORE V0.0 - Modular Construction
 2 - M03 Product Discovery
 
 ## NEXT STEP
-Continue M03 Round 4 deep planning with exact public Rust contracts, final file/dependency admission, external source-resolver/adaptor interfaces, property/fuzz laws, benchmark thresholds and production DoD direction. Do not authorize implementation.
+Run the independent exact-head review of the M03 Round 4 planning candidate against Scope, Architecture, Requirements, Security, Test Plan, DoD and the Round 4 acceptance criteria. Keep M03 implementation unauthorized until the canonical review/promotion gate.

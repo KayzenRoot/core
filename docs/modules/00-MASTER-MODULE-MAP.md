@@ -88,5 +88,5 @@ The order may be refined by dependency evidence, but a later module must not sil
 ## Current progression
 - M01 Core Runtime & Lifecycle — COMPLETE / PROMOTED.
 - M02 Project / Workspace Adapter — COMPLETE / PROMOTED.
-- M03 Work Order Engine — DEEP PLANNING ACTIVE / ROUNDS 1-3 PROMOTED / ROUND 4 NEXT.
+- M03 Work Order Engine — ROUNDS 1-3 PROMOTED / ROUND 4 PLANNING REVIEW CANDIDATE (PENDING INDEPENDENT AUDIT) / IMPLEMENTATION UNAUTHORIZED.
 - M04-M24 — discovery-only until their planning freezes.

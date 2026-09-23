@@ -131,3 +131,22 @@ Final M03 acceptance must additionally prove:
 - no partial frozen/admitted result under budget/deadline failure.
 
 Round 3 does not authorize implementation.
+
+
+### M03 Round 4 production DoD direction
+
+The future M03 V0.0 implementation is complete only when all of the following are proven together on one exact candidate head:
+
+- all public V1 contracts, IDs, revision/fingerprint ownership, service inputs/outputs/errors and the frozen file/dependency map are implemented without scope drift;
+- source, M02 workspace/basis, Context Lock, external governance and optional HIVE references follow the Round 4 adapter boundary and freshness/replay rules;
+- canonical semantic projection, explicit collection sorting, stable serialization/fingerprint vectors and diagnostic exclusion pass deterministic permutation/replay tests;
+- packet DAG, deny-overrides-allow scope intersection, AEG completeness, PCM reconstruction, correction classification and immutable revision behavior pass property and adversarial tests;
+- external LineageSnapshot/LPC compare-and-set prevents stale or competing canonical revisions; M03 performs no persistence, hidden refresh, rebase, commit or promotion;
+- parser, compile, validate, diff, correction, admission and handoff errors are typed and bounded; core resource failures return no partial FROZEN, READY or handoff output, and caller-owned wall-clock timeout discards any late result without ambient clock reads inside core-work-order;
+- secret canaries and hostile adapter diagnostics prove durable contracts and errors are redacted and bounded;
+- static/dependency evidence proves the compiler has no hidden filesystem, cwd, Git, HIVE, GitHub, network, process or database I/O and the dependency graph is acyclic and admitted;
+- all finite positive resource defaults are supported by the mandatory committed M03 calibration report, with selected/rejected candidates, supported scales and no extrapolated or fabricated measurements;
+- required unit, integration, deterministic property, adversarial, fuzz and benchmark/resource evidence passes on Windows and Ubuntu exact-head CI;
+- advisory/license/supply-chain/SBOM evidence passes, the AEG covers every blocking DoD obligation, and an independent governed exact-head review finds no unresolved HIGH/CRITICAL defect.
+
+M03 Round 4 is a planning review candidate only. Implementation stays unauthorized until this planning delta is independently reviewed and promoted through the canonical governance process; this DoD direction itself is not implementation acceptance or checkpoint promotion.

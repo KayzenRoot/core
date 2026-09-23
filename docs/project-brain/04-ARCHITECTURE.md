@@ -523,7 +523,35 @@ One candidate crate: `core-work-order`.
 
 The core is synchronous and does not require Tokio by default.
 
-Candidate dependency direction:
-`core-contracts + core-identity + core-config + core-workspace -> core-work-order -> future M04`.
+The Round 3 candidate dependency direction (`core-contracts + core-identity + core-config + core-workspace -> core-work-order -> future M04`) is refined by the Round 4 dependency disposition below after inspecting the actual workspace graph.
 
 No database/network/Git/HIVE runtime dependency belongs in the compiler core.
+
+
+## M03 Round 4 public-contract and adapter architecture
+
+Round 4 freezes one versioned public boundary at schema nexlabs.core.work-order version 1. Authoring request, immutable FrozenWorkOrder, admission request/receipt and AdmittedWorkOrder handoff remain separate contracts. Distinct ID/revision/fingerprint wrappers make logical lineage, semantic revision, compiler result, packets, criteria, evidence and provenance non-interchangeable.
+
+The pure synchronous core consumes already-resolved value evidence and emits deterministic contracts:
+
+~~~text
+caller-owned canonical source / M02 / Context Lock / GEF / optional HIVE adapters
+        | bounded versioned evidence DTOs, fingerprints, provenance and freshness
+        v
+core-work-order pure compile / validate / diff / classify / admit / handoff
+        | FrozenWorkOrder + DCR + LPC + immutable admission receipt
+        v
+external governed persistence / future M04
+~~~
+
+Resolver interfaces describe caller-owned source, M02 workspace/basis, Context Lock, governance, lineage and optional HIVE seams. No core-work-order service accepts or invokes a resolver. The host calls any needed adapter explicitly, then supplies its bounded evidence. M02 continues to own workspace/path/repository truth; the M03 DTO records only M02 schema/version, stable identities, generation, basis fingerprint, required profile/components and proof provenance. HIVE context remains advisory and cannot satisfy missing canonical, M02 or governance proof. Wall-clock deadlines are also host-owned: the pure core reads no clock; a timed-out invocation is discarded by the caller and cannot become accepted semantic/admission output.
+
+FrozenWorkOrder semantic identity is an explicit projection. It includes schema/version/kind, semantic mission/scope/dependency policy, required canonical source identity/fingerprint/provenance/freshness, workspace/lock/governance requirements, packet DAG, acceptance/evidence graph, context obligations, correction policy, stop condition and lineage parent. It excludes diagnostic/transport/rendering data, timestamps, wall duration, PR URLs, runtime evidence and M04 state. Unordered collections are sorted before the existing core-identity canonical fingerprint primitive; diagnostics are stored outside the frozen revision.
+
+### M03 Round 4 dependency disposition
+
+Cargo metadata at the admitted base shows ten workspace crates and no M03 crate. Existing core-workspace directly enables Tokio filesystem, network and process features for M02 inspection. To keep M03 free of a transitive I/O-capable M02 service surface, V0.0 core-work-order does not directly depend on core-workspace or core-config. The outer adapter/host may depend on both core-workspace and core-work-order and map M02's public evidence to the narrow M03 DTO. This preserves M02 ownership without duplicating its workspace model.
+
+The frozen M03 crate directly uses core-identity for canonical bytes/fingerprints and existing workspace serde, serde_json and thiserror dependencies for V1 contracts, bounded JSON and typed errors. It does not directly add core-contracts, core-config, core-workspace, sha2, Tokio, Git/network/process APIs, HIVE/GitHub SDKs, databases, graph libraries or caches. core-identity's observed transitive closure is core-contracts, serde, serde_json, sha2 and thiserror, with no process/network/database authority.
+
+Dependency direction remains acyclic: existing M01/M02 crates are unchanged; core-work-order depends downward only on core-identity and serialization/error primitives; the outer host/adapters translate M02 evidence; future M04 consumes the immutable M03 handoff. Any direct M02 type coupling or additional dependency requires a separate architecture/dependency admission and fresh exact-head review.
