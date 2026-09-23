@@ -689,3 +689,8 @@ Status: `ACTIVE`
 ## CORE-D-165 - M03 execution admission is promoted; implementation is the next legal action
 **Decision:** Review 007 / Issue #69 APPROVED CORE-M03-ADMIT-001 at exact head `36f18d1dc53faf9af9d3c06355ebe07384e4e1f7` with workflow run `35845550610` green across all seven required contexts. PR #68 was promoted as squash merge `abe21ed4564978d24b2f41bca13b6f052daa3b17`. The admission is therefore canonical. The next legal product action is governed execution of `CORE-WO-M03-001` from post-admission canonical `origin/main`, after recompiling the Context Lock/evidence bindings for this post-promotion state. No M03 product Pack A-H was implemented by this synchronization increment.
 **State:** ACCEPTED
+
+
+## CORE-D-166 - M03 implementation is promoted and M04 planning is the next legal product increment
+**Decision:** M03-REVIEW-009 / Issue #73 APPROVED CORE-WO-M03-001 at exact head `b92f14514e4cf615ed76fa87915539a835b6a85b`. Workflow run `35905315953` completed all 10 jobs SUCCESS, including M03 Windows, M03 Ubuntu and the seven-target bounded fuzz campaign. PR #72 was squash-promoted as canonical merge `c63df6ad581c44bac66a8b1dab9a86522ce7fe3b`. EV-025 is satisfied by the independent exact-head review and no unresolved HIGH/CRITICAL finding remains. This closeout delta changes governance/project state only. After its independent review and promotion, M04 discovery/planning is the next legal product increment; M04 implementation remains unauthorized until its own planning freeze and execution admission.
+**State:** ACCEPTED
