@@ -5,5 +5,5 @@
   "status": "M01 COMPLETE / M02 COMPLETE / M03 DISCOVERY ACTIVE",
   "version": "CORE V0.0 - Modular Construction",
   "phase": "2 - M03 Product Discovery",
-  "nextStep": "Run the independent exact-head review of the M03 Round 4 planning candidate against Scope, Architecture, Requirements, Security, Test Plan, DoD and the Round 4 acceptance criteria. Keep M03 implementation unauthorized until the canonical review/promotion gate."
+  "nextStep": "Compile M03 Round 5 final planning freeze from the promoted Round 4 baseline: Work Order, pending Context Lock, full acceptance/evidence mapping, Calibration Gate, executor packet and STOP CONDITION. Do not authorize implementation in the freeze candidate."
 }
