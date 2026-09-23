@@ -1,6 +1,6 @@
 # M04 — Run / Attempt / Step Engine
 
-Status: `ROUND_1_DISCOVERY_CANDIDATE`
+Status: `ROUND_2_TRANSITION_SEMANTICS_CANDIDATE`
 Implementation: `UNAUTHORIZED`
 Assurance: `ELEVATED`
 
@@ -128,20 +128,97 @@ Future freeze must require:
 - supply-chain/SBOM evidence;
 - independent exact-head review with no unresolved HIGH/CRITICAL.
 
-## Round 2 questions
+## Round 2 frozen semantics
 
-Round 2 must freeze:
-- exact Run/Attempt/Step transition matrices;
-- event envelope and semantic projection;
-- idempotency keys and duplicate semantics;
-- generation/CAS laws;
-- cancellation precedence;
-- attempt/step numbering and ordering;
-- continuation cursor semantics;
-- M03 BRC compatibility rules;
-- resource dimensions and bounded-history policy;
-- durable vs derived fields.
+### Durable lifecycle
+
+`CREATED` is durable for Run and Attempt. `DECLARED` is durable for Step. No externally visible identity may exist without its initial durable event.
+
+Run legal transitions:
+- `CREATED -> ADMITTED | BLOCKED | CANCELLED`
+- `ADMITTED -> ACTIVE | BLOCKED | CANCELLED | INTERRUPTED`
+- `ACTIVE -> SUCCEEDED | FAILED | BLOCKED | CANCELLED | INTERRUPTED`
+
+Attempt legal transitions:
+- `CREATED -> ACTIVE | BLOCKED | CANCELLED`
+- `ACTIVE -> SUCCEEDED | FAILED | BLOCKED | CANCELLED | INTERRUPTED`
+
+Step legal transitions:
+- `DECLARED -> READY | BLOCKED | CANCELLED | SKIPPED`
+- `READY -> ACTIVE | BLOCKED | CANCELLED | SKIPPED`
+- `ACTIVE -> SUCCEEDED | FAILED | BLOCKED | CANCELLED | INTERRUPTED`
+
+All terminal states are immutable. There is no terminal-to-active transition. A continuation after `INTERRUPTED` creates a new Attempt/continuation epoch. `SKIPPED` is legal only before ACTIVE and requires an explicit non-execution reason code plus authority reference; it is never inferred from absence of execution.
+
+### Parent/child closure laws
+
+- Run `SUCCEEDED` requires every required Step in its selected completion projection to be `SUCCEEDED` or explicitly `SKIPPED` under an allowed authority.
+- Run/Attempt terminalization prohibits creation of new descendants.
+- Attempt `SUCCEEDED` requires all required Steps in that Attempt to satisfy their declared completion disposition.
+- Child failure does not automatically choose parent retry/recovery policy; it exposes typed facts for later policy owners.
+- A child can never be semantically newer than its parent generation fence.
+
+### Event envelope
+
+Every durable event carries: schema version, domain tag, RunId, optional AttemptId/StepId as required by event type, event sequence, expected prior generation, resulting generation, idempotency key, transition kind, canonical payload fingerprint, prior journal root and resulting journal root. Diagnostic timestamps are optional/non-authoritative.
+
+Projection accepts only a contiguous event sequence beginning at the declared journal origin. Missing, reordered, cross-lineage, wrong-domain, wrong-generation or root-mismatched events fail closed.
+
+### Idempotency
+
+Idempotency key scope is `(RunId, operation-domain, caller-key)`. Repeating the exact semantic operation with the same key and identical canonical request fingerprint returns the recorded result without creating another event. Reusing the key with a different semantic fingerprint is `IDEMPOTENCY_CONFLICT`. Duplicate transport delivery is therefore harmless; semantic duplication is explicit.
+
+### CER / generation and CAS laws
+
+- Each semantic commit advances the Run generation exactly by one.
+- Expected generation must equal the durable current generation.
+- A stale or future generation returns typed `GENERATION_CONFLICT`; no partial mutation/event is valid.
+- Attempt/Step local sequence numbers are monotonic within their typed parent but the Run generation is the serialization fence.
+- No wall-clock timestamp resolves concurrent writers.
+- ASF requires state projection, event append, journal-root update and generation advance to become visible atomically.
+
+### Cancellation precedence
+
+Cancellation has a monotonic Run cancellation epoch. Once a cancellation request is durably accepted at generation G, any child-admission/activation operation whose expected generation is G or later must reject unless it is an explicitly bounded closeout operation. A concurrently committed child operation strictly before the cancellation generation remains historical fact and is then driven toward cancellation/terminal closeout. Cancellation never erases a previously committed success/failure.
+
+### Ordering
+
+Attempt ordinal is a zero-based monotonic integer unique within Run and never reused. Step ordinal is a zero-based monotonic integer unique within Attempt and never reused. Stable semantic order is `RunId / AttemptOrdinal / StepOrdinal / EventSequence`, with typed IDs used for identity and ordinals used only for bounded ordering.
+
+### ICF continuation cursor
+
+An ICF contains schema/domain, RunId, source AttemptId, last committed Run generation, last event sequence, journal root, M03 BRC fingerprint, execution epoch and canonical cursor fingerprint. It contains no secret material and no host-specific recovery instruction. Resume validates all bindings and creates a new Attempt/epoch; mismatch or UNKNOWN yields `STALE_CONTINUATION`/BLOCKED.
+
+### BRC compatibility
+
+At Run admission and continuation, BRC must bind the exact M03 WorkOrderId, revision/fingerprint, workspace identity/basis, Context Lock fingerprint, governance/source generation and admission receipt fingerprint. Exact semantic equality is required unless a future explicitly versioned compatibility rule is frozen. Any changed or unverifiable binding is STALE and prevents activation.
+
+### Resource bounds
+
+The contract exposes explicit finite limits for attempts per Run, steps per Attempt, durable events per Run, canonical payload bytes per event, diagnostic bytes, continuation-cursor bytes and replay depth. Limit values are configuration/policy inputs and must be calibrated before execution freeze. Cap+1 fails typed without partial state advancement. Histories are never silently truncated to satisfy a cap.
+
+### Durable versus derived
+
+Durable: typed identities/ordinals, lifecycle events, generations, idempotency records, canonical payload fingerprints, journal roots, BRCs, ICFs, terminal reason codes and versioned external evidence references.
+
+Derived: current projected state, counts, completion summaries, latest-child pointers and diagnostic views. Derived data is rebuildable from the bounded canonical journal and cannot supersede it.
+
+### Round 2 threat closure
+
+Round 2 explicitly closes duplicate delivery, stale/future CAS, event reorder/truncation/substitution, concurrent attempt creation, cancellation/admission races, stale M03 authority, continuation drift, split publication, unbounded history and cross-lineage identity substitution through TLG/CER/RJR/BRC/ICF/ASF invariants. Secret-redaction and malicious external payload validation remain mandatory evidence concerns.
+
+## Round 3 questions
+
+Round 3 must freeze:
+- public contract/type surface and error taxonomy;
+- canonical serialization/domain separators and fingerprint inputs;
+- exact event kinds and reason-code registry;
+- projection/snapshot compaction rules without loss of journal authority;
+- external outcome/evidence attachment contract;
+- bounded configuration schema and calibration method;
+- cross-module adapter seams and dependency direction;
+- acceptance criteria/evidence graph for the eventual planning freeze.
 
 ## STOP CONDITION
 
-Round 1 is planning only. Do not implement M04 product code, create an execution Work Order, select a persistence backend, or authorize execution. Stop for independent exact-head review and promotion of this discovery candidate.
+Round 2 is planning only. Do not implement M04 product code, create an execution Work Order, select a persistence backend, or authorize execution. Stop for independent exact-head review and promotion before Round 3.
