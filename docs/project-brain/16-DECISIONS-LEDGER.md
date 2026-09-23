@@ -670,3 +670,8 @@ Status: `ACTIVE`
 ## CORE-D-161 - Round 4 checkpoint status remains unpromoted
 **Decision:** this branch records Round 4 as a planning review candidate only. M03 implementation, checkpoint promotion, merge, release and the next planning increment remain unauthorized until the independent exact-head review and canonical governance gate permit progression.
 **State:** ACCEPTED; Round 4 promoted by Review 004 / Issue #63 and PR #62; implementation remains unauthorized.
+
+
+## CORE-D-162 - M03 Round 4 is promoted and final planning freeze is the next legal action
+**Decision:** after Review 004 / Issue #63 approved exact head `8fd3f085f93b342373b06e4471088dc7b843fac4` and PR #62 was promoted as merge `78daa752760ba19b3c36c7e2a7574bb3cfd03501`, M03 Rounds 1-4 are canonical planning truth. The next legal increment is the Round 5 final planning freeze that compiles the implementation Work Order, pending Context Lock, acceptance/evidence mapping, Calibration Gate and executor handoff. Product implementation remains unauthorized until that freeze is independently reviewed/promoted and a separate execution-admission delta binds canonical main.
+**State:** ACCEPTED
