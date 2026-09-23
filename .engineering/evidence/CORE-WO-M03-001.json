@@ -3,7 +3,7 @@
   "increment": "CORE-M03-FREEZE-001",
   "workOrder": "CORE-WO-M03-001",
   "repository": "KayzenRoot/core",
-  "status": "LOCAL_CANDIDATE_PENDING_HOSTED_CHECKS_AND_INDEPENDENT_REVIEW",
+  "status": "APPROVED_PROMOTED",
   "planningCandidate": {
     "branch": "planning/m03-final-freeze-round5",
     "planningBase": "786ad33a27d45eb435bc6e63f22174de74b0bb71",
@@ -56,9 +56,9 @@
     "note": "No CORE HIVE project/checkpoint proof was available for this planning candidate; no other project status is attributed to CORE."
   },
   "implementation": {
-    "status": "LOCAL_CANDIDATE_PENDING_HOSTED_CHECKS_AND_INDEPENDENT_REVIEW",
+    "status": "APPROVED_PROMOTED",
     "authorizedBase": "ac90b1f48c5551e65ecadace95c59f7f0647062f",
-    "finalHead": "de6a829bd2f9402214c371446615fc364431f515",
+    "finalHead": "b92f14514e4cf615ed76fa87915539a835b6a85b",
     "productFilesCreated": true,
     "changedFiles": [
       "Cargo.lock",
@@ -1034,9 +1034,9 @@
         "platforms": [
           "Windows"
         ],
-        "status": "PASS_WINDOWS_LOCAL; HOSTED_CHECKS_PENDING",
+        "status": "PASS_HOSTED_EXACT_HEAD",
         "artifactPath": "docs/evidence/M03-TEST-H5-WINDOWS.log; docs/evidence/M03-WORKSPACE-H5-WINDOWS.log; docs/evidence/M03-CLIPPY-H5-WINDOWS.log; docs/evidence/M03-GOVERNANCE-H5.log",
-        "validatedHead": "de6a829bd2f9402214c371446615fc364431f515"
+        "validatedHead": "b92f14514e4cf615ed76fa87915539a835b6a85b"
       },
       {
         "evidenceId": "EV-022",
@@ -1047,9 +1047,9 @@
         "platforms": [
           "Ubuntu"
         ],
-        "status": "PASS_M03_UBUNTU_LOCAL; 3_BASELINE_M02_WORKSPACE_FAILURES; HOSTED_CHECKS_PENDING",
+        "status": "PASS_HOSTED_EXACT_HEAD",
         "artifactPath": "docs/evidence/M03-TEST-H5-UBUNTU.log; docs/evidence/M03-WORKSPACE-H5-UBUNTU.log; docs/evidence/M03-CLIPPY-H5-UBUNTU.log; docs/evidence/M03-WORKSPACE-BASE-H5-UBUNTU.log",
-        "validatedHead": "de6a829bd2f9402214c371446615fc364431f515"
+        "validatedHead": "b92f14514e4cf615ed76fa87915539a835b6a85b"
       },
       {
         "evidenceId": "EV-023",
@@ -1088,19 +1088,21 @@
         "platforms": [
           "Governance"
         ],
-        "status": "PENDING_INDEPENDENT_REVIEW",
-        "artifactPath": null,
-        "validatedHead": null
+        "status": "PASS_INDEPENDENT_EXACT_HEAD_REVIEW",
+        "artifactPath": "GitHub Issue #73 / M03-REVIEW-009",
+        "validatedHead": "b92f14514e4cf615ed76fa87915539a835b6a85b"
       }
     ]
   },
   "independentReview": {
-    "status": "PENDING_INDEPENDENT_EXACT_HEAD_REVIEW",
-    "issue": null,
-    "pullRequest": null,
-    "verdict": null,
-    "reviewedHead": null,
-    "unresolvedHighCritical": null
+    "status": "APPROVED",
+    "issue": 73,
+    "pullRequest": 72,
+    "verdict": "APPROVED",
+    "reviewedHead": "b92f14514e4cf615ed76fa87915539a835b6a85b",
+    "workflowRun": 35905315953,
+    "unresolvedHighCritical": 0,
+    "promotionMerge": "c63df6ad581c44bac66a8b1dab9a86522ce7fe3b"
   },
   "executionAdmission": {
     "increment": "CORE-M03-ADMIT-001",
