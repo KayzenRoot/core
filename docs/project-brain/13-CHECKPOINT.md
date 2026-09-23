@@ -1,19 +1,19 @@
 # CORE Checkpoint
 
 ## STATUS
-M01 COMPLETE / M02 COMPLETE / M03 FINAL PLANNING FREEZE IN REVIEW / IMPLEMENTATION UNAUTHORIZED
+M01 COMPLETE / M02 COMPLETE / M03 IMPLEMENTATION AUTHORIZATION ARMED
 
 ## VERSION
 CORE V0.0 - Modular Construction
 
 ## PHASE
-2 - M03 Final Planning Freeze Review
+3 - M03 Governed Implementation
 
 ## OBJECTIVE
 Continue building CORE as the headless NexLabs action plane that operates standalone and synchronizes deeply with HIVE without duplicating HIVE-owned intelligence.
 
 ## IN PROGRESS
-- M03 Rounds 1-4 are promoted; CORE-M03-FREEZE-001 is the Round 5 final planning-freeze candidate on planning/m03-final-freeze-round5 from the exact required base. Independent exact-head review is pending; implementation remains unauthorized.
+- M03 Rounds 1-5 planning are promoted. CORE-WO-M03-001 execution admission is armed on `planning/m03-execution-admission`; authorization is effective only after this exact admission state is independently reviewed and promoted to canonical `origin/main`.
 - M04-M24 remain discovery-only until their planning freezes.
 
 ## COMPLETED
@@ -38,17 +38,17 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - CORE-GOV-002-C01 GitHub hardening independently reviewed (Review 001 / Issue #57) and promoted through PR #56; active ruleset `CORE main protection` id `23769853` protects `main` with no bypass actors and the seven-context strict CI gate.
 
 ## PENDING
-- Independently review and promote the CORE-M03-FREEZE-001 final planning-freeze candidate, then require a separate execution-admission delta before any M03 implementation.
+- Independently review and promote the CORE-M03-ADMIT-001 execution-admission delta. After promotion, execute CORE-WO-M03-001 from post-admission canonical `origin/main` and collect exact-head evidence.
 - Deep-plan M04 through M24 in dependency order.
 - Freeze each module Requirements/Architecture/DoD/Work Order before implementation authorization.
 - Live local HIVE bootstrap evidence against current main.
 
 ## BLOCKERS
-- CORE-M03-FREEZE-001 remains unapproved until independent exact-head review; its seven-context hosted CI must stay bound to the open PR head.
-- M03-M24 implementation remains gated by their respective planning freezes and execution admissions.
+- Before admission PR promotion, M03 execution remains blocked because authorization is effective only on canonical `origin/main`.
+- After the exact admission state is promoted, no known planning blocker prevents CORE-WO-M03-001 execution; M04-M24 implementation remains gated by their own planning freezes and admissions.
 
 ## NEXT STEP
-Independent exact-head audit/review of CORE-M03-FREEZE-001 on planning/m03-final-freeze-round5. Keep implementation unauthorized; any implementation admission requires a later delta on canonical origin/main.
+Independently audit CORE-M03-ADMIT-001 on `planning/m03-execution-admission`. If APPROVED and promoted unchanged, execute CORE-WO-M03-001 from post-admission canonical `origin/main`; otherwise do not execute.
 
 ## EVIDENCE
 - `docs/engineering/CORE-MODULAR-DELIVERY-MODEL.md`
@@ -98,6 +98,9 @@ Independent exact-head audit/review of CORE-M03-FREEZE-001 on planning/m03-final
 - M03 Review 004 / Issue #63 — APPROVED at exact head `8fd3f085f93b342373b06e4471088dc7b843fac4`.
 - M03 Round 4 PR #62; workflow #147 / run `35805683331` — all seven required contexts SUCCESS.
 - M03 Round 4 promotion merge `78daa752760ba19b3c36c7e2a7574bb3cfd03501`.
+- M03 final planning freeze exact-head reviewed (Review 006 / Issue #67) and promoted through PR #66.
+- M03 final-freeze exact head `326eea936989ad2155ae6d1fb3fc965b8d1d25b9`; workflow run `35813591063` — all seven required contexts SUCCESS.
+- M03 final-freeze promotion merge `ac90b1f48c5551e65ecadace95c59f7f0647062f`.
 
 ## M02 completion record
 Frozen Work Order: `CORE-WO-M02-001`
@@ -456,3 +459,20 @@ Acceptance graph: 23 blocking criteria, each mapped to future Evidence Requireme
 Construction packets: A–H, including a rule-only Resource Calibration Gate with no invented production values.
 HIVE planning preflight: read-only HIVE v1.0.0 MCP was reachable, but KayzenRoot/core and its checkpoint did not resolve; canonical Git sources were used in SOLO mode. The future executor must repeat preflight.
 Candidate review: PENDING. No M03 implementation, promotion, merge, release, or completion is authorized.
+
+
+## M03 execution admission
+
+Increment: `CORE-M03-ADMIT-001`
+Work Order: `CORE-WO-M03-001`
+Authorized execution base: `ac90b1f48c5551e65ecadace95c59f7f0647062f`
+Execution branch: `feat/m03-work-order-engine`
+Final planning review: Review 006 / Issue #67 — APPROVED
+Final-freeze PR: #66
+Final-freeze exact head: `326eea936989ad2155ae6d1fb3fc965b8d1d25b9`
+Final-freeze workflow: `35813591063` — all seven required contexts SUCCESS
+Final-freeze promotion merge: `ac90b1f48c5551e65ecadace95c59f7f0647062f`
+Scope armed for authorization: `M03_WORK_ORDER_ENGINE` only
+Assurance: ELEVATED
+
+Authorization in this admission delta is effective only when the exact active Context Lock and synchronized state are present on canonical `origin/main` after independent review/promotion. A PR branch does not authorize execution. No architecture, dependency, contract, acceptance, calibration, security or M02/M04 boundary semantics are changed by admission.
