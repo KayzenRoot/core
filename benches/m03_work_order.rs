@@ -47,6 +47,10 @@ fn scope_rule_count(scope: &ScopeEnvelopeV1) -> usize {
 fn scaled_packet_fixture(packet_count: usize, chain: bool) -> common::Fixture {
     let mut fixture = common::fixture();
     assert!(packet_count >= fixture.request.packets.len());
+    let shared_source_id = fixture.request.sources[0].source_id.clone();
+    for packet in &mut fixture.request.packets {
+        packet.required_source_ids = vec![shared_source_id.clone()];
+    }
     let template = fixture.request.packets[0].clone();
     let evidence_template = fixture.request.acceptance.evidence_requirements[0].clone();
     for index in fixture.request.packets.len()..packet_count {
@@ -115,7 +119,7 @@ fn scaled_packet_fixture(packet_count: usize, chain: bool) -> common::Fixture {
     fixture.budget.max_criteria = packet_count as u64;
     fixture.budget.max_evidence_requirements = packet_count as u64;
     fixture.budget.max_acceptance_evidence_edges = packet_count as u64;
-    fixture.budget.max_context_refs = (packet_count * 2) as u64;
+    fixture.budget.max_context_refs = packet_count as u64;
     fixture
 }
 
@@ -360,6 +364,7 @@ fn measure_boundaries() {
     compile(&sources.request, &sources.context, &sources.budget).unwrap();
     let mut over_sources = scaled_source_fixture(33);
     over_sources.budget.max_source_refs = 32;
+    over_sources.budget.max_context_refs = 32;
     assert_eq!(
         compile(
             &over_sources.request,
