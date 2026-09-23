@@ -1,7 +1,7 @@
 # CORE Checkpoint
 
 ## STATUS
-M01 COMPLETE / M02 COMPLETE / M03 IMPLEMENTATION AUTHORIZATION ARMED
+M01 COMPLETE / M02 COMPLETE / M03 IMPLEMENTATION AUTHORIZED
 
 ## VERSION
 CORE V0.0 - Modular Construction
@@ -13,7 +13,7 @@ CORE V0.0 - Modular Construction
 Continue building CORE as the headless NexLabs action plane that operates standalone and synchronizes deeply with HIVE without duplicating HIVE-owned intelligence.
 
 ## IN PROGRESS
-- M03 Rounds 1-5 planning are promoted. CORE-WO-M03-001 execution admission is armed on `planning/m03-execution-admission`; authorization is effective only after this exact admission state is independently reviewed and promoted to canonical `origin/main`.
+- M03 Rounds 1-5 planning and CORE-M03-ADMIT-001 execution admission are promoted to canonical `origin/main`. CORE-WO-M03-001 is authorized for governed execution; implementation has not started.
 - M04-M24 remain discovery-only until their planning freezes.
 
 ## COMPLETED
@@ -38,17 +38,17 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - CORE-GOV-002-C01 GitHub hardening independently reviewed (Review 001 / Issue #57) and promoted through PR #56; active ruleset `CORE main protection` id `23769853` protects `main` with no bypass actors and the seven-context strict CI gate.
 
 ## PENDING
-- Independently review and promote the CORE-M03-ADMIT-001 execution-admission delta. After promotion, execute CORE-WO-M03-001 from post-admission canonical `origin/main` and collect exact-head evidence.
+- Execute CORE-WO-M03-001 from post-admission canonical `origin/main` and collect exact-head implementation evidence.
 - Deep-plan M04 through M24 in dependency order.
 - Freeze each module Requirements/Architecture/DoD/Work Order before implementation authorization.
 - Live local HIVE bootstrap evidence against current main.
 
 ## BLOCKERS
-- Before admission PR promotion, M03 execution remains blocked because authorization is effective only on canonical `origin/main`.
-- After the exact admission state is promoted, no known planning blocker prevents CORE-WO-M03-001 execution; M04-M24 implementation remains gated by their own planning freezes and admissions.
+- No known planning/admission blocker prevents CORE-WO-M03-001 execution. Any material change to the admitted canonical sources requires Context Lock recompilation and governed re-admission before execution.
+- M04-M24 implementation remains gated by their own planning freezes and admissions.
 
 ## NEXT STEP
-Independently audit CORE-M03-ADMIT-001 on `planning/m03-execution-admission`. If APPROVED and promoted unchanged, execute CORE-WO-M03-001 from post-admission canonical `origin/main`; otherwise do not execute.
+Execute CORE-WO-M03-001 from post-admission canonical `origin/main` under the active Context Lock, then collect exact-head evidence and stop for independent audit before merge.
 
 ## EVIDENCE
 - `docs/engineering/CORE-MODULAR-DELIVERY-MODEL.md`
@@ -101,6 +101,9 @@ Independently audit CORE-M03-ADMIT-001 on `planning/m03-execution-admission`. If
 - M03 final planning freeze exact-head reviewed (Review 006 / Issue #67) and promoted through PR #66.
 - M03 final-freeze exact head `326eea936989ad2155ae6d1fb3fc965b8d1d25b9`; workflow run `35813591063` — all seven required contexts SUCCESS.
 - M03 final-freeze promotion merge `ac90b1f48c5551e65ecadace95c59f7f0647062f`.
+- M03 execution admission Review 007 / Issue #69 — APPROVED at exact head `36f18d1dc53faf9af9d3c06355ebe07384e4e1f7`.
+- M03 execution-admission PR #68; workflow run `35845550610` — all seven required contexts SUCCESS.
+- M03 execution-admission promotion merge `abe21ed4564978d24b2f41bca13b6f052daa3b17`.
 
 ## M02 completion record
 Frozen Work Order: `CORE-WO-M02-001`
