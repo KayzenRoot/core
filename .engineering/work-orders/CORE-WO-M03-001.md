@@ -1,6 +1,6 @@
 # CORE-WO-M03-001 — M03 Work Order Engine
 
-Status: FINAL_FREEZE_CANDIDATE / IMPLEMENTATION_UNAUTHORIZED
+Status: ACTIVE_AUTHORIZATION_ARMED / EFFECTIVE_ONLY_ON_CANONICAL_MAIN_PROMOTION
 Increment: CORE-M03-FREEZE-001
 Module: M03 — Work Order Engine
 Repository: KayzenRoot/core
@@ -9,12 +9,12 @@ Planning branch: planning/m03-final-freeze-round5
 Future execution branch: feat/m03-work-order-engine
 Risk / assurance: ELEVATED
 Execution model: one comprehensive implementation Work Order, eight ordered construction packets
-Product implementation authorization: FALSE
-Context Lock: .engineering/context-locks/CORE-WO-M03-001.json — PENDING_PROMOTION
+Product implementation authorization: ARMED — effective only after CORE-M03-ADMIT-001 is independently reviewed and promoted to canonical origin/main
+Context Lock: .engineering/context-locks/CORE-WO-M03-001.json — ACTIVE / CANONICAL_MAIN_GATED
 Evidence skeleton: .engineering/evidence/CORE-WO-M03-001.json
 Codex handoff: docs/work-orders/CODEX-HANDOFF-M03.md
 
-This candidate freezes the future implementation contract only. It creates no M03 product code and grants no authority to begin implementation. Independent exact-head review/promotion and a later execution-admission delta are separate mandatory gates.
+The final planning freeze is promoted. CORE-M03-ADMIT-001 arms this frozen Work Order for execution without changing its architecture, scope, dependency, acceptance, calibration, security, ownership or STOP semantics. The admission state grants no authority while it exists only on a PR branch; execution becomes effective only after the exact reviewed admission state is promoted to canonical origin/main.
 
 ## OBJECTIVE
 
@@ -435,4 +435,23 @@ Only after Packs A–H satisfy the frozen STOP gates, AC-001 through AC-023 are 
 
 If any required criterion, evidence, source binding, gate, bounded resource selection or authorization precondition is missing, stale, conflicting, failing, unsupported without an allowed disposition, or requires a change outside frozen scope, stop and state the exact gap. Do not work around governance gates.
 
-The executor MUST NEVER return APPROVED. Approval belongs to the independent governed reviewer. This Work Order cannot be executed until the separate admission delta activates its Context Lock on canonical main.
+The executor MUST NEVER return APPROVED. Approval belongs to the independent governed reviewer. This Work Order may execute only when the exact ACTIVE Context Lock produced by CORE-M03-ADMIT-001 is present on canonical origin/main and all canonical-main authorization gates below pass.
+
+
+## Execution admission record
+
+Admission increment: `CORE-M03-ADMIT-001`
+Final planning review: M03 Review 006 / Issue #67 — APPROVED
+Final-freeze PR: #66
+Final-freeze exact reviewed head: `326eea936989ad2155ae6d1fb3fc965b8d1d25b9`
+Final-freeze exact-head workflow: `35813591063` — all seven required contexts SUCCESS
+Promoted authorized base: `ac90b1f48c5551e65ecadace95c59f7f0647062f`
+Execution branch: `feat/m03-work-order-engine`
+Authorized scope: `M03_WORK_ORDER_ENGINE` only
+Assurance: ELEVATED
+
+Authorization in this record is canonical-main gated. It becomes effective only after the exact CORE-M03-ADMIT-001 state is independently reviewed and promoted to canonical `origin/main`. A planning/admission PR branch carrying `status=ACTIVE` is not execution authority.
+
+After admission promotion, the executor MUST create `feat/m03-work-order-engine` from post-admission canonical `origin/main`, prove `ac90b1f48c5551e65ecadace95c59f7f0647062f` is an ancestor, and prove every intervening commit contains governance/admission metadata only. It must then repeat Git/HIVE/governance preflight and validate the exact active Context Lock, Work Order blob and nine canonical source fingerprints before Pack A.
+
+This admission changes execution state only. All frozen architecture, scope, dependency, contracts, Packs A-H, AC-001..AC-023, EV-001..EV-025, Calibration Gate, security invariants, file topology, M02/M04 ownership and STOP semantics remain unchanged.
