@@ -3,7 +3,7 @@
   "increment": "CORE-M03-FREEZE-001",
   "workOrder": "CORE-WO-M03-001",
   "repository": "KayzenRoot/core",
-  "status": "PLANNING_CANDIDATE_PENDING_REVIEW",
+  "status": "EXECUTION_ADMISSION_ARMED",
   "planningCandidate": {
     "branch": "planning/m03-final-freeze-round5",
     "planningBase": "786ad33a27d45eb435bc6e63f22174de74b0bb71",
@@ -39,11 +39,11 @@
   },
   "contextLock": {
     "path": ".engineering/context-locks/CORE-WO-M03-001.json",
-    "status": "PENDING_PROMOTION",
-    "blobSha": "9cd685f7eb7e7295924ec6119837d6e3976bc6db",
-    "authorizedBase": null,
-    "productImplementationAuthorized": false,
-    "executionStatus": "NOT_ADMITTED"
+    "status": "ACTIVE",
+    "blobSha": "e784c7fa1aad560f92244fcf61547d2514d47657",
+    "authorizedBase": "ac90b1f48c5551e65ecadace95c59f7f0647062f",
+    "productImplementationAuthorized": true,
+    "executionStatus": "READY_FOR_EXECUTION_ON_CANONICAL_MAIN_PROMOTION"
   },
   "planningHiveObservation": {
     "hiveVersion": "1.0.0",
@@ -56,8 +56,8 @@
     "note": "No CORE HIVE project/checkpoint proof was available for this planning candidate; no other project status is attributed to CORE."
   },
   "implementation": {
-    "status": "NOT_STARTED_UNAUTHORIZED",
-    "authorizedBase": null,
+    "status": "NOT_STARTED_ADMISSION_ARMED",
+    "authorizedBase": "ac90b1f48c5551e65ecadace95c59f7f0647062f",
     "finalHead": null,
     "productFilesCreated": false,
     "changedFiles": [],
@@ -744,5 +744,46 @@
     "verdict": null,
     "reviewedHead": null,
     "unresolvedHighCritical": null
+  },
+  "executionAdmission": {
+    "increment": "CORE-M03-ADMIT-001",
+    "branch": "planning/m03-execution-admission",
+    "authorizedBase": "ac90b1f48c5551e65ecadace95c59f7f0647062f",
+    "status": "EFFECTIVE_ONLY_ON_CANONICAL_MAIN_PROMOTION",
+    "authorizedScope": "M03_WORK_ORDER_ENGINE",
+    "assuranceMode": "ELEVATED",
+    "authorizationEffectiveOnlyOnCanonicalMain": true,
+    "finalPlanningReview": {
+      "issue": 67,
+      "verdict": "APPROVED",
+      "pullRequest": 66,
+      "reviewedHead": "326eea936989ad2155ae6d1fb3fc965b8d1d25b9",
+      "workflowRun": 35813591063,
+      "promotionMerge": "ac90b1f48c5551e65ecadace95c59f7f0647062f"
+    },
+    "sourceBlobShaKind": "git_blob_sha1",
+    "canonicalSourceBlobShas": {
+      "docs/project-brain/13-CHECKPOINT.md": "3a3e52773c753880f7ad830c4b768ddb6326325a",
+      "docs/project-brain/16-DECISIONS-LEDGER.md": "7966559d08f3d35a5be5776e83f1fc6e0b014e01",
+      "docs/project-brain/03-SCOPE.md": "f2df9200f88bd0fcc77d9b4a02ad7a039d2f429d",
+      "docs/project-brain/15-DEFINITION-OF-DONE.md": "3ffb3f27c57ec7d9b6810fe601c3944d3529a323",
+      "docs/project-brain/04-ARCHITECTURE.md": "d9bd9609e81e57862715ea18fa176e9531287e35",
+      "docs/project-brain/02-REQUIREMENTS.md": "2148eb95b408827a1d7c12a6ca059eba48062ce1",
+      "docs/project-brain/10-SECURITY-GOVERNANCE.md": "4c7a102a6229de12d4721507db5cfc18a914b59b",
+      "docs/project-brain/11-TEST-PLAN.md": "22f8bd63e304bfd83453d4f58d53db1e0f0e3bb9",
+      "docs/modules/M03-WORK-ORDER-ENGINE.md": "bd394a9f3609f5658a730613e83ddc33015d2fe5"
+    },
+    "workOrderBlobSha": "8801c91f1c946c80d3af7996ff5b8b14944440f6",
+    "contextLockBlobSha": "e784c7fa1aad560f92244fcf61547d2514d47657"
+  },
+  "finalPlanningReview": {
+    "status": "APPROVED_PROMOTED",
+    "issue": 67,
+    "pullRequest": 66,
+    "verdict": "APPROVED",
+    "reviewedHead": "326eea936989ad2155ae6d1fb3fc965b8d1d25b9",
+    "workflowRun": 35813591063,
+    "promotionMerge": "ac90b1f48c5551e65ecadace95c59f7f0647062f",
+    "note": "Exact candidate-head binding is external GitHub review evidence to avoid self-referential commit hashing."
   }
 }
