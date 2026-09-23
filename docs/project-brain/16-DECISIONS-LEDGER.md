@@ -744,3 +744,28 @@ Status: `ACTIVE`
 ## CORE-D-178 - Continuation revalidates exact M03 authority and creates a new epoch
 **Decision:** ICF continuation binds the last semantic M04 boundary and BRC binds exact M03 admission/workspace/Context Lock/governance authority. Resume validates all bindings and creates a new Attempt/epoch. Changed, UNKNOWN or unverifiable authority becomes STALE/BLOCKED.
 **State:** PROPOSED; M04 Round 2 candidate.
+
+
+## CORE-D-179 - M04 V1 exposes explicit versioned request/receipt contracts
+**Decision:** M04 mutations and replay use explicit V1 request/receipt/result contracts with expected-generation and idempotency inputs where semantic state changes. No API receives ambient filesystem, repository, network, process or clock authority.
+**State:** PROPOSED; M04 Round 3 candidate.
+
+## CORE-D-180 - M04 canonical fingerprints are schema-bound and domain-separated
+**Decision:** semantic fingerprints use deterministic canonical bytes, explicit field ordering/lengths and distinct domain separators. Diagnostic time, locale, unordered map iteration and secret-bearing fields are excluded. Cross-platform golden vectors are blocking evidence.
+**State:** PROPOSED; M04 Round 3 candidate.
+
+## CORE-D-181 - M04 V1 event kinds and error classes are closed registries
+**Decision:** V1 accepts only frozen event kinds and machine-readable error/reason classes. Unknown schema/kind fails typed with no silent downgrade; free-form diagnostics never substitute for semantic reason codes.
+**State:** PROPOSED; M04 Round 3 candidate.
+
+## CORE-D-182 - Snapshots accelerate projection but never replace journal authority
+**Decision:** snapshots bind an exact journal boundary and are verified derived artifacts. Active canonical Run events required for proof are not destructively compacted by M04; archive/retention policy is external.
+**State:** PROPOSED; M04 Round 3 candidate.
+
+## CORE-D-183 - External execution/verification data enters M04 only as bounded references
+**Decision:** M04 records versioned lineage-bound references and attachment facts, not external artifact bodies and not later-module truth decisions. Reference shape/lineage/bounds are validated without importing M14-M17 policy.
+**State:** PROPOSED; M04 Round 3 candidate.
+
+## CORE-D-184 - M04 final acceptance uses a blocking 23-node Evidence Graph
+**Decision:** EV-M04-001 through EV-M04-023 cover contracts, transitions, concurrency, idempotency, cancellation, replay, BRC/ICF, identities, canonicalization, resource bounds, snapshots, references, hidden-I/O/zero-LLM, fuzz, calibration, supply chain, cross-platform CI and independent review. Numeric resource defaults require evidence-backed calibration and cannot mutate semantics.
+**State:** PROPOSED; M04 Round 3 candidate.
