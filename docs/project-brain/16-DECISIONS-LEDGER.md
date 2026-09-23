@@ -685,3 +685,7 @@ Status: `ACTIVE`
 ## CORE-D-164 - M03 final planning freeze is promoted and execution admission is the next legal action
 **Decision:** Review 006 / Issue #67 APPROVED CORE-M03-FREEZE-001 at exact head `326eea936989ad2155ae6d1fb3fc965b8d1d25b9`; PR #66 was promoted as merge `ac90b1f48c5551e65ecadace95c59f7f0647062f`. The M03 Work Order, pending Context Lock, Packs A-H, Calibration Gate and 23-criterion AEG are now frozen planning truth. The next legal change is the bounded `CORE-M03-ADMIT-001` execution-admission delta. It may bind the promoted canonical base, activate the Context Lock and arm only `M03_WORK_ORDER_ENGINE`, but execution authority is effective only after that exact admission state is independently reviewed and promoted to canonical `origin/main`.
 **State:** ACCEPTED
+
+## CORE-D-165 - M03 execution admission is promoted; implementation is the next legal action
+**Decision:** Review 007 / Issue #69 APPROVED CORE-M03-ADMIT-001 at exact head `36f18d1dc53faf9af9d3c06355ebe07384e4e1f7` with workflow run `35845550610` green across all seven required contexts. PR #68 was promoted as squash merge `abe21ed4564978d24b2f41bca13b6f052daa3b17`. The admission is therefore canonical. The next legal product action is governed execution of `CORE-WO-M03-001` from post-admission canonical `origin/main`, after recompiling the Context Lock/evidence bindings for this post-promotion state. No M03 product Pack A-H was implemented by this synchronization increment.
+**State:** ACCEPTED
