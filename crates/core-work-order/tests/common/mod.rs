@@ -19,23 +19,23 @@ pub fn fp<T: Serialize>(value: &T) -> EvidenceFingerprintV1 {
 
 pub fn budget() -> M03ResourceBudgetV1 {
     M03ResourceBudgetV1::new(
-        128_000,
-        128_000,
-        16_000,
+        78_333,
+        78_898,
+        4_096,
         32,
         32,
-        128,
-        256,
+        31,
         64,
+        32,
+        32,
+        32,
+        32,
+        32,
         64,
-        256,
-        128,
-        256,
-        64,
-        256,
-        64,
-        64,
-        ResourceCalibrationStateV1::Uncalibrated,
+        3,
+        4,
+        7,
+        ResourceCalibrationStateV1::Calibrated,
     )
     .unwrap()
 }

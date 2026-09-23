@@ -47,6 +47,15 @@ fn finite_positive_budgets_and_cap_plus_one_fail_atomically() {
     )
     .is_err());
 
+    let mut uncalibrated = fixture.budget.clone();
+    uncalibrated.calibration_state = ResourceCalibrationStateV1::Uncalibrated;
+    assert_eq!(
+        compile(&fixture.request, &fixture.context, &uncalibrated)
+            .unwrap_err()
+            .code,
+        WorkOrderErrorCodeV1::InvalidContextBudget
+    );
+
     let mut packet_cap = fixture.budget.clone();
     packet_cap.max_packets = 1;
     let result = compile(&fixture.request, &fixture.context, &packet_cap);

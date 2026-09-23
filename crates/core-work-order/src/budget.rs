@@ -97,6 +97,7 @@ impl M03ResourceBudgetV1 {
             .any(|value| *value == 0 || *value == u64::MAX)
             || self.max_parse_depth == 0
             || self.max_parse_depth == u32::MAX
+            || self.calibration_state != ResourceCalibrationStateV1::Calibrated
         {
             return Err(error(
                 WorkOrderErrorCategoryV1::Resource,
@@ -162,7 +163,7 @@ mod tests {
             1,
             ResourceCalibrationStateV1::Uncalibrated
         )
-        .is_ok());
+        .is_err());
         assert!(M03ResourceBudgetV1::new(
             1,
             1,
