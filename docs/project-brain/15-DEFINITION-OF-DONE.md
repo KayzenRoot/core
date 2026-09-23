@@ -1,6 +1,6 @@
 # CORE Definition of Done
 
-Status: `M01_M02_COMPLETE_M03_FINAL_PLANNING_FREEZE_IN_REVIEW_IMPLEMENTATION_UNAUTHORIZED`
+Status: `M01_M02_COMPLETE_M03_IMPLEMENTATION_AUTHORIZATION_ARMED`
 
 ## Bootstrap DoD
 
@@ -92,7 +92,7 @@ The eventual M03 DoD must prove, on one governed exact head:
 - property/adversarial/fuzz/Windows/Ubuntu/security/performance evidence;
 - independent governed review with no unresolved HIGH/CRITICAL finding.
 
-CORE-M03-FREEZE-001 now records the final planning-freeze candidate and its future implementation criteria/evidence map. Those criteria remain pending implementation evidence and independent final-freeze review/promotion; the candidate does not satisfy the M03 DoD or authorize product work.
+CORE-M03-FREEZE-001 is now the promoted final planning freeze and records the future implementation criteria/evidence map. Review 006 / Issue #67 approved exact head `326eea936989ad2155ae6d1fb3fc965b8d1d25b9`; PR #66 was promoted as merge `ac90b1f48c5551e65ecadace95c59f7f0647062f`. Those criteria still remain pending implementation evidence. CORE-M03-ADMIT-001 may arm execution, but does not satisfy the M03 DoD or claim product completion.
 
 
 ### M03 Round 2 DoD refinements
@@ -152,6 +152,6 @@ The future M03 V0.0 implementation is complete only when all of the following ar
 M03 Round 4 is an independently reviewed and promoted planning baseline (Review 004 / Issue #63; PR #62; exact head `8fd3f085f93b342373b06e4471088dc7b843fac4`; workflow #147 / run `35805683331`; promotion merge `78daa752760ba19b3c36c7e2a7574bb3cfd03501`). Implementation remains unauthorized. The next gate is the M03 final planning freeze (Round 5 candidate), followed by its own review/promotion and a separate execution-admission delta.
 
 
-### M03 Round 5 final planning freeze candidate status
+### M03 Round 5 final planning freeze promoted / admission status
 
-CORE-M03-FREEZE-001 records a final planning-freeze candidate from the promoted Round 1–4 baseline. Its 23 blocking future implementation criteria are mapped to explicit Evidence Requirement IDs. The Context Lock remains PENDING_PROMOTION with no authorized base and implementation authorization false. This candidate is not M03 product completion, approval, promotion, or execution admission. Independent exact-head review/promotion and a separate canonical-main admission delta remain required; all implementation DoD evidence remains pending.
+CORE-M03-FREEZE-001 is promoted planning truth. Its 23 blocking future implementation criteria remain mapped to explicit Evidence Requirement IDs and all implementation DoD evidence remains pending. CORE-M03-ADMIT-001 may set the Context Lock ACTIVE, bind authorizedBase `ac90b1f48c5551e65ecadace95c59f7f0647062f`, and arm only `M03_WORK_ORDER_ENGINE`, but execution authority is effective only after that exact admission state is independently reviewed and promoted to canonical `origin/main`. Admission is not M03 product completion.
