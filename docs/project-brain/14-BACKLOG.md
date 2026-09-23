@@ -8,7 +8,7 @@ Canonical module map: `docs/modules/00-MASTER-MODULE-MAP.md`.
 
 - M01 Core Runtime & Lifecycle — COMPLETE / PROMOTED.
 - M02 Project / Workspace Adapter — COMPLETE / PROMOTED (CORE-WO-M02-001; Review 009 / Issue #43; PR #40).
-- M03 Work Order Engine — ROUNDS 1-4 PROMOTED / FINAL PLANNING FREEZE CANDIDATE IN REVIEW (CORE-M03-FREEZE-001) / IMPLEMENTATION UNAUTHORIZED.
+- M03 Work Order Engine — ROUNDS 1-5 PLANNING PROMOTED / EXECUTION ADMISSION ARMED (CORE-M03-ADMIT-001) / EFFECTIVE ONLY AFTER CANONICAL-MAIN PROMOTION.
 - M04 Run / Attempt / Step Engine.
 - M05 Host Adapter Fabric.
 - M06 Capability Negotiation.
