@@ -680,3 +680,8 @@ Status: `ACTIVE`
 ## CORE-D-163 - M03 Round 5 final planning freeze is a review candidate
 **Decision:** CORE-M03-FREEZE-001 packages the future M03 implementation Work Order, pending Context Lock, Evidence Bundle skeleton, eight packets, Calibration Gate, 23-criterion AEG, and executor handoff on the exact planning base. This candidate does not authorize implementation. Independent exact-head review/promotion and a separate execution-admission delta binding canonical main are required before product work.
 **State:** PROPOSED; pending independent exact-head review.
+
+
+## CORE-D-164 - M03 final planning freeze is promoted and execution admission is the next legal action
+**Decision:** Review 006 / Issue #67 APPROVED CORE-M03-FREEZE-001 at exact head `326eea936989ad2155ae6d1fb3fc965b8d1d25b9`; PR #66 was promoted as merge `ac90b1f48c5551e65ecadace95c59f7f0647062f`. The M03 Work Order, pending Context Lock, Packs A-H, Calibration Gate and 23-criterion AEG are now frozen planning truth. The next legal change is the bounded `CORE-M03-ADMIT-001` execution-admission delta. It may bind the promoted canonical base, activate the Context Lock and arm only `M03_WORK_ORDER_ENGINE`, but execution authority is effective only after that exact admission state is independently reviewed and promoted to canonical `origin/main`.
+**State:** ACCEPTED

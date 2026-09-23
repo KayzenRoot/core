@@ -17,7 +17,7 @@ python -m unittest discover -s tests -p "test_*.py" -v
 ```
 
 ## Product validation
-Product validation is frozen progressively by module and risk. M01 and M02 have promoted exact-head completion evidence; M03 Rounds 1-4 are promoted and CORE-M03-FREEZE-001 is the Round 5 final planning-freeze candidate pending independent exact-head review. No M03 product implementation or new product test result is claimed by this candidate. M04+ obligations remain `PENDING_DISCOVERY` until their owning plans are accepted.
+Product validation is frozen progressively by module and risk. M01 and M02 have promoted exact-head completion evidence; M03 Rounds 1-5 planning are promoted. CORE-M03-ADMIT-001 is the bounded execution-admission candidate; it changes authorization state only and claims no M03 product test, benchmark, calibration, or implementation result. M04+ obligations remain `PENDING_DISCOVERY` until their owning plans are accepted.
 
 Historical green evidence never automatically proves a changed head.
 
@@ -232,6 +232,6 @@ Finite positive M03ResourceBudget defaults and any acceptance thresholds remain 
 Production acceptance requires one exact final head with Windows and Ubuntu CI, contract/property/integration/adversarial/fuzz coverage, M03 calibration report, finite budget selection rationale, no-hidden-I/O and acyclic dependency proof, security/advisory/license/SBOM checks, deterministic serialization evidence, complete AEG-to-evidence traceability and independent exact-head review with no unresolved HIGH/CRITICAL finding. Any later commit invalidates the head-bound results and requires the applicable suite to rerun.
 
 
-## M03 Round 5 final-freeze candidate validation status
+## M03 Round 5 final-freeze promoted / execution-admission validation status
 
-CORE-M03-FREEZE-001 freezes the future implementation Work Order, pending Context Lock, Evidence Bundle skeleton, executor handoff, eight construction packets, rule-only Calibration Gate, and a 23-criterion machine-readable AEG. All implementation Evidence Requirements remain PENDING_IMPLEMENTATION. Planning validation covers artifact consistency, exact source bindings, authorization flags, JSON/Markdown structure, deterministic governance validation, and exact-head hosted CI. It does not claim M03 product tests, benchmarks, calibration values, or implementation success. Independent exact-head review and promotion remain pending.
+CORE-M03-FREEZE-001 froze the future implementation Work Order, Context Lock form, Evidence Bundle skeleton, executor handoff, eight construction packets, rule-only Calibration Gate, and a 23-criterion machine-readable AEG. Review 006 / Issue #67 approved exact head `326eea936989ad2155ae6d1fb3fc965b8d1d25b9`; PR #66 was promoted as merge `ac90b1f48c5551e65ecadace95c59f7f0647062f` with workflow `35813591063` green in all seven required contexts. All implementation Evidence Requirements remain PENDING_IMPLEMENTATION. CORE-M03-ADMIT-001 must validate exact source/Work Order/lock fingerprints, canonical-main-only authorization, M03-only scope and unchanged architecture/dependency/acceptance/calibration/security semantics before promotion. The admission delta itself claims no product implementation success.
