@@ -31,6 +31,26 @@ pub struct M03ResourceBudgetV1 {
 }
 
 impl M03ResourceBudgetV1 {
+    pub const CALIBRATED_V1: Self = Self {
+        max_request_bytes: 78_333,
+        max_frozen_bytes: 78_898,
+        max_string_bytes: 4_096,
+        max_source_refs: 32,
+        max_packets: 32,
+        max_packet_edges: 31,
+        max_scope_rules: 64,
+        max_criteria: 32,
+        max_evidence_requirements: 32,
+        max_acceptance_evidence_edges: 32,
+        max_lineage_edges: 32,
+        max_context_refs: 32,
+        max_correction_rules: 64,
+        max_diff_entries: 3,
+        max_diagnostic_entries: 4,
+        max_parse_depth: 7,
+        calibration_state: ResourceCalibrationStateV1::Calibrated,
+    };
+
     #[allow(clippy::too_many_arguments)]
     pub fn new(
         max_request_bytes: u64,
@@ -75,7 +95,7 @@ impl M03ResourceBudgetV1 {
     }
 
     pub fn validate(&self) -> Result<(), WorkOrderErrorV1> {
-        let dimensions = [
+        let limits = [
             self.max_request_bytes,
             self.max_frozen_bytes,
             self.max_string_bytes,
@@ -92,11 +112,30 @@ impl M03ResourceBudgetV1 {
             self.max_diff_entries,
             self.max_diagnostic_entries,
         ];
-        if dimensions
+        let calibrated_maxima = [
+            Self::CALIBRATED_V1.max_request_bytes,
+            Self::CALIBRATED_V1.max_frozen_bytes,
+            Self::CALIBRATED_V1.max_string_bytes,
+            Self::CALIBRATED_V1.max_source_refs,
+            Self::CALIBRATED_V1.max_packets,
+            Self::CALIBRATED_V1.max_packet_edges,
+            Self::CALIBRATED_V1.max_scope_rules,
+            Self::CALIBRATED_V1.max_criteria,
+            Self::CALIBRATED_V1.max_evidence_requirements,
+            Self::CALIBRATED_V1.max_acceptance_evidence_edges,
+            Self::CALIBRATED_V1.max_lineage_edges,
+            Self::CALIBRATED_V1.max_context_refs,
+            Self::CALIBRATED_V1.max_correction_rules,
+            Self::CALIBRATED_V1.max_diff_entries,
+            Self::CALIBRATED_V1.max_diagnostic_entries,
+        ];
+        if limits
             .iter()
-            .any(|value| *value == 0 || *value == u64::MAX)
+            .zip(calibrated_maxima)
+            .any(|(value, maximum)| *value == 0 || *value == u64::MAX || *value > maximum)
             || self.max_parse_depth == 0
             || self.max_parse_depth == u32::MAX
+            || self.max_parse_depth > Self::CALIBRATED_V1.max_parse_depth
             || self.calibration_state != ResourceCalibrationStateV1::Calibrated
         {
             return Err(error(
@@ -184,5 +223,60 @@ mod tests {
             ResourceCalibrationStateV1::Calibrated
         )
         .is_err());
+    }
+
+    #[test]
+    fn calibrated_profile_accepts_its_ceiling_and_rejects_every_larger_dimension() {
+        let profile = M03ResourceBudgetV1::CALIBRATED_V1;
+        assert!(profile.validate().is_ok());
+
+        let mut over = profile.clone();
+        over.max_request_bytes += 1;
+        assert!(over.validate().is_err());
+        let mut over = profile.clone();
+        over.max_frozen_bytes += 1;
+        assert!(over.validate().is_err());
+        let mut over = profile.clone();
+        over.max_string_bytes += 1;
+        assert!(over.validate().is_err());
+        let mut over = profile.clone();
+        over.max_source_refs += 1;
+        assert!(over.validate().is_err());
+        let mut over = profile.clone();
+        over.max_packets += 1;
+        assert!(over.validate().is_err());
+        let mut over = profile.clone();
+        over.max_packet_edges += 1;
+        assert!(over.validate().is_err());
+        let mut over = profile.clone();
+        over.max_scope_rules += 1;
+        assert!(over.validate().is_err());
+        let mut over = profile.clone();
+        over.max_criteria += 1;
+        assert!(over.validate().is_err());
+        let mut over = profile.clone();
+        over.max_evidence_requirements += 1;
+        assert!(over.validate().is_err());
+        let mut over = profile.clone();
+        over.max_acceptance_evidence_edges += 1;
+        assert!(over.validate().is_err());
+        let mut over = profile.clone();
+        over.max_lineage_edges += 1;
+        assert!(over.validate().is_err());
+        let mut over = profile.clone();
+        over.max_context_refs += 1;
+        assert!(over.validate().is_err());
+        let mut over = profile.clone();
+        over.max_correction_rules += 1;
+        assert!(over.validate().is_err());
+        let mut over = profile.clone();
+        over.max_diff_entries += 1;
+        assert!(over.validate().is_err());
+        let mut over = profile.clone();
+        over.max_diagnostic_entries += 1;
+        assert!(over.validate().is_err());
+        let mut over = profile;
+        over.max_parse_depth += 1;
+        assert!(over.validate().is_err());
     }
 }
