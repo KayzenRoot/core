@@ -14,7 +14,7 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 
 ## IN PROGRESS
 - M03 canonical closeout was promoted through PR #74 as merge `2fdf595cc6b450d1be0038eb67d0a5160035d9bd` after M03-REVIEW-010 / Issue #75.
-- M04 Round 1 discovery candidate defines the Run / Attempt / Step authority boundary, lifecycle direction and initial RAS/TLG/CER/RJR/BRC/ICF/ASF mechanisms. M04 implementation remains unauthorized.
+- M04 Round 1 is promoted. Round 2 candidate freezes exact lifecycle matrices, CAS/idempotency, cancellation precedence, journal/replay, continuation/BRC and resource-bound semantics. M04 implementation remains unauthorized.
 - M05-M24 remain discovery-only until their planning freezes.
 
 ## COMPLETED
@@ -39,7 +39,7 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - CORE-GOV-002-C01 GitHub hardening independently reviewed (Review 001 / Issue #57) and promoted through PR #56; active ruleset `CORE main protection` id `23769853` protects `main` with no bypass actors and the seven-context strict CI gate.
 
 ## PENDING
-- Independently review/promote M04 Round 1 discovery; then continue M04 Round 2 transition/event/concurrency semantics.
+- Independently review/promote M04 Round 2 transition semantics; then continue M04 Round 3 contract/evidence design.
 - Deep-plan M04 through M24 in dependency order.
 - Freeze each module Requirements/Architecture/DoD/Work Order before implementation authorization.
 - Live local HIVE bootstrap evidence against current main.
@@ -49,7 +49,7 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - M04-M24 implementation remains gated by their own planning freezes and admissions.
 
 ## NEXT STEP
-Independently review/promote CORE-M04-DISC-001 Round 1; if approved, continue M04 Round 2. M04 implementation remains unauthorized.
+Independently review/promote CORE-M04-PLAN-002 Round 2; if approved, continue M04 Round 3 contract/evidence design. M04 implementation remains unauthorized.
 
 ## EVIDENCE
 - `docs/engineering/CORE-MODULAR-DELIVERY-MODEL.md`
