@@ -2,7 +2,7 @@
 
 Work Order: `CORE-WO-M04-001`  
 Increment: `CORE-M04-FREEZE-001`  
-Status: `EXECUTION_AUTHORIZED_NOT_STARTED / CORE_M04_SYNC_004_REVIEW_PENDING`
+Status: `EXECUTION_AUTHORIZED_NOT_STARTED / SYNC_005_PROMOTION_REVIEW_PENDING`
 Future execution branch: `feat/m04-run-state`
 
 ## STOP BEFORE EXECUTION
@@ -112,4 +112,6 @@ Never return `APPROVED`. Never merge your own implementation.
 
 CORE-M04-SYNC-003 was APPROVED by M04-REVIEW-009 / Issue #97 at exact head `f9a5a7847e268000a5249ae8e69c81ed22b924ad`; PR #96; workflow `35994572596` with 10/10 jobs SUCCESS; promotion merge `b79891f489d8c7117aee15e1dca47abb9e23dea3`; unresolved HIGH/CRITICAL: 0.
 
-CORE-M04-SYNC-004 is a governance-only closeout candidate. It does not start Pack A. After this correction is independently reviewed, APPROVED and promoted, the next legal action is the preflight for CORE-WO-M04-001 Pack A. Only after that preflight passes may `feat/m04-run-state` be created from the resulting canonical main and Pack A begin.
+CORE-M04-SYNC-004 was independently APPROVED by M04-REVIEW-010 / Issue #100 at exact head `19123d50bebe1a13257d8e2768fca7a1ca1d3393`; PR #99; workflow `36013624792` completed 10/10 jobs SUCCESS; squash promotion merge `b2ac8e0db72a2145948e7773295b1b252c5e4eab`; unresolved HIGH/CRITICAL: 0.
+
+CORE-M04-SYNC-005 is a governance-only post-review state synchronization and does not start Pack A. After this state delta is independently reviewed, APPROVED and promoted, the next legal action is a fresh Git/HIVE/governance preflight for CORE-WO-M04-001 Pack A on canonical `origin/main`. Verify the ACTIVE Context Lock, all nine source fingerprints, the exact Work Order blob and frozen authorized-base ancestry. Only after every preflight check passes may `feat/m04-run-state` be created from that exact canonical main and Pack A begin.

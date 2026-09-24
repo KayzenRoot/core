@@ -56,11 +56,11 @@ Before future product-code changes, the executor MUST:
 
 Planning base: `0f448c708aafd8f5b4cb6303effdabd7e028bc6f`.
 
-Active canonical source Git blob IDs for the CORE-M04-SYNC-004 closeout candidate:
+Active canonical source Git blob IDs in the CORE-M04-SYNC-005 synchronization candidate:
 
 | Canonical source | Candidate blob |
 | --- | --- |
-| docs/project-brain/13-CHECKPOINT.md | a8b45c75f3f40fddb1762795fe4125fa7d860552 |
+| docs/project-brain/13-CHECKPOINT.md | ff4709465f9247b44c96572c6dfa60373a20ac05 |
 | docs/project-brain/16-DECISIONS-LEDGER.md | 6b7e873745e2ec6a81fedb6dbea5b0e0b271cde5 |
 | docs/project-brain/03-SCOPE.md | 83a2509dab36c2b1676750d0e23542592255bc87 |
 | docs/project-brain/15-DEFINITION-OF-DONE.md | 864f1974b340fca9a5a2d2e7e297c8f4fcfe5553 |
@@ -353,6 +353,8 @@ CORE-M04-ADMIT-001 was APPROVED by M04-REVIEW-008 / Issue #95 at exact head `f29
 
 Execution is authorized only for the frozen M04 scope and only under the exact active Context Lock on canonical main. CORE-M04-SYNC-003 was subsequently approved by M04-REVIEW-009 / Issue #97 at exact head `f9a5a7847e268000a5249ae8e69c81ed22b924ad`, passed all 10 hosted jobs in workflow `35994572596`, and was promoted through PR #96 as merge `b79891f489d8c7117aee15e1dca47abb9e23dea3`. Unresolved HIGH/CRITICAL findings: 0. The final-freeze authorized base remains `f6b422be5465d5a93d0b8fcf4c9507c205663072` and must remain an ancestor of execution start.
 
-CORE-M04-SYNC-004 is a governance-only canonical closeout; it does not start product implementation. After this correction is independently reviewed, APPROVED and promoted, the next legal action is the preflight for CORE-WO-M04-001 Pack A. Only after that preflight passes may the executor create `feat/m04-run-state` from canonical main and begin Pack A.
+CORE-M04-SYNC-004 was APPROVED by M04-REVIEW-010 / Issue #100 at exact head `19123d50bebe1a13257d8e2768fca7a1ca1d3393`; PR #99; workflow `36013624792` completed 10/10 jobs SUCCESS; it was squash-promoted as merge `b2ac8e0db72a2145948e7773295b1b252c5e4eab`; unresolved HIGH/CRITICAL findings: 0. This governance-only promotion did not start product implementation.
+
+CORE-M04-SYNC-005 reconciles that post-review state only. After this state delta is independently reviewed, APPROVED and promoted, the next legal action is a fresh Git/HIVE/governance preflight for CORE-WO-M04-001 Pack A on canonical `origin/main`. Only if the ACTIVE Context Lock, all nine source fingerprints, exact Work Order blob, frozen authorized-base ancestry and governance-only intervening changes pass may the executor create `feat/m04-run-state` from that exact main and begin Pack A.
 
 No planning, architecture, contract, dependency, acceptance, calibration, security or backend decision is changed by this state transition.

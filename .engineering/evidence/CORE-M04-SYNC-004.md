@@ -1,6 +1,14 @@
 # CORE-M04-SYNC-004 — Canonical Closeout
 
-Status: `REVIEW_CANDIDATE`
+Status: `APPROVED_PROMOTED`
+
+Review: M04-REVIEW-010 / Issue #100 — `APPROVED`; unresolved HIGH/CRITICAL: 0
+Reviewed PR: #99
+Reviewed exact head: `19123d50bebe1a13257d8e2768fca7a1ca1d3393`
+Exact-head workflow: `36013624792` — 10/10 jobs SUCCESS
+Promotion merge: `b2ac8e0db72a2145948e7773295b1b252c5e4eab`
+
+The candidate-stage status, pending-review statements, source bindings and proposed checkpoint delta below describe the state before Review #100 and merge. They are retained as historical evidence; the approval and promotion facts above are current.
 
 Type: governance/project-state synchronization only
 
@@ -26,7 +34,7 @@ Correction branch: `fix/m04-post-sync-canonical-closeout`
 - Updated GEF-current promotion/next-action metadata and marked implementation as authorized but not started.
 - No decision, architecture, product contract, dependency, Cargo file, product source, fuzz target, benchmark or implementation evidence was changed. No Pack A work began.
 
-## Source binding audit
+## Source binding audit (historical SYNC-004 candidate head)
 
 The active source set is the nine canonical files named by the CORE-WO-M04-001 Context Lock. The Work Order table, Context Lock and Evidence Bundle are bound to these candidate Git blob SHAs:
 
@@ -55,10 +63,10 @@ The three stale values present in the promoted Work Order table at the canonical
 - Changed-file inventory — PASS: 14 governance/evidence files; no product, Cargo, fuzz or benchmark paths.
 - `git diff --check` — PASS.
 
-PR #99 was opened from this candidate. Its first published head `bf14b581eca85effa254c94dff92b4cbc0acdfd9` had two Ubuntu timeout-test failures on attempt 1; rerunning only the failed jobs on that same head produced 10/10 successful jobs in workflow `36010853494` (attempt 2). This evidence-only follow-up changes the PR head, so its own hosted checks must pass before the final review-ready handoff.
+PR #99's first published head `bf14b581eca85effa254c94dff92b4cbc0acdfd9` had two Ubuntu timeout-test failures on attempt 1; rerunning only the failed jobs on that same head produced 10/10 successful jobs in workflow `36010853494` (attempt 2). The final reviewed head `19123d50bebe1a13257d8e2768fca7a1ca1d3393` completed workflow `36013624792` with 10/10 successful jobs.
 
-The independent review for CORE-M04-SYNC-004 is still pending. The predecessor CORE-M04-SYNC-003 review recorded zero unresolved HIGH/CRITICAL findings; this candidate has no independent verdict yet. It is not approved or promoted. Pack A remains unauthorized to start until this correction is independently approved and promoted and its separate preflight passes.
+At the time this candidate report was first published, independent review was pending and the candidate was not approved or promoted. Review #100 later approved the exact final head above with zero unresolved HIGH/CRITICAL findings, and PR #99 was squash-merged as `b2ac8e0db72a2145948e7773295b1b252c5e4eab`. The promotion did not start Pack A.
 
 ## Proposed Checkpoint Delta
 
-After CORE-M04-SYNC-004 is independently approved and promoted, run fresh Git/HIVE/governance preflight for CORE-WO-M04-001 on canonical `origin/main`; verify the ACTIVE Context Lock, all nine source fingerprints, exact Work Order blob, frozen authorized base ancestry and governance-only intervening changes. Only if every check passes, create `feat/m04-run-state` from that exact canonical main and begin Pack A within the frozen `M04_RUN_ATTEMPT_STEP_ENGINE` scope. No M04 product implementation has started.
+After CORE-M04-SYNC-005 is independently approved and promoted, run fresh Git/HIVE/governance preflight for CORE-WO-M04-001 on canonical `origin/main`; verify the ACTIVE Context Lock, all nine source fingerprints, exact Work Order blob, frozen authorized-base ancestry and governance-only intervening changes. Only if every check passes, create `feat/m04-run-state` from that exact canonical main and begin Pack A within the frozen `M04_RUN_ATTEMPT_STEP_ENGINE` scope. No M04 product implementation has started.
