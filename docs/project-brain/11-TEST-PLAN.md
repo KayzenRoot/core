@@ -278,6 +278,8 @@ Future implementation must provide exact-head evidence for:
 - compilation/public API conformance of all frozen V1 types and service signatures;
 - exhaustive TLG transition table and parent/terminal invariants;
 - prepared-commit purity independent of store implementation;
+- pending operation receipts cannot become authority before a matching durable commit receipt is successfully finalized;
+- finalization rejects RunId/operation-fingerprint/generation/event-sequence/journal-root mismatch;
 - store-port conformance with adversarial partial-write/conflict fakes;
 - same-generation two-writer races with at most one successful durable commit;
 - exact idempotency duplicate/conflict behavior;
