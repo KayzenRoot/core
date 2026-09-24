@@ -155,3 +155,29 @@ M03 Round 4 is an independently reviewed and promoted planning baseline (Review 
 ### M03 Round 5 final planning freeze promoted / admission status
 
 CORE-M03-FREEZE-001 is promoted planning truth. Its 23 blocking future implementation criteria remain mapped to explicit Evidence Requirement IDs and all implementation DoD evidence remains pending. CORE-M03-ADMIT-001 may set the Context Lock ACTIVE, bind authorizedBase `ac90b1f48c5551e65ecadace95c59f7f0647062f`, and arm only `M03_WORK_ORDER_ENGINE`, but execution authority is effective only after that exact admission state is independently reviewed and promoted to canonical `origin/main`. Admission is not M03 product completion.
+
+
+## M04 - Run / Attempt / Step Engine DoD candidate
+
+M04 implementation is NOT authorized by Rounds 1-3. The eventual production DoD must be satisfied on one governed exact candidate head and must prove all blocking EV-M04-001..023 obligations.
+
+M04 completion requires:
+- explicit versioned Run/Attempt/Step public contracts and typed non-interchangeable identities;
+- exact M03 READY/BRC revalidation at Run and continuation boundaries;
+- closed legal lifecycle matrices, durable initial states and immutable terminal history;
+- append-only attempt/step lineage with non-reused ordinals and continuation as a new epoch;
+- Run-generation compare-and-set concurrency control and ASF atomic semantic publication;
+- deterministic fingerprint-bound idempotency and monotonic cancellation precedence;
+- canonical bounded journal authority with replay equivalence and corruption/reorder/truncation/substitution rejection;
+- ICF continuation integrity and stale/UNKNOWN fail-closed behavior;
+- schema-bound/domain-separated canonical fingerprints with cross-platform golden vectors;
+- verified derived snapshot acceleration that cannot replace journal authority;
+- bounded lineage-valid external outcome/evidence references without later-module policy ownership;
+- finite positive production resource limits derived from committed calibration evidence, with cap+1 atomic failure and no silent truncation;
+- backend-neutral, acyclic adapter boundaries with no M05+ reverse dependency;
+- static/runtime proof of zero-LLM lifecycle semantics and no hidden filesystem/network/process/database/HIVE/GitHub I/O;
+- unit/integration/property/adversarial/fuzz coverage plus Windows/Ubuntu exact-head CI;
+- advisory/license/supply-chain/SBOM evidence;
+- complete AEG-to-artifact traceability and independent exact-head review with no unresolved HIGH/CRITICAL defect.
+
+Rounds 1-3 are planning candidates/baselines only. No persistence backend, execution Work Order or M04 implementation authorization is created by these sections.
