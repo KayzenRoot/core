@@ -56,7 +56,7 @@ Before future product-code changes, the executor MUST:
 
 Planning base: `0f448c708aafd8f5b4cb6303effdabd7e028bc6f`.
 
-Candidate canonical source Git blob IDs:
+Active canonical source Git blob IDs after CORE-M04-SYNC-003:
 
 | Canonical source | Candidate blob |
 | --- | --- |
