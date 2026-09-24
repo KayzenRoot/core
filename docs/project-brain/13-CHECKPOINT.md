@@ -14,7 +14,7 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 
 ## IN PROGRESS
 - M03 canonical closeout was promoted through PR #74 as merge `2fdf595cc6b450d1be0038eb67d0a5160035d9bd` after M03-REVIEW-010 / Issue #75.
-- M04 Rounds 1-3 are promoted. Round 4 implementation-addressable candidate freezes the crate/file/dependency map, concrete V1 service/store/reference contracts, property/fuzz/calibration plan and required technology disposition. M04 implementation remains unauthorized.
+- M04 Rounds 1-4 are promoted canonical planning truth. Round 5 final planning freeze is the next legal increment. M04 implementation remains unauthorized and still requires a separate execution-admission delta.
 - M05-M24 remain discovery-only until their planning freezes.
 
 ## COMPLETED
@@ -39,7 +39,7 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - CORE-GOV-002-C01 GitHub hardening independently reviewed (Review 001 / Issue #57) and promoted through PR #56; active ruleset `CORE main protection` id `23769853` protects `main` with no bypass actors and the seven-context strict CI gate.
 
 ## PENDING
-- Independently review/promote M04 Round 4 implementation-addressable design; then continue Round 5 final planning freeze.
+- Continue M04 Round 5 final planning freeze from the promoted Rounds 1-4 baseline.
 - Deep-plan M04 through M24 in dependency order.
 - Freeze each module Requirements/Architecture/DoD/Work Order before implementation authorization.
 - Live local HIVE bootstrap evidence against current main.
@@ -49,9 +49,10 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - M04-M24 implementation remains gated by their own planning freezes and admissions.
 
 ## NEXT STEP
-Independently review/promote CORE-M04-PLAN-004 Round 4; if approved, continue M04 Round 5 final planning freeze. M04 implementation remains unauthorized.
+Continue M04 Round 5 final planning freeze from canonical Rounds 1-4. M04 implementation remains unauthorized; execution requires a separate governed admission delta.
 
 ## EVIDENCE
+- M04 Round 4 Review 005 / Issue #87 — APPROVED; PR #86; exact head `997fcccc79e786a271ba01a6fa7854bf1eaf8bce`; workflow `35945725379`; promotion merge `63af0f735dd0419fb02f9879efed340ddb07da30`; 10/10 hosted jobs SUCCESS after same-head rerun of the timing-sensitive Ubuntu test.
 - M04 Round 1 Review 001 / Issue #77 — APPROVED; PR #76; exact head `bd9b14b3608b7f4adc19deee0acd87a03aaac478`; workflow `35915073250`; promotion merge `8a82f6bab1074aff1f692be73969364c00d1795e`.
 - M04 Round 2 Review 002 / Issue #79 — APPROVED; PR #78; exact head `dde8a4783e5a649418e9550f5b932cbddbf02c7e`; workflow `35921837198`; promotion merge `9a4b55d3a5e3dd9915dc186ecc49066a30d9b289`.
 - M04 Round 3 Review 003 / Issue #83 — APPROVED; PR #80; exact head `0a777b038e5436b72162ccd2185020d40128d809`; workflow `35940552631`; promotion merge `3b1fc86ee401153f109ee04d7b797b544b06a741`.
