@@ -2,7 +2,7 @@
 
 Work Order: `CORE-WO-M04-001`  
 Increment: `CORE-M04-FREEZE-001`  
-Status: `EXECUTION_ADMISSION_CANDIDATE / DO_NOT_EXECUTE_UNTIL_CANONICAL_PROMOTION`  
+Status: `EXECUTION_AUTHORIZED_AFTER_CORE_M04_SYNC_003_PROMOTION`  
 Future execution branch: `feat/m04-run-state`
 
 ## STOP BEFORE EXECUTION
@@ -10,7 +10,7 @@ Future execution branch: `feat/m04-run-state`
 Do **not** modify product code, Cargo manifests/lockfiles, fuzz targets, benchmark code or runtime crates unless all of the following are true on canonical `origin/main`:
 
 1. CORE-M04-FREEZE-001 has been independently exact-head reviewed and promoted as canonical base `f6b422be5465d5a93d0b8fcf4c9507c205663072`.
-2. CORE-M04-ADMIT-001 has been independently reviewed and promoted to canonical `origin/main`.
+2. CORE-M04-ADMIT-001 has been independently reviewed and promoted to canonical `origin/main` as merge `bb6f631284361fae29479c66f62ca88bebf3d79c`.
 3. `.engineering/context-locks/CORE-WO-M04-001.json` on canonical main is `ACTIVE`.
 4. The lock contains a concrete `authorizedBase`.
 5. `productImplementationAuthorized = true`.
@@ -110,4 +110,4 @@ Never return `APPROVED`. Never merge your own implementation.
 
 ## Admission candidate note
 
-This handoff is now bound to the CORE-M04-ADMIT-001 candidate. Its presence on branch `planning/m04-execution-admission` still grants no execution authority. Do not begin Pack A until the admission is promoted and the exact canonical-main lock is ACTIVE/effective.
+CORE-M04-ADMIT-001 is promoted. Do not begin Pack A until CORE-M04-SYNC-003 is independently reviewed/promoted and the exact canonical-main lock/GEF state are ACTIVE/effective. Then create `feat/m04-run-state` from that post-sync canonical main and repeat the full preflight.

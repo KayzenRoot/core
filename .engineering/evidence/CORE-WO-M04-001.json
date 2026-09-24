@@ -3,7 +3,7 @@
   "increment": "CORE-M04-FREEZE-001",
   "workOrder": "CORE-WO-M04-001",
   "repository": "KayzenRoot/core",
-  "status": "FINAL_FREEZE_APPROVED_PROMOTED_EXECUTION_ADMISSION_CANDIDATE",
+  "status": "EXECUTION_AUTHORIZED_NOT_STARTED_POST_ADMISSION_SYNC_CANDIDATE",
   "planningCandidate": {
     "branch": "planning/m04-final-freeze-round5",
     "planningBase": "0f448c708aafd8f5b4cb6303effdabd7e028bc6f",
@@ -17,25 +17,25 @@
   "sourceCheck": {
     "candidateCanonicalSourceBlobShaKind": "git_blob_sha1",
     "candidateCanonicalSourceBlobShas": {
-      "docs/project-brain/13-CHECKPOINT.md": "e5540d25b68d9b2861604a118f81f7025f9858e6",
-      "docs/project-brain/16-DECISIONS-LEDGER.md": "dfc34d4ce6802c619277be534645d94d88b55f15",
+      "docs/project-brain/13-CHECKPOINT.md": "0c7e08e36793b343ef3292eb71f8a2fc465449df",
+      "docs/project-brain/16-DECISIONS-LEDGER.md": "6b7e873745e2ec6a81fedb6dbea5b0e0b271cde5",
       "docs/project-brain/03-SCOPE.md": "d8f917770f4b72ab0628be0da8744350289a21a5",
       "docs/project-brain/15-DEFINITION-OF-DONE.md": "864f1974b340fca9a5a2d2e7e297c8f4fcfe5553",
       "docs/project-brain/04-ARCHITECTURE.md": "09f56adc576ee477fe61c5588fee201eac841bc2",
       "docs/project-brain/02-REQUIREMENTS.md": "b68bbdf41bbf06b1f1587261f39c31eee32e7cb9",
       "docs/project-brain/10-SECURITY-GOVERNANCE.md": "66a39179fb312eb229870aa5367e89708f6bfd66",
       "docs/project-brain/11-TEST-PLAN.md": "1784085e690e4fdfbdb5bd2b893d58f704c0fa6e",
-      "docs/modules/M04-RUN-ATTEMPT-STEP-ENGINE.md": "43f03b50625496f22d041c06e5d1c56b91bc05fc"
+      "docs/modules/M04-RUN-ATTEMPT-STEP-ENGINE.md": "bf3582b16f1b11e4bdc9770ec727ffdecfba5ca5"
     },
-    "workOrderBlobSha": "b6d2b440c50d2a056b8d78749d178ee80ef4c73a"
+    "workOrderBlobSha": "66d1702bb17e87302d0d332dfa30dc42d59d242d"
   },
   "contextLock": {
     "path": ".engineering/context-locks/CORE-WO-M04-001.json",
-    "status": "ACTIVE_ON_CANONICAL_MAIN_PROMOTION",
-    "blobSha": "0da67b2178350b09fae1326227ce4ea82defe13e",
+    "status": "ACTIVE",
+    "blobSha": "4ee868094223f6ff742d936e1f4f348a408bd13c",
     "authorizedBase": "f6b422be5465d5a93d0b8fcf4c9507c205663072",
     "productImplementationAuthorized": true,
-    "executionStatus": "ARMED_NOT_EFFECTIVE_UNTIL_CANONICAL_MAIN_PROMOTION"
+    "executionStatus": "ACTIVE_AUTHORIZED_NOT_STARTED"
   },
   "planningHiveObservation": {
     "directHiveConnectorAvailable": false,
@@ -61,7 +61,7 @@
     "fabricatedMeasurements": false
   },
   "implementation": {
-    "status": "NOT_STARTED_ADMISSION_CANDIDATE",
+    "status": "AUTHORIZED_NOT_STARTED_SYNC_REVIEW_PENDING",
     "authorizedBase": "f6b422be5465d5a93d0b8fcf4c9507c205663072",
     "finalHead": null,
     "productFilesCreated": false
@@ -238,14 +238,24 @@
   },
   "executorHandoff": {
     "path": "docs/work-orders/CODEX-HANDOFF-M04.md",
-    "blobSha": "e4047e906620c38cc271b66f93c436dc21df405d",
-    "status": "EXECUTION_REFUSES_UNTIL_ADMISSION_PROMOTION"
+    "blobSha": "4de421b22dd16fe5c2e7a822ab64253ef598ad7e",
+    "status": "EXECUTION_AUTHORIZED_AFTER_CORE_M04_SYNC_003_PROMOTION"
   },
   "executionAdmission": {
     "increment": "CORE-M04-ADMIT-001",
     "branch": "planning/m04-execution-admission",
-    "status": "PENDING_REVIEW",
+    "status": "APPROVED_PROMOTED",
     "authorizedBase": "f6b422be5465d5a93d0b8fcf4c9507c205663072",
+    "reviewIssue": 95,
+    "pullRequest": 94,
+    "reviewedHead": "f29dcb6b327c5fdceda31fe306e52d506c1eae72",
+    "workflowRun": 35992752646,
+    "promotionMerge": "bb6f631284361fae29479c66f62ca88bebf3d79c"
+  },
+  "postAdmissionSynchronization": {
+    "increment": "CORE-M04-SYNC-003",
+    "branch": "fix/m04-post-admission-state-sync",
+    "status": "REVIEW_CANDIDATE",
     "reviewIssue": null,
     "pullRequest": null,
     "reviewedHead": null,

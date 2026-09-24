@@ -841,4 +841,9 @@ Status: `ACTIVE`
 
 ## CORE-D-201 - M04 final planning freeze is promoted; execution admission is a separate state-only gate
 **Decision:** M04-REVIEW-007 / Issue #93 APPROVED CORE-M04-FREEZE-001 at exact head `aa65784c66a16f918d694f25cde1a9ba88663b5a`; workflow `35981285696` completed all 10 hosted jobs SUCCESS and PR #92 was squash-promoted as merge `f6b422be5465d5a93d0b8fcf4c9507c205663072`. CORE-M04-ADMIT-001 may now bind this exact promoted final-freeze base, arm the existing frozen Work Order and activate its Context Lock only on canonical-main promotion. Admission MUST NOT change M04 architecture, contracts, dependency rules, Packs A-H, AC/EV meaning, Resource Calibration Gate, security boundaries or deferred backend policy.
-**State:** PROPOSED; M04 execution-admission candidate.
+**State:** ACCEPTED; execution admission promoted by M04-REVIEW-008 / Issue #95 and PR #94.
+
+
+## CORE-D-202 - M04 execution admission is promoted and CORE-WO-M04-001 is authorized
+**Decision:** M04-REVIEW-008 / Issue #95 APPROVED CORE-M04-ADMIT-001 at exact head `f29dcb6b327c5fdceda31fe306e52d506c1eae72`; workflow `35992752646` completed all 10 hosted jobs SUCCESS and PR #94 was squash-promoted as merge `bb6f631284361fae29479c66f62ca88bebf3d79c`. The exact M04 Context Lock is now effective on canonical main. CORE-WO-M04-001 is the active authorized Work Order for scope `M04_RUN_ATTEMPT_STEP_ENGINE`, with frozen authorized base `f6b422be5465d5a93d0b8fcf4c9507c205663072`. Execution must begin from post-admission canonical main after the required preflight and may not change frozen Round 1-5 semantics.
+**State:** ACCEPTED
