@@ -1,6 +1,6 @@
 # M04 — Run / Attempt / Step Engine
 
-Status: `ROUND_3_CONTRACT_EVIDENCE_CANDIDATE`
+Status: `ROUNDS_1_3_PROMOTED_ROUND_4_PLANNING_GATE`
 Implementation: `UNAUTHORIZED`
 Assurance: `ELEVATED`
 
@@ -331,4 +331,4 @@ Round 4 must freeze the implementation-addressable crate/file map, exact depende
 
 ## STOP CONDITION
 
-Round 3 is planning only. Do not implement M04 product code, create an execution Work Order, select a persistence backend, or authorize execution. Stop for independent exact-head review and promotion before Round 4.
+Rounds 1-3 are promoted planning truth. M04 implementation remains unauthorized. The next legal increment is Round 4 implementation-addressable freeze design; do not create an execution Work Order, select a persistence backend, or authorize product execution.

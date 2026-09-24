@@ -698,74 +698,79 @@ Status: `ACTIVE`
 
 ## CORE-D-167 - M04 owns execution state, not execution side effects
 **Decision:** M04 owns deterministic Run / Attempt / Step identities, lifecycle transitions, lineage, terminal-state semantics, replayable execution-state records and continuation boundaries. Host/model/tool execution, mutations, verification, recovery policy, delivery and telemetry transport remain owned by later modules. M04 implementation remains unauthorized.
-**State:** PROPOSED; M04 Round 1 discovery candidate.
+**State:** ACCEPTED; Round 1 promoted by M04-REVIEW-001 / Issue #77 and PR #76; implementation remains unauthorized.
 
 ## CORE-D-168 - M04 starts only from revalidated M03 READY authority
 **Decision:** creation/admission of a Run requires a current M03 READY handoff whose work-order, workspace/basis, Context Lock/governance and policy bindings are revalidated at the start boundary. UNKNOWN or stale authority fails closed.
-**State:** PROPOSED; M04 Round 1 discovery candidate.
+**State:** ACCEPTED; Round 1 promoted by M04-REVIEW-001 / Issue #77 and PR #76; implementation remains unauthorized.
 
 ## CORE-D-169 - M04 history is append-only and retries create new Attempts
 **Decision:** Attempts and Steps are immutable historical lineage records once terminal. Retry or continuation creates a new bounded child/epoch rather than rewriting prior execution history.
-**State:** PROPOSED; M04 Round 1 discovery candidate.
+**State:** ACCEPTED; Round 1 promoted by M04-REVIEW-001 / Issue #77 and PR #76; implementation remains unauthorized.
 
 ## CORE-D-170 - Semantic ordering is causal, not wall-clock based
 **Decision:** M04 uses explicit monotonic semantic generations/sequences for ordering and compare-and-set behavior. Timestamps may be diagnostic metadata but cannot alone establish execution truth.
-**State:** PROPOSED; M04 Round 1 discovery candidate.
+**State:** ACCEPTED; Round 1 promoted by M04-REVIEW-001 / Issue #77 and PR #76; implementation remains unauthorized.
 
 ## CORE-D-171 - M04 replay and state publication fail closed
 **Decision:** canonical event replay must reconstruct identical semantic state. Reordered, duplicated where non-idempotent, truncated, corrupt or stale-generation histories fail typed. Storage adapters must prevent valid partial advancement through an atomic semantic state fence.
-**State:** PROPOSED; M04 Round 1 discovery candidate.
+**State:** ACCEPTED; Round 1 promoted by M04-REVIEW-001 / Issue #77 and PR #76; implementation remains unauthorized.
 
 ## CORE-D-172 - M04 core is backend-neutral, zero-LLM and hidden-I/O-free
 **Decision:** Round 1 freezes no persistence backend. Core state-machine semantics consume explicit values/evidence and perform no hidden filesystem, process, network, database, HIVE/GitHub or LLM operation.
-**State:** PROPOSED; M04 Round 1 discovery candidate.
+**State:** ACCEPTED; Round 1 promoted by M04-REVIEW-001 / Issue #77 and PR #76; implementation remains unauthorized.
 
 
 ## CORE-D-173 - M04 Round 2 freezes closed lifecycle matrices and immutable terminal history
 **Decision:** Run, Attempt and Step use the explicit legal transition matrices in the canonical M04 module plan. Initial states are durable; terminal states never transition back to active. Continuation after interruption creates a new Attempt/epoch. SKIPPED is pre-ACTIVE only and requires explicit authority/reason.
-**State:** PROPOSED; M04 Round 2 candidate.
+**State:** ACCEPTED; Round 2 promoted by M04-REVIEW-002 / Issue #79 and PR #78; implementation remains unauthorized.
 
 ## CORE-D-174 - Run generation is M04's serialization fence
 **Decision:** every semantic M04 commit advances the Run generation exactly once under compare-and-set. Attempt/Step ordinals and local sequences remain bounded lineage/order facts, but wall-clock time never resolves concurrency. State, journal, root and generation publication are one atomic semantic fence.
-**State:** PROPOSED; M04 Round 2 candidate.
+**State:** ACCEPTED; Round 2 promoted by M04-REVIEW-002 / Issue #79 and PR #78; implementation remains unauthorized.
 
 ## CORE-D-175 - Idempotency is fingerprint-bound and conflicting reuse fails closed
 **Decision:** idempotency is scoped by Run, operation domain and caller key. Exact replay of the same canonical request returns its recorded result; reuse with a different semantic fingerprint is IDEMPOTENCY_CONFLICT and produces no state advancement.
-**State:** PROPOSED; M04 Round 2 candidate.
+**State:** ACCEPTED; Round 2 promoted by M04-REVIEW-002 / Issue #79 and PR #78; implementation remains unauthorized.
 
 ## CORE-D-176 - Cancellation is monotonic and generation-ordered
 **Decision:** once cancellation is durably accepted, later child admission/activation is rejected except explicitly bounded closeout. Earlier committed child history remains immutable and is driven to terminal closeout rather than erased.
-**State:** PROPOSED; M04 Round 2 candidate.
+**State:** ACCEPTED; Round 2 promoted by M04-REVIEW-002 / Issue #79 and PR #78; implementation remains unauthorized.
 
 ## CORE-D-177 - M04 canonical journal is bounded, contiguous and replay-authoritative
 **Decision:** durable events form a domain-separated contiguous sequence with prior/result journal roots and generation bindings. Reorder, truncation, substitution, wrong lineage/domain or root mismatch fails closed. Derived views never supersede the canonical bounded journal.
-**State:** PROPOSED; M04 Round 2 candidate.
+**State:** ACCEPTED; Round 2 promoted by M04-REVIEW-002 / Issue #79 and PR #78; implementation remains unauthorized.
 
 ## CORE-D-178 - Continuation revalidates exact M03 authority and creates a new epoch
 **Decision:** ICF continuation binds the last semantic M04 boundary and BRC binds exact M03 admission/workspace/Context Lock/governance authority. Resume validates all bindings and creates a new Attempt/epoch. Changed, UNKNOWN or unverifiable authority becomes STALE/BLOCKED.
-**State:** PROPOSED; M04 Round 2 candidate.
+**State:** ACCEPTED; Round 2 promoted by M04-REVIEW-002 / Issue #79 and PR #78; implementation remains unauthorized.
 
 
 ## CORE-D-179 - M04 V1 exposes explicit versioned request/receipt contracts
 **Decision:** M04 mutations and replay use explicit V1 request/receipt/result contracts with expected-generation and idempotency inputs where semantic state changes. No API receives ambient filesystem, repository, network, process or clock authority.
-**State:** PROPOSED; M04 Round 3 candidate.
+**State:** ACCEPTED; Round 3 promoted by M04-REVIEW-003 / Issue #83 and PR #80; implementation remains unauthorized.
 
 ## CORE-D-180 - M04 canonical fingerprints are schema-bound and domain-separated
 **Decision:** semantic fingerprints use deterministic canonical bytes, explicit field ordering/lengths and distinct domain separators. Diagnostic time, locale, unordered map iteration and secret-bearing fields are excluded. Cross-platform golden vectors are blocking evidence.
-**State:** PROPOSED; M04 Round 3 candidate.
+**State:** ACCEPTED; Round 3 promoted by M04-REVIEW-003 / Issue #83 and PR #80; implementation remains unauthorized.
 
 ## CORE-D-181 - M04 V1 event kinds and error classes are closed registries
 **Decision:** V1 accepts only frozen event kinds and machine-readable error/reason classes. Unknown schema/kind fails typed with no silent downgrade; free-form diagnostics never substitute for semantic reason codes.
-**State:** PROPOSED; M04 Round 3 candidate.
+**State:** ACCEPTED; Round 3 promoted by M04-REVIEW-003 / Issue #83 and PR #80; implementation remains unauthorized.
 
 ## CORE-D-182 - Snapshots accelerate projection but never replace journal authority
 **Decision:** snapshots bind an exact journal boundary and are verified derived artifacts. Active canonical Run events required for proof are not destructively compacted by M04; archive/retention policy is external.
-**State:** PROPOSED; M04 Round 3 candidate.
+**State:** ACCEPTED; Round 3 promoted by M04-REVIEW-003 / Issue #83 and PR #80; implementation remains unauthorized.
 
 ## CORE-D-183 - External execution/verification data enters M04 only as bounded references
 **Decision:** M04 records versioned lineage-bound references and attachment facts, not external artifact bodies and not later-module truth decisions. Reference shape/lineage/bounds are validated without importing M14-M17 policy.
-**State:** PROPOSED; M04 Round 3 candidate.
+**State:** ACCEPTED; Round 3 promoted by M04-REVIEW-003 / Issue #83 and PR #80; implementation remains unauthorized.
 
 ## CORE-D-184 - M04 final acceptance uses a blocking 23-node Evidence Graph
 **Decision:** EV-M04-001 through EV-M04-023 cover contracts, transitions, concurrency, idempotency, cancellation, replay, BRC/ICF, identities, canonicalization, resource bounds, snapshots, references, hidden-I/O/zero-LLM, fuzz, calibration, supply chain, cross-platform CI and independent review. Numeric resource defaults require evidence-backed calibration and cannot mutate semantics.
-**State:** PROPOSED; M04 Round 3 candidate.
+**State:** ACCEPTED; Round 3 promoted by M04-REVIEW-003 / Issue #83 and PR #80; implementation remains unauthorized.
+
+
+## CORE-D-185 - M04 Rounds 1-3 are promoted; Round 4 is the next legal planning increment
+**Decision:** M04-REVIEW-003 / Issue #83 APPROVED CORE-M04-PLAN-003 at exact head `0a777b038e5436b72162ccd2185020d40128d809`; workflow `35940552631` completed all 10 hosted jobs SUCCESS and PR #80 was squash-promoted as merge `3b1fc86ee401153f109ee04d7b797b544b06a741`. Together with the prior Round 1 and Round 2 promotions, Rounds 1-3 are canonical planning truth. The next legal increment is Round 4 implementation-addressable freeze design. M04 product implementation remains unauthorized until a final planning freeze and a separate governed execution-admission delta are independently reviewed and promoted.
+**State:** ACCEPTED
