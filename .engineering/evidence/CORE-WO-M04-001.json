@@ -1,0 +1,235 @@
+{
+  "schemaVersion": "core-evidence-bundle-v1",
+  "increment": "CORE-M04-FREEZE-001",
+  "workOrder": "CORE-WO-M04-001",
+  "repository": "KayzenRoot/core",
+  "status": "FINAL_FREEZE_REVIEW_CANDIDATE_IMPLEMENTATION_NOT_STARTED",
+  "planningCandidate": {
+    "branch": "planning/m04-final-freeze-round5",
+    "planningBase": "0f448c708aafd8f5b4cb6303effdabd7e028bc6f",
+    "candidateHead": null,
+    "pullRequest": null
+  },
+  "sourceCheck": {
+    "candidateCanonicalSourceBlobShaKind": "git_blob_sha1",
+    "candidateCanonicalSourceBlobShas": {
+      "docs/project-brain/13-CHECKPOINT.md": "3f3ecca766ca93956ac4c9f782368e0abfcf39da",
+      "docs/project-brain/16-DECISIONS-LEDGER.md": "a55a912576d8279dfe2bde89f43f19e4a1dd7b16",
+      "docs/project-brain/03-SCOPE.md": "d8f917770f4b72ab0628be0da8744350289a21a5",
+      "docs/project-brain/15-DEFINITION-OF-DONE.md": "864f1974b340fca9a5a2d2e7e297c8f4fcfe5553",
+      "docs/project-brain/04-ARCHITECTURE.md": "09f56adc576ee477fe61c5588fee201eac841bc2",
+      "docs/project-brain/02-REQUIREMENTS.md": "b68bbdf41bbf06b1f1587261f39c31eee32e7cb9",
+      "docs/project-brain/10-SECURITY-GOVERNANCE.md": "66a39179fb312eb229870aa5367e89708f6bfd66",
+      "docs/project-brain/11-TEST-PLAN.md": "1784085e690e4fdfbdb5bd2b893d58f704c0fa6e",
+      "docs/modules/M04-RUN-ATTEMPT-STEP-ENGINE.md": "882147c31c4dd2f5ed837474f4c914ba4c025c8f"
+    },
+    "workOrderBlobSha": "91d1ec26dfb30c7711e9fc2310a8d81abca9e8c7"
+  },
+  "contextLock": {
+    "path": ".engineering/context-locks/CORE-WO-M04-001.json",
+    "status": "PENDING_PROMOTION",
+    "blobSha": "b1b0b8f701187836206af55c5ae53659dfa4c0e3",
+    "authorizedBase": null,
+    "productImplementationAuthorized": false,
+    "executionStatus": "NOT_AUTHORIZED_FINAL_FREEZE_REVIEW_PENDING"
+  },
+  "planningHiveObservation": {
+    "directHiveConnectorAvailable": false,
+    "coreProjectResolved": null,
+    "coreCheckpointRead": null,
+    "modeUsed": "SOLO_GIT_CANONICAL",
+    "implementationPreflightStatus": "MUST_REPEAT_AFTER_SEPARATE_ADMISSION",
+    "note": "No current HIVE project/checkpoint claim is made because no direct HIVE MCP/connector is available in this planning chat environment."
+  },
+  "constructionPackets": {
+    "A": "contracts_identity_canonical",
+    "B": "lifecycle_projection",
+    "C": "journal_replay_snapshot",
+    "D": "cas_idempotency_cancellation",
+    "E": "brc_icf_references",
+    "F": "resources_store_purity",
+    "G": "security_properties_fuzz_supply_chain",
+    "H": "calibration_evidence_exact_head_handoff"
+  },
+  "calibration": {
+    "status": "PENDING_IMPLEMENTATION_MEASUREMENTS",
+    "allowedDelta": "NUMERIC_RESOURCE_LIMITS_AND_CALIBRATION_EVIDENCE_ONLY",
+    "fabricatedMeasurements": false
+  },
+  "implementation": {
+    "status": "NOT_STARTED_NOT_AUTHORIZED",
+    "authorizedBase": null,
+    "finalHead": null,
+    "productFilesCreated": false
+  },
+  "evidenceNodes": {
+    "EV-M04-001": {
+      "acceptanceCriterion": "AC-M04-001",
+      "obligation": "Public V1 contract/API conformance",
+      "status": "PENDING",
+      "owner": "FUTURE_EXECUTOR",
+      "artifacts": []
+    },
+    "EV-M04-002": {
+      "acceptanceCriterion": "AC-M04-002",
+      "obligation": "Exhaustive legal transition matrix",
+      "status": "PENDING",
+      "owner": "FUTURE_EXECUTOR",
+      "artifacts": []
+    },
+    "EV-M04-003": {
+      "acceptanceCriterion": "AC-M04-003",
+      "obligation": "Illegal transition/property rejection",
+      "status": "PENDING",
+      "owner": "FUTURE_EXECUTOR",
+      "artifacts": []
+    },
+    "EV-M04-004": {
+      "acceptanceCriterion": "AC-M04-004",
+      "obligation": "Generation/CAS concurrency races",
+      "status": "PENDING",
+      "owner": "FUTURE_EXECUTOR",
+      "artifacts": []
+    },
+    "EV-M04-005": {
+      "acceptanceCriterion": "AC-M04-005",
+      "obligation": "Idempotency replay/conflict laws",
+      "status": "PENDING",
+      "owner": "FUTURE_EXECUTOR",
+      "artifacts": []
+    },
+    "EV-M04-006": {
+      "acceptanceCriterion": "AC-M04-006",
+      "obligation": "Cancellation precedence races",
+      "status": "PENDING",
+      "owner": "FUTURE_EXECUTOR",
+      "artifacts": []
+    },
+    "EV-M04-007": {
+      "acceptanceCriterion": "AC-M04-007",
+      "obligation": "Journal replay equivalence",
+      "status": "PENDING",
+      "owner": "FUTURE_EXECUTOR",
+      "artifacts": []
+    },
+    "EV-M04-008": {
+      "acceptanceCriterion": "AC-M04-008",
+      "obligation": "Reorder/truncation/substitution/root corruption rejection",
+      "status": "PENDING",
+      "owner": "FUTURE_EXECUTOR",
+      "artifacts": []
+    },
+    "EV-M04-009": {
+      "acceptanceCriterion": "AC-M04-009",
+      "obligation": "BRC stale/substitution boundary tests",
+      "status": "PENDING",
+      "owner": "FUTURE_EXECUTOR",
+      "artifacts": []
+    },
+    "EV-M04-010": {
+      "acceptanceCriterion": "AC-M04-010",
+      "obligation": "ICF continuation/epoch tests",
+      "status": "PENDING",
+      "owner": "FUTURE_EXECUTOR",
+      "artifacts": []
+    },
+    "EV-M04-011": {
+      "acceptanceCriterion": "AC-M04-011",
+      "obligation": "Typed identity cross-domain substitution tests",
+      "status": "PENDING",
+      "owner": "FUTURE_EXECUTOR",
+      "artifacts": []
+    },
+    "EV-M04-012": {
+      "acceptanceCriterion": "AC-M04-012",
+      "obligation": "Canonicalization/fingerprint golden vectors across Windows/Ubuntu",
+      "status": "PENDING",
+      "owner": "FUTURE_EXECUTOR",
+      "artifacts": []
+    },
+    "EV-M04-013": {
+      "acceptanceCriterion": "AC-M04-013",
+      "obligation": "Resource at-limit and cap+1 atomic rejection",
+      "status": "PENDING",
+      "owner": "FUTURE_EXECUTOR",
+      "artifacts": []
+    },
+    "EV-M04-014": {
+      "acceptanceCriterion": "AC-M04-014",
+      "obligation": "Snapshot verification/rebuild equivalence",
+      "status": "PENDING",
+      "owner": "FUTURE_EXECUTOR",
+      "artifacts": []
+    },
+    "EV-M04-015": {
+      "acceptanceCriterion": "AC-M04-015",
+      "obligation": "External-reference bounds/lineage validation",
+      "status": "PENDING",
+      "owner": "FUTURE_EXECUTOR",
+      "artifacts": []
+    },
+    "EV-M04-016": {
+      "acceptanceCriterion": "AC-M04-016",
+      "obligation": "No hidden filesystem/network/process/database/HIVE/GitHub I/O",
+      "status": "PENDING",
+      "owner": "FUTURE_EXECUTOR",
+      "artifacts": []
+    },
+    "EV-M04-017": {
+      "acceptanceCriterion": "AC-M04-017",
+      "obligation": "Zero-LLM core proof",
+      "status": "PENDING",
+      "owner": "FUTURE_EXECUTOR",
+      "artifacts": []
+    },
+    "EV-M04-018": {
+      "acceptanceCriterion": "AC-M04-018",
+      "obligation": "Six bounded M04 fuzz campaigns",
+      "status": "PENDING",
+      "owner": "FUTURE_EXECUTOR",
+      "artifacts": []
+    },
+    "EV-M04-019": {
+      "acceptanceCriterion": "AC-M04-019",
+      "obligation": "Finite reproducible calibration report",
+      "status": "PENDING",
+      "owner": "FUTURE_EXECUTOR",
+      "artifacts": []
+    },
+    "EV-M04-020": {
+      "acceptanceCriterion": "AC-M04-020",
+      "obligation": "Dependency/advisory/license/SBOM evidence",
+      "status": "PENDING",
+      "owner": "FUTURE_EXECUTOR",
+      "artifacts": []
+    },
+    "EV-M04-021": {
+      "acceptanceCriterion": "AC-M04-021",
+      "obligation": "Exact-head Windows CI",
+      "status": "PENDING",
+      "owner": "FUTURE_EXECUTOR",
+      "artifacts": []
+    },
+    "EV-M04-022": {
+      "acceptanceCriterion": "AC-M04-022",
+      "obligation": "Exact-head Ubuntu CI",
+      "status": "PENDING",
+      "owner": "FUTURE_EXECUTOR",
+      "artifacts": []
+    },
+    "EV-M04-023": {
+      "acceptanceCriterion": "AC-M04-023",
+      "obligation": "Independent exact-head review with zero unresolved HIGH/CRITICAL",
+      "status": "PENDING",
+      "owner": "INDEPENDENT_REVIEWER",
+      "artifacts": []
+    }
+  },
+  "independentReview": {
+    "status": "PENDING",
+    "reviewIssue": null,
+    "reviewedHead": null,
+    "workflowRun": null,
+    "unresolvedHighCritical": null
+  }
+}
