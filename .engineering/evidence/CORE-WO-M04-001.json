@@ -3,7 +3,7 @@
   "increment": "CORE-M04-FREEZE-001",
   "workOrder": "CORE-WO-M04-001",
   "repository": "KayzenRoot/core",
-  "status": "EXECUTION_AUTHORIZED_NOT_STARTED_POST_ADMISSION_SYNC_CANDIDATE",
+  "status": "EXECUTION_AUTHORIZED_NOT_STARTED_SYNC_003_PROMOTED_SYNC_004_REVIEW_CANDIDATE",
   "planningCandidate": {
     "branch": "planning/m04-final-freeze-round5",
     "planningBase": "0f448c708aafd8f5b4cb6303effdabd7e028bc6f",
@@ -17,33 +17,33 @@
   "sourceCheck": {
     "candidateCanonicalSourceBlobShaKind": "git_blob_sha1",
     "candidateCanonicalSourceBlobShas": {
-      "docs/project-brain/13-CHECKPOINT.md": "0c7e08e36793b343ef3292eb71f8a2fc465449df",
+      "docs/project-brain/13-CHECKPOINT.md": "a8b45c75f3f40fddb1762795fe4125fa7d860552",
       "docs/project-brain/16-DECISIONS-LEDGER.md": "6b7e873745e2ec6a81fedb6dbea5b0e0b271cde5",
-      "docs/project-brain/03-SCOPE.md": "d8f917770f4b72ab0628be0da8744350289a21a5",
+      "docs/project-brain/03-SCOPE.md": "83a2509dab36c2b1676750d0e23542592255bc87",
       "docs/project-brain/15-DEFINITION-OF-DONE.md": "864f1974b340fca9a5a2d2e7e297c8f4fcfe5553",
       "docs/project-brain/04-ARCHITECTURE.md": "09f56adc576ee477fe61c5588fee201eac841bc2",
       "docs/project-brain/02-REQUIREMENTS.md": "b68bbdf41bbf06b1f1587261f39c31eee32e7cb9",
       "docs/project-brain/10-SECURITY-GOVERNANCE.md": "66a39179fb312eb229870aa5367e89708f6bfd66",
-      "docs/project-brain/11-TEST-PLAN.md": "1784085e690e4fdfbdb5bd2b893d58f704c0fa6e",
-      "docs/modules/M04-RUN-ATTEMPT-STEP-ENGINE.md": "bf3582b16f1b11e4bdc9770ec727ffdecfba5ca5"
+      "docs/project-brain/11-TEST-PLAN.md": "cc9e84fdbdea8a8d4e5a621756918ba361f5a031",
+      "docs/modules/M04-RUN-ATTEMPT-STEP-ENGINE.md": "51894d86ca39186eb5345881d457021ab90e34ed"
     },
-    "workOrderBlobSha": "66d1702bb17e87302d0d332dfa30dc42d59d242d"
+    "workOrderBlobSha": "2325764617a640da724cbec39f0edbe8e2dea8fb"
   },
   "contextLock": {
     "path": ".engineering/context-locks/CORE-WO-M04-001.json",
     "status": "ACTIVE",
-    "blobSha": "4ee868094223f6ff742d936e1f4f348a408bd13c",
+    "blobSha": "327da2fb04ca2d363061e445730314f9652da92f",
     "authorizedBase": "f6b422be5465d5a93d0b8fcf4c9507c205663072",
     "productImplementationAuthorized": true,
-    "executionStatus": "ACTIVE_AUTHORIZED_NOT_STARTED"
+    "executionStatus": "ACTIVE_AUTHORIZED_NOT_STARTED_SYNC_004_CLOSEOUT_REVIEW_PENDING"
   },
   "planningHiveObservation": {
-    "directHiveConnectorAvailable": false,
-    "coreProjectResolved": null,
-    "coreCheckpointRead": null,
+    "directHiveConnectorAvailable": true,
+    "coreProjectResolved": "2a5fb7e6-209a-4cd7-ac3b-137ca3b312bc",
+    "coreCheckpointRead": "STALE_SOURCE_NOT_CURRENT",
     "modeUsed": "SOLO_GIT_CANONICAL",
-    "implementationPreflightStatus": "MUST_REPEAT_AFTER_SEPARATE_ADMISSION",
-    "note": "No current HIVE project/checkpoint claim is made because no direct HIVE MCP/connector is available in this planning chat environment."
+    "implementationPreflightStatus": "MUST_REPEAT_AFTER_SYNC_004_PROMOTION",
+    "note": "Read-only HIVE v1.0.0 resolves CORE at D:/Projects/core, branch main, HEAD fdb4dbe165e74b009c43df3874b6043c9b94710b, dirty. checkpoint.read returned stale/source_not_current. Git canonical origin/main is used; repeat HIVE and Git preflight after SYNC-004 promotion."
   },
   "constructionPackets": {
     "A": "contracts_identity_canonical",
@@ -61,7 +61,7 @@
     "fabricatedMeasurements": false
   },
   "implementation": {
-    "status": "AUTHORIZED_NOT_STARTED_SYNC_REVIEW_PENDING",
+    "status": "AUTHORIZED_NOT_STARTED_SYNC_004_CLOSEOUT_REVIEW_PENDING",
     "authorizedBase": "f6b422be5465d5a93d0b8fcf4c9507c205663072",
     "finalHead": null,
     "productFilesCreated": false
@@ -238,8 +238,8 @@
   },
   "executorHandoff": {
     "path": "docs/work-orders/CODEX-HANDOFF-M04.md",
-    "blobSha": "4de421b22dd16fe5c2e7a822ab64253ef598ad7e",
-    "status": "EXECUTION_AUTHORIZED_AFTER_CORE_M04_SYNC_003_PROMOTION"
+    "blobSha": "a57ce41b292f7e6c487d62709a315d6bbe72a849",
+    "status": "EXECUTION_AUTHORIZED_NOT_STARTED / CORE_M04_SYNC_004_REVIEW_PENDING"
   },
   "executionAdmission": {
     "increment": "CORE-M04-ADMIT-001",
@@ -255,11 +255,11 @@
   "postAdmissionSynchronization": {
     "increment": "CORE-M04-SYNC-003",
     "branch": "fix/m04-post-admission-state-sync",
-    "status": "REVIEW_CANDIDATE",
-    "reviewIssue": null,
-    "pullRequest": null,
-    "reviewedHead": null,
-    "workflowRun": null,
-    "promotionMerge": null
+    "status": "APPROVED_PROMOTED",
+    "reviewIssue": 97,
+    "pullRequest": 96,
+    "reviewedHead": "f9a5a7847e268000a5249ae8e69c81ed22b924ad",
+    "workflowRun": 35994572596,
+    "promotionMerge": "b79891f489d8c7117aee15e1dca47abb9e23dea3"
   }
 }

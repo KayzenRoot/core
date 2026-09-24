@@ -10,15 +10,15 @@
   "assuranceMode": "ELEVATED",
   "productImplementationAuthorized": true,
   "canonicalSources": {
-    "docs/project-brain/13-CHECKPOINT.md": "0c7e08e36793b343ef3292eb71f8a2fc465449df",
+    "docs/project-brain/13-CHECKPOINT.md": "a8b45c75f3f40fddb1762795fe4125fa7d860552",
     "docs/project-brain/16-DECISIONS-LEDGER.md": "6b7e873745e2ec6a81fedb6dbea5b0e0b271cde5",
-    "docs/project-brain/03-SCOPE.md": "d8f917770f4b72ab0628be0da8744350289a21a5",
+    "docs/project-brain/03-SCOPE.md": "83a2509dab36c2b1676750d0e23542592255bc87",
     "docs/project-brain/15-DEFINITION-OF-DONE.md": "864f1974b340fca9a5a2d2e7e297c8f4fcfe5553",
     "docs/project-brain/04-ARCHITECTURE.md": "09f56adc576ee477fe61c5588fee201eac841bc2",
     "docs/project-brain/02-REQUIREMENTS.md": "b68bbdf41bbf06b1f1587261f39c31eee32e7cb9",
     "docs/project-brain/10-SECURITY-GOVERNANCE.md": "66a39179fb312eb229870aa5367e89708f6bfd66",
-    "docs/project-brain/11-TEST-PLAN.md": "1784085e690e4fdfbdb5bd2b893d58f704c0fa6e",
-    "docs/modules/M04-RUN-ATTEMPT-STEP-ENGINE.md": "bf3582b16f1b11e4bdc9770ec727ffdecfba5ca5"
+    "docs/project-brain/11-TEST-PLAN.md": "cc9e84fdbdea8a8d4e5a621756918ba361f5a031",
+    "docs/modules/M04-RUN-ATTEMPT-STEP-ENGINE.md": "51894d86ca39186eb5345881d457021ab90e34ed"
   },
   "upstream": {
     "gef": {
@@ -31,15 +31,15 @@
     }
   },
   "stalenessRule": "Any material change to the later admitted authorizedBase, any of the nine canonical source blobs, CORE-WO-M04-001, or governing GEF policy makes an active M04 lock STALE and blocks execution until governed re-admission.",
-  "promotionRule": "CORE-M04-ADMIT-001 is APPROVED_PROMOTED. This lock is effective on canonical main after CORE-M04-SYNC-003 promotion; execution must still validate exact lock/source fingerprints before Pack A.",
+  "promotionRule": "CORE-M04-ADMIT-001 and CORE-M04-SYNC-003 are APPROVED_PROMOTED. This lock is effective on canonical main after CORE-M04-SYNC-004 closeout is independently reviewed and promoted; execution must still repeat preflight and validate exact lock/source fingerprints before Pack A.",
   "workOrderSource": {
     "path": ".engineering/work-orders/CORE-WO-M04-001.md",
-    "blobSha": "66d1702bb17e87302d0d332dfa30dc42d59d242d"
+    "blobSha": "2325764617a640da724cbec39f0edbe8e2dea8fb"
   },
   "authorizationEffectiveOnlyOnCanonicalMain": true,
   "canonicalMain": "origin/main",
   "activationRule": "Execution authority is effective only when this exact ACTIVE lock, synchronized GEF state and authorized Work Order are present on canonical origin/main. A branch-local copy or stale fingerprint is non-authoritative.",
-  "executionStartRule": "After CORE-M04-SYNC-003 promotion, create feat/m04-run-state from that post-sync canonical origin/main; authorizedBase f6b422be5465d5a93d0b8fcf4c9507c205663072 must be an ancestor and intervening changes must be limited to governed admission/state synchronization. Repeat Git/HIVE/governance preflight before Pack A.",
+  "executionStartRule": "Only after CORE-M04-SYNC-004 closeout is independently reviewed and promoted, repeat Git/HIVE/governance preflight on canonical origin/main; verify this ACTIVE lock, all nine canonical source fingerprints, exact Work Order blob, frozen authorizedBase f6b422be5465d5a93d0b8fcf4c9507c205663072 ancestry and that intervening changes are limited to governed admission/state synchronization. Then create feat/m04-run-state from that exact canonical main and begin Pack A only if preflight passes.",
   "finalPlanningReview": {
     "status": "APPROVED_PROMOTED",
     "issue": 93,
@@ -69,11 +69,11 @@
   "postAdmissionSynchronization": {
     "increment": "CORE-M04-SYNC-003",
     "branch": "fix/m04-post-admission-state-sync",
-    "status": "REVIEW_CANDIDATE",
-    "reviewIssue": null,
-    "pullRequest": null,
-    "reviewedHead": null,
-    "workflowRun": null,
-    "promotionMerge": null
+    "status": "APPROVED_PROMOTED",
+    "reviewIssue": 97,
+    "pullRequest": 96,
+    "reviewedHead": "f9a5a7847e268000a5249ae8e69c81ed22b924ad",
+    "workflowRun": 35994572596,
+    "promotionMerge": "b79891f489d8c7117aee15e1dca47abb9e23dea3"
   }
 }
