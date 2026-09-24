@@ -108,7 +108,10 @@ def _b(value: bool) -> str:
 
 
 def _norm(path: str) -> str:
-    return path.strip().replace("\\", "/").lstrip("./")
+    normalized = path.strip().replace("\\", "/")
+    while normalized.startswith("./"):
+        normalized = normalized[2:]
+    return normalized
 
 
 def _starts(path: str, prefixes: tuple[str, ...]) -> bool:
