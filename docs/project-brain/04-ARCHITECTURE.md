@@ -662,13 +662,14 @@ M04 uses a two-phase semantic/persistence model:
 host loads exact durable Run state
         |
         v
-pure core-run-state operation
+pure core-run-state prepare_* operation
   validate request + expected generation
   apply TLG/CER/idempotency/cancellation/BRC/ICF laws
   build canonical event + next projection + roots
+  carry operation-specific receipt as PENDING result
         |
         v
-PreparedCommitV1
+PreparedCommitV1<R>
         |
         v
 host-owned M04StateStoreV1.compare_and_commit(...)
@@ -677,9 +678,15 @@ host-owned M04StateStoreV1.compare_and_commit(...)
         |
         +--> DurableCommitReceiptV1
         +--> typed storage/generation conflict
+        |
+        v
+pure finalize_commit(prepared, durable)
+  exact-match durable proof
+        |
+        +--> authoritative Round 3 operation receipt R
 ~~~
 
-The pure service never invokes the store. This preserves deterministic in-memory testing and prevents persistence adapters from becoming hidden semantic authority.
+The pure service never invokes the store. A receipt inside `PreparedCommitV1<R>` is explicitly pending and non-authoritative. After the host persists the exact prepared commit, pure `finalize_commit` validates the durable store receipt and only then releases the operation-specific Round 3 receipt as committed authority. This preserves deterministic in-memory testing and prevents persistence adapters from becoming hidden semantic authority.
 
 ### Store port contract
 
