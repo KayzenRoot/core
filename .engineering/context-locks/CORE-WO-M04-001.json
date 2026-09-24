@@ -34,7 +34,7 @@
   "promotionRule": "CORE-M04-ADMIT-001 is APPROVED_PROMOTED. This lock is effective on canonical main after CORE-M04-SYNC-003 promotion; execution must still validate exact lock/source fingerprints before Pack A.",
   "workOrderSource": {
     "path": ".engineering/work-orders/CORE-WO-M04-001.md",
-    "blobSha": "1306556a941db4e0a3ee8b00e353e9795719a2df"
+    "blobSha": "66d1702bb17e87302d0d332dfa30dc42d59d242d"
   },
   "authorizationEffectiveOnlyOnCanonicalMain": true,
   "canonicalMain": "origin/main",
