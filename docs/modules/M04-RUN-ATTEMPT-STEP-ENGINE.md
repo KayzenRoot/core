@@ -384,49 +384,64 @@ No map/hash iteration order enters a semantic frame. Any unordered collection is
 
 ### Concrete public service signatures
 
+Round 4 preserves the operation-specific receipt contract frozen in Round 3 while separating semantic preparation from durable publication.
+
+Mutating operations use a three-step protocol:
+
+1. `prepare_*` is pure and returns `PreparedCommitV1<R>`, where `R` is the exact operation-specific receipt type frozen in Round 3.
+2. The host passes that prepared commit to `M04StateStoreV1.compare_and_commit`.
+3. `finalize_commit` verifies the durable store receipt against the exact prepared commit and only then releases `R` as an authoritative operation receipt.
+
+The receipt carried inside a prepared commit is a deterministic pending result and MUST NOT be exposed as committed authority before successful finalization.
+
 The implementation must expose pure functions equivalent to:
 
 ```rust
-pub fn admit_run(
+pub fn prepare_run_admission(
     request: &RunAdmissionRequestV1,
     limits: &M04ResourceLimitsV1,
-) -> Result<PreparedCommitV1, M04ErrorV1>;
+) -> Result<PreparedCommitV1<RunAdmissionReceiptV1>, M04ErrorV1>;
 
-pub fn create_attempt(
+pub fn prepare_attempt_creation(
     current: &RunProjectionV1,
     request: &CreateAttemptRequestV1,
     limits: &M04ResourceLimitsV1,
-) -> Result<PreparedCommitV1, M04ErrorV1>;
+) -> Result<PreparedCommitV1<AttemptReceiptV1>, M04ErrorV1>;
 
-pub fn declare_step(
+pub fn prepare_step_declaration(
     current: &RunProjectionV1,
     request: &DeclareStepRequestV1,
     limits: &M04ResourceLimitsV1,
-) -> Result<PreparedCommitV1, M04ErrorV1>;
+) -> Result<PreparedCommitV1<StepReceiptV1>, M04ErrorV1>;
 
-pub fn transition(
+pub fn prepare_transition(
     current: &RunProjectionV1,
     request: &TransitionRequestV1,
     limits: &M04ResourceLimitsV1,
-) -> Result<PreparedCommitV1, M04ErrorV1>;
+) -> Result<PreparedCommitV1<TransitionReceiptV1>, M04ErrorV1>;
 
-pub fn cancel_run(
+pub fn prepare_cancellation(
     current: &RunProjectionV1,
     request: &CancelRunRequestV1,
     limits: &M04ResourceLimitsV1,
-) -> Result<PreparedCommitV1, M04ErrorV1>;
+) -> Result<PreparedCommitV1<CancellationReceiptV1>, M04ErrorV1>;
 
-pub fn create_continuation(
+pub fn prepare_continuation(
     current: &RunProjectionV1,
     request: &CreateContinuationRequestV1,
     limits: &M04ResourceLimitsV1,
-) -> Result<PreparedCommitV1, M04ErrorV1>;
+) -> Result<PreparedCommitV1<ContinuationReceiptV1>, M04ErrorV1>;
 
-pub fn attach_reference(
+pub fn prepare_reference_attachment(
     current: &RunProjectionV1,
     request: &AttachReferenceRequestV1,
     limits: &M04ResourceLimitsV1,
-) -> Result<PreparedCommitV1, M04ErrorV1>;
+) -> Result<PreparedCommitV1<ReferenceReceiptV1>, M04ErrorV1>;
+
+pub fn finalize_commit<R: M04OperationReceiptV1>(
+    prepared: &PreparedCommitV1<R>,
+    durable: &DurableCommitReceiptV1,
+) -> Result<R, M04ErrorV1>;
 
 pub fn replay(
     request: &ReplayRequestV1,
@@ -440,13 +455,15 @@ pub fn verify_snapshot(
 ) -> Result<RunProjectionV1, M04ErrorV1>;
 ```
 
-These functions prepare deterministic semantic commits only. They perform no storage/network/process/clock operation.
+`finalize_commit` verifies RunId, operation fingerprint, expected/result generation, event sequence and resulting journal root. A mismatched/failed store result cannot release the pending receipt.
+
+All preparation, replay, snapshot verification and finalization functions remain deterministic and perform no storage/network/process/clock operation.
 
 ### Store and reference ports
 
 `M04StateStoreV1` is a host-facing port contract, not an implementation dependency. It must support exact Run load plus one atomic compare-and-commit operation over `PreparedCommitV1`. The compare operation binds RunId, expected generation, prior journal root and idempotency record; success returns the durable generation/event/root receipt. Conflict cannot partially append an event.
 
-The pure core does not call an arbitrary storage adapter while calculating semantics. Host orchestration loads a projection, invokes the pure service, then asks the adapter to atomically persist the prepared commit.
+The pure core does not call an arbitrary storage adapter while calculating semantics. Host orchestration loads a projection, invokes the pure prepare service, asks the adapter to atomically persist the prepared commit, then passes the durable store receipt back to the pure `finalize_commit` verifier. Only finalized operation-specific receipts represent committed authority.
 
 External reference resolution follows the same pattern. Caller-owned adapters produce bounded `ExternalReferenceEvidenceV1`; `attach_reference` validates that DTO. M04 does not invoke M14-M17 or fetch artifact bodies.
 
