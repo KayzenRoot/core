@@ -117,3 +117,17 @@ M02 threat model details and adversarial fixtures are maintained in `docs/module
 - The deterministic M04 core performs zero LLM inference and no hidden filesystem, repository, network, process, database, HIVE, GitHub or ambient clock I/O.
 - Snapshot acceleration cannot mint authority absent from the canonical journal.
 - Later M05-M24 policy/execution/verification modules cannot be imported into M04 core or create reverse authority dependencies.
+
+
+## M04 Round 4 security refinements
+
+- `core-run-state` has no direct Tokio/core-runtime/core-workspace or I/O-capable external-service dependency.
+- Pure semantic operations return `PreparedCommitV1` and cannot persist or contact an adapter while calculating state.
+- The state-store port must enforce one all-or-nothing compare-and-commit over generation, prior journal root and idempotency state; partial event/projection/root visibility is forbidden.
+- Store implementations cannot reinterpret transition/cancellation/idempotency semantics or mint higher authority than the prepared commit.
+- M04 canonical framing is domain/version separated and uses explicit lengths/tags before the shared cryptographic digest primitive.
+- Semantic IDs cannot be internally random/time-derived.
+- Caller-owned M01 and external-reference adapters must reduce external data to bounded typed evidence; raw unbounded provider/process/artifact payloads do not enter durable M04 state.
+- Fuzz targets are in-memory only and must detect accepted corruption/substitution, resource amplification, secret echo and partial semantic output.
+- Resource calibration cannot weaken security semantics or introduce an unlimited sentinel.
+- No concrete database/backend or distributed-consensus mechanism is admitted by Round 4.
