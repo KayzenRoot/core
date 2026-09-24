@@ -1,6 +1,6 @@
 # M04 — Run / Attempt / Step Engine
 
-Status: `ROUND_5_FINAL_PLANNING_FREEZE_CANDIDATE`
+Status: `ROUND_5_FINAL_FREEZE_PROMOTED_EXECUTION_ADMISSION_CANDIDATE`
 Implementation: `UNAUTHORIZED`
 Assurance: `ELEVATED`
 
@@ -646,3 +646,15 @@ No direct HIVE MCP/connector is available in this planning chat environment. No 
 Stop this planning increment after the Work Order, pending Context Lock, Evidence Bundle skeleton, executor handoff, canonical source bindings, checkpoint/GEF candidate state and final-freeze evidence are complete and submitted for independent exact-head review.
 
 Do not create product code, the `core-run-state` crate, Cargo changes, fuzz targets, benchmark code, a production backend, an active Context Lock, an execution branch or implementation authorization in this increment.
+
+
+## Execution admission candidate
+
+Increment: `CORE-M04-ADMIT-001`  
+Authorized execution base candidate: `f6b422be5465d5a93d0b8fcf4c9507c205663072`  
+Execution branch: `feat/m04-run-state`  
+Assurance: `ELEVATED`
+
+The final planning freeze is promoted. This admission candidate changes execution state only. It may arm the exact frozen Work Order and Context Lock against the promoted final-freeze base, but it does not alter any Round 1-5 semantic, contract, dependency, file-map, acceptance, calibration, security or ownership decision.
+
+Execution authority is effective only after the exact admission candidate is independently reviewed and promoted to canonical `origin/main`. Presence on `planning/m04-execution-admission` is not authority.
