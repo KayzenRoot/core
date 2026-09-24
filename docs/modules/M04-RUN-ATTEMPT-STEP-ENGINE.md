@@ -1,6 +1,6 @@
 # M04 — Run / Attempt / Step Engine
 
-Status: `ROUNDS_1_4_PROMOTED_ROUND_5_FINAL_FREEZE_GATE`
+Status: `ROUND_5_FINAL_PLANNING_FREEZE_CANDIDATE`
 Implementation: `UNAUTHORIZED`
 Assurance: `ELEVATED`
 
@@ -556,3 +556,93 @@ Round 4 is not the final planning freeze. A separate Round 5 must compile the fi
 ## STOP CONDITION
 
 Rounds 1-4 are promoted canonical planning truth. M04 implementation remains unauthorized. The next legal increment is Round 5 final planning freeze, which may compile the execution packet but MUST NOT activate implementation authority; a separate execution-admission delta remains required.
+
+
+## Round 5 final planning freeze candidate
+
+Increment: `CORE-M04-FREEZE-001`  
+Future Work Order: `.engineering/work-orders/CORE-WO-M04-001.md`  
+Pending Context Lock: `.engineering/context-locks/CORE-WO-M04-001.json`  
+Evidence skeleton: `.engineering/evidence/CORE-WO-M04-001.json`  
+Executor handoff: `docs/work-orders/CODEX-HANDOFF-M04.md`  
+Future execution branch: `feat/m04-run-state`  
+Assurance: `ELEVATED`
+
+Round 5 compiles promoted Rounds 1-4 into one executor-addressable packet. It does not reopen the frozen state machine, public V1 contracts, canonical framing, journal authority, BRC/ICF semantics, resource dimensions, dependency graph, file map, technology disposition or deferred persistence decisions.
+
+### Construction packet graph
+
+- **Pack A — Contracts, identity and canonical framing:** create the `core-run-state` crate, public V1 DTOs, typed IDs, domain framing and stable cross-platform vectors.
+- **Pack B — Lifecycle and projection:** implement TLG legal transitions, lineage/ordinal laws, immutable terminal states, parent-child closure and deterministic projection.
+- **Pack C — Journal, replay and snapshots:** implement RJR canonical event chaining, replay integrity, projection rebuild and verified snapshot boundaries.
+- **Pack D — Concurrency, idempotency and cancellation:** implement CER generation fencing, fingerprint-bound idempotency, ASF prepared-commit semantics and monotonic cancellation precedence.
+- **Pack E — Admission/continuation/reference boundaries:** implement BRC exact M03 authority validation, ICF continuation/new-epoch rules and bounded external-reference attachment.
+- **Pack F — Resource/store/purity boundary:** implement finite `M04ResourceLimitsV1`, pure `prepare_*` and `finalize_commit`, the host-facing `M04StateStoreV1` contract and no-hidden-I/O/zero-LLM proof surfaces.
+- **Pack G — Security, properties, fuzz and supply chain:** implement the frozen adversarial/property matrix, six named fuzz targets, secret-canary checks, dependency/static boundaries, advisory/license/SBOM evidence and both-platform test coverage.
+- **Pack H — Calibration, evidence and exact-head handoff:** run the deterministic benchmark/calibration protocol, apply only the authorized numeric/evidence Calibration Delta if required, rerun affected exact-head gates, complete EV/AC traceability and open the implementation PR as `READY_FOR_REVIEW`.
+
+Packs are ordered by semantic dependency. A blocking failure stops the affected pack and all dependent packs. Valid independent evidence may be preserved.
+
+### Exact acceptance mapping
+
+The implementation acceptance graph is one-to-one and blocking:
+
+| Acceptance criterion | Evidence node | Obligation |
+| --- | --- | --- |
+| AC-M04-001 | EV-M04-001 | Public V1 contract/API conformance |
+| AC-M04-002 | EV-M04-002 | Exhaustive legal transition matrix |
+| AC-M04-003 | EV-M04-003 | Illegal transition/property rejection |
+| AC-M04-004 | EV-M04-004 | Generation/CAS concurrency races |
+| AC-M04-005 | EV-M04-005 | Idempotency replay/conflict laws |
+| AC-M04-006 | EV-M04-006 | Cancellation precedence races |
+| AC-M04-007 | EV-M04-007 | Journal replay equivalence |
+| AC-M04-008 | EV-M04-008 | Reorder/truncation/substitution/root corruption rejection |
+| AC-M04-009 | EV-M04-009 | BRC stale/substitution boundary tests |
+| AC-M04-010 | EV-M04-010 | ICF continuation/epoch tests |
+| AC-M04-011 | EV-M04-011 | Typed identity cross-domain substitution |
+| AC-M04-012 | EV-M04-012 | Windows/Ubuntu canonicalization golden vectors |
+| AC-M04-013 | EV-M04-013 | Resource at-limit and cap+1 atomic rejection |
+| AC-M04-014 | EV-M04-014 | Snapshot verification/rebuild equivalence |
+| AC-M04-015 | EV-M04-015 | External-reference shape/lineage/bounds |
+| AC-M04-016 | EV-M04-016 | No hidden filesystem/network/process/database/HIVE/GitHub I/O |
+| AC-M04-017 | EV-M04-017 | Zero-LLM deterministic core proof |
+| AC-M04-018 | EV-M04-018 | Six frozen bounded fuzz campaigns |
+| AC-M04-019 | EV-M04-019 | Finite reproducible resource calibration report |
+| AC-M04-020 | EV-M04-020 | Dependency/advisory/license/SBOM evidence |
+| AC-M04-021 | EV-M04-021 | Exact-head Windows CI |
+| AC-M04-022 | EV-M04-022 | Exact-head Ubuntu CI |
+| AC-M04-023 | EV-M04-023 | Independent exact-head review, zero unresolved HIGH/CRITICAL |
+
+No criterion is advisory. A later Evidence Bundle may attach several artifacts to one criterion, but cannot remove or combine away a blocking node.
+
+### Resource Calibration Gate
+
+Round 5 freezes no guessed production numbers. Pack H may measure deterministic synthetic fixtures for every Round 4 resource dimension on supported platforms and choose finite positive defaults from recorded evidence.
+
+One bounded Calibration Delta is authorized only after measurements exist and only for:
+- finite numeric M04 resource defaults/thresholds;
+- their calibration fixtures/results/report;
+- tests whose expected numeric value must follow the selected limit.
+
+It may not alter public contract meaning, transition laws, identity/canonical framing, BRC/ICF, dependency admission, persistence/backend class, journal authority, security boundaries or AC/EV meaning.
+
+### Planning authority and admission separation
+
+The Round 5 Context Lock is a planning artifact only. It must remain `PENDING_PROMOTION`, with `authorizedBase = null` and `productImplementationAuthorized = false`.
+
+Even after Round 5 is independently reviewed and promoted, M04 implementation remains forbidden until a later separate execution-admission delta:
+1. binds the exact promoted final-freeze canonical main;
+2. recompiles the lock against current canonical source fingerprints;
+3. sets a concrete authorized base and the execution branch `feat/m04-run-state`;
+4. is independently reviewed and promoted to canonical `origin/main`;
+5. leaves all frozen planning semantics unchanged.
+
+### HIVE planning observation
+
+No direct HIVE MCP/connector is available in this planning chat environment. No current HIVE project/checkpoint state is therefore claimed for CORE. Round 5 uses exact Git canonical sources in SOLO mode. The implementation executor must repeat the optional HIVE preflight and record only observed current results; HIVE remains advisory and cannot replace Git/source/lock authority.
+
+### Round 5 STOP CONDITION
+
+Stop this planning increment after the Work Order, pending Context Lock, Evidence Bundle skeleton, executor handoff, canonical source bindings, checkpoint/GEF candidate state and final-freeze evidence are complete and submitted for independent exact-head review.
+
+Do not create product code, the `core-run-state` crate, Cargo changes, fuzz targets, benchmark code, a production backend, an active Context Lock, an execution branch or implementation authorization in this increment.

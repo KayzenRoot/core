@@ -256,3 +256,25 @@ M04 implementation remains unauthorized until final planning freeze and separate
 - database/backend selection;
 - M05+ executor/policy/review implementation;
 - numeric resource defaults without implementation measurements.
+
+
+## M04 Round 5 final-freeze scope
+
+### IN SCOPE FOR THE PLANNING FREEZE
+- freeze `CORE-WO-M04-001`, pending Context Lock, Evidence Bundle skeleton and executor handoff;
+- bind the promoted Round 1-4 semantics to one exact construction packet graph A-H;
+- preserve the exact `core-run-state` file/dependency map;
+- freeze AC-M04-001..023 one-to-one against EV-M04-001..023;
+- freeze the numeric/evidence-only Resource Calibration Delta;
+- freeze executor STOP states and independent review ownership;
+- record exact canonical source fingerprints for later admission staleness checks.
+
+### OUT OF SCOPE
+- all M04 product implementation;
+- active execution authority or execution-branch creation;
+- Cargo/workspace/fuzz/bench source changes;
+- production persistence/backend choice;
+- M05+ implementation;
+- architecture/contract redesign disguised as calibration or admission.
+
+Round 5 promotion freezes planning truth only. Execution still requires a separate governed admission delta.

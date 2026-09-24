@@ -303,3 +303,21 @@ Future implementation must provide exact-head evidence for:
 The frozen `m04_run_state` harness scales attempts/run, steps/attempt, events/run, same-generation concurrent preparation, event payload bytes, replay length, snapshot interval/rebuild, reference cardinality/bytes and continuation cursor bytes. Each supported scenario uses deterministic synthetic fixtures, one warm-up and at least five measured iterations per platform. Reports include exact source SHA, OS, Rust toolchain, CPU, fixture generator/version, command and median/min/max.
 
 Candidate finite limits and cap+1 are exercised explicitly. Unsupported scales are reported as unsupported. Planning documents contain no claimed latency/memory/default values before these measurements exist.
+
+
+## M04 Round 5 final-freeze validation contract
+
+The future implementation must execute Packs A-H and satisfy AC-M04-001..023 exactly one-to-one with EV-M04-001..023.
+
+Each AC record must identify:
+- exact candidate head;
+- test/property/fuzz/benchmark/static command or artifact;
+- platform where relevant;
+- result;
+- evidence path/reference;
+- whether a Calibration Delta affected the criterion;
+- unresolved finding count.
+
+Pack H must rerun every criterion affected by the selected numeric resource limits after the Calibration Delta. A pre-calibration green result cannot substitute for a required post-calibration exact-head result.
+
+The final implementation PR may report only `READY_FOR_REVIEW` or `BLOCKED`. It may not report APPROVED. Independent exact-head review is AC-M04-023 and remains unsatisfied until performed by the reviewer after executor handoff.

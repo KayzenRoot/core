@@ -812,3 +812,28 @@ Status: `ACTIVE`
 ## CORE-D-194 - M04 Round 4 is promoted; Round 5 final planning freeze is the next legal increment
 **Decision:** M04-REVIEW-005 / Issue #87 APPROVED CORE-M04-PLAN-004 at exact head `997fcccc79e786a271ba01a6fa7854bf1eaf8bce`; workflow `35945725379` completed all 10 hosted jobs SUCCESS after a same-head rerun of the timing-sensitive Ubuntu test, and PR #86 was squash-promoted as merge `63af0f735dd0419fb02f9879efed340ddb07da30`. M04 Rounds 1-4 are canonical planning truth. The next legal increment is Round 5 final planning freeze, which compiles the Work Order, pending Context Lock, Evidence Bundle, construction packets, exact acceptance mapping, Resource Calibration Gate and executor handoff. Product implementation remains unauthorized until a separate execution-admission delta is independently reviewed and promoted on canonical main.
 **State:** ACCEPTED
+
+
+## CORE-D-195 - M04 Round 5 is the final planning freeze candidate
+**Decision:** CORE-M04-FREEZE-001 compiles the executor-ready M04 V0.0 planning packet from promoted Rounds 1-4. It freezes the Work Order, pending Context Lock, Evidence Bundle skeleton, executor handoff, Packs A-H and AC-M04-001..023 mapping. It does not authorize product implementation.
+**State:** PROPOSED; M04 Round 5 final-freeze candidate.
+
+## CORE-D-196 - M04 execution authority requires a later separate admission delta
+**Decision:** promotion of the Round 5 planning freeze establishes frozen planning truth only. A later `CORE-M04-ADMIT-001`-equivalent delta must bind the exact promoted canonical base, activate the lock and set implementation authorization on canonical `origin/main`. Admission may not change frozen architecture, contracts, dependencies, acceptance, calibration semantics or module ownership.
+**State:** PROPOSED; M04 Round 5 final-freeze candidate.
+
+## CORE-D-197 - M04 implementation uses eight ordered construction packets
+**Decision:** the implementation packet is Packs A-H: A contracts/identity/canonical framing; B lifecycle/projection; C journal/replay/snapshot; D CAS/idempotency/cancellation; E BRC/ICF/references; F resource/store/purity boundaries; G security/property/fuzz/supply-chain; H calibration/evidence/exact-head CI/handoff. Blocking upstream failures stop dependent work.
+**State:** PROPOSED; M04 Round 5 final-freeze candidate.
+
+## CORE-D-198 - M04 acceptance is exactly AC-M04-001..023 mapped to EV-M04-001..023
+**Decision:** the 23 Round 3 evidence nodes are retained as 23 blocking implementation acceptance criteria with one-to-one evidence identities. Evidence may reference multiple artifacts, but no blocking criterion may disappear through aggregation.
+**State:** PROPOSED; M04 Round 5 final-freeze candidate.
+
+## CORE-D-199 - M04 permits only a numeric/evidence Resource Calibration Delta
+**Decision:** after implementation measurements exist, the Work Order may authorize one bounded calibration delta limited to finite numeric resource defaults/thresholds and the calibration report. The delta cannot alter semantics, contracts, dependencies, authority, persistence class, security boundaries or acceptance meaning.
+**State:** PROPOSED; M04 Round 5 final-freeze candidate.
+
+## CORE-D-200 - Round 5 records unavailable HIVE context without inventing evidence
+**Decision:** this planning session has no direct HIVE MCP/connector available, so Round 5 uses exact canonical Git sources in SOLO mode and makes no claim about current HIVE registration/checkpoint state. The future executor must repeat the optional HIVE preflight and record only observed results; canonical Git remains authoritative.
+**State:** PROPOSED; M04 Round 5 final-freeze candidate.
