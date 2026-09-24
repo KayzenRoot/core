@@ -15,4 +15,4 @@ CORE V0.0 - Modular Construction
 3 - M03 Complete / M04 Planning Gate
 
 ## NEXT STEP
-Independently review/promote CORE-M04-PLAN-004 Round 4; if approved, continue M04 Round 5 final planning freeze. M04 implementation remains unauthorized.
+Continue M04 Round 5 final planning freeze from canonical Rounds 1-4. M04 implementation remains unauthorized; execution requires a separate governed admission delta.
