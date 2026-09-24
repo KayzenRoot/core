@@ -60,7 +60,7 @@ Candidate canonical source Git blob IDs:
 
 | Canonical source | Candidate blob |
 | --- | --- |
-| docs/project-brain/13-CHECKPOINT.md | 3f3ecca766ca93956ac4c9f782368e0abfcf39da |
+| docs/project-brain/13-CHECKPOINT.md | 025045cc2269ee2bb4b043e024b00aa72fa713a3 |
 | docs/project-brain/16-DECISIONS-LEDGER.md | a55a912576d8279dfe2bde89f43f19e4a1dd7b16 |
 | docs/project-brain/03-SCOPE.md | d8f917770f4b72ab0628be0da8744350289a21a5 |
 | docs/project-brain/15-DEFINITION-OF-DONE.md | 864f1974b340fca9a5a2d2e7e297c8f4fcfe5553 |
