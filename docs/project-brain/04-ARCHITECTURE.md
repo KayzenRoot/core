@@ -734,3 +734,33 @@ Persistent backend choice, destructive event retention, distributed state replic
 ### Final-freeze boundary
 
 Round 4 is not execution-ready. Round 5 must compile the implementation Work Order, pending Context Lock, evidence skeleton, construction packets, exact EV-M04 mapping, Resource Calibration Gate and executor handoff. A separate later admission delta must bind canonical main before any product implementation can begin.
+
+
+## M04 Round 5 final-freeze execution architecture
+
+The frozen implementation path is:
+
+~~~text
+promoted Round 5 planning truth
+        |
+        v
+separate execution-admission delta
+  exact canonical base + ACTIVE Context Lock
+        |
+        v
+feat/m04-run-state
+  Pack A -> B -> C -> D -> E -> F -> G -> H
+        |
+        v
+implementation PR / READY_FOR_REVIEW
+        |
+        v
+independent exact-head review
+        |
+        +--> APPROVED -> governed promotion
+        +--> CORRECTION REQUIRED / BLOCKED
+~~~
+
+No planning artifact, prepared commit, executor claim or branch-local `ACTIVE` marker grants authority by itself. The later admission delta may bind state only; it cannot mutate the frozen M04 architecture.
+
+The Work Order uses the Round 4 pure-core/host-store split unchanged. Packs A-F construct semantics, Pack G proves adversarial/security/fuzz/supply-chain obligations, and Pack H performs evidence-backed numeric calibration plus final exact-head validation. Any semantic change discovered during implementation requires the smallest governed Correction Delta rather than a widened Pack H.
