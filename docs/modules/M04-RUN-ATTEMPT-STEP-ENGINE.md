@@ -1,6 +1,6 @@
 # M04 — Run / Attempt / Step Engine
 
-Status: `ROUNDS_1_3_PROMOTED_ROUND_4_PLANNING_GATE`
+Status: `ROUND_4_IMPLEMENTATION_ADDRESSABLE_CANDIDATE`
 Implementation: `UNAUTHORIZED`
 Assurance: `ELEVATED`
 
@@ -325,10 +325,217 @@ Blocking evidence nodes for final M04 acceptance:
 
 All nodes are blocking unless a later frozen Work Order explicitly proves a node non-applicable without weakening a frozen requirement.
 
-### Round 4 questions
+## Round 4 implementation-addressable freeze candidate
 
-Round 4 must freeze the implementation-addressable crate/file map, exact dependency admission, concrete Rust signatures/types, store/reference traits, property/fuzz target inventory, benchmark/calibration protocol, production DoD and disposition of all candidate technologies. It must also decide whether Round 4 is sufficient for final planning freeze or a separate final-freeze round is required.
+### Crate and file map
+
+M04 V0.0 is one focused crate: `core-run-state`.
+
+Required product files:
+- `crates/core-run-state/Cargo.toml`
+- `src/lib.rs`
+- `src/contracts.rs`
+- `src/identity.rs`
+- `src/canonical.rs`
+- `src/transition.rs`
+- `src/journal.rs`
+- `src/projection.rs`
+- `src/idempotency.rs`
+- `src/cancellation.rs`
+- `src/boundary.rs`
+- `src/continuation.rs`
+- `src/reference.rs`
+- `src/budget.rs`
+- `src/errors.rs`
+- `src/store.rs`
+- `src/service.rs`
+
+Required test/evidence surfaces:
+- `tests/public_contracts.rs`
+- `tests/transitions.rs`
+- `tests/cas_idempotency.rs`
+- `tests/cancellation.rs`
+- `tests/replay.rs`
+- `tests/boundary_continuation.rs`
+- `tests/canonical_identity.rs`
+- `tests/snapshots.rs`
+- `tests/references.rs`
+- `tests/resources_no_io.rs`
+- `benches/m04_run_state.rs`
+- M04 fuzz targets in the existing `fuzz/` package.
+
+### Dependency admission
+
+Direct M04 crate dependencies are frozen to:
+- `core-work-order` for the admitted M03 handoff and admission receipt contracts;
+- `core-identity` for the existing cryptographic fingerprint primitive;
+- workspace `serde` for V1 contracts;
+- workspace `thiserror` for typed errors.
+
+`serde_json` is permitted only in tests/tooling unless a later exact API proof shows production necessity. No direct `tokio`, `core-runtime`, `core-workspace`, Git/process/network/database/HIVE/GitHub SDK, graph, cache or persistence dependency is admitted.
+
+M01 cancellation/shutdown information crosses a bounded value DTO from caller-owned adapters. M04 does not import the async runtime merely to observe cancellation.
+
+### Canonical framing and digest
+
+M04 reuses `core_identity::fingerprint_bytes` for the cryptographic digest and defines M04-specific deterministic domain framing before hashing. Framing is versioned and uses explicit domain tag, field tag, fixed-width integer encoding and length-prefixing for variable-width byte/string values. This satisfies Round 3 domain separation without introducing a second digest implementation.
+
+No map/hash iteration order enters a semantic frame. Any unordered collection is sorted by its canonical typed key before framing.
+
+### Concrete public service signatures
+
+The implementation must expose pure functions equivalent to:
+
+```rust
+pub fn admit_run(
+    request: &RunAdmissionRequestV1,
+    limits: &M04ResourceLimitsV1,
+) -> Result<PreparedCommitV1, M04ErrorV1>;
+
+pub fn create_attempt(
+    current: &RunProjectionV1,
+    request: &CreateAttemptRequestV1,
+    limits: &M04ResourceLimitsV1,
+) -> Result<PreparedCommitV1, M04ErrorV1>;
+
+pub fn declare_step(
+    current: &RunProjectionV1,
+    request: &DeclareStepRequestV1,
+    limits: &M04ResourceLimitsV1,
+) -> Result<PreparedCommitV1, M04ErrorV1>;
+
+pub fn transition(
+    current: &RunProjectionV1,
+    request: &TransitionRequestV1,
+    limits: &M04ResourceLimitsV1,
+) -> Result<PreparedCommitV1, M04ErrorV1>;
+
+pub fn cancel_run(
+    current: &RunProjectionV1,
+    request: &CancelRunRequestV1,
+    limits: &M04ResourceLimitsV1,
+) -> Result<PreparedCommitV1, M04ErrorV1>;
+
+pub fn create_continuation(
+    current: &RunProjectionV1,
+    request: &CreateContinuationRequestV1,
+    limits: &M04ResourceLimitsV1,
+) -> Result<PreparedCommitV1, M04ErrorV1>;
+
+pub fn attach_reference(
+    current: &RunProjectionV1,
+    request: &AttachReferenceRequestV1,
+    limits: &M04ResourceLimitsV1,
+) -> Result<PreparedCommitV1, M04ErrorV1>;
+
+pub fn replay(
+    request: &ReplayRequestV1,
+    limits: &M04ResourceLimitsV1,
+) -> Result<ReplayProjectionV1, M04ErrorV1>;
+
+pub fn verify_snapshot(
+    snapshot: &RunSnapshotV1,
+    boundary: &JournalBoundaryV1,
+    limits: &M04ResourceLimitsV1,
+) -> Result<RunProjectionV1, M04ErrorV1>;
+```
+
+These functions prepare deterministic semantic commits only. They perform no storage/network/process/clock operation.
+
+### Store and reference ports
+
+`M04StateStoreV1` is a host-facing port contract, not an implementation dependency. It must support exact Run load plus one atomic compare-and-commit operation over `PreparedCommitV1`. The compare operation binds RunId, expected generation, prior journal root and idempotency record; success returns the durable generation/event/root receipt. Conflict cannot partially append an event.
+
+The pure core does not call an arbitrary storage adapter while calculating semantics. Host orchestration loads a projection, invokes the pure service, then asks the adapter to atomically persist the prepared commit.
+
+External reference resolution follows the same pattern. Caller-owned adapters produce bounded `ExternalReferenceEvidenceV1`; `attach_reference` validates that DTO. M04 does not invoke M14-M17 or fetch artifact bodies.
+
+### Required V1 type groups
+
+V1 must include:
+- Run/Attempt/Step/Event typed IDs and ordinal/generation/epoch wrappers;
+- lifecycle enums and closed event/reason enums;
+- BRC and ICF contracts;
+- canonical event envelope and journal-boundary/root contracts;
+- projected Run/Attempt/Step state;
+- idempotency record/key/fingerprint contracts;
+- prepared commit and durable commit receipt contracts;
+- snapshot and external-reference evidence contracts;
+- resource limits;
+- bounded diagnostics plus stable `M04ErrorV1`.
+
+Opaque random/time-derived semantic IDs are not generated inside the core. IDs are supplied by the caller or deterministically derived from versioned logical inputs.
+
+### Property and adversarial inventory
+
+Required deterministic laws:
+- every legal transition is accepted and every non-table transition is rejected;
+- terminal history is immutable;
+- parent closure and child generation fences hold;
+- equivalent request replay is idempotent;
+- conflicting idempotency key reuse never advances state;
+- two writers at the same generation cannot both commit;
+- cancellation ordering matches the frozen precedence law;
+- journal replay equals incrementally projected state;
+- event reorder/truncation/substitution/root mutation fails closed;
+- BRC/ICF mismatch and cross-lineage identity substitution fail closed;
+- snapshots rebuild exactly to the bound journal projection;
+- cap+1 failure yields no prepared partial semantic advancement;
+- reference attachment never imports external truth/secret-bearing bodies.
+
+### Fuzz target inventory
+
+Add six bounded targets:
+- `m04_transition_event`
+- `m04_replay_journal`
+- `m04_identity_canonical`
+- `m04_brc_icf`
+- `m04_reference`
+- `m04_resource_limits`
+
+Fuzzing is in-memory only, uses synthetic inputs, and fails on panic, hang/resource amplification, accepted corruption/substitution, partial semantic output or secret echo.
+
+### Benchmark and Resource Calibration Gate
+
+One `m04_run_state` benchmark harness scales:
+- attempts/run;
+- steps/attempt;
+- events/run;
+- concurrent same-generation prepared operations;
+- canonical event payload bytes;
+- replay length;
+- snapshot interval/rebuild;
+- reference count/bytes;
+- continuation cursor size.
+
+The future implementation Work Order must run reproducible synthetic calibration on Windows and Ubuntu, warm once, collect at least five measured iterations per supported scenario, record median/min/max plus toolchain/OS/CPU/fixture version/commands, test each candidate limit and cap+1, and record unsupported scales rather than extrapolate.
+
+The authorized Calibration Delta may change numeric M04 resource defaults/thresholds and calibration evidence only.
+
+### Technology disposition
+
+Required V0.0 semantic mechanisms:
+- RAS;
+- TLG;
+- CER;
+- RJR;
+- BRC;
+- ICF;
+- ASF.
+
+They are semantic mechanisms inside `core-run-state`, not separately deployable services/crates.
+
+Deferred:
+- persistent backend selection;
+- destructive journal compaction/archive;
+- distributed replication/consensus;
+- persistent snapshot cache;
+- runtime self-tuning.
+
+### Round 5 requirement
+
+Round 4 is not the final planning freeze. A separate Round 5 must compile the final implementation Work Order, pending Context Lock, Evidence Bundle skeleton, construction packets, exact acceptance mapping, Calibration Gate and executor handoff. Round 5 must perform the final cross-source audit and still leave implementation unauthorized until a separate execution-admission delta is reviewed and promoted.
 
 ## STOP CONDITION
 
-Rounds 1-3 are promoted planning truth. M04 implementation remains unauthorized. The next legal increment is Round 4 implementation-addressable freeze design; do not create an execution Work Order, select a persistence backend, or authorize product execution.
+Round 4 is a planning candidate only. Do not implement M04 product code, create the execution Work Order, select a persistence backend or authorize execution. Stop for independent exact-head review and promotion before Round 5 final planning freeze.
