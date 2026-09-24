@@ -200,3 +200,17 @@ Additional Round 4 completion obligations:
 - Round 5 final freeze and separate execution admission occur before implementation starts.
 
 Round 4 itself remains planning-only and does not satisfy the production DoD.
+
+
+## M04 Round 5 final planning freeze DoD
+
+Round 5 planning is complete only when, on one review candidate head:
+- `CORE-WO-M04-001` fully describes objective, canonical basis, staleness, scope, file/dependency map, Packs A-H, AC-M04-001..023, calibration and STOP semantics;
+- the M04 Context Lock exists as `PENDING_PROMOTION` with no authorized base and implementation authorization false;
+- the Evidence Bundle skeleton contains every EV-M04-001..023 node as pending and carries planning/source metadata without fabricated implementation results;
+- the executor handoff refuses implementation until a later canonical-main admission activates the exact lock;
+- canonical Requirements, Scope, Architecture, Security, Test Plan, DoD, Decisions, module plan, Checkpoint and GEF agree that implementation is unauthorized;
+- exact candidate source fingerprints and Work Order identity are recorded for future staleness/admission checks;
+- hosted CI and independent exact-head review approve the final-freeze candidate with zero unresolved HIGH/CRITICAL.
+
+Promotion of this DoD closes M04 planning only. It does not satisfy the M04 product implementation DoD.
