@@ -2,15 +2,15 @@
 
 Work Order: `CORE-WO-M04-001`  
 Increment: `CORE-M04-FREEZE-001`  
-Status: `PLANNING_FROZEN_CANDIDATE / EXECUTION_NOT_AUTHORIZED`  
+Status: `EXECUTION_ADMISSION_CANDIDATE / DO_NOT_EXECUTE_UNTIL_CANONICAL_PROMOTION`  
 Future execution branch: `feat/m04-run-state`
 
 ## STOP BEFORE EXECUTION
 
 Do **not** modify product code, Cargo manifests/lockfiles, fuzz targets, benchmark code or runtime crates unless all of the following are true on canonical `origin/main`:
 
-1. CORE-M04-FREEZE-001 has been independently exact-head reviewed and promoted.
-2. A later separate execution-admission delta has been independently reviewed and promoted.
+1. CORE-M04-FREEZE-001 has been independently exact-head reviewed and promoted as canonical base `f6b422be5465d5a93d0b8fcf4c9507c205663072`.
+2. CORE-M04-ADMIT-001 has been independently reviewed and promoted to canonical `origin/main`.
 3. `.engineering/context-locks/CORE-WO-M04-001.json` on canonical main is `ACTIVE`.
 4. The lock contains a concrete `authorizedBase`.
 5. `productImplementationAuthorized = true`.
@@ -106,3 +106,8 @@ Allowed only after Packs A-H, AC-M04-001..022, calibration/post-calibration reru
 Use when any authorization, locked source, packet obligation, acceptance/evidence node, finite resource selection, CI/security gate or frozen contract is missing/stale/conflicting/failing or requires out-of-scope change.
 
 Never return `APPROVED`. Never merge your own implementation.
+
+
+## Admission candidate note
+
+This handoff is now bound to the CORE-M04-ADMIT-001 candidate. Its presence on branch `planning/m04-execution-admission` still grants no execution authority. Do not begin Pack A until the admission is promoted and the exact canonical-main lock is ACTIVE/effective.

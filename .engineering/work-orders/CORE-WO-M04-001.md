@@ -1,6 +1,6 @@
 # CORE-WO-M04-001 — M04 Run / Attempt / Step Engine
 
-Status: FINAL_FREEZE_CANDIDATE / IMPLEMENTATION_UNAUTHORIZED
+Status: ACTIVE_AUTHORIZATION_ARMED / EFFECTIVE_ONLY_ON_CANONICAL_MAIN_PROMOTION
 Increment: CORE-M04-FREEZE-001
 Module: M04 — Run / Attempt / Step Engine
 Repository: KayzenRoot/core
@@ -9,8 +9,8 @@ Planning branch: planning/m04-final-freeze-round5
 Future execution branch: feat/m04-run-state
 Risk / assurance: ELEVATED
 Execution model: one comprehensive implementation Work Order, eight ordered construction packets
-Product implementation authorization: FALSE — a separate governed execution-admission delta is required after this final freeze is independently reviewed and promoted
-Context Lock: .engineering/context-locks/CORE-WO-M04-001.json — PENDING_PROMOTION
+Product implementation authorization: ARMED — effective only after CORE-M04-ADMIT-001 is independently reviewed and promoted to canonical origin/main
+Context Lock: .engineering/context-locks/CORE-WO-M04-001.json — ACTIVE_ON_CANONICAL_MAIN_PROMOTION
 Evidence skeleton: .engineering/evidence/CORE-WO-M04-001.json
 Executor handoff: docs/work-orders/CODEX-HANDOFF-M04.md
 
@@ -326,3 +326,22 @@ The executor MUST NEVER return APPROVED. Independent governed review owns AC-M04
 ## PLANNING STOP CONDITION
 
 CORE-M04-FREEZE-001 stops after this Work Order, pending Context Lock, Evidence Bundle skeleton, executor handoff, canonical source bindings and candidate checkpoint/GEF state are independently reviewed. No product implementation is authorized by creation or promotion of this planning packet.
+
+
+## Execution admission record
+
+Admission increment: `CORE-M04-ADMIT-001`  
+Final planning review: M04-REVIEW-007 / Issue #93 — APPROVED  
+Final-freeze PR: #92  
+Final-freeze exact reviewed head: `aa65784c66a16f918d694f25cde1a9ba88663b5a`  
+Final-freeze exact-head workflow: `35981285696` — all 10 hosted jobs SUCCESS  
+Promoted authorized base: `f6b422be5465d5a93d0b8fcf4c9507c205663072`  
+Execution branch: `feat/m04-run-state`  
+Authorized scope: `M04_RUN_ATTEMPT_STEP_ENGINE` only  
+Assurance: `ELEVATED`
+
+Authorization in this record is canonical-main gated. It becomes effective only after the exact CORE-M04-ADMIT-001 state is independently reviewed and promoted to canonical `origin/main`. A planning/admission PR branch carrying armed/active metadata is not execution authority.
+
+After admission promotion, the executor MUST create `feat/m04-run-state` from post-admission canonical `origin/main`, prove `f6b422be5465d5a93d0b8fcf4c9507c205663072` is an ancestor, prove intervening commits contain only governed admission/state-synchronization metadata, then repeat Git/HIVE/governance preflight and validate the exact active Context Lock, Work Order blob and nine canonical source fingerprints before Pack A.
+
+This admission changes execution state only. All frozen architecture, scope, dependencies, public contracts, Packs A-H, AC-M04-001..023, EV-M04-001..023, Resource Calibration Gate, security invariants, file topology, M03/M04 ownership and STOP semantics remain unchanged.

@@ -1,24 +1,24 @@
 {
   "schemaVersion": "core-context-lock-v1",
   "workOrder": "CORE-WO-M04-001",
-  "status": "PENDING_PROMOTION",
+  "status": "ACTIVE_ON_CANONICAL_MAIN_PROMOTION",
   "repository": "KayzenRoot/core",
   "planningBase": "0f448c708aafd8f5b4cb6303effdabd7e028bc6f",
-  "authorizedBase": null,
+  "authorizedBase": "f6b422be5465d5a93d0b8fcf4c9507c205663072",
   "executionBranch": "feat/m04-run-state",
   "scopeClass": "M04_RUN_ATTEMPT_STEP_ENGINE",
   "assuranceMode": "ELEVATED",
-  "productImplementationAuthorized": false,
+  "productImplementationAuthorized": true,
   "canonicalSources": {
-    "docs/project-brain/13-CHECKPOINT.md": "025045cc2269ee2bb4b043e024b00aa72fa713a3",
-    "docs/project-brain/16-DECISIONS-LEDGER.md": "a55a912576d8279dfe2bde89f43f19e4a1dd7b16",
+    "docs/project-brain/13-CHECKPOINT.md": "e5540d25b68d9b2861604a118f81f7025f9858e6",
+    "docs/project-brain/16-DECISIONS-LEDGER.md": "dfc34d4ce6802c619277be534645d94d88b55f15",
     "docs/project-brain/03-SCOPE.md": "d8f917770f4b72ab0628be0da8744350289a21a5",
     "docs/project-brain/15-DEFINITION-OF-DONE.md": "864f1974b340fca9a5a2d2e7e297c8f4fcfe5553",
     "docs/project-brain/04-ARCHITECTURE.md": "09f56adc576ee477fe61c5588fee201eac841bc2",
     "docs/project-brain/02-REQUIREMENTS.md": "b68bbdf41bbf06b1f1587261f39c31eee32e7cb9",
     "docs/project-brain/10-SECURITY-GOVERNANCE.md": "66a39179fb312eb229870aa5367e89708f6bfd66",
     "docs/project-brain/11-TEST-PLAN.md": "1784085e690e4fdfbdb5bd2b893d58f704c0fa6e",
-    "docs/modules/M04-RUN-ATTEMPT-STEP-ENGINE.md": "882147c31c4dd2f5ed837474f4c914ba4c025c8f"
+    "docs/modules/M04-RUN-ATTEMPT-STEP-ENGINE.md": "43f03b50625496f22d041c06e5d1c56b91bc05fc"
   },
   "upstream": {
     "gef": {
@@ -31,31 +31,39 @@
     }
   },
   "stalenessRule": "Any material change to the later admitted authorizedBase, any of the nine canonical source blobs, CORE-WO-M04-001, or governing GEF policy makes an active M04 lock STALE and blocks execution until governed re-admission.",
-  "promotionRule": "CORE-M04-FREEZE-001 may promote this planning lock as frozen metadata only. It remains non-authoritative until a separate CORE-M04-ADMIT-001-equivalent delta binds a concrete authorizedBase, recompiles current canonical source fingerprints, activates the lock, and is independently reviewed/promoted to canonical origin/main.",
+  "promotionRule": "CORE-M04-ADMIT-001 arms this exact lock against the promoted final-freeze base. Execution authority becomes effective only after the exact admission candidate is independently reviewed and promoted to canonical origin/main. A branch-local active/armed lock is non-authoritative.",
   "workOrderSource": {
     "path": ".engineering/work-orders/CORE-WO-M04-001.md",
-    "blobSha": "4320993a1b4dbe2fa7c274aa55fa2d44da84288a"
+    "blobSha": "b6d2b440c50d2a056b8d78749d178ee80ef4c73a"
   },
   "authorizationEffectiveOnlyOnCanonicalMain": true,
   "canonicalMain": "origin/main",
-  "activationRule": "Implementation is forbidden while status is PENDING_PROMOTION or authorizedBase is null. A later admission PR branch does not authorize execution by itself; authorization becomes effective only after its exact reviewed state is promoted to canonical origin/main.",
-  "executionStartRule": "After separate admission promotion, create feat/m04-run-state from the admitted post-promotion canonical origin/main, prove the authorized final-freeze base is an ancestor with only governed admission/synchronization metadata between them, then repeat Git/HIVE/governance preflight before Pack A.",
+  "activationRule": "Authorization is effective only when this exact ACTIVE_ON_CANONICAL_MAIN_PROMOTION lock and synchronized admission state are present on canonical origin/main after independent review/promotion. Presence only on planning/m04-execution-admission does not authorize execution.",
+  "executionStartRule": "After CORE-M04-ADMIT-001 promotion, create feat/m04-run-state from the admitted post-promotion canonical origin/main; authorizedBase f6b422be5465d5a93d0b8fcf4c9507c205663072 must be an ancestor and intervening changes must be limited to governed admission/state-synchronization metadata. Repeat Git/HIVE/governance preflight before Pack A.",
   "finalPlanningReview": {
-    "status": "PENDING",
-    "issue": null,
-    "verdict": null,
-    "pullRequest": null,
-    "reviewedHead": null,
-    "workflowRun": null,
-    "promotionMerge": null
+    "status": "APPROVED_PROMOTED",
+    "issue": 93,
+    "verdict": "APPROVED",
+    "pullRequest": 92,
+    "reviewedHead": "aa65784c66a16f918d694f25cde1a9ba88663b5a",
+    "workflowRun": 35981285696,
+    "promotionMerge": "f6b422be5465d5a93d0b8fcf4c9507c205663072"
   },
   "evidence": ".engineering/evidence/CORE-WO-M04-001.json",
-  "executionStatus": "NOT_AUTHORIZED_FINAL_FREEZE_REVIEW_PENDING",
+  "executionStatus": "ARMED_NOT_EFFECTIVE_UNTIL_CANONICAL_MAIN_PROMOTION",
   "admissionIncrement": "CORE-M04-ADMIT-001",
   "admissionBranch": "planning/m04-execution-admission",
   "planningCandidate": {
     "increment": "CORE-M04-FREEZE-001",
     "branch": "planning/m04-final-freeze-round5",
     "planningBase": "0f448c708aafd8f5b4cb6303effdabd7e028bc6f"
+  },
+  "admissionCandidate": {
+    "status": "PENDING_REVIEW",
+    "reviewIssue": null,
+    "pullRequest": null,
+    "reviewedHead": null,
+    "workflowRun": null,
+    "promotionMerge": null
   }
 }
