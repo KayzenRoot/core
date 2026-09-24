@@ -14,7 +14,7 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 
 ## IN PROGRESS
 - M03 canonical closeout was promoted through PR #74 as merge `2fdf595cc6b450d1be0038eb67d0a5160035d9bd` after M03-REVIEW-010 / Issue #75.
-- M04 Rounds 1-3 are promoted canonical planning truth. Round 4 implementation-addressable freeze design is the next legal increment. M04 implementation remains unauthorized.
+- M04 Rounds 1-3 are promoted. Round 4 implementation-addressable candidate freezes the crate/file/dependency map, concrete V1 service/store/reference contracts, property/fuzz/calibration plan and required technology disposition. M04 implementation remains unauthorized.
 - M05-M24 remain discovery-only until their planning freezes.
 
 ## COMPLETED
@@ -39,7 +39,7 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - CORE-GOV-002-C01 GitHub hardening independently reviewed (Review 001 / Issue #57) and promoted through PR #56; active ruleset `CORE main protection` id `23769853` protects `main` with no bypass actors and the seven-context strict CI gate.
 
 ## PENDING
-- Continue M04 Round 4 implementation-addressable freeze design from the promoted Rounds 1-3 baseline.
+- Independently review/promote M04 Round 4 implementation-addressable design; then continue Round 5 final planning freeze.
 - Deep-plan M04 through M24 in dependency order.
 - Freeze each module Requirements/Architecture/DoD/Work Order before implementation authorization.
 - Live local HIVE bootstrap evidence against current main.
@@ -49,7 +49,7 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - M04-M24 implementation remains gated by their own planning freezes and admissions.
 
 ## NEXT STEP
-Continue M04 Round 4 implementation-addressable freeze design from canonical Rounds 1-3. M04 implementation remains unauthorized.
+Independently review/promote CORE-M04-PLAN-004 Round 4; if approved, continue M04 Round 5 final planning freeze. M04 implementation remains unauthorized.
 
 ## EVIDENCE
 - M04 Round 1 Review 001 / Issue #77 — APPROVED; PR #76; exact head `bd9b14b3608b7f4adc19deee0acd87a03aaac478`; workflow `35915073250`; promotion merge `8a82f6bab1074aff1f692be73969364c00d1795e`.
