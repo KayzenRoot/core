@@ -1,6 +1,6 @@
 # M04 — Run / Attempt / Step Engine
 
-Status: `ROUND_4_IMPLEMENTATION_ADDRESSABLE_CANDIDATE`
+Status: `ROUNDS_1_4_PROMOTED_ROUND_5_FINAL_FREEZE_GATE`
 Implementation: `UNAUTHORIZED`
 Assurance: `ELEVATED`
 
@@ -555,4 +555,4 @@ Round 4 is not the final planning freeze. A separate Round 5 must compile the fi
 
 ## STOP CONDITION
 
-Round 4 is a planning candidate only. Do not implement M04 product code, create the execution Work Order, select a persistence backend or authorize execution. Stop for independent exact-head review and promotion before Round 5 final planning freeze.
+Rounds 1-4 are promoted canonical planning truth. M04 implementation remains unauthorized. The next legal increment is Round 5 final planning freeze, which may compile the execution packet but MUST NOT activate implementation authority; a separate execution-admission delta remains required.
