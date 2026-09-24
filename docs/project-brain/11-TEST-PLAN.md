@@ -268,3 +268,38 @@ At minimum, bounded generated/fuzz cases must exercise transition envelopes, typ
 ### M04 future calibration protocol
 
 Planning freezes dimensions, not guessed numeric values. The implementation Work Order must run deterministic representative/adversarial fixtures on supported platforms, record environment/toolchain/commands and measured results, choose finite positive defaults, document rejected candidates and rerun exact-head validation after the narrowly authorized numeric Calibration Delta. Unsupported scales are reported, not extrapolated.
+
+
+## M04 Round 4 implementation-addressable validation plan
+
+Planning review must verify the frozen crate/file/dependency map against the current workspace graph and confirm that no new production dependency or backend has been silently admitted.
+
+Future implementation must provide exact-head evidence for:
+- compilation/public API conformance of all frozen V1 types and service signatures;
+- exhaustive TLG transition table and parent/terminal invariants;
+- prepared-commit purity independent of store implementation;
+- pending operation receipts cannot become authority before a matching durable commit receipt is successfully finalized;
+- finalization rejects RunId/operation-fingerprint/generation/event-sequence/journal-root mismatch;
+- store-port conformance with adversarial partial-write/conflict fakes;
+- same-generation two-writer races with at most one successful durable commit;
+- exact idempotency duplicate/conflict behavior;
+- cancellation precedence under adversarial operation orderings;
+- replay/projection equivalence across generated histories;
+- root-chain corruption, reorder, truncation, substitution and cross-lineage rejection;
+- BRC/ICF stale/UNKNOWN/mismatch fixtures;
+- canonical binary-frame golden vectors and domain-separation vectors on Windows and Ubuntu;
+- deterministic/caller-supplied ID behavior with no random/clock input;
+- snapshot-boundary verification and journal rebuild equivalence;
+- reference-adapter evidence shape/lineage/resource validation with secret canaries;
+- at-limit/cap+1 behavior for every M04ResourceLimitsV1 dimension;
+- static dependency/no-hidden-I/O/zero-LLM proof;
+- six named bounded fuzz campaigns;
+- supply-chain/advisory/license/SBOM gates;
+- cross-platform exact-head CI;
+- complete EV-M04-001..023 traceability and final independent review.
+
+### M04 benchmark/calibration matrix
+
+The frozen `m04_run_state` harness scales attempts/run, steps/attempt, events/run, same-generation concurrent preparation, event payload bytes, replay length, snapshot interval/rebuild, reference cardinality/bytes and continuation cursor bytes. Each supported scenario uses deterministic synthetic fixtures, one warm-up and at least five measured iterations per platform. Reports include exact source SHA, OS, Rust toolchain, CPU, fixture generator/version, command and median/min/max.
+
+Candidate finite limits and cap+1 are exercised explicitly. Unsupported scales are reported as unsupported. Planning documents contain no claimed latency/memory/default values before these measurements exist.

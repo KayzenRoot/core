@@ -634,3 +634,103 @@ M04 may depend only on admitted lower-level M01/M03/shared primitive contracts a
 The candidate M04 Acceptance Evidence Graph EV-M04-001..023 is blocking and covers public contracts, legal/illegal transitions, generation/CAS races, idempotency, cancellation races, journal replay/corruption, BRC/ICF, typed-identity substitution, canonicalization vectors, resource boundaries, snapshot equivalence, reference validation, hidden-I/O and zero-LLM proof, bounded fuzzing, calibration, supply-chain/SBOM, Windows/Ubuntu exact-head CI and independent exact-head review.
 
 This is a planning candidate only. M04 product implementation remains unauthorized until the final planning freeze and a separate governed execution-admission delta are independently reviewed and promoted.
+
+
+## M04 Round 4 implementation-addressable architecture candidate
+
+### Crate boundary
+
+M04 V0.0 is implemented as a single `core-run-state` crate. The crate contains only deterministic state semantics and versioned contracts. It does not own a database, runtime scheduler, executor, tool runner, Git client, HIVE client or external evidence service.
+
+Direct dependency direction:
+
+~~~text
+core-contracts <- core-identity <- core-work-order <- core-run-state
+                                      ^              |
+                                      |              +--> later M05+ consumers
+caller-owned M01/M02/GEF/HIVE adapters              |
+                                      +--------------+
+~~~
+
+The direct M04 dependency set is `core-work-order`, `core-identity`, `serde` and `thiserror`. This keeps M03 handoff contracts available while avoiding direct Tokio/core-runtime/core-workspace or I/O-capable service dependencies.
+
+### Pure semantic engine and host persistence
+
+M04 uses a two-phase semantic/persistence model:
+
+~~~text
+host loads exact durable Run state
+        |
+        v
+pure core-run-state prepare_* operation
+  validate request + expected generation
+  apply TLG/CER/idempotency/cancellation/BRC/ICF laws
+  build canonical event + next projection + roots
+  carry operation-specific receipt as PENDING result
+        |
+        v
+PreparedCommitV1<R>
+        |
+        v
+host-owned M04StateStoreV1.compare_and_commit(...)
+  compare RunId + generation + prior root + idempotency state
+  atomically persist event/projection/root/new generation
+        |
+        +--> DurableCommitReceiptV1
+        +--> typed storage/generation conflict
+        |
+        v
+pure finalize_commit(prepared, durable)
+  exact-match durable proof
+        |
+        +--> authoritative Round 3 operation receipt R
+~~~
+
+The pure service never invokes the store. A receipt inside `PreparedCommitV1<R>` is explicitly pending and non-authoritative. After the host persists the exact prepared commit, pure `finalize_commit` validates the durable store receipt and only then releases the operation-specific Round 3 receipt as committed authority. This preserves deterministic in-memory testing and prevents persistence adapters from becoming hidden semantic authority.
+
+### Store port contract
+
+`M04StateStoreV1` is a host-facing port whose required capabilities are:
+- load an exact Run durable record/snapshot boundary by RunId;
+- atomically compare expected Run generation and prior journal root;
+- atomically enforce the scoped idempotency record;
+- persist exactly one prepared semantic commit or no semantic fragment;
+- return a durable receipt containing committed generation, event sequence and journal root.
+
+The port does not choose transitions, retries, cancellation behavior, identities, evidence truth or recovery policy. No concrete backend is selected in Round 4.
+
+### Reference port contract
+
+External outcome/evidence resolution is caller-owned. A reference adapter may validate or resolve an immutable locator and produce `ExternalReferenceEvidenceV1`. The pure `attach_reference` operation validates its version, lineage, fingerprint metadata and resource bounds before preparing `REFERENCE_ATTACHED`.
+
+M04 never fetches artifact bodies and never imports M14-M17 verdict logic.
+
+### Canonical framing
+
+M04 semantic hashing does not duplicate the SHA-256 primitive already exposed by core-identity. Instead, M04 constructs a versioned binary frame:
+- fixed domain/version prefix;
+- typed field tag;
+- fixed-width big-endian integer encoding;
+- explicit presence marker for optional values;
+- length prefix followed by bytes for variable-width strings/bytes;
+- sorted canonical-key order for unordered collections.
+
+The completed frame is passed to `core_identity::fingerprint_bytes`. Separate domain prefixes are required for IDs, requests, events, journal links, BRC, ICF, snapshots and prepared commits.
+
+### File map
+
+The V0.0 product crate is frozen to the file map in the canonical M04 module plan, including contracts, identity, canonical framing, transition laws, journal, projection, idempotency, cancellation, boundary/continuation, references, budgets, errors, store contract and pure services. Test, benchmark and fuzz surfaces are likewise named before implementation.
+
+### Runtime cancellation seam
+
+M01 cancellation/shutdown enters M04 as a bounded caller-owned value DTO containing only the execution-state facts required by the frozen cancellation law. `core-run-state` does not directly depend on the async runtime and does not subscribe to runtime events itself.
+
+### Technology disposition
+
+RAS, TLG, CER, RJR, BRC, ICF and ASF are required internal semantic mechanisms. They are implemented as normal Rust modules/types rather than independent services, plugins or feature-gated backends.
+
+Persistent backend choice, destructive event retention, distributed state replication/consensus, persistent snapshot caching and hidden runtime autotuning remain deferred.
+
+### Final-freeze boundary
+
+Round 4 is not execution-ready. Round 5 must compile the implementation Work Order, pending Context Lock, evidence skeleton, construction packets, exact EV-M04 mapping, Resource Calibration Gate and executor handoff. A separate later admission delta must bind canonical main before any product implementation can begin.

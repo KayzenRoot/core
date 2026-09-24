@@ -774,3 +774,36 @@ Status: `ACTIVE`
 ## CORE-D-185 - M04 Rounds 1-3 are promoted; Round 4 is the next legal planning increment
 **Decision:** M04-REVIEW-003 / Issue #83 APPROVED CORE-M04-PLAN-003 at exact head `0a777b038e5436b72162ccd2185020d40128d809`; workflow `35940552631` completed all 10 hosted jobs SUCCESS and PR #80 was squash-promoted as merge `3b1fc86ee401153f109ee04d7b797b544b06a741`. Together with the prior Round 1 and Round 2 promotions, Rounds 1-3 are canonical planning truth. The next legal increment is Round 4 implementation-addressable freeze design. M04 product implementation remains unauthorized until a final planning freeze and a separate governed execution-admission delta are independently reviewed and promoted.
 **State:** ACCEPTED
+
+
+## CORE-D-186 - M04 V0.0 is one core-run-state crate
+**Decision:** M04 V0.0 uses one focused `core-run-state` crate with explicit contracts, identity/canonical framing, transitions, journal/projection, idempotency, cancellation, boundary/continuation, reference, budget, error, store-port and service modules. A split requires later governed evidence.
+**State:** PROPOSED; M04 Round 4 candidate.
+
+## CORE-D-187 - M04 direct dependencies are minimal and synchronous
+**Decision:** direct production dependencies are `core-work-order`, `core-identity`, `serde` and `thiserror`. No Tokio/core-runtime/core-workspace, database, process/network, Git/HIVE/GitHub, graph, cache or persistence dependency is admitted. Runtime cancellation crosses a value-only caller seam.
+**State:** PROPOSED; M04 Round 4 candidate.
+
+## CORE-D-188 - M04 reuses core-identity digest through versioned domain framing
+**Decision:** M04 uses its own deterministic typed frame to satisfy field-tag/length/domain requirements, then delegates cryptographic digesting to `core_identity::fingerprint_bytes`; it does not introduce a second hash implementation.
+**State:** PROPOSED; M04 Round 4 candidate.
+
+## CORE-D-189 - Pure M04 services prepare commits; hosts persist them
+**Decision:** M04 semantic prepare functions return `PreparedCommitV1<R>` carrying the exact operation-specific Round 3 receipt as a pending, non-authoritative result and never perform storage I/O. Host orchestration owns load and atomic compare-and-commit through `M04StateStoreV1`; pure `finalize_commit` verifies the matching durable store receipt before releasing `R` as committed authority. Adapters cannot recalculate semantic rules.
+**State:** PROPOSED; M04 Round 4 candidate.
+
+## CORE-D-190 - External reference resolution remains caller-owned
+**Decision:** external artifact resolution/validation adapters produce bounded `ExternalReferenceEvidenceV1` values. M04 validates shape, lineage and resource bounds but never fetches bodies or invokes later verification modules.
+**State:** PROPOSED; M04 Round 4 candidate.
+
+## CORE-D-191 - M04 property/fuzz/calibration surfaces are frozen before implementation
+**Decision:** the Round 4 property law matrix, six named fuzz targets and deterministic cross-platform `m04_run_state` benchmark/calibration family are required implementation evidence. Numeric defaults remain calibration outputs, not planning guesses.
+**State:** PROPOSED; M04 Round 4 candidate.
+
+## CORE-D-192 - RAS/TLG/CER/RJR/BRC/ICF/ASF are required V0.0 semantics
+**Decision:** all seven mechanisms are required semantic capabilities implemented inside `core-run-state`; they are not separate deployable services or optional feature flags.
+**State:** PROPOSED; M04 Round 4 candidate.
+
+## CORE-D-193 - M04 needs a separate Round 5 final planning freeze
+**Decision:** Round 4 freezes implementation-addressable design but does not compile the execution packet. Round 5 must freeze the Work Order, pending Context Lock, Evidence Bundle, construction packets, exact acceptance mapping, Calibration Gate and executor handoff. Product implementation still requires a later separate execution-admission promotion.
+**State:** PROPOSED; M04 Round 4 candidate.
