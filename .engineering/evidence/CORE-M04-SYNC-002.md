@@ -2,13 +2,16 @@
 
 Status: `REVIEW_CANDIDATE`  
 Type: governance/project-state synchronization only  
-Canonical base: `63af0f735dd0419fb02f9879efed340ddb07da30`
+Canonical base: `b34252891d3e0cd72183205e13cf46a372d09ba3`
 
 ## Purpose
 
 Synchronize canonical and derived project state immediately after promotion of M04 Round 4 so Round 5 starts from an authoritative baseline that does not still describe Round 4 as pending review.
 
 ## Promotion evidence
+
+Canonical base also contains the separately reviewed test-only CI reliability correction `CORE-CI-REL-001` from PR #89 / Issue #90, promoted as `b34252891d3e0cd72183205e13cf46a372d09ba3`. That correction changes no M04 planning semantics or authority.
+
 
 - Review: M04-REVIEW-005 / Issue #87 — APPROVED.
 - PR: #86.
