@@ -1,6 +1,6 @@
 # CORE-WO-M04-001 — M04 Run / Attempt / Step Engine
 
-Status: ACTIVE_AUTHORIZATION_ARMED / EFFECTIVE_ONLY_ON_CANONICAL_MAIN_PROMOTION
+Status: ACTIVE / IMPLEMENTATION_AUTHORIZED
 Increment: CORE-M04-FREEZE-001
 Module: M04 — Run / Attempt / Step Engine
 Repository: KayzenRoot/core
@@ -9,8 +9,8 @@ Planning branch: planning/m04-final-freeze-round5
 Future execution branch: feat/m04-run-state
 Risk / assurance: ELEVATED
 Execution model: one comprehensive implementation Work Order, eight ordered construction packets
-Product implementation authorization: ARMED — effective only after CORE-M04-ADMIT-001 is independently reviewed and promoted to canonical origin/main
-Context Lock: .engineering/context-locks/CORE-WO-M04-001.json — ACTIVE_ON_CANONICAL_MAIN_PROMOTION
+Product implementation authorization: TRUE — CORE-M04-ADMIT-001 was independently reviewed and promoted to canonical origin/main
+Context Lock: .engineering/context-locks/CORE-WO-M04-001.json — ACTIVE
 Evidence skeleton: .engineering/evidence/CORE-WO-M04-001.json
 Executor handoff: docs/work-orders/CODEX-HANDOFF-M04.md
 
@@ -345,3 +345,12 @@ Authorization in this record is canonical-main gated. It becomes effective only 
 After admission promotion, the executor MUST create `feat/m04-run-state` from post-admission canonical `origin/main`, prove `f6b422be5465d5a93d0b8fcf4c9507c205663072` is an ancestor, prove intervening commits contain only governed admission/state-synchronization metadata, then repeat Git/HIVE/governance preflight and validate the exact active Context Lock, Work Order blob and nine canonical source fingerprints before Pack A.
 
 This admission changes execution state only. All frozen architecture, scope, dependencies, public contracts, Packs A-H, AC-M04-001..023, EV-M04-001..023, Resource Calibration Gate, security invariants, file topology, M03/M04 ownership and STOP semantics remain unchanged.
+
+
+## Admission promotion completion
+
+CORE-M04-ADMIT-001 was APPROVED by M04-REVIEW-008 / Issue #95 at exact head `f29dcb6b327c5fdceda31fe306e52d506c1eae72`, workflow `35992752646`, and promoted through PR #94 as merge `bb6f631284361fae29479c66f62ca88bebf3d79c`.
+
+Execution is now authorized only for the frozen M04 scope and only under the exact active Context Lock on canonical main. The execution branch must be created from the post-admission canonical main after CORE-M04-SYNC-003 is itself reviewed/promoted. The final-freeze authorized base remains `f6b422be5465d5a93d0b8fcf4c9507c205663072` and must remain an ancestor of execution start.
+
+No planning, architecture, contract, dependency, acceptance, calibration, security or backend decision is changed by this state transition.
