@@ -1,6 +1,6 @@
 # M04 — Run / Attempt / Step Engine
 
-Status: `ROUND_2_TRANSITION_SEMANTICS_CANDIDATE`
+Status: `ROUND_3_CONTRACT_EVIDENCE_CANDIDATE`
 Implementation: `UNAUTHORIZED`
 Assurance: `ELEVATED`
 
@@ -207,18 +207,128 @@ Derived: current projected state, counts, completion summaries, latest-child poi
 
 Round 2 explicitly closes duplicate delivery, stale/future CAS, event reorder/truncation/substitution, concurrent attempt creation, cancellation/admission races, stale M03 authority, continuation drift, split publication, unbounded history and cross-lineage identity substitution through TLG/CER/RJR/BRC/ICF/ASF invariants. Secret-redaction and malicious external payload validation remain mandatory evidence concerns.
 
-## Round 3 questions
+## Round 3 frozen contract and evidence design
 
-Round 3 must freeze:
-- public contract/type surface and error taxonomy;
-- canonical serialization/domain separators and fingerprint inputs;
-- exact event kinds and reason-code registry;
-- projection/snapshot compaction rules without loss of journal authority;
-- external outcome/evidence attachment contract;
-- bounded configuration schema and calibration method;
-- cross-module adapter seams and dependency direction;
-- acceptance criteria/evidence graph for the eventual planning freeze.
+### Public V1 contract surface
+
+The implementation freeze must expose versioned, deterministic contracts equivalent to:
+- `RunAdmissionRequestV1 -> Result<RunAdmissionReceiptV1, M04ErrorV1>`
+- `CreateAttemptRequestV1 -> Result<AttemptReceiptV1, M04ErrorV1>`
+- `DeclareStepRequestV1 -> Result<StepReceiptV1, M04ErrorV1>`
+- `TransitionRequestV1 -> Result<TransitionReceiptV1, M04ErrorV1>`
+- `CancelRunRequestV1 -> Result<CancellationReceiptV1, M04ErrorV1>`
+- `CreateContinuationRequestV1 -> Result<ContinuationReceiptV1, M04ErrorV1>`
+- `ReplayRequestV1 -> Result<ReplayProjectionV1, M04ErrorV1>`
+- `AttachReferenceRequestV1 -> Result<ReferenceReceiptV1, M04ErrorV1>`
+
+Requests carry explicit expected generation and idempotency data where they mutate semantic state. Receipts identify the committed generation/event/root. No API accepts ambient repository, process, network or clock authority.
+
+### Typed identity and envelope surface
+
+V1 requires domain-separated `RunId`, `AttemptId`, `StepId`, `EventId`, `IdempotencyKey`, `JournalRoot`, `CanonicalFingerprint`, `ExecutionEpoch` and `RunGeneration`. Raw strings cannot substitute across domains.
+
+All serialized V1 envelopes include schema version and kind. Unknown versions/kinds fail typed and never downgrade silently.
+
+### Error taxonomy
+
+Stable top-level classes:
+- `INVALID_INPUT`
+- `INVALID_TRANSITION`
+- `LINEAGE_MISMATCH`
+- `GENERATION_CONFLICT`
+- `IDEMPOTENCY_CONFLICT`
+- `STALE_AUTHORITY`
+- `STALE_CONTINUATION`
+- `REPLAY_INTEGRITY_FAILURE`
+- `RESOURCE_LIMIT_EXCEEDED`
+- `CANCELLED`
+- `BLOCKED`
+- `UNSUPPORTED_VERSION`
+- `EXTERNAL_REFERENCE_REJECTED`
+- `STORAGE_CONFLICT`
+- `INTERNAL_INVARIANT_VIOLATION`
+
+Errors are machine-readable, carry bounded diagnostics and retryability classification, but retryability is a fact, not M04 retry policy.
+
+### Canonical serialization and fingerprints
+
+Semantic fingerprints use a versioned canonical byte projection with explicit field order, length-prefixing for variable-width values, normalized enum discriminants, no map iteration order, no locale formatting, no diagnostic timestamps and no secret-bearing fields.
+
+Domain separators are distinct for IDs, requests, events, journal chaining, BRC and ICF. Fingerprint inputs are schema-bound. Cross-domain reuse of identical bytes must produce different semantic fingerprints.
+
+Hash algorithm selection remains dependency-admission work for the final freeze, but V1 requires a collision-resistant cryptographic digest with deterministic cross-platform vectors.
+
+### Exact event-kind registry
+
+V1 event kinds are closed:
+`RUN_CREATED`, `RUN_ADMITTED`, `RUN_TRANSITIONED`, `RUN_CANCELLATION_ACCEPTED`,
+`ATTEMPT_CREATED`, `ATTEMPT_TRANSITIONED`,
+`STEP_DECLARED`, `STEP_TRANSITIONED`,
+`CONTINUATION_CREATED`, `REFERENCE_ATTACHED`.
+
+No generic arbitrary event kind is accepted. Each kind has a schema-specific canonical payload and legal parent/transition preconditions.
+
+### Reason-code registry
+
+Terminal/block/skip/interruption records use versioned reason-code namespaces. V1 reserves domain classes for caller cancellation, runtime shutdown, stale authority, invalid lineage, resource cap, external reference rejection, execution outcome, explicit authorized skip and invariant protection. Free-form diagnostics may supplement but never replace a machine reason.
+
+### Projection, snapshots and compaction
+
+The canonical journal remains authoritative. A snapshot is a derived acceleration artifact binding RunId, source generation, last event sequence and journal root plus a canonical projection fingerprint.
+
+Loading a snapshot requires verification against the journal boundary. A snapshot cannot authorize state absent from the journal. Compaction may discard only independently reproducible derived/cache material; V1 does not permit destructive deletion of canonical events needed to prove the active bounded Run history. Archive/retention policy belongs outside M04.
+
+### External outcome/evidence references
+
+M04 stores only versioned bounded references and semantic attachment facts, not the external artifact body. Each reference declares owner module/domain, reference kind, immutable locator/identity, content fingerprint when available, producing Run/Attempt/Step lineage and schema version. M04 validates shape, lineage and bounds, not the truth of M14-M17 verification outcomes.
+
+### Bounded configuration and calibration
+
+`M04ResourceLimitsV1` contains finite positive caps for attempts/run, steps/attempt, events/run, event canonical bytes, diagnostic bytes, cursor bytes, reference count/bytes and replay depth. Zero/unbounded sentinels are forbidden for production admission.
+
+Exact numeric defaults are not fabricated during planning. The eventual Work Order must include a Resource Calibration Gate producing evidence-backed finite defaults under representative and adversarial fixtures. Any calibration delta may change numeric limits only, never semantics/contracts/authority/dependencies.
+
+### Adapter seams and dependency direction
+
+M04 core depends only on admitted lower-level contracts required from M01/M03 and shared primitive utilities explicitly admitted at final freeze. M04 never calls M03 repository/HIVE/GitHub resolution itself; callers/adapters supply validated BRC inputs.
+
+Storage is an external `M04StateStoreV1`-equivalent port implementing atomic ASF compare-and-set commit. No database/backend dependency is frozen here. External evidence/outcome integration is a reference-validation port, never a dependency from M14-M17 back into M04 core.
+
+Dependency direction remains acyclic: M01/M03 -> M04 -> later consumers. Later modules may consume M04 contracts but M04 cannot import their policy/execution/verification implementations.
+
+### Acceptance Evidence Graph candidate
+
+Blocking evidence nodes for final M04 acceptance:
+- EV-M04-001 public contract compile/API conformance;
+- EV-M04-002 exhaustive legal transition matrix;
+- EV-M04-003 illegal transition/property rejection;
+- EV-M04-004 generation/CAS concurrency races;
+- EV-M04-005 idempotency replay/conflict laws;
+- EV-M04-006 cancellation precedence races;
+- EV-M04-007 journal replay equivalence;
+- EV-M04-008 reorder/truncation/substitution/root corruption rejection;
+- EV-M04-009 BRC stale/substitution boundary tests;
+- EV-M04-010 ICF continuation/epoch tests;
+- EV-M04-011 typed identity cross-domain substitution tests;
+- EV-M04-012 canonicalization/fingerprint golden vectors across Windows/Ubuntu;
+- EV-M04-013 resource cap and cap+1 atomic rejection;
+- EV-M04-014 snapshot verification/rebuild equivalence;
+- EV-M04-015 external-reference bounds/lineage validation;
+- EV-M04-016 no hidden filesystem/network/process/database/HIVE/GitHub I/O;
+- EV-M04-017 zero-LLM core proof;
+- EV-M04-018 fuzz campaigns for transition/event/replay/identity/cursor/reference surfaces;
+- EV-M04-019 finite calibration report;
+- EV-M04-020 dependency/supply-chain/SBOM evidence;
+- EV-M04-021 exact-head Windows CI;
+- EV-M04-022 exact-head Ubuntu CI;
+- EV-M04-023 independent exact-head review with zero unresolved HIGH/CRITICAL.
+
+All nodes are blocking unless a later frozen Work Order explicitly proves a node non-applicable without weakening a frozen requirement.
+
+### Round 4 questions
+
+Round 4 must freeze the implementation-addressable crate/file map, exact dependency admission, concrete Rust signatures/types, store/reference traits, property/fuzz target inventory, benchmark/calibration protocol, production DoD and disposition of all candidate technologies. It must also decide whether Round 4 is sufficient for final planning freeze or a separate final-freeze round is required.
 
 ## STOP CONDITION
 
-Round 2 is planning only. Do not implement M04 product code, create an execution Work Order, select a persistence backend, or authorize execution. Stop for independent exact-head review and promotion before Round 3.
+Round 3 is planning only. Do not implement M04 product code, create an execution Work Order, select a persistence backend, or authorize execution. Stop for independent exact-head review and promotion before Round 4.

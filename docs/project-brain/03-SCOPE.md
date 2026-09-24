@@ -177,3 +177,46 @@ To be classified during governed discovery. No future capability is admitted mer
 - Run scheduler/state;
 - tool/source execution;
 - final evidence/review engines.
+
+
+## M04 Rounds 1-3 scope classification
+
+### NECESSARY
+- deterministic Run / Attempt / Step lifecycle state and typed lineage;
+- M03 READY/BRC revalidation at Run and continuation boundaries;
+- closed transition tables with immutable terminal history;
+- Run-generation CAS serialization and atomic state-fence publication;
+- fingerprint-bound idempotency and monotonic cancellation;
+- append-only canonical event journal, replay validation and derived snapshots;
+- ICF continuation records without recovery-policy ownership;
+- bounded external outcome/evidence references;
+- finite resource dimensions and evidence-backed calibration gate;
+- explicit versioned public request/receipt/result contracts;
+- blocking EV-M04-001..023 acceptance evidence graph.
+
+### IMPORTANT
+- compact deterministic projection/snapshot acceleration;
+- backend-neutral storage/reference ports;
+- bounded safe diagnostics and machine reason codes;
+- cross-platform canonicalization vectors and replay fixtures.
+
+### FUTURE / CONDITIONAL
+- persistent storage backend selection/optimization;
+- archive/retention/compaction policy beyond active proof history;
+- distributed multi-writer state stores or replication;
+- performance accelerators that preserve ASF/RJR equivalence.
+
+### OUT OF SCOPE FOR M04
+- host/provider execution;
+- capability negotiation/leases;
+- agent/model selection or execution policy;
+- command/tool execution and source mutation;
+- recovery strategy ownership;
+- quota/cost policy;
+- Git/GitHub delivery/release actions;
+- security-policy engines;
+- HIVE federation intelligence;
+- verification/evidence/review verdict ownership;
+- telemetry transport/observability spine.
+
+M04 implementation remains unauthorized until final planning freeze and separate governed execution admission.

@@ -235,3 +235,36 @@ Production acceptance requires one exact final head with Windows and Ubuntu CI, 
 ## M03 Round 5 final-freeze promoted / execution-admission validation status
 
 CORE-M03-FREEZE-001 froze the future implementation Work Order, Context Lock form, Evidence Bundle skeleton, executor handoff, eight construction packets, rule-only Calibration Gate, and a 23-criterion machine-readable AEG. Review 006 / Issue #67 approved exact head `326eea936989ad2155ae6d1fb3fc965b8d1d25b9`; PR #66 was promoted as merge `ac90b1f48c5551e65ecadace95c59f7f0647062f` with workflow `35813591063` green in all seven required contexts. All implementation Evidence Requirements remain PENDING_IMPLEMENTATION. CORE-M03-ADMIT-001 must validate exact source/Work Order/lock fingerprints, canonical-main-only authorization, M03-only scope and unchanged architecture/dependency/acceptance/calibration/security semantics before promotion. The admission delta itself claims no product implementation success.
+
+
+## M04 Rounds 1-3 planning and future implementation validation
+
+Round 3 planning review must verify consistency among canonical Scope, Requirements, Architecture, Security, DoD, module plan, decisions and checkpoint/GEF state. Planning evidence does not claim product implementation tests have run.
+
+Future implementation evidence must map the blocking EV-M04-001..023 graph to exact-head artifacts. Required proof includes:
+- public V1 contract/API conformance and unsupported version/kind rejection;
+- exhaustive legal transition matrices and illegal-transition properties;
+- generation/CAS stale/future/conflicting writer races;
+- fingerprint-bound idempotency exact replay and conflicting reuse;
+- cancellation versus child-admission/activation race ordering;
+- journal projection/replay equivalence and reorder/truncation/substitution/root-corruption rejection;
+- BRC stale/substitution and ICF continuation/epoch fixtures;
+- typed identity cross-domain substitution rejection;
+- canonicalization/fingerprint golden vectors on Windows and Ubuntu;
+- resource at-limit and cap+1 atomic rejection for every finite dimension;
+- snapshot verification/rebuild equivalence without journal authority loss;
+- external reference lineage/shape/bounds validation;
+- static/runtime no-hidden-I/O and zero-LLM proof;
+- bounded fuzz targets for transition, event, replay, identity, cursor and external-reference surfaces;
+- reproducible finite resource calibration with selected/rejected candidates;
+- advisory/license/supply-chain/SBOM evidence;
+- exact-head Windows and Ubuntu CI;
+- independent exact-head review with zero unresolved HIGH/CRITICAL findings.
+
+### M04 future fuzz/property surfaces
+
+At minimum, bounded generated/fuzz cases must exercise transition envelopes, typed identities, event sequencing/root chaining, CAS/idempotency, BRC/ICF payloads, snapshot boundaries and external-reference schemas. Fuzzing must remain in-memory, resource bounded and free of network/process/repository side effects.
+
+### M04 future calibration protocol
+
+Planning freezes dimensions, not guessed numeric values. The implementation Work Order must run deterministic representative/adversarial fixtures on supported platforms, record environment/toolchain/commands and measured results, choose finite positive defaults, document rejected candidates and rerun exact-head validation after the narrowly authorized numeric Calibration Delta. Unsupported scales are reported, not extrapolated.

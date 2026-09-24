@@ -89,5 +89,5 @@ The order may be refined by dependency evidence, but a later module must not sil
 - M01 Core Runtime & Lifecycle — COMPLETE / PROMOTED.
 - M02 Project / Workspace Adapter — COMPLETE / PROMOTED.
 - M03 Work Order Engine — COMPLETE / PROMOTED.
-- M04 Run / Attempt / Step Engine — ROUND 1 DISCOVERY CANDIDATE / IMPLEMENTATION UNAUTHORIZED.
+- M04 Run / Attempt / Step Engine — ROUNDS 1-2 PROMOTED / ROUND 3 CONTRACT-EVIDENCE CANDIDATE / IMPLEMENTATION UNAUTHORIZED.
 - M05-M24 — discovery-only until their planning freezes.

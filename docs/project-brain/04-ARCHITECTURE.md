@@ -555,3 +555,82 @@ Cargo metadata at the admitted base shows ten workspace crates and no M03 crate.
 The frozen M03 crate directly uses core-identity for canonical bytes/fingerprints and existing workspace serde, serde_json and thiserror dependencies for V1 contracts, bounded JSON and typed errors. It does not directly add core-contracts, core-config, core-workspace, sha2, Tokio, Git/network/process APIs, HIVE/GitHub SDKs, databases, graph libraries or caches. core-identity's observed transitive closure is core-contracts, serde, serde_json, sha2 and thiserror, with no process/network/database authority.
 
 Dependency direction remains acyclic: existing M01/M02 crates are unchanged; core-work-order depends downward only on core-identity and serialization/error primitives; the outer host/adapters translate M02 evidence; future M04 consumes the immutable M03 handoff. Any direct M02 type coupling or additional dependency requires a separate architecture/dependency admission and fresh exact-head review.
+
+
+## M04 Rounds 1-3 execution-state architecture candidate
+
+M04 is the deterministic execution-state layer between the immutable M03 admitted handoff and later execution/policy/verification modules. It owns orchestration state, not host side effects.
+
+~~~text
+M03 AdmittedWorkOrder + READY admission evidence
+        | exact BRC revalidation at Run boundary
+        v
++---------------- core M04 state semantics ----------------+
+| Run -> Attempt -> Step typed lineage                     |
+| closed transition law graph (TLG)                       |
+| Run generation / CAS serialization fence (CER)          |
+| fingerprint-bound idempotency                            |
+| monotonic cancellation                                   |
+| append-only canonical journal + replay root (RJR)        |
+| interruption continuation frame (ICF)                    |
+| bounded references to later-module outcomes/evidence     |
++----------------------------------------------------------+
+        | atomic state-fence commit port (ASF)
+        v
+external M04StateStoreV1 adapter
+
+later M05-M24 consumers read/attach bounded versioned references;
+M04 does not import their execution, policy or verification implementations.
+~~~
+
+### Authority and lifecycle
+
+A Run can be admitted only after exact revalidation of the M03 READY handoff, WorkOrder identity/revision/fingerprint, workspace basis, Context Lock and governance/source generations. UNKNOWN or changed authority is STALE/BLOCKED.
+
+Run, Attempt and Step identities are typed and immutable. Initial states are durable. Attempts and Steps are append-only children and their ordinals are never reused. Terminal states are historical facts and cannot reactivate. Retry/recovery policy remains outside M04; continuation after interruption creates a new Attempt/execution epoch.
+
+### Concurrency and atomic publication
+
+RunGeneration is the semantic serialization fence. Every mutating request supplies the expected generation. A successful semantic commit advances generation exactly once. State projection, canonical event append, journal-root update, idempotency record and resulting generation become visible atomically through the ASF storage port. Stale/future generation fails typed with no partial mutation.
+
+No host wall clock establishes semantic order. Stable order is derived from Run generation, parent ordinals and event sequence.
+
+### Idempotency and cancellation
+
+Idempotency keys are scoped by Run and operation domain and are bound to a canonical request fingerprint. An exact duplicate returns the recorded result without a second event; conflicting key reuse fails closed.
+
+Cancellation is monotonic. Once durably accepted, later child admission/activation is rejected except explicit bounded closeout. Earlier committed outcomes remain immutable history.
+
+### Journal, replay and snapshots
+
+The bounded canonical event journal is execution-state authority. Events are schema/version/domain separated and bind prior/result generations and prior/result journal roots. Replay requires a contiguous lineage-consistent sequence and fails closed on reorder, truncation, substitution or corruption.
+
+Snapshots are derived acceleration artifacts bound to a verified journal boundary. They may rebuild/provide projection speed but cannot authorize state absent from the journal and cannot destructively replace active proof history.
+
+### Public boundary
+
+V1 exposes explicit request/receipt/result contracts for Run admission, Attempt creation, Step declaration, transitions, cancellation, continuation, replay and bounded reference attachment. Durable envelopes use closed schema/kind registries, typed IDs and machine-readable bounded errors/reason codes.
+
+The deterministic core receives no ambient filesystem, repository, network, process, database, HIVE, GitHub or clock authority. Required external proof arrives as already-resolved bounded values/adapters. Core lifecycle/projection/replay semantics are zero-LLM.
+
+### Canonical identity
+
+M04 semantic fingerprints use schema-bound canonical bytes with explicit field ordering/lengths and domain separation. Diagnostic timestamps, locale formatting, unordered map order and secret-bearing fields are excluded. Cross-platform golden vectors are blocking evidence.
+
+### External reference boundary
+
+Later execution/verification modules may attach versioned bounded references carrying producer domain, immutable locator/identity, content fingerprint when available, and Run/Attempt/Step lineage. M04 validates shape, lineage and resource bounds only. It does not decide whether M14-M17 evidence is truthful or sufficient.
+
+### Resource and calibration boundary
+
+Finite production caps are required for attempts/run, steps/attempt, events/run, canonical event bytes, diagnostics, cursor bytes, references and replay depth. Cap+1 fails typed without partial advancement. Exact numeric defaults come from the later frozen Resource Calibration Gate and cannot change architecture or authority.
+
+### Dependency direction
+
+M04 may depend only on admitted lower-level M01/M03/shared primitive contracts and explicitly admitted storage/reference ports. M03 cannot depend back on M04, and M04 cannot import M05+ policy/execution/verification implementations. Persistent backend selection remains unfrozen in Round 3.
+
+### Acceptance evidence architecture
+
+The candidate M04 Acceptance Evidence Graph EV-M04-001..023 is blocking and covers public contracts, legal/illegal transitions, generation/CAS races, idempotency, cancellation races, journal replay/corruption, BRC/ICF, typed-identity substitution, canonicalization vectors, resource boundaries, snapshot equivalence, reference validation, hidden-I/O and zero-LLM proof, bounded fuzzing, calibration, supply-chain/SBOM, Windows/Ubuntu exact-head CI and independent exact-head review.
+
+This is a planning candidate only. M04 product implementation remains unauthorized until the final planning freeze and a separate governed execution-admission delta are independently reviewed and promoted.

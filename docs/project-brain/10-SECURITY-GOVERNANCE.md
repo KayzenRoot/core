@@ -99,3 +99,21 @@ M02 threat model details and adversarial fixtures are maintained in `docs/module
 - M03ResourceBudget values must be finite and positive after calibration. Parser depth, serialized size, graph cardinality and diagnostics are deterministically bounded inside the core; exhaustion returns typed failure without partial FROZEN/READY/handoff state. Wall-clock deadlines are enforced only by caller-owned orchestration, which must discard late results and emit typed timeout evidence.
 - Diagnostics expose only bounded safe codes, IDs/fingerprints and redaction classes. Raw prompts, source bodies, secrets, credentials, HIVE payloads and unbounded external/process error strings are forbidden.
 - External lineage persistence uses LPC compare-and-set. M03 cannot write, auto-rebase, commit, push, update the checkpoint or turn stale evidence into current authority.
+
+
+## M04 Rounds 1-3 security and trust boundaries
+
+- Run creation/continuation MUST revalidate exact M03 authority bindings; stale, changed, UNKNOWN or unverifiable BRC inputs fail closed.
+- RunId, AttemptId, StepId, EventId, generations, epochs, fingerprints, journal roots and idempotency keys are typed/domain-separated; cross-domain substitution is rejected.
+- Illegal lifecycle transitions, stale/future CAS generations and parent/child lineage mismatches fail without partial state advancement.
+- ASF requires projected state, event append, journal-root update, idempotency record and generation advance to become visible atomically.
+- Idempotency-key replay is accepted only when canonical semantic request fingerprints match exactly; conflicting reuse fails closed.
+- Cancellation is monotonic and cannot be bypassed by later child admission/activation except bounded closeout.
+- RJR replay rejects reorder, truncation, substitution, wrong domain/lineage/generation and root corruption.
+- ICF continuation carries no secret material or host-specific recovery instruction; mismatch produces STALE_CONTINUATION/BLOCKED.
+- Canonical fingerprint projections exclude diagnostics, timestamps, locale-dependent formatting, unordered map order and secret-bearing fields.
+- External outcomes/evidence enter M04 only as bounded versioned lineage-bound references; raw secret-bearing artifact bodies are not durable M04 state.
+- Production resource caps are finite and positive; cap+1 fails atomically and histories are never silently truncated.
+- The deterministic M04 core performs zero LLM inference and no hidden filesystem, repository, network, process, database, HIVE, GitHub or ambient clock I/O.
+- Snapshot acceleration cannot mint authority absent from the canonical journal.
+- Later M05-M24 policy/execution/verification modules cannot be imported into M04 core or create reverse authority dependencies.
