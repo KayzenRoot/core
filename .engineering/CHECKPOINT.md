@@ -12,7 +12,7 @@ M01 COMPLETE / M02 COMPLETE / M03 COMPLETE
 CORE V0.0 - Modular Construction
 
 ## PHASE
-3 - M03 Complete / M04 Planning Gate
+3 - M03 Complete / M04 Final Planning Freeze Candidate
 
 ## NEXT STEP
 Independently review/promote CORE-M04-FREEZE-001 Round 5 final planning freeze; if approved, compile a separate M04 execution-admission delta. M04 implementation remains unauthorized.
