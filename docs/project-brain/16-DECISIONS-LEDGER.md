@@ -816,24 +816,29 @@ Status: `ACTIVE`
 
 ## CORE-D-195 - M04 Round 5 is the final planning freeze candidate
 **Decision:** CORE-M04-FREEZE-001 compiles the executor-ready M04 V0.0 planning packet from promoted Rounds 1-4. It freezes the Work Order, pending Context Lock, Evidence Bundle skeleton, executor handoff, Packs A-H and AC-M04-001..023 mapping. It does not authorize product implementation.
-**State:** PROPOSED; M04 Round 5 final-freeze candidate.
+**State:** ACCEPTED; Round 5 final planning freeze promoted by M04-REVIEW-007 / Issue #93 and PR #92; implementation remains unauthorized pending separate admission.
 
 ## CORE-D-196 - M04 execution authority requires a later separate admission delta
 **Decision:** promotion of the Round 5 planning freeze establishes frozen planning truth only. A later `CORE-M04-ADMIT-001`-equivalent delta must bind the exact promoted canonical base, activate the lock and set implementation authorization on canonical `origin/main`. Admission may not change frozen architecture, contracts, dependencies, acceptance, calibration semantics or module ownership.
-**State:** PROPOSED; M04 Round 5 final-freeze candidate.
+**State:** ACCEPTED; Round 5 final planning freeze promoted by M04-REVIEW-007 / Issue #93 and PR #92; implementation remains unauthorized pending separate admission.
 
 ## CORE-D-197 - M04 implementation uses eight ordered construction packets
 **Decision:** the implementation packet is Packs A-H: A contracts/identity/canonical framing; B lifecycle/projection; C journal/replay/snapshot; D CAS/idempotency/cancellation; E BRC/ICF/references; F resource/store/purity boundaries; G security/property/fuzz/supply-chain; H calibration/evidence/exact-head CI/handoff. Blocking upstream failures stop dependent work.
-**State:** PROPOSED; M04 Round 5 final-freeze candidate.
+**State:** ACCEPTED; Round 5 final planning freeze promoted by M04-REVIEW-007 / Issue #93 and PR #92; implementation remains unauthorized pending separate admission.
 
 ## CORE-D-198 - M04 acceptance is exactly AC-M04-001..023 mapped to EV-M04-001..023
 **Decision:** the 23 Round 3 evidence nodes are retained as 23 blocking implementation acceptance criteria with one-to-one evidence identities. Evidence may reference multiple artifacts, but no blocking criterion may disappear through aggregation.
-**State:** PROPOSED; M04 Round 5 final-freeze candidate.
+**State:** ACCEPTED; Round 5 final planning freeze promoted by M04-REVIEW-007 / Issue #93 and PR #92; implementation remains unauthorized pending separate admission.
 
 ## CORE-D-199 - M04 permits only a numeric/evidence Resource Calibration Delta
 **Decision:** after implementation measurements exist, the Work Order may authorize one bounded calibration delta limited to finite numeric resource defaults/thresholds and the calibration report. The delta cannot alter semantics, contracts, dependencies, authority, persistence class, security boundaries or acceptance meaning.
-**State:** PROPOSED; M04 Round 5 final-freeze candidate.
+**State:** ACCEPTED; Round 5 final planning freeze promoted by M04-REVIEW-007 / Issue #93 and PR #92; implementation remains unauthorized pending separate admission.
 
 ## CORE-D-200 - Round 5 records unavailable HIVE context without inventing evidence
 **Decision:** this planning session has no direct HIVE MCP/connector available, so Round 5 uses exact canonical Git sources in SOLO mode and makes no claim about current HIVE registration/checkpoint state. The future executor must repeat the optional HIVE preflight and record only observed results; canonical Git remains authoritative.
-**State:** PROPOSED; M04 Round 5 final-freeze candidate.
+**State:** ACCEPTED; Round 5 final planning freeze promoted by M04-REVIEW-007 / Issue #93 and PR #92; implementation remains unauthorized pending separate admission.
+
+
+## CORE-D-201 - M04 final planning freeze is promoted; execution admission is a separate state-only gate
+**Decision:** M04-REVIEW-007 / Issue #93 APPROVED CORE-M04-FREEZE-001 at exact head `aa65784c66a16f918d694f25cde1a9ba88663b5a`; workflow `35981285696` completed all 10 hosted jobs SUCCESS and PR #92 was squash-promoted as merge `f6b422be5465d5a93d0b8fcf4c9507c205663072`. CORE-M04-ADMIT-001 may now bind this exact promoted final-freeze base, arm the existing frozen Work Order and activate its Context Lock only on canonical-main promotion. Admission MUST NOT change M04 architecture, contracts, dependency rules, Packs A-H, AC/EV meaning, Resource Calibration Gate, security boundaries or deferred backend policy.
+**State:** PROPOSED; M04 execution-admission candidate.
