@@ -122,7 +122,7 @@ M02 threat model details and adversarial fixtures are maintained in `docs/module
 ## M04 Round 4 security refinements
 
 - `core-run-state` has no direct Tokio/core-runtime/core-workspace or I/O-capable external-service dependency.
-- Pure semantic operations return `PreparedCommitV1` and cannot persist or contact an adapter while calculating state.
+- Pure semantic preparation operations return `PreparedCommitV1<R>` and cannot persist or contact an adapter while calculating state. The embedded operation receipt is pending/non-authoritative until pure `finalize_commit` verifies the exact durable commit receipt.
 - The state-store port must enforce one all-or-nothing compare-and-commit over generation, prior journal root and idempotency state; partial event/projection/root visibility is forbidden.
 - Store implementations cannot reinterpret transition/cancellation/idempotency semantics or mint higher authority than the prepared commit.
 - M04 canonical framing is domain/version separated and uses explicit lengths/tags before the shared cryptographic digest primitive.
