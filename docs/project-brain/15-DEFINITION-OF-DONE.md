@@ -181,3 +181,22 @@ M04 completion requires:
 - complete AEG-to-artifact traceability and independent exact-head review with no unresolved HIGH/CRITICAL defect.
 
 Rounds 1-3 are planning candidates/baselines only. No persistence backend, execution Work Order or M04 implementation authorization is created by these sections.
+
+
+### M04 Round 4 production DoD refinement
+
+The future M04 V0.0 implementation is not complete unless the Round 4 implementation map is realized without scope drift and the EV-M04-001..023 graph is proven on one governed exact head.
+
+Additional Round 4 completion obligations:
+- the `core-run-state` crate matches the admitted file/module/dependency boundary;
+- the pure public service signatures return prepared semantic commits and remain store-independent;
+- a store-port conformance harness proves ASF all-or-nothing compare-and-commit behavior without selecting one production backend as canonical;
+- M04 framing reuses the shared core-identity digest and passes domain/cross-platform vectors;
+- caller-owned cancellation/reference adapters do not introduce hidden authority or raw secret-bearing durable payloads;
+- all seven RAS/TLG/CER/RJR/BRC/ICF/ASF capabilities are implemented as required V0.0 semantics;
+- all six frozen fuzz targets and the deterministic calibration harness execute under the final Work Order;
+- the final numeric resource budget is evidence-derived and any Calibration Delta is numeric/evidence-only;
+- no persistence backend, archive/retention, distributed consensus, persistent cache or runtime self-tuning is smuggled into V0.0;
+- Round 5 final freeze and separate execution admission occur before implementation starts.
+
+Round 4 itself remains planning-only and does not satisfy the production DoD.
