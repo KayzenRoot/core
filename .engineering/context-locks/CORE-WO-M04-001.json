@@ -10,7 +10,7 @@
   "assuranceMode": "ELEVATED",
   "productImplementationAuthorized": true,
   "canonicalSources": {
-    "docs/project-brain/13-CHECKPOINT.md": "a8b45c75f3f40fddb1762795fe4125fa7d860552",
+    "docs/project-brain/13-CHECKPOINT.md": "ff4709465f9247b44c96572c6dfa60373a20ac05",
     "docs/project-brain/16-DECISIONS-LEDGER.md": "6b7e873745e2ec6a81fedb6dbea5b0e0b271cde5",
     "docs/project-brain/03-SCOPE.md": "83a2509dab36c2b1676750d0e23542592255bc87",
     "docs/project-brain/15-DEFINITION-OF-DONE.md": "864f1974b340fca9a5a2d2e7e297c8f4fcfe5553",
@@ -31,15 +31,15 @@
     }
   },
   "stalenessRule": "Any material change to the later admitted authorizedBase, any of the nine canonical source blobs, CORE-WO-M04-001, or governing GEF policy makes an active M04 lock STALE and blocks execution until governed re-admission.",
-  "promotionRule": "CORE-M04-ADMIT-001 and CORE-M04-SYNC-003 are APPROVED_PROMOTED. This lock is effective on canonical main after CORE-M04-SYNC-004 closeout is independently reviewed and promoted; execution must still repeat preflight and validate exact lock/source fingerprints before Pack A.",
+  "promotionRule": "CORE-M04-ADMIT-001, CORE-M04-SYNC-003 and CORE-M04-SYNC-004 are APPROVED_PROMOTED. This lock is effective on canonical main. Before Pack A, CORE-M04-SYNC-005 state synchronization must be independently reviewed and promoted, then a fresh preflight must validate the exact lock and source fingerprints.",
   "workOrderSource": {
     "path": ".engineering/work-orders/CORE-WO-M04-001.md",
-    "blobSha": "2325764617a640da724cbec39f0edbe8e2dea8fb"
+    "blobSha": "8beffbc19e73a60f49a1e4d7797427391680d5e3"
   },
   "authorizationEffectiveOnlyOnCanonicalMain": true,
   "canonicalMain": "origin/main",
   "activationRule": "Execution authority is effective only when this exact ACTIVE lock, synchronized GEF state and authorized Work Order are present on canonical origin/main. A branch-local copy or stale fingerprint is non-authoritative.",
-  "executionStartRule": "Only after CORE-M04-SYNC-004 closeout is independently reviewed and promoted, repeat Git/HIVE/governance preflight on canonical origin/main; verify this ACTIVE lock, all nine canonical source fingerprints, exact Work Order blob, frozen authorizedBase f6b422be5465d5a93d0b8fcf4c9507c205663072 ancestry and that intervening changes are limited to governed admission/state synchronization. Then create feat/m04-run-state from that exact canonical main and begin Pack A only if preflight passes.",
+  "executionStartRule": "Only after CORE-M04-SYNC-005 state synchronization is independently reviewed and promoted, repeat fresh Git/HIVE/governance preflight on canonical origin/main; verify this ACTIVE lock, all nine canonical source fingerprints, exact Work Order blob, frozen authorizedBase f6b422be5465d5a93d0b8fcf4c9507c205663072 ancestry and that intervening changes are limited to governed admission/state synchronization, including CORE-M04-SYNC-003, CORE-M04-SYNC-004 and CORE-M04-SYNC-005. Then create feat/m04-run-state from that exact canonical main and begin Pack A only if preflight passes.",
   "finalPlanningReview": {
     "status": "APPROVED_PROMOTED",
     "issue": 93,
@@ -75,5 +75,16 @@
     "reviewedHead": "f9a5a7847e268000a5249ae8e69c81ed22b924ad",
     "workflowRun": 35994572596,
     "promotionMerge": "b79891f489d8c7117aee15e1dca47abb9e23dea3"
+  },
+  "postReviewSynchronization": {
+    "increment": "CORE-M04-SYNC-004",
+    "branch": "fix/m04-post-sync-canonical-closeout",
+    "status": "APPROVED_PROMOTED",
+    "reviewIssue": 100,
+    "pullRequest": 99,
+    "reviewedHead": "19123d50bebe1a13257d8e2768fca7a1ca1d3393",
+    "workflowRun": 36013624792,
+    "promotionMerge": "b2ac8e0db72a2145948e7773295b1b252c5e4eab",
+    "unresolvedHighCritical": 0
   }
 }
