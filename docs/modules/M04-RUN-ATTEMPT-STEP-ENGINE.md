@@ -1,6 +1,6 @@
 # M04 — Run / Attempt / Step Engine
 
-Status: `ROUND_5_FINAL_FREEZE_PROMOTED_EXECUTION_ADMISSION_CANDIDATE`
+Status: `EXECUTION_ADMISSION_PROMOTED_IMPLEMENTATION_AUTHORIZED`
 Implementation: `UNAUTHORIZED`
 Assurance: `ELEVATED`
 
@@ -658,3 +658,10 @@ Assurance: `ELEVATED`
 The final planning freeze is promoted. This admission candidate changes execution state only. It may arm the exact frozen Work Order and Context Lock against the promoted final-freeze base, but it does not alter any Round 1-5 semantic, contract, dependency, file-map, acceptance, calibration, security or ownership decision.
 
 Execution authority is effective only after the exact admission candidate is independently reviewed and promoted to canonical `origin/main`. Presence on `planning/m04-execution-admission` is not authority.
+
+
+## Execution admission promotion
+
+CORE-M04-ADMIT-001 was independently approved by M04-REVIEW-008 / Issue #95 at exact head `f29dcb6b327c5fdceda31fe306e52d506c1eae72`, workflow `35992752646`, and promoted as merge `bb6f631284361fae29479c66f62ca88bebf3d79c`.
+
+CORE-WO-M04-001 is now authorized on canonical main for M04-only implementation. The executor must create `feat/m04-run-state` from post-admission canonical main, verify the frozen authorized base `f6b422be5465d5a93d0b8fcf4c9507c205663072` is an ancestor with only governed admission/state-synchronization metadata between it and execution start, repeat preflight, validate the ACTIVE lock, then begin Pack A.
