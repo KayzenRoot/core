@@ -231,5 +231,10 @@
     "reviewedHead": null,
     "workflowRun": null,
     "unresolvedHighCritical": null
+  },
+  "executorHandoff": {
+    "path": "docs/work-orders/CODEX-HANDOFF-M04.md",
+    "blobSha": "89adc335a403778b1748688b0ecd58f22d525142",
+    "status": "EXECUTION_REFUSES_UNTIL_SEPARATE_ADMISSION"
   }
 }
