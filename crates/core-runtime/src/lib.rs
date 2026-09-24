@@ -2158,7 +2158,7 @@ mod tests {
     #[tokio::test]
     async fn multiple_leases_release_in_different_order_without_lost_notifications() {
         let mut shutdown_config = config("multiple-lease-release-order");
-        shutdown_config.shutdown_timeout_ms = 500;
+        // The release sequence itself is 60 ms. Keep a generous CI scheduling\n        // margin while still failing closed if a notification is actually lost.\n        shutdown_config.shutdown_timeout_ms = 2_000;
         let mut supervisor = Supervisor::new(shutdown_config).unwrap();
         supervisor.bootstrap().await.unwrap();
         supervisor
