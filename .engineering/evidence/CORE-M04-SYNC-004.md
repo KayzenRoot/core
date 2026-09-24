@@ -55,9 +55,9 @@ The three stale values present in the promoted Work Order table at the canonical
 - Changed-file inventory — PASS: 14 governance/evidence files; no product, Cargo, fuzz or benchmark paths.
 - `git diff --check` — PASS.
 
-Hosted required checks and independent review are separate GitHub gates and must be read against the exact final PR head. This candidate artifact does not assert their outcome. It is not approved or promoted.
+PR #99 was opened from this candidate. Its first published head `bf14b581eca85effa254c94dff92b4cbc0acdfd9` had two Ubuntu timeout-test failures on attempt 1; rerunning only the failed jobs on that same head produced 10/10 successful jobs in workflow `36010853494` (attempt 2). This evidence-only follow-up changes the PR head, so its own hosted checks must pass before the final review-ready handoff.
 
-Hosted exact-head required checks and independent review are pending until the PR exists. This candidate is not approved or promoted. Pack A remains unauthorized to start until this correction is independently approved and promoted and its separate preflight passes.
+The independent review for CORE-M04-SYNC-004 is still pending. The predecessor CORE-M04-SYNC-003 review recorded zero unresolved HIGH/CRITICAL findings; this candidate has no independent verdict yet. It is not approved or promoted. Pack A remains unauthorized to start until this correction is independently approved and promoted and its separate preflight passes.
 
 ## Proposed Checkpoint Delta
 
