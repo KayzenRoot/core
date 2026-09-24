@@ -3,35 +3,39 @@
   "increment": "CORE-M04-FREEZE-001",
   "workOrder": "CORE-WO-M04-001",
   "repository": "KayzenRoot/core",
-  "status": "FINAL_FREEZE_REVIEW_CANDIDATE_IMPLEMENTATION_NOT_STARTED",
+  "status": "FINAL_FREEZE_APPROVED_PROMOTED_EXECUTION_ADMISSION_CANDIDATE",
   "planningCandidate": {
     "branch": "planning/m04-final-freeze-round5",
     "planningBase": "0f448c708aafd8f5b4cb6303effdabd7e028bc6f",
-    "candidateHead": null,
-    "pullRequest": null
+    "candidateHead": "aa65784c66a16f918d694f25cde1a9ba88663b5a",
+    "pullRequest": 92,
+    "reviewIssue": 93,
+    "workflowRun": 35981285696,
+    "promotionMerge": "f6b422be5465d5a93d0b8fcf4c9507c205663072",
+    "reviewStatus": "APPROVED_PROMOTED"
   },
   "sourceCheck": {
     "candidateCanonicalSourceBlobShaKind": "git_blob_sha1",
     "candidateCanonicalSourceBlobShas": {
-      "docs/project-brain/13-CHECKPOINT.md": "025045cc2269ee2bb4b043e024b00aa72fa713a3",
-      "docs/project-brain/16-DECISIONS-LEDGER.md": "a55a912576d8279dfe2bde89f43f19e4a1dd7b16",
+      "docs/project-brain/13-CHECKPOINT.md": "e5540d25b68d9b2861604a118f81f7025f9858e6",
+      "docs/project-brain/16-DECISIONS-LEDGER.md": "dfc34d4ce6802c619277be534645d94d88b55f15",
       "docs/project-brain/03-SCOPE.md": "d8f917770f4b72ab0628be0da8744350289a21a5",
       "docs/project-brain/15-DEFINITION-OF-DONE.md": "864f1974b340fca9a5a2d2e7e297c8f4fcfe5553",
       "docs/project-brain/04-ARCHITECTURE.md": "09f56adc576ee477fe61c5588fee201eac841bc2",
       "docs/project-brain/02-REQUIREMENTS.md": "b68bbdf41bbf06b1f1587261f39c31eee32e7cb9",
       "docs/project-brain/10-SECURITY-GOVERNANCE.md": "66a39179fb312eb229870aa5367e89708f6bfd66",
       "docs/project-brain/11-TEST-PLAN.md": "1784085e690e4fdfbdb5bd2b893d58f704c0fa6e",
-      "docs/modules/M04-RUN-ATTEMPT-STEP-ENGINE.md": "882147c31c4dd2f5ed837474f4c914ba4c025c8f"
+      "docs/modules/M04-RUN-ATTEMPT-STEP-ENGINE.md": "43f03b50625496f22d041c06e5d1c56b91bc05fc"
     },
-    "workOrderBlobSha": "4320993a1b4dbe2fa7c274aa55fa2d44da84288a"
+    "workOrderBlobSha": "b6d2b440c50d2a056b8d78749d178ee80ef4c73a"
   },
   "contextLock": {
     "path": ".engineering/context-locks/CORE-WO-M04-001.json",
-    "status": "PENDING_PROMOTION",
-    "blobSha": "775fa93791398610a032e15aebec01056e318560",
-    "authorizedBase": null,
-    "productImplementationAuthorized": false,
-    "executionStatus": "NOT_AUTHORIZED_FINAL_FREEZE_REVIEW_PENDING"
+    "status": "ACTIVE_ON_CANONICAL_MAIN_PROMOTION",
+    "blobSha": "0da67b2178350b09fae1326227ce4ea82defe13e",
+    "authorizedBase": "f6b422be5465d5a93d0b8fcf4c9507c205663072",
+    "productImplementationAuthorized": true,
+    "executionStatus": "ARMED_NOT_EFFECTIVE_UNTIL_CANONICAL_MAIN_PROMOTION"
   },
   "planningHiveObservation": {
     "directHiveConnectorAvailable": false,
@@ -57,8 +61,8 @@
     "fabricatedMeasurements": false
   },
   "implementation": {
-    "status": "NOT_STARTED_NOT_AUTHORIZED",
-    "authorizedBase": null,
+    "status": "NOT_STARTED_ADMISSION_CANDIDATE",
+    "authorizedBase": "f6b422be5465d5a93d0b8fcf4c9507c205663072",
     "finalHead": null,
     "productFilesCreated": false
   },
@@ -234,7 +238,18 @@
   },
   "executorHandoff": {
     "path": "docs/work-orders/CODEX-HANDOFF-M04.md",
-    "blobSha": "89adc335a403778b1748688b0ecd58f22d525142",
-    "status": "EXECUTION_REFUSES_UNTIL_SEPARATE_ADMISSION"
+    "blobSha": "e4047e906620c38cc271b66f93c436dc21df405d",
+    "status": "EXECUTION_REFUSES_UNTIL_ADMISSION_PROMOTION"
+  },
+  "executionAdmission": {
+    "increment": "CORE-M04-ADMIT-001",
+    "branch": "planning/m04-execution-admission",
+    "status": "PENDING_REVIEW",
+    "authorizedBase": "f6b422be5465d5a93d0b8fcf4c9507c205663072",
+    "reviewIssue": null,
+    "pullRequest": null,
+    "reviewedHead": null,
+    "workflowRun": null,
+    "promotionMerge": null
   }
 }
