@@ -220,3 +220,39 @@ To be classified during governed discovery. No future capability is admitted mer
 - telemetry transport/observability spine.
 
 M04 implementation remains unauthorized until final planning freeze and separate governed execution admission.
+
+
+## M04 Round 4 scope classification
+
+### NECESSARY
+- one `core-run-state` V0.0 crate and frozen file/test/fuzz/bench map;
+- minimal direct dependency set and acyclic M03 -> M04 direction;
+- pure prepared-commit service layer;
+- backend-neutral atomic state-store port contract;
+- caller-owned external-reference evidence seam;
+- concrete V1 request/result/type groups;
+- M04 canonical framing over the shared core-identity digest primitive;
+- exact property/adversarial law inventory;
+- six named bounded fuzz targets;
+- deterministic Windows/Ubuntu benchmark and Resource Calibration Gate;
+- required disposition of RAS/TLG/CER/RJR/BRC/ICF/ASF;
+- separate Round 5 final planning freeze.
+
+### IMPORTANT
+- concise store/reference adapter ergonomics without semantic authority leakage;
+- snapshot/replay benchmark scenarios that expose large-history cost honestly;
+- exact file-level traceability from EV-M04 nodes to future implementation evidence.
+
+### FUTURE / CONDITIONAL
+- concrete persistent backend;
+- event archive/retention service;
+- distributed store replication/consensus;
+- persistent snapshot/projection cache;
+- runtime adaptive tuning.
+
+### OUT OF SCOPE FOR ROUND 4
+- product implementation;
+- execution Work Order/active Context Lock;
+- database/backend selection;
+- M05+ executor/policy/review implementation;
+- numeric resource defaults without implementation measurements.
