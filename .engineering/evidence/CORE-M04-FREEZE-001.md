@@ -12,7 +12,7 @@ The final-freeze candidate was compiled from exact canonical Git state after:
 - Round 4 promotion synchronization through PR #88 / Issue #91;
 - test-only CI reliability correction through PR #89 / Issue #90.
 
-The nine canonical source blobs bound by the pending Context Lock match the candidate branch exactly. The Work Order blob is `91d1ec26dfb30c7711e9fc2310a8d81abca9e8c7`. The pending Context Lock blob is `b1b0b8f701187836206af55c5ae53659dfa4c0e3`. The executor handoff blob is `89adc335a403778b1748688b0ecd58f22d525142`.
+The nine canonical source blobs bound by the pending Context Lock match the candidate branch exactly. The Work Order blob is `4320993a1b4dbe2fa7c274aa55fa2d44da84288a`. The pending Context Lock blob is `775fa93791398610a032e15aebec01056e318560`. The executor handoff blob is `89adc335a403778b1748688b0ecd58f22d525142`.
 
 ## Final-freeze artifacts
 
