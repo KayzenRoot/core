@@ -7,14 +7,14 @@ M01 COMPLETE / M02 COMPLETE / M03 COMPLETE
 CORE V0.0 - Modular Construction
 
 ## PHASE
-3 - M03 Complete / M04 Execution Admission Candidate
+3 - M03 Complete / M04 Execution Authorized
 
 ## OBJECTIVE
 Continue building CORE as the headless NexLabs action plane that operates standalone and synchronizes deeply with HIVE without duplicating HIVE-owned intelligence.
 
 ## IN PROGRESS
 - M03 canonical closeout was promoted through PR #74 as merge `2fdf595cc6b450d1be0038eb67d0a5160035d9bd` after M03-REVIEW-010 / Issue #75.
-- M04 Rounds 1-5 planning are promoted. CORE-M04-ADMIT-001 is the execution-admission candidate binding authorized base `f6b422be5465d5a93d0b8fcf4c9507c205663072`. M04 implementation remains unauthorized until this exact admission state is independently reviewed and promoted to canonical main.
+- M04 Rounds 1-5 planning and CORE-M04-ADMIT-001 are promoted. CORE-WO-M04-001 is authorized for M04-only implementation on canonical main.
 - M05-M24 remain discovery-only until their planning freezes.
 
 ## COMPLETED
@@ -39,7 +39,7 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - CORE-GOV-002-C01 GitHub hardening independently reviewed (Review 001 / Issue #57) and promoted through PR #56; active ruleset `CORE main protection` id `23769853` protects `main` with no bypass actors and the seven-context strict CI gate.
 
 ## PENDING
-- Independently review/promote CORE-M04-ADMIT-001. Do not start M04 product implementation from the admission PR branch.
+- Begin governed M04 implementation from post-admission canonical main under CORE-WO-M04-001, starting with Pack A after preflight.
 - Deep-plan M04 through M24 in dependency order.
 - Freeze each module Requirements/Architecture/DoD/Work Order before implementation authorization.
 - Live local HIVE bootstrap evidence against current main.
@@ -49,9 +49,11 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - M04-M24 implementation remains gated by their own planning freezes and admissions.
 
 ## NEXT STEP
-Independently review/promote CORE-M04-ADMIT-001 execution admission. M04 implementation remains unauthorized until the exact reviewed admission state is promoted to canonical origin/main.
+Create feat/m04-run-state from post-admission canonical main, repeat Git/HIVE/governance preflight, validate the ACTIVE CORE-WO-M04-001 Context Lock and begin Pack A. Do not widen frozen M04 scope.
 
 ## EVIDENCE
+- M04 execution admission Review 008 / Issue #95 — APPROVED; PR #94; exact head `f29dcb6b327c5fdceda31fe306e52d506c1eae72`; workflow `35992752646`; promotion merge `bb6f631284361fae29479c66f62ca88bebf3d79c`; 10/10 hosted jobs SUCCESS.
+- CORE-WO-M04-001 authorized base remains final-freeze merge `f6b422be5465d5a93d0b8fcf4c9507c205663072`; implementation starts only from post-admission canonical main after lock/source preflight.
 - M04 final planning freeze Review 007 / Issue #93 — APPROVED; PR #92; exact head `aa65784c66a16f918d694f25cde1a9ba88663b5a`; workflow `35981285696`; promotion merge `f6b422be5465d5a93d0b8fcf4c9507c205663072`; 10/10 hosted jobs SUCCESS.
 - CORE-M04-ADMIT-001 candidate binds authorized execution base `f6b422be5465d5a93d0b8fcf4c9507c205663072`; execution remains ineffective until admission promotion.
 - CORE-M04-FREEZE-001 planning base: `0f448c708aafd8f5b4cb6303effdabd7e028bc6f`; branch `planning/m04-final-freeze-round5`; implementation unauthorized; review pending.
