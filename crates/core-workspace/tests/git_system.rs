@@ -230,7 +230,7 @@ fn hostile_dual_output_is_capped_without_deadlock() {
 
 #[test]
 fn hostile_git_deadline_kills_reaps_and_does_not_poison_next_inspection() {
-    let root = std::env::temp_dir().join(format!("m02-git-deadline-{}", std::process::id()));
+    // Keep the executable helper on the checked-out workspace filesystem. Some CI\n    // runners can mount the OS temp directory with execution restrictions, which\n    // would make this deadline test exercise spawn failure instead of timeout.\n    let root = std::env::current_dir()\n        .unwrap()\n        .join("target")\n        .join(format!("m02-git-deadline-{}", std::process::id()));
     fs::create_dir_all(&root).unwrap();
     let helper = if cfg!(windows) {
         root.join("sleep-helper.exe")
