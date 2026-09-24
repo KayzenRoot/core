@@ -789,7 +789,7 @@ Status: `ACTIVE`
 **State:** PROPOSED; M04 Round 4 candidate.
 
 ## CORE-D-189 - Pure M04 services prepare commits; hosts persist them
-**Decision:** M04 semantic functions return `PreparedCommitV1` and never perform storage I/O. Host orchestration owns load and atomic compare-and-commit through `M04StateStoreV1`; adapters cannot recalculate semantic rules.
+**Decision:** M04 semantic prepare functions return `PreparedCommitV1<R>` carrying the exact operation-specific Round 3 receipt as a pending, non-authoritative result and never perform storage I/O. Host orchestration owns load and atomic compare-and-commit through `M04StateStoreV1`; pure `finalize_commit` verifies the matching durable store receipt before releasing `R` as committed authority. Adapters cannot recalculate semantic rules.
 **State:** PROPOSED; M04 Round 4 candidate.
 
 ## CORE-D-190 - External reference resolution remains caller-owned
