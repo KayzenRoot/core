@@ -189,7 +189,7 @@ The future M04 V0.0 implementation is not complete unless the Round 4 implementa
 
 Additional Round 4 completion obligations:
 - the `core-run-state` crate matches the admitted file/module/dependency boundary;
-- the pure public service signatures return prepared semantic commits and remain store-independent;
+- the pure public preparation signatures return `PreparedCommitV1<R>` and remain store-independent; pending operation receipts are never exposed as committed authority before exact durable-receipt finalization;
 - a store-port conformance harness proves ASF all-or-nothing compare-and-commit behavior without selecting one production backend as canonical;
 - M04 framing reuses the shared core-identity digest and passes domain/cross-platform vectors;
 - caller-owned cancellation/reference adapters do not introduce hidden authority or raw secret-bearing durable payloads;
