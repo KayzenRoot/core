@@ -15,4 +15,4 @@ CORE V0.0 - Modular Construction
 3 - M03 Complete / M04 Execution Authorized
 
 ## NEXT STEP
-Create feat/m04-run-state from post-admission canonical main, repeat Git/HIVE/governance preflight, validate the ACTIVE CORE-WO-M04-001 Context Lock and begin Pack A. Do not widen frozen M04 scope.
+After CORE-M04-SYNC-004 is independently approved and promoted, run Git/HIVE/governance preflight for CORE-WO-M04-001 Pack A from canonical main, validate the ACTIVE Context Lock and all source fingerprints, then begin Pack A. Do not widen frozen M04 scope.

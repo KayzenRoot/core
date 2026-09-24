@@ -2,7 +2,7 @@
 
 Work Order: `CORE-WO-M04-001`  
 Increment: `CORE-M04-FREEZE-001`  
-Status: `EXECUTION_AUTHORIZED_AFTER_CORE_M04_SYNC_003_PROMOTION`  
+Status: `EXECUTION_AUTHORIZED_NOT_STARTED / CORE_M04_SYNC_004_REVIEW_PENDING`
 Future execution branch: `feat/m04-run-state`
 
 ## STOP BEFORE EXECUTION
@@ -110,4 +110,6 @@ Never return `APPROVED`. Never merge your own implementation.
 
 ## Admission candidate note
 
-CORE-M04-ADMIT-001 is promoted. Do not begin Pack A until CORE-M04-SYNC-003 is independently reviewed/promoted and the exact canonical-main lock/GEF state are ACTIVE/effective. Then create `feat/m04-run-state` from that post-sync canonical main and repeat the full preflight.
+CORE-M04-SYNC-003 was APPROVED by M04-REVIEW-009 / Issue #97 at exact head `f9a5a7847e268000a5249ae8e69c81ed22b924ad`; PR #96; workflow `35994572596` with 10/10 jobs SUCCESS; promotion merge `b79891f489d8c7117aee15e1dca47abb9e23dea3`; unresolved HIGH/CRITICAL: 0.
+
+CORE-M04-SYNC-004 is a governance-only closeout candidate. It does not start Pack A. After this correction is independently reviewed, APPROVED and promoted, the next legal action is the preflight for CORE-WO-M04-001 Pack A. Only after that preflight passes may `feat/m04-run-state` be created from the resulting canonical main and Pack A begin.

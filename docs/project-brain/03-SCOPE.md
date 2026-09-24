@@ -219,7 +219,7 @@ To be classified during governed discovery. No future capability is admitted mer
 - verification/evidence/review verdict ownership;
 - telemetry transport/observability spine.
 
-M04 implementation remains unauthorized until final planning freeze and separate governed execution admission.
+At the end of M04 Rounds 1-3, implementation remained unauthorized pending the final planning freeze and separate governed execution admission. Those gates were subsequently approved and promoted; current authority is recorded in the Checkpoint, Work Order and active Context Lock.
 
 
 ## M04 Round 4 scope classification

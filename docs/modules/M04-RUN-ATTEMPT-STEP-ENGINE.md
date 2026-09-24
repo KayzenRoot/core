@@ -1,7 +1,7 @@
 # M04 — Run / Attempt / Step Engine
 
-Status: `EXECUTION_ADMISSION_PROMOTED_IMPLEMENTATION_AUTHORIZED`
-Implementation: `UNAUTHORIZED`
+Status: `EXECUTION_AUTHORIZED_NOT_STARTED_AFTER_CORE_M04_SYNC_003_PROMOTION`
+Implementation: `AUTHORIZED_NOT_STARTED`
 Assurance: `ELEVATED`
 
 ## Mission
@@ -555,7 +555,7 @@ Round 4 is not the final planning freeze. A separate Round 5 must compile the fi
 
 ## STOP CONDITION
 
-Rounds 1-4 are promoted canonical planning truth. M04 implementation remains unauthorized. The next legal increment is Round 5 final planning freeze, which may compile the execution packet but MUST NOT activate implementation authority; a separate execution-admission delta remains required.
+At the end of Rounds 1-4, planning was promoted but implementation remained unauthorized; the Round 5 freeze and a separate execution-admission delta were still required at that stage. Those gates were later approved and promoted. Current M04 execution authority and status are recorded in the active Work Order and Context Lock.
 
 
 ## Round 5 final planning freeze candidate

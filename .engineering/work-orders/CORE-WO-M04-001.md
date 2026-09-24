@@ -56,19 +56,19 @@ Before future product-code changes, the executor MUST:
 
 Planning base: `0f448c708aafd8f5b4cb6303effdabd7e028bc6f`.
 
-Active canonical source Git blob IDs after CORE-M04-SYNC-003:
+Active canonical source Git blob IDs for the CORE-M04-SYNC-004 closeout candidate:
 
 | Canonical source | Candidate blob |
 | --- | --- |
-| docs/project-brain/13-CHECKPOINT.md | 025045cc2269ee2bb4b043e024b00aa72fa713a3 |
-| docs/project-brain/16-DECISIONS-LEDGER.md | a55a912576d8279dfe2bde89f43f19e4a1dd7b16 |
-| docs/project-brain/03-SCOPE.md | d8f917770f4b72ab0628be0da8744350289a21a5 |
+| docs/project-brain/13-CHECKPOINT.md | a8b45c75f3f40fddb1762795fe4125fa7d860552 |
+| docs/project-brain/16-DECISIONS-LEDGER.md | 6b7e873745e2ec6a81fedb6dbea5b0e0b271cde5 |
+| docs/project-brain/03-SCOPE.md | 83a2509dab36c2b1676750d0e23542592255bc87 |
 | docs/project-brain/15-DEFINITION-OF-DONE.md | 864f1974b340fca9a5a2d2e7e297c8f4fcfe5553 |
 | docs/project-brain/04-ARCHITECTURE.md | 09f56adc576ee477fe61c5588fee201eac841bc2 |
 | docs/project-brain/02-REQUIREMENTS.md | b68bbdf41bbf06b1f1587261f39c31eee32e7cb9 |
 | docs/project-brain/10-SECURITY-GOVERNANCE.md | 66a39179fb312eb229870aa5367e89708f6bfd66 |
-| docs/project-brain/11-TEST-PLAN.md | 1784085e690e4fdfbdb5bd2b893d58f704c0fa6e |
-| docs/modules/M04-RUN-ATTEMPT-STEP-ENGINE.md | 882147c31c4dd2f5ed837474f4c914ba4c025c8f |
+| docs/project-brain/11-TEST-PLAN.md | cc9e84fdbdea8a8d4e5a621756918ba361f5a031 |
+| docs/modules/M04-RUN-ATTEMPT-STEP-ENGINE.md | 51894d86ca39186eb5345881d457021ab90e34ed |
 
 Authority remains governed by `.engineering/SOURCE-HIERARCHY.md`: Git is repository truth; Checkpoint is project-state authority; Decisions/ADRs govern decisions; Scope governs scope; Requirements and Architecture govern product contracts; DoD governs completion; an admitted Work Order governs execution only after separate admission; Test Plan and exact-head evidence govern validation. GEF/HIVE bridges are derived.
 
@@ -351,6 +351,8 @@ This admission changes execution state only. All frozen architecture, scope, dep
 
 CORE-M04-ADMIT-001 was APPROVED by M04-REVIEW-008 / Issue #95 at exact head `f29dcb6b327c5fdceda31fe306e52d506c1eae72`, workflow `35992752646`, and promoted through PR #94 as merge `bb6f631284361fae29479c66f62ca88bebf3d79c`.
 
-Execution is now authorized only for the frozen M04 scope and only under the exact active Context Lock on canonical main. The execution branch must be created from the post-admission canonical main after CORE-M04-SYNC-003 is itself reviewed/promoted. The final-freeze authorized base remains `f6b422be5465d5a93d0b8fcf4c9507c205663072` and must remain an ancestor of execution start.
+Execution is authorized only for the frozen M04 scope and only under the exact active Context Lock on canonical main. CORE-M04-SYNC-003 was subsequently approved by M04-REVIEW-009 / Issue #97 at exact head `f9a5a7847e268000a5249ae8e69c81ed22b924ad`, passed all 10 hosted jobs in workflow `35994572596`, and was promoted through PR #96 as merge `b79891f489d8c7117aee15e1dca47abb9e23dea3`. Unresolved HIGH/CRITICAL findings: 0. The final-freeze authorized base remains `f6b422be5465d5a93d0b8fcf4c9507c205663072` and must remain an ancestor of execution start.
+
+CORE-M04-SYNC-004 is a governance-only canonical closeout; it does not start product implementation. After this correction is independently reviewed, APPROVED and promoted, the next legal action is the preflight for CORE-WO-M04-001 Pack A. Only after that preflight passes may the executor create `feat/m04-run-state` from canonical main and begin Pack A.
 
 No planning, architecture, contract, dependency, acceptance, calibration, security or backend decision is changed by this state transition.
