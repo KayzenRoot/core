@@ -6,83 +6,230 @@ on:
     branches:
       - main
 
+concurrency:
+  group: core-ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
 jobs:
+  impact:
+    name: CI impact classifier
+    runs-on: ubuntu-latest
+    outputs:
+      mode: ${{ steps.classify.outputs.mode }}
+      full: ${{ steps.classify.outputs.full }}
+      run_m01: ${{ steps.classify.outputs.run_m01 }}
+      run_m02: ${{ steps.classify.outputs.run_m02 }}
+      run_m03: ${{ steps.classify.outputs.run_m03 }}
+      run_m01_fuzz: ${{ steps.classify.outputs.run_m01_fuzz }}
+      run_m02_fuzz: ${{ steps.classify.outputs.run_m02_fuzz }}
+      run_m03_fuzz: ${{ steps.classify.outputs.run_m03_fuzz }}
+      run_supply_chain: ${{ steps.classify.outputs.run_supply_chain }}
+      rust_changed: ${{ steps.classify.outputs.rust_changed }}
+      changed_count: ${{ steps.classify.outputs.changed_count }}
+      reason: ${{ steps.classify.outputs.reason }}
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Classify changed surfaces
+        id: classify
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          CHANGED="$RUNNER_TEMP/core-changed-files.txt"
+          if [[ "$EVENT_NAME" == "pull_request" ]]; then
+            git diff --name-only "$BASE_SHA" "$HEAD_SHA" > "$CHANGED"
+          else
+            : > "$CHANGED"
+          fi
+          python scripts/ci_impact.py             --event-name "$EVENT_NAME"             --files-from "$CHANGED"             --github-output "$GITHUB_OUTPUT"
+          echo "Changed paths:"
+          cat "$CHANGED" || true
+
   governance:
     name: Governance
     runs-on: ubuntu-latest
     steps:
       - name: Checkout exact candidate
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - name: Set up Python
         uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: "3.12"
-      - name: Compile bootstrap tooling
-        run: python -m py_compile scripts/validate_governance.py scripts/hive_bootstrap.py scripts/hive_mcp.py
+      - name: Compile bootstrap and CI tooling
+        run: python -m py_compile scripts/validate_governance.py scripts/hive_bootstrap.py scripts/hive_mcp.py scripts/ci_impact.py
       - name: Validate CORE governance
         run: python scripts/validate_governance.py
-      - name: Test HIVE bootstrap and MCP bridge
+      - name: Test HIVE bootstrap, MCP bridge and CI classifier
         run: python -m unittest discover -s tests -p "test_*.py" -v
 
   m01:
     name: M01 (${{ matrix.os }})
+    needs: impact
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
     steps:
+      - name: Adaptive gate summary
+        shell: bash
+        run: |
+          echo "mode=${{ needs.impact.outputs.mode }}"
+          echo "reason=${{ needs.impact.outputs.reason }}"
+          echo "run_m01=${{ needs.impact.outputs.run_m01 }}"
+          echo "run_supply_chain=${{ needs.impact.outputs.run_supply_chain }}"
+
       - name: Checkout exact candidate
+        if: needs.impact.outputs.run_m01 == 'true' || (runner.os == 'Linux' && needs.impact.outputs.rust_changed == 'true')
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
       - name: Set up Python
+        if: needs.impact.outputs.run_m01 == 'true' || (runner.os == 'Linux' && needs.impact.outputs.rust_changed == 'true')
         uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: "3.12"
-      - name: Validate governance
-        run: python scripts/validate_governance.py
+
+      - name: Restore Cargo build cache
+        if: needs.impact.outputs.run_m01 == 'true' || (runner.os == 'Linux' && needs.impact.outputs.rust_changed == 'true')
+        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: core-cargo-${{ runner.os }}-${{ github.job }}-${{ hashFiles('Cargo.lock') }}-v1
+          restore-keys: |
+            core-cargo-${{ runner.os }}-${{ github.job }}-
+
       - name: Rust toolchain
+        if: needs.impact.outputs.run_m01 == 'true' || (runner.os == 'Linux' && needs.impact.outputs.rust_changed == 'true')
         run: rustup show active-toolchain
-      - name: Format
+
+      - name: Format once
+        if: runner.os == 'Linux' && needs.impact.outputs.rust_changed == 'true'
         run: cargo fmt --all -- --check
-      - name: Clippy
-        run: cargo clippy --workspace --all-targets --locked -- -D warnings
-      - name: Tests and platform IPC
-        run: cargo test --workspace --all-targets --locked
-      - name: Supply-chain tools
-        run: cargo install cargo-deny --locked
-      - name: Advisory tool
-        run: cargo install cargo-audit --locked
-      - name: Dependency policy
-        run: cargo deny check
-      - name: Advisory scan
-        run: cargo audit
-      - name: SBOM
+
+      - name: Clippy full workspace
+        if: needs.impact.outputs.run_m01 == 'true' && needs.impact.outputs.full == 'true'
+        run: cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
+
+      - name: Clippy M01 targeted
+        if: needs.impact.outputs.run_m01 == 'true' && needs.impact.outputs.full != 'true'
+        run: cargo clippy -p core-config -p core-registry -p core-journal -p core-ipc -p core-health -p core-runtime -p core-cli --all-targets --locked -- -D warnings
+
+      - name: Tests full workspace and platform IPC
+        if: needs.impact.outputs.run_m01 == 'true' && needs.impact.outputs.full == 'true'
+        run: cargo test --workspace --all-targets --all-features --locked
+
+      - name: Tests M01 targeted and platform IPC
+        if: needs.impact.outputs.run_m01 == 'true' && needs.impact.outputs.full != 'true'
+        run: cargo test -p core-config -p core-registry -p core-journal -p core-ipc -p core-health -p core-runtime -p core-cli --all-targets --locked
+
+      - name: Restore pinned supply-chain tools
+        if: runner.os == 'Linux' && needs.impact.outputs.run_supply_chain == 'true'
+        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        with:
+          path: ~/.core-supply-tools
+          key: core-supply-tools-linux-deny-0.20.2-audit-0.22.2-v1
+
+      - name: Install pinned supply-chain tools if missing
+        if: runner.os == 'Linux' && needs.impact.outputs.run_supply_chain == 'true'
         shell: bash
-        run: python scripts/generate_sbom.py --output artifacts/m01-sbom.cdx.json
+        run: |
+          set -euo pipefail
+          ROOT="$HOME/.core-supply-tools"
+          mkdir -p "$ROOT"
+          if [[ ! -x "$ROOT/bin/cargo-deny" ]]; then
+            cargo install cargo-deny --version 0.20.2 --locked --root "$ROOT"
+          fi
+          if [[ ! -x "$ROOT/bin/cargo-audit" ]]; then
+            cargo install cargo-audit --version 0.22.2 --locked --root "$ROOT"
+          fi
+          echo "$ROOT/bin" >> "$GITHUB_PATH"
+
+      - name: Dependency policy
+        if: runner.os == 'Linux' && needs.impact.outputs.run_supply_chain == 'true'
+        run: cargo-deny check
+
+      - name: Advisory scan
+        if: runner.os == 'Linux' && needs.impact.outputs.run_supply_chain == 'true'
+        run: cargo-audit
+
+      - name: Core SBOM
+        if: runner.os == 'Linux' && needs.impact.outputs.run_supply_chain == 'true'
+        run: python scripts/generate_sbom.py --output artifacts/core-sbom.cdx.json
+
       - name: Bounded start/stop soak
+        if: needs.impact.outputs.run_m01 == 'true'
         run: python scripts/m01_soak.py --iterations 16 --output artifacts/m01-soak.json
+
       - name: PRB/WNF gate
+        if: needs.impact.outputs.run_m01 == 'true'
         run: python scripts/m01_prb.py --mode check --output artifacts/m01-prb.json
+
       - name: Upload evidence artifacts
+        if: needs.impact.outputs.run_m01 == 'true' || (runner.os == 'Linux' && needs.impact.outputs.run_supply_chain == 'true')
         uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
         with:
           name: m01-evidence-${{ matrix.os }}
           path: artifacts/
+          if-no-files-found: ignore
 
   m01-fuzz:
     name: M01 fuzz campaign
+    needs: impact
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
+      - name: Adaptive gate summary
+        run: echo "mode=${{ needs.impact.outputs.mode }} run_m01_fuzz=${{ needs.impact.outputs.run_m01_fuzz }}"
+
       - name: Checkout exact candidate
+        if: needs.impact.outputs.run_m01_fuzz == 'true'
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
       - name: Install nightly toolchain
+        if: needs.impact.outputs.run_m01_fuzz == 'true'
         run: rustup toolchain install nightly --profile minimal
-      - name: Install cargo-fuzz
-        run: cargo +nightly install cargo-fuzz --locked
+
+      - name: Restore pinned cargo-fuzz
+        if: needs.impact.outputs.run_m01_fuzz == 'true'
+        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        with:
+          path: ~/.core-fuzz-tools
+          key: core-cargo-fuzz-linux-0.13.2-v1
+
+      - name: Install pinned cargo-fuzz if missing
+        if: needs.impact.outputs.run_m01_fuzz == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$HOME/.core-fuzz-tools"
+          mkdir -p "$ROOT"
+          if [[ ! -x "$ROOT/bin/cargo-fuzz" ]]; then
+            cargo +nightly install cargo-fuzz --version 0.13.2 --locked --root "$ROOT"
+          fi
+          echo "$ROOT/bin" >> "$GITHUB_PATH"
+
       - name: Run bounded fuzz targets
+        if: needs.impact.outputs.run_m01_fuzz == 'true'
         shell: bash
         working-directory: fuzz
         run: |
@@ -93,40 +240,68 @@ jobs:
 
   m02:
     name: M02 workspace adapter
+    needs: impact
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
     steps:
+      - name: Adaptive gate summary
+        shell: bash
+        run: |
+          echo "mode=${{ needs.impact.outputs.mode }}"
+          echo "run_m02=${{ needs.impact.outputs.run_m02 }}"
+
       - name: Checkout exact candidate
+        if: needs.impact.outputs.run_m02 == 'true'
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
       - name: Set up Python
+        if: needs.impact.outputs.run_m02 == 'true'
         uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: "3.12"
-      - name: Validate governance and M02 static boundaries
+
+      - name: Validate M02 static boundaries
+        if: needs.impact.outputs.run_m02 == 'true'
         run: |
-          python -m py_compile scripts/validate_governance.py scripts/hive_bootstrap.py scripts/hive_mcp.py scripts/validate_m02.py
-          python scripts/validate_governance.py
+          python -m py_compile scripts/validate_m02.py
           python scripts/validate_m02.py
+
+      - name: Restore Cargo build cache
+        if: needs.impact.outputs.run_m02 == 'true'
+        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: core-cargo-${{ runner.os }}-${{ github.job }}-${{ hashFiles('Cargo.lock') }}-v1
+          restore-keys: |
+            core-cargo-${{ runner.os }}-${{ github.job }}-
+
       - name: Rust toolchain
+        if: needs.impact.outputs.run_m02 == 'true'
         run: rustup show active-toolchain
-      - name: Format
-        run: cargo fmt --all -- --check
-      - name: Clippy
-        run: cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
+
+      - name: Clippy M02
+        if: needs.impact.outputs.run_m02 == 'true'
+        run: cargo clippy -p core-workspace --all-targets --all-features --locked -- -D warnings
+
       - name: Workspace and M02 tests
-        run: cargo test --workspace --all-features --locked
-      - name: Supply-chain tools
-        run: cargo install cargo-deny cargo-audit --locked
-      - name: Dependency policy
-        run: cargo deny check
-      - name: Advisory scan
-        run: cargo audit
-      - name: SBOM
+        if: needs.impact.outputs.run_m02 == 'true'
+        run: cargo test -p core-workspace --all-targets --all-features --locked
+
+      - name: M02 SBOM
+        if: runner.os == 'Linux' && needs.impact.outputs.run_m02 == 'true'
         run: python scripts/generate_sbom.py --output artifacts/m02-sbom.cdx.json
+
       - name: Upload M02 evidence
+        if: needs.impact.outputs.run_m02 == 'true'
         uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
         with:
           name: m02-evidence-${{ matrix.os }}
@@ -134,18 +309,48 @@ jobs:
             artifacts/
             docs/evidence/M02-*.md
             .engineering/evidence/CORE-WO-M02-001.json
+          if-no-files-found: ignore
 
   m02-fuzz:
     name: M02 bounded fuzz campaign
+    needs: impact
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
+      - name: Adaptive gate summary
+        run: echo "mode=${{ needs.impact.outputs.mode }} run_m02_fuzz=${{ needs.impact.outputs.run_m02_fuzz }}"
+
       - name: Checkout exact candidate
+        if: needs.impact.outputs.run_m02_fuzz == 'true'
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
       - name: Install nightly toolchain
+        if: needs.impact.outputs.run_m02_fuzz == 'true'
         run: rustup toolchain install nightly --profile minimal
-      - name: Install cargo-fuzz
-        run: cargo +nightly install cargo-fuzz --locked
+
+      - name: Restore pinned cargo-fuzz
+        if: needs.impact.outputs.run_m02_fuzz == 'true'
+        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        with:
+          path: ~/.core-fuzz-tools
+          key: core-cargo-fuzz-linux-0.13.2-v1
+
+      - name: Install pinned cargo-fuzz if missing
+        if: needs.impact.outputs.run_m02_fuzz == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$HOME/.core-fuzz-tools"
+          mkdir -p "$ROOT"
+          if [[ ! -x "$ROOT/bin/cargo-fuzz" ]]; then
+            cargo +nightly install cargo-fuzz --version 0.13.2 --locked --root "$ROOT"
+          fi
+          echo "$ROOT/bin" >> "$GITHUB_PATH"
+
       - name: Run bounded M02 fuzz targets
+        if: needs.impact.outputs.run_m02_fuzz == 'true'
         shell: bash
         working-directory: fuzz
         run: |
@@ -154,50 +359,102 @@ jobs:
             cargo +nightly fuzz run "$target" -- -runs=1000
           done
 
-
   m03:
     name: M03 work-order engine (${{ matrix.os }})
+    needs: impact
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
     steps:
+      - name: Adaptive gate summary
+        shell: bash
+        run: |
+          echo "mode=${{ needs.impact.outputs.mode }}"
+          echo "run_m03=${{ needs.impact.outputs.run_m03 }}"
+
       - name: Checkout exact candidate
+        if: needs.impact.outputs.run_m03 == 'true'
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Restore Cargo build cache
+        if: needs.impact.outputs.run_m03 == 'true'
+        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: core-cargo-${{ runner.os }}-${{ github.job }}-${{ hashFiles('Cargo.lock') }}-v1
+          restore-keys: |
+            core-cargo-${{ runner.os }}-${{ github.job }}-
+
       - name: Rust toolchain
+        if: needs.impact.outputs.run_m03 == 'true'
         run: rustup show active-toolchain
-      - name: Format
-        run: cargo fmt --all -- --check
+
       - name: Clippy M03
+        if: needs.impact.outputs.run_m03 == 'true'
         run: cargo clippy -p core-work-order --all-targets --locked -- -D warnings
+
       - name: M03 tests
+        if: needs.impact.outputs.run_m03 == 'true'
         run: cargo test -p core-work-order --all-targets --locked
-      - name: Supply-chain tools
-        run: cargo install cargo-deny cargo-audit --locked
-      - name: Dependency policy
-        run: cargo deny check
-      - name: Advisory scan
-        run: cargo audit
+
       - name: Upload M03 evidence
+        if: needs.impact.outputs.run_m03 == 'true'
         uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
         with:
           name: m03-evidence-${{ matrix.os }}
           path: |
             docs/evidence/M03-*
             .engineering/evidence/CORE-WO-M03-001.json
+          if-no-files-found: ignore
 
   m03-fuzz:
     name: M03 bounded fuzz campaign
+    needs: impact
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
+      - name: Adaptive gate summary
+        run: echo "mode=${{ needs.impact.outputs.mode }} run_m03_fuzz=${{ needs.impact.outputs.run_m03_fuzz }}"
+
       - name: Checkout exact candidate
+        if: needs.impact.outputs.run_m03_fuzz == 'true'
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
       - name: Install nightly toolchain
+        if: needs.impact.outputs.run_m03_fuzz == 'true'
         run: rustup toolchain install nightly --profile minimal
-      - name: Install cargo-fuzz
-        run: cargo +nightly install cargo-fuzz --locked
+
+      - name: Restore pinned cargo-fuzz
+        if: needs.impact.outputs.run_m03_fuzz == 'true'
+        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        with:
+          path: ~/.core-fuzz-tools
+          key: core-cargo-fuzz-linux-0.13.2-v1
+
+      - name: Install pinned cargo-fuzz if missing
+        if: needs.impact.outputs.run_m03_fuzz == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$HOME/.core-fuzz-tools"
+          mkdir -p "$ROOT"
+          if [[ ! -x "$ROOT/bin/cargo-fuzz" ]]; then
+            cargo +nightly install cargo-fuzz --version 0.13.2 --locked --root "$ROOT"
+          fi
+          echo "$ROOT/bin" >> "$GITHUB_PATH"
+
       - name: Run bounded M03 fuzz targets
+        if: needs.impact.outputs.run_m03_fuzz == 'true'
         shell: bash
         working-directory: fuzz
         run: |
