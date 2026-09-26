@@ -5,11 +5,12 @@
   "reviewMode": "DELTA_EXACT_HEAD",
   "assuranceMode": "ELEVATED",
   "productStage": "M04_EXECUTION_AUTHORIZED",
-  "nextLegalAction": "PREFLIGHT_CORE_WO_M04_001_PACK_A_AFTER_CORE_M04_SYNC_006_PROMOTION",
+  "nextLegalAction": "RESOLVE_CD03_CORRECTION_EXACT_HEAD_CI_THEN_AWAIT_INDEPENDENT_AUDIT; KEEP_PACK_B_AND_CHECKPOINT_PROMOTION_STOPPED",
+  "implementationExecutionStatus": "PACK_A_CD03_CORRECTION_AWAITING_EXACT_HEAD_CI_AND_INDEPENDENT_AUDIT",
   "productImplementationAuthorized": true,
   "canonicalCheckpoint": "docs/project-brain/13-CHECKPOINT.md",
   "lastCompletedWorkOrder": "CORE-WO-M03-001",
-  "lastPromotedMerge": "251f15495b82df8270ebc12fa93807ffaa15fba4",
+  "lastPromotedMerge": "d2b750f917f841fe715aafea9e0f80fbd3bc1035",
   "authorizedScope": "M04_RUN_ATTEMPT_STEP_ENGINE",
   "activeWorkOrder": "CORE-WO-M04-001",
   "authorizationEffectiveOnlyOnCanonicalMain": true,
@@ -62,5 +63,130 @@
     "promotionMerge": "c63df6ad581c44bac66a8b1dab9a86522ce7fe3b",
     "unresolvedHighCritical": 0
   },
-  "admissionPromotionMerge": "bb6f631284361fae29479c66f62ca88bebf3d79c"
+  "admissionPromotionMerge": "bb6f631284361fae29479c66f62ca88bebf3d79c",
+  "postPromotionSynchronization": {
+    "increment": "CORE-M04-SYNC-006",
+    "status": "APPROVED_PROMOTED",
+    "reviewIssue": 105,
+    "reviewIssueTitle": "M04-REVIEW-012: APPROVED CORE-M04-SYNC-006 closeout",
+    "reviewIssueState": "open",
+    "pullRequest": 104,
+    "pullRequestState": "closed",
+    "pullRequestMerged": true,
+    "baseSha": "251f15495b82df8270ebc12fa93807ffaa15fba4",
+    "reviewedHead": "11982778fdf0c8e345f72f5bd709f94cb14bfe86",
+    "workflowRun": 36236642339,
+    "workflowStatus": "completed",
+    "workflowConclusion": "success",
+    "workflowJobCount": 10,
+    "workflowJobsSuccessful": 10,
+    "workflowJobsFailed": 0,
+    "workflowJobNames": [
+      "Governance",
+      "M03 work-order engine (ubuntu-latest)",
+      "M01 (ubuntu-latest)",
+      "M02 bounded fuzz campaign",
+      "M03 bounded fuzz campaign",
+      "M01 (windows-latest)",
+      "M02 workspace adapter (ubuntu-latest)",
+      "M02 workspace adapter (windows-latest)",
+      "M03 work-order engine (windows-latest)",
+      "M01 fuzz campaign"
+    ],
+    "promotionMerge": "d2b750f917f841fe715aafea9e0f80fbd3bc1035",
+    "unresolvedHighCritical": 0
+  },
+  "implementationPreflight": {
+    "status": "PASS",
+    "mode": "SOLO_GIT_CANONICAL",
+    "canonicalMainSha": "d2b750f917f841fe715aafea9e0f80fbd3bc1035",
+    "executionBranch": "feat/m04-run-state",
+    "authorizedBase": "f6b422be5465d5a93d0b8fcf4c9507c205663072",
+    "sourceFingerprintsMatched": 9,
+    "hiveCheckpointRead": "source_not_current"
+  },
+  "executionBlocker": {
+    "packet": "A",
+    "status": "PACK_A_CD03_CORRECTION_PENDING_EXACT_HEAD_CI_AND_INDEPENDENT_AUDIT",
+    "triageId": "CORE-M04-PACK-A-CD03",
+    "previousTriageId": "CORE-M04-PACK-A-CD02",
+    "resolvedPreviousFailure": "The unchanged M02 .cmd test fixture emitted no child output under env_clear; the test-only native Rust executable now exercises both streams.",
+    "failingGate": null,
+    "baselineFixtureOnlyFullWorkspaceTest": "PASS at base d2b750f917f841fe715aafea9e0f80fbd3bc1035",
+    "candidateFullWorkspaceTest": "PASS on feat/m04-run-state working tree; Pack A plus CD-02 fixture",
+    "windowsFocal": "PASS",
+    "linuxFocal": "PASS in rust:1.98.1-slim-bookworm Docker container",
+    "fmtClippyGovernanceDiffCheck": "PASS",
+    "exactHeadCi": "PASS at initial PR head 2a553a11c5bfe2bedd0ea05754d2fc71b3ea579b; workflow 36248160958 latest attempt has 10/10 jobs successful after M02 Ubuntu rerun job 108423661915. Re-run and resolve against current PR head after Evidence/Handoff follow-up.",
+    "implementationPullRequest": "OPEN #106 https://github.com/KayzenRoot/core/pull/106",
+    "independentAudit": "PENDING; executor does not approve or merge",
+    "packBStarted": false,
+    "allEvNodesRemainPending": true,
+    "nextLegalAction": "Resolve GitHub checks for the correction commit exact head, then await independent audit; do not start Pack B or promote the checkpoint.",
+    "lastGreenPrHeadBeforeCd03Correction": {
+      "headSha": "cfa82f6183a5e44ccfff0bba50a72706f3458928",
+      "workflowRunId": 36249941196,
+      "workflowStatus": "completed",
+      "workflowConclusion": "success",
+      "successfulJobs": 10,
+      "totalJobs": 10,
+      "historicalOnly": true
+    },
+    "cd03Correction": {
+      "prompt": "CORE-M04-PACK-A-CD03-INDEPENDENT-REVIEW-CORRECTION-PROMPT.pdf",
+      "reviewedBaseSha": "d2b750f917f841fe715aafea9e0f80fbd3bc1035",
+      "reviewedPreCorrectionHeadSha": "cfa82f6183a5e44ccfff0bba50a72706f3458928",
+      "reviewedPreCorrectionWorkflow": {
+        "runId": 36249941196,
+        "status": "completed",
+        "conclusion": "success",
+        "successfulJobs": 10,
+        "totalJobs": 10,
+        "appliesOnlyToHead": "cfa82f6183a5e44ccfff0bba50a72706f3458928"
+      },
+      "findings": {
+        "F-01": "CORRECTED: validated schema/version value types and fail-closed deserialization cover all five versioned Pack A DTOs.",
+        "F-02": "CORRECTED: CanonicalEventV1 construction and deserialization reject every event_kind/payload mismatch with KindPayloadMismatch.",
+        "F-03": "CORRECTED: preserved the cfa82f6 / run 36249941196 history and separated the correction commit pending its own exact-head CI.",
+        "F-04": "COVERAGE_IMPROVED: test helper emits 512 KiB to stdout and stderr concurrently; M02 production source and default limits are unchanged."
+      },
+      "changedFiles": [
+        "crates/core-run-state/src/contracts.rs",
+        "crates/core-run-state/src/lib.rs",
+        "crates/core-run-state/tests/public_contracts.rs",
+        "crates/core-workspace/tests/git_system.rs",
+        ".engineering/gef/GEF-CURRENT.json",
+        ".engineering/evidence/CORE-WO-M04-001.json",
+        "docs/work-orders/CODEX-HANDOFF-M04.md"
+      ],
+      "localVerification": {
+        "platform": "Windows",
+        "workspaceTests": {
+          "command": "cargo test --workspace --all-targets --all-features --locked",
+          "result": "PASS",
+          "exitCode": 0
+        },
+        "focusedRunStateTests": {
+          "command": "cargo test -p core-run-state --locked",
+          "result": "PASS"
+        },
+        "focusedM02PipePressureTest": {
+          "command": "cargo test -p core-workspace --test git_system hostile_dual_output_is_capped_without_deadlock -- --exact --nocapture",
+          "result": "PASS"
+        },
+        "format": "PASS: cargo fmt --all -- --check",
+        "clippy": "PASS: cargo clippy --workspace --all-targets --all-features --locked -- -D warnings",
+        "governance": "PASS: python scripts/validate_governance.py",
+        "diffChecks": "PASS: git diff --check and git diff --cached --check",
+        "hostedCorrectionHeadCi": "PENDING; local results do not replace GitHub checks on the pushed exact head"
+      },
+      "newCorrectionHead": "the commit containing this correction record; SHA is bound by the resulting PR head",
+      "newCorrectionHeadCiAtPublication": "PENDING_EXACT_HEAD_GITHUB_RUN",
+      "independentAudit": "PENDING; executor does not approve or merge",
+      "packBStarted": false,
+      "checkpointPromotion": false,
+      "allEvNodesRemainPending": true,
+      "reviewerOwnedAcceptance": "AC-M04-023 / EV-M04-023 remains assigned to the independent reviewer"
+    }
+  }
 }

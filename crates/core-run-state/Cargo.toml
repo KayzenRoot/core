@@ -1,0 +1,15 @@
+[package]
+name = "core-run-state"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+core-work-order = { path = "../core-work-order", version = "0.1.0" }
+core-identity = { path = "../core-identity", version = "0.1.0" }
+serde.workspace = true
+thiserror.workspace = true
+
+[dev-dependencies]
+serde_json.workspace = true

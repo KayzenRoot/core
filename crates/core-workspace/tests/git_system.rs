@@ -26,6 +26,71 @@ fn write_helper(path: &Path, body: &str) {
     }
 }
 
+fn make_dual_output_helper(root: &Path, name: &str) -> PathBuf {
+    let source = root.join(format!("{name}.rs"));
+    let executable = root.join(if cfg!(windows) {
+        format!("{name}.exe")
+    } else {
+        name.to_owned()
+    });
+    fs::write(
+        &source,
+        r#"use std::io::Write;
+
+fn write_stream(byte: u8, length: usize, stderr: bool) {
+    let chunk = [byte; 8192];
+    let mut written = 0;
+    if stderr {
+        let mut stream = std::io::stderr().lock();
+        while written < length {
+            let chunk_len = (length - written).min(chunk.len());
+            stream.write_all(&chunk[..chunk_len]).unwrap();
+            written += chunk_len;
+        }
+        stream.flush().unwrap();
+    } else {
+        let mut stream = std::io::stdout().lock();
+        while written < length {
+            let chunk_len = (length - written).min(chunk.len());
+            stream.write_all(&chunk[..chunk_len]).unwrap();
+            written += chunk_len;
+        }
+        stream.flush().unwrap();
+    }
+}
+
+fn main() {
+    let root = std::env::current_dir().unwrap();
+    let pipe_pressure = root.join("exercise-pipe-pressure").is_file();
+    let length = if pipe_pressure { 512 * 1024 } else { 50 };
+    std::thread::scope(|scope| {
+        let stdout = scope.spawn(|| write_stream(b'x', length, false));
+        let stderr = scope.spawn(|| write_stream(b'y', length, true));
+        stdout.join().unwrap();
+        stderr.join().unwrap();
+    });
+}
+"#,
+    )
+    .unwrap();
+    let rustc = std::env::var_os("RUSTC").unwrap_or_else(|| "rustc".into());
+    let output = Command::new(rustc)
+        .args([
+            "--edition=2021",
+            source.to_string_lossy().as_ref(),
+            "-o",
+            executable.to_string_lossy().as_ref(),
+        ])
+        .output()
+        .expect("rustc must be available to compile the native stream helper");
+    assert!(
+        output.status.success(),
+        "native stream helper compilation failed: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    executable
+}
+
 fn make_sleep_helper(path: &Path) {
     if cfg!(windows) {
         let source = path.with_extension("rs");
@@ -201,30 +266,98 @@ fn hostile_fsmonitor_configuration_never_executes_a_canary() {
 fn hostile_dual_output_is_capped_without_deadlock() {
     let root = std::env::temp_dir().join(format!("m02-git-dual-output-{}", std::process::id()));
     fs::create_dir_all(&root).unwrap();
-    let helper = helper_path(&root, "dual-output-helper");
-    let body = if cfg!(windows) {
-        "@echo off\r\necho xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\necho yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy 1>&2\r\n"
-    } else {
-        "#!/bin/sh\nprintf 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'\nprintf 'yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy' >&2\n"
-    };
-    write_helper(&helper, body);
-    let budget = WorkspaceResourceBudget {
-        max_stdout_bytes: 16,
-        max_stderr_bytes: 16,
-        ..WorkspaceResourceBudget::default()
-    };
-    let started = Instant::now();
-    let error = SystemGitInspector {
+    let helper = make_dual_output_helper(&root, "dual-output-helper");
+
+    let helper_output = Command::new(&helper)
+        .current_dir(&root)
+        .env_clear()
+        .output()
+        .expect("native dual-output helper must run without inherited environment");
+    assert!(helper_output.status.success());
+    assert_eq!(helper_output.status.code(), Some(0));
+    assert_eq!(helper_output.stdout, vec![b'x'; 50]);
+    assert_eq!(helper_output.stderr, vec![b'y'; 50]);
+    assert_eq!(helper_output.stdout.len(), 50);
+    assert_eq!(helper_output.stderr.len(), 50);
+    assert_ne!(helper_output.stdout, helper_output.stderr);
+
+    let pressure_root = root.join("pipe-pressure");
+    fs::create_dir_all(&pressure_root).unwrap();
+    fs::write(pressure_root.join("exercise-pipe-pressure"), b"enabled").unwrap();
+    let pressure_output = Command::new(&helper)
+        .current_dir(&pressure_root)
+        .env_clear()
+        .output()
+        .expect("simultaneous pipe-pressure helper must run without inherited environment");
+    let pressure_bytes = 512 * 1024;
+    assert!(pressure_output.status.success());
+    assert_eq!(pressure_output.stdout.len(), pressure_bytes);
+    assert_eq!(pressure_output.stderr.len(), pressure_bytes);
+    assert!(pressure_output.stdout.iter().all(|byte| *byte == b'x'));
+    assert!(pressure_output.stderr.iter().all(|byte| *byte == b'y'));
+
+    let pressure_started = Instant::now();
+    let pressure_result = SystemGitInspector {
         git_program: helper.to_string_lossy().into_owned(),
     }
     .inspect(&GitInspectRequest {
-        root: root.clone(),
+        root: pressure_root,
         untracked_policy: UntrackedPolicy::ExcludedByPolicy,
-        budget,
-    })
-    .expect_err("dual output must exceed an independent cap");
-    assert!(matches!(error, M02Error::ResourceBudgetExceeded(_)));
-    assert!(started.elapsed() < Duration::from_secs(5));
+        budget: WorkspaceResourceBudget::default(),
+    });
+    let pressure_elapsed = pressure_started.elapsed();
+    assert!(
+        pressure_elapsed < Duration::from_secs(5),
+        "simultaneous stdout/stderr pipe pressure did not complete before the deadline: {pressure_result:?}"
+    );
+    assert!(
+        !matches!(
+            pressure_result,
+            Err(M02Error::ResourceBudgetExceeded(ref reason)) if reason.contains("process duration")
+        ),
+        "pipe pressure must not deadlock the inspector"
+    );
+
+    let inspect_with_caps = |max_stdout_bytes, max_stderr_bytes| {
+        let budget = WorkspaceResourceBudget {
+            max_stdout_bytes,
+            max_stderr_bytes,
+            ..WorkspaceResourceBudget::default()
+        };
+        let started = Instant::now();
+        let error = SystemGitInspector {
+            git_program: helper.to_string_lossy().into_owned(),
+        }
+        .inspect(&GitInspectRequest {
+            root: root.clone(),
+            untracked_policy: UntrackedPolicy::ExcludedByPolicy,
+            budget,
+        })
+        .expect_err("over-limit native output must fail before inspection continues");
+        (error, started.elapsed())
+    };
+
+    let defaults = WorkspaceResourceBudget::default();
+    let (stdout_error, stdout_elapsed) = inspect_with_caps(16, defaults.max_stderr_bytes);
+    assert!(matches!(
+        stdout_error,
+        M02Error::ResourceBudgetExceeded(ref stream) if stream == "Git stdout"
+    ));
+    assert!(stdout_elapsed < Duration::from_secs(5));
+
+    let (stderr_error, stderr_elapsed) = inspect_with_caps(defaults.max_stdout_bytes, 16);
+    assert!(matches!(
+        stderr_error,
+        M02Error::ResourceBudgetExceeded(ref stream) if stream == "Git stderr"
+    ));
+    assert!(stderr_elapsed < Duration::from_secs(5));
+
+    let (dual_error, dual_elapsed) = inspect_with_caps(16, 16);
+    assert!(matches!(
+        dual_error,
+        M02Error::ResourceBudgetExceeded(ref stream) if stream == "Git stdout"
+    ));
+    assert!(dual_elapsed < Duration::from_secs(5));
     let _ = fs::remove_dir_all(root);
 }
 
