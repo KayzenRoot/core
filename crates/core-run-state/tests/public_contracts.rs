@@ -543,6 +543,43 @@ fn canonical_event_rejects_mismatched_payload_lineage() {
         .validate()
         .expect_err("reference event run ID must match its evidence lineage");
     assert_eq!(reference_error.code, M04ErrorCodeV1::LineageMismatch);
+
+    let same_attempt_continuation = canonical_event_with_domain(
+        FingerprintDomainV1::Event,
+        EventKindV1::ContinuationCreated,
+        EventPayloadV1::ContinuationCreated {
+            source_attempt_id: AttemptId::new("attempt-1").unwrap(),
+            attempt_id: AttemptId::new("attempt-1").unwrap(),
+            execution_epoch: ExecutionEpoch::new(2),
+            boundary_fingerprint: fingerprint('b'),
+        },
+    )
+    .expect_err("continuation must create a distinct attempt identity");
+    assert_eq!(
+        same_attempt_continuation.code,
+        M04ErrorCodeV1::LineageMismatch
+    );
+}
+
+#[test]
+fn closed_tagged_contracts_reject_unknown_payload_fields() {
+    let payload = EventPayloadV1::RunAdmitted {
+        boundary_fingerprint: fingerprint('b'),
+    };
+    let mut payload_wire = serde_json::to_value(payload).expect("serialize event payload");
+    payload_wire["data"]["unexpected"] = serde_json::json!("must fail closed");
+    assert!(
+        serde_json::from_value::<EventPayloadV1>(payload_wire).is_err(),
+        "event payload variants must reject unknown fields"
+    );
+
+    let target = TransitionTargetV1::Run(RunStatusV1::Active);
+    let mut target_wire = serde_json::to_value(target).expect("serialize transition target");
+    target_wire["unexpected"] = serde_json::json!("must fail closed");
+    assert!(
+        serde_json::from_value::<TransitionTargetV1>(target_wire).is_err(),
+        "transition targets must reject unknown fields"
+    );
 }
 
 #[test]

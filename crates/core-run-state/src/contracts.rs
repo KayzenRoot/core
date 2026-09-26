@@ -592,6 +592,7 @@ impl<'de> Deserialize<'de> for ContinuationFrameV1 {
 /// Closed target union for transition requests; Pack B supplies transition laws.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(
+    deny_unknown_fields,
     rename_all = "SCREAMING_SNAKE_CASE",
     tag = "entity",
     content = "status"
@@ -604,7 +605,12 @@ pub enum TransitionTargetV1 {
 
 /// Typed event payload variants. No arbitrary event name or opaque body exists.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "SCREAMING_SNAKE_CASE", tag = "kind", content = "data")]
+#[serde(
+    deny_unknown_fields,
+    rename_all = "SCREAMING_SNAKE_CASE",
+    tag = "kind",
+    content = "data"
+)]
 pub enum EventPayloadV1 {
     RunCreated {
         work_order: WorkOrderIdentityRefV1,
@@ -802,9 +808,14 @@ fn validate_event_lineage(
             ..
         } => attempt_id == Some(payload_attempt_id) && step_id == Some(payload_step_id),
         EventPayloadV1::ContinuationCreated {
+            source_attempt_id,
             attempt_id: created_attempt_id,
             ..
-        } => attempt_id == Some(created_attempt_id) && step_id.is_none(),
+        } => {
+            attempt_id == Some(created_attempt_id)
+                && step_id.is_none()
+                && source_attempt_id != created_attempt_id
+        }
         EventPayloadV1::ReferenceAttached { reference } => {
             run_id == &reference.run_id
                 && attempt_id == reference.attempt_id.as_ref()
