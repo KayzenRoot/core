@@ -309,7 +309,7 @@ fn canonical_event_with_domain(
             step_id,
             ..
         } => (Some(attempt_id.clone()), Some(step_id.clone())),
-        EventPayloadV1::ContinuationCreated { attempt_id, .. } => (Some(attempt_id.clone()), None)
+        EventPayloadV1::ContinuationCreated { attempt_id, .. } => (Some(attempt_id.clone()), None),
         EventPayloadV1::ReferenceAttached { reference } => {
             (reference.attempt_id.clone(), reference.step_id.clone())
         }
