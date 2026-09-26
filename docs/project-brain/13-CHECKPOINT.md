@@ -17,6 +17,7 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - M04 Rounds 1-5 planning and CORE-M04-ADMIT-001 are promoted. CORE-WO-M04-001 is authorized for M04-only implementation on canonical main.
 - CORE-M04-SYNC-003 was APPROVED by M04-REVIEW-009 / Issue #97 at exact head `f9a5a7847e268000a5249ae8e69c81ed22b924ad`; PR #96, workflow `35994572596` (10/10 SUCCESS), promotion merge `b79891f489d8c7117aee15e1dca47abb9e23dea3`, unresolved HIGH/CRITICAL: 0.
 - CORE-M04-SYNC-004 was APPROVED by M04-REVIEW-010 / Issue #100 at exact head `19123d50bebe1a13257d8e2768fca7a1ca1d3393`; PR #99, workflow `36013624792` (10/10 SUCCESS), squash promotion merge `b2ac8e0db72a2145948e7773295b1b252c5e4eab`, unresolved HIGH/CRITICAL: 0.
+- CORE-M04-SYNC-005 was APPROVED by M04-REVIEW-011 / Issue #102 at exact head `e8b0548c2ecd7c22edbeb3f02de8a238f9c49ffc`; PR #101, workflow `36033275191` (10/10 SUCCESS), promotion merge `251f15495b82df8270ebc12fa93807ffaa15fba4`, unresolved HIGH/CRITICAL: 0.
 - M05-M24 remain discovery-only until their planning freezes.
 
 ## COMPLETED
@@ -41,18 +42,18 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - CORE-GOV-002-C01 GitHub hardening independently reviewed (Review 001 / Issue #57) and promoted through PR #56; active ruleset `CORE main protection` id `23769853` protects `main` with no bypass actors and the seven-context strict CI gate.
 
 ## PENDING
-- After CORE-M04-SYNC-005 is independently approved and promoted, run a fresh Git/HIVE/governance preflight for CORE-WO-M04-001 Pack A. Validate the ACTIVE Context Lock, all nine source fingerprints, the exact Work Order blob and frozen authorized-base ancestry before Pack A. M04 remains authorized, ACTIVE and NOT_STARTED.
+- After CORE-M04-SYNC-006 is independently approved and promoted, run a fresh Git/HIVE/governance preflight for CORE-WO-M04-001 Pack A. Validate the ACTIVE Context Lock, all nine source fingerprints, the exact Work Order blob and frozen authorized-base ancestry before Pack A. M04 remains authorized, ACTIVE and NOT_STARTED.
 - Deep-plan M04 through M24 in dependency order.
 - Freeze each module Requirements/Architecture/DoD/Work Order before implementation authorization.
 - Live local HIVE bootstrap evidence against current main.
 
 ## BLOCKERS
 - No unresolved HIGH/CRITICAL finding is recorded in promoted M03 implementation or M04 planning/admission/synchronization reviews.
-- CORE-M04-SYNC-004 is APPROVED_PROMOTED with zero unresolved HIGH/CRITICAL findings; Pack A remains gated on a fresh preflight after CORE-M04-SYNC-005 is approved and promoted. No M04 product implementation has started.
+- CORE-M04-SYNC-005 is APPROVED_PROMOTED with zero unresolved HIGH/CRITICAL findings; Pack A remains gated on promotion of CORE-M04-SYNC-006 and a fresh preflight afterward. No M04 product implementation has started.
 - M05-M24 implementation remains gated by their own planning freezes and admissions.
 
 ## NEXT STEP
-After CORE-M04-SYNC-005 is independently approved and promoted, run fresh Git/HIVE/governance preflight for CORE-WO-M04-001 Pack A from canonical main. Validate the ACTIVE Context Lock, all nine source fingerprints, the exact Work Order blob and frozen authorized-base ancestry. Begin Pack A only if preflight passes; M04 remains authorized, ACTIVE and NOT_STARTED. Do not widen frozen M04 scope.
+After CORE-M04-SYNC-006 is independently approved and promoted, run fresh Git/HIVE/governance preflight for CORE-WO-M04-001 Pack A from canonical main. Validate the ACTIVE Context Lock, all nine source fingerprints, the exact Work Order blob and frozen authorized-base ancestry. Begin Pack A only if preflight passes; M04 remains authorized, ACTIVE and NOT_STARTED. Do not widen frozen M04 scope.
 
 ## EVIDENCE
 - M04 execution admission Review 008 / Issue #95 — APPROVED; PR #94; exact head `f29dcb6b327c5fdceda31fe306e52d506c1eae72`; workflow `35992752646`; promotion merge `bb6f631284361fae29479c66f62ca88bebf3d79c`; 10/10 hosted jobs SUCCESS.
@@ -61,6 +62,7 @@ After CORE-M04-SYNC-005 is independently approved and promoted, run fresh Git/HI
 - CORE-M04-ADMIT-001 is APPROVED_PROMOTED as merge `bb6f631284361fae29479c66f62ca88bebf3d79c`; CORE-M04-SYNC-003 subsequently made the authorized state canonical at `b79891f489d8c7117aee15e1dca47abb9e23dea3`.
 - CORE-M04-SYNC-003 Review 009 / Issue #97 — APPROVED; PR #96; exact head `f9a5a7847e268000a5249ae8e69c81ed22b924ad`; workflow `35994572596`; 10/10 hosted jobs SUCCESS; promotion merge `b79891f489d8c7117aee15e1dca47abb9e23dea3`; unresolved HIGH/CRITICAL: 0.
 - CORE-M04-SYNC-004 governance-only closeout was APPROVED by M04-REVIEW-010 / Issue #100 at exact head `19123d50bebe1a13257d8e2768fca7a1ca1d3393`; PR #99; workflow `36013624792` (10/10 SUCCESS); squash promotion merge `b2ac8e0db72a2145948e7773295b1b252c5e4eab`; unresolved HIGH/CRITICAL: 0. This promotion did not start Pack A.
+- CORE-M04-SYNC-005 governance-only promotion closeout was APPROVED by M04-REVIEW-011 / Issue #102 at exact head `e8b0548c2ecd7c22edbeb3f02de8a238f9c49ffc`; PR #101; workflow `36033275191` (10/10 SUCCESS); promotion merge `251f15495b82df8270ebc12fa93807ffaa15fba4`; unresolved HIGH/CRITICAL: 0. This promotion did not start Pack A.
 - M04 Round 4 Review 005 / Issue #87 — APPROVED; PR #86; exact head `997fcccc79e786a271ba01a6fa7854bf1eaf8bce`; workflow `35945725379`; promotion merge `63af0f735dd0419fb02f9879efed340ddb07da30`; 10/10 hosted jobs SUCCESS after same-head rerun of the timing-sensitive Ubuntu test.
 - M04 Round 1 Review 001 / Issue #77 — APPROVED; PR #76; exact head `bd9b14b3608b7f4adc19deee0acd87a03aaac478`; workflow `35915073250`; promotion merge `8a82f6bab1074aff1f692be73969364c00d1795e`.
 - M04 Round 2 Review 002 / Issue #79 — APPROVED; PR #78; exact head `dde8a4783e5a649418e9550f5b932cbddbf02c7e`; workflow `35921837198`; promotion merge `9a4b55d3a5e3dd9915dc186ecc49066a30d9b289`.

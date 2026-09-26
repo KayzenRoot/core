@@ -3,7 +3,7 @@
   "increment": "CORE-M04-FREEZE-001",
   "workOrder": "CORE-WO-M04-001",
   "repository": "KayzenRoot/core",
-  "status": "EXECUTION_AUTHORIZED_NOT_STARTED_SYNC_003_PROMOTED_SYNC_004_APPROVED_PROMOTED",
+  "status": "EXECUTION_AUTHORIZED_NOT_STARTED_SYNC_003_PROMOTED_SYNC_004_PROMOTED_SYNC_005_PROMOTED_SYNC_006_REVIEW_PENDING",
   "planningCandidate": {
     "branch": "planning/m04-final-freeze-round5",
     "planningBase": "0f448c708aafd8f5b4cb6303effdabd7e028bc6f",
@@ -17,7 +17,7 @@
   "sourceCheck": {
     "candidateCanonicalSourceBlobShaKind": "git_blob_sha1",
     "candidateCanonicalSourceBlobShas": {
-      "docs/project-brain/13-CHECKPOINT.md": "ff4709465f9247b44c96572c6dfa60373a20ac05",
+      "docs/project-brain/13-CHECKPOINT.md": "e0b659e997433c09f6cb82139f9774c6f8cc0abf",
       "docs/project-brain/16-DECISIONS-LEDGER.md": "6b7e873745e2ec6a81fedb6dbea5b0e0b271cde5",
       "docs/project-brain/03-SCOPE.md": "83a2509dab36c2b1676750d0e23542592255bc87",
       "docs/project-brain/15-DEFINITION-OF-DONE.md": "864f1974b340fca9a5a2d2e7e297c8f4fcfe5553",
@@ -32,7 +32,7 @@
   "contextLock": {
     "path": ".engineering/context-locks/CORE-WO-M04-001.json",
     "status": "ACTIVE",
-    "blobSha": "ce60e2403a7b85b1c68104e33a776395ef6314f1",
+    "blobSha": "846db75e80956cfe9fdcc447bc5a216699469bde",
     "authorizedBase": "f6b422be5465d5a93d0b8fcf4c9507c205663072",
     "productImplementationAuthorized": true,
     "executionStatus": "ACTIVE_AUTHORIZED_NOT_STARTED"
@@ -238,8 +238,8 @@
   },
   "executorHandoff": {
     "path": "docs/work-orders/CODEX-HANDOFF-M04.md",
-    "blobSha": "096175df5133132fda9a5d4b40fec5771e0d03c6",
-    "status": "EXECUTION_AUTHORIZED_NOT_STARTED / SYNC_005_PROMOTION_REVIEW_PENDING"
+    "blobSha": "718eda3a014a1799884e35acfd7c17fca4c4e820",
+    "status": "EXECUTION_AUTHORIZED_NOT_STARTED / SYNC_005_PROMOTED_SYNC_006_REVIEW_PENDING"
   },
   "executionAdmission": {
     "increment": "CORE-M04-ADMIT-001",
@@ -273,5 +273,78 @@
     "workflowJobsSuccessful": 10,
     "promotionMerge": "b2ac8e0db72a2145948e7773295b1b252c5e4eab",
     "unresolvedHighCritical": 0
+  },
+  "canonicalPromotionSynchronization": {
+    "increment": "CORE-M04-SYNC-005",
+    "branch": "fix/m04-post-review-promotion-state",
+    "status": "APPROVED_PROMOTED",
+    "reviewIssue": 102,
+    "pullRequest": 101,
+    "reviewedHead": "e8b0548c2ecd7c22edbeb3f02de8a238f9c49ffc",
+    "workflowRun": 36033275191,
+    "workflowJobsSuccessful": 10,
+    "promotionMerge": "251f15495b82df8270ebc12fa93807ffaa15fba4",
+    "unresolvedHighCritical": 0
+  },
+  "sync006GitCanonicalPreflight": {
+    "increment": "CORE-M04-SYNC-006",
+    "mode": "SOLO_GIT_CANONICAL",
+    "baseSha": "251f15495b82df8270ebc12fa93807ffaa15fba4",
+    "preflightHeadSha": "251f15495b82df8270ebc12fa93807ffaa15fba4",
+    "branch": "CORE-M04-SYNC-006",
+    "worktree": "D:/Projects/core-m04-sync-006-solo",
+    "canonicalMainSha": "251f15495b82df8270ebc12fa93807ffaa15fba4",
+    "remoteBranchCollision": false,
+    "worktreeCleanAtStart": true,
+    "authorizedBase": "f6b422be5465d5a93d0b8fcf4c9507c205663072",
+    "authorizedBaseIsAncestor": true,
+    "workOrderBlobSha": "8beffbc19e73a60f49a1e4d7797427391680d5e3",
+    "sourceFingerprintsVerifiedAtPreflight": 9,
+    "hive": {
+      "availability": "UNAVAILABLE",
+      "classification": "ADVISORY",
+      "observedProjectList": "OFFLINE",
+      "observedCheckpointRead": "source_not_current",
+      "observationSource": "Prior SYNC-006 attempt; current prompt directs no repeated HIVE calls.",
+      "callsRepeated": false,
+      "modeUsed": "SOLO_GIT_CANONICAL"
+    },
+    "syncedPromotion": {
+      "pullRequest": 101,
+      "reviewIssue": 102,
+      "reviewedHead": "e8b0548c2ecd7c22edbeb3f02de8a238f9c49ffc",
+      "workflowRun": 36033275191,
+      "workflowJobsSuccessful": 10,
+      "promotionMerge": "251f15495b82df8270ebc12fa93807ffaa15fba4",
+      "unresolvedHighCritical": 0
+    },
+    "candidateHeadSha": null,
+    "candidateHeadShaSource": "GitHub PR head metadata after branch push; also recorded in the PR body.",
+    "risk": "HIVE checkpoint context remains unavailable/currentness unresolved; it is advisory and Git canonical is authoritative for this state correction. The frozen Work Order table retains the SYNC-005 checkpoint snapshot while current active lock/evidence bind the SYNC-006 checkpoint blob; this exact distinction is disclosed for independent review. M04 remains ACTIVE / NOT_STARTED.",
+    "frozenWorkOrderSourceSnapshot": {
+      "workOrderBlobSha": "8beffbc19e73a60f49a1e4d7797427391680d5e3",
+      "checkpointBlobInFrozenSync005WorkOrderTable": "ff4709465f9247b44c96572c6dfa60373a20ac05",
+      "currentCheckpointBlobAfterSync006Correction": "e0b659e997433c09f6cb82139f9774c6f8cc0abf",
+      "disposition": "The Work Order remains unchanged as required. Its embedded checkpoint SHA is the frozen SYNC-005 candidate snapshot; current active Context Lock and Evidence Bundle bind the corrected checkpoint blob. Independent review must confirm this intended historical-snapshot interpretation."
+    },
+    "changedFiles": [
+      ".engineering/CHECKPOINT.json",
+      ".engineering/CHECKPOINT.md",
+      ".engineering/context-locks/CORE-WO-M04-001.json",
+      ".engineering/evidence/CORE-WO-M04-001.json",
+      ".engineering/gef/GEF-CURRENT.json",
+      "docs/project-brain/13-CHECKPOINT.md",
+      "docs/work-orders/CODEX-HANDOFF-M04.md"
+    ],
+    "validationResults": {
+      "pythonJsonParse": "PASS (four changed machine-readable governance JSON files parse)",
+      "governanceValidator": "PASS: python scripts/validate_governance.py; GEF/HIVE bridges consistent; 27 required artifacts present",
+      "currentCanonicalSources": "PASS: nine current source blobs match ACTIVE Context Lock and Evidence Bundle",
+      "workOrderBlob": "PASS: frozen Work Order blob remains 8beffbc19e73a60f49a1e4d7797427391680d5e3 in the active lock and Evidence Bundle",
+      "authorizedBaseAncestry": "PASS: f6b422be5465d5a93d0b8fcf4c9507c205663072 is an ancestor of base/head 251f15495b82df8270ebc12fa93807ffaa15fba4",
+      "diffCheck": "PASS: git diff --check",
+      "diffScope": "PASS: seven changed paths, all within the instructed governance/checkpoint/evidence/handoff scope; no Work Order or product paths changed",
+      "candidateHeadSha": "Will be recorded in the GitHub PR body and resolved from GitHub PR head metadata after push; it cannot be self-referentially embedded in the commit that contains this bundle."
+    }
   }
 }
