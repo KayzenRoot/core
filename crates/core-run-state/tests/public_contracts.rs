@@ -6,7 +6,7 @@ use core_run_state::{
     FingerprintDomainV1, IdempotencyKey, JournalRoot, M04EnvelopeV1, M04ErrorClassV1,
     M04ErrorCodeV1, M04ErrorV1, M04ReasonCodeV1, M04SchemaV1, M04VersionV1, RawM04EnvelopeV1,
     RunGeneration, RunId, RunProjectionV1, RunSnapshotV1, RunStatusV1, StepId, StepOrdinalV1,
-    StepStatusV1, M04_SCHEMA, M04_VERSION,
+    StepStatusV1, TransitionTargetV1, M04_SCHEMA, M04_VERSION,
 };
 use core_work_order::{evaluate_admission, materialize_handoff, WorkOrderIdentityRefV1};
 use serde::{de::DeserializeOwned, Serialize};
