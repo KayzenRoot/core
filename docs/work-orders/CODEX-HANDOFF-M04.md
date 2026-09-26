@@ -239,3 +239,43 @@ The correction delta is limited to:
 - `docs/work-orders/CODEX-HANDOFF-M04.md`
 
 All 23 EV-M04 entries remain `PENDING`, including reviewer-owned EV-M04-023 / AC-M04-023. Pack B has not started. No checkpoint promotion, PR approval, merge, or Pack B-H execution is part of this correction. The CD-03 correction can be offered for independent review only after the required local gates and a new exact-head 10/10 GitHub run pass; this does not satisfy the Work Order's overall `READY_FOR_REVIEW` stop condition for Packs A-H.
+
+## CORE-M04-PACK-A CD-04 review and domain correction — 2026-09-26
+
+The complete three-page `CORE-M04-PACK-A-CD04-PROMPT-DE-REVISAO.pdf` was read and visually checked. Its direct `My request` field was blank. Per the repository's PDF execution rule, the attached prompt supplies the in-scope sequence; its instructions were treated as task input beneath repository authority and safety rules.
+
+### Exact state and bindings
+
+- Repository: `KayzenRoot/core`; execution branch: `feat/m04-run-state`.
+- Canonical base: `main` at `d2b750f917f841fe715aafea9e0f80fbd3bc1035`; authorized Work Order base remains `f6b422be5465d5a93d0b8fcf4c9507c205663072`.
+- PR #106 remains open and unmerged. The reviewed pre-correction head was `839cb6576326b4c0e96e2aa4729dce4cf6bd3c59`; workflow `36255642619` completed successfully with 10/10 jobs on that SHA only. It does not validate CD-04.
+- The Work Order blob, active Context Lock blob, nine canonical source fingerprints, branch binding and authorized-base ancestry were rechecked and matched before edits. No frozen source or binding changed.
+- HIVE returned `stale/source_not_current` for registered CORE state. The admitted `SOLO_GIT_CANONICAL` fallback was used; no HIVE result was fabricated. The dirty primary checkout was preserved.
+
+### Finding and correction
+
+The Pack A public contract allowed a known `FingerprintDomainV1` value to cross contract boundaries. `CanonicalEventV1` could be built or deserialized with a domain other than `EVENT`, and `ContinuationFrameV1` had no requirement for `CONTINUATION`. This enabled cross-domain substitution despite the typed event and continuation contracts.
+
+CD-04 makes both `domain` fields private and exposes read-only accessors. Validated constructors and custom deserializers reject a wrong known domain; both `validate()` methods also recheck their required domain. The constructor error uses the existing `InvalidInput` class/code and `Never` retryability. Event kind/payload validation remains intact. Serialization retains the existing `domain` field name and enum values (`EVENT` / `CONTINUATION`). Compile-fail doctests prove external callers cannot mutate either field. Regression tests cover valid round trips, wire shape, typed constructor rejection, Serde rejection and `validate()` rejection for mutated internal values.
+
+No dependency, architecture, contract registry, wire name, enum representation, production M02 code, Work Order, Context Lock, checkpoint or canonical source was changed.
+
+### Local verification
+
+On Windows, the CD-04 implementation passed:
+
+- `cargo test -p core-run-state --locked` — 7 crate unit tests, 10 integration tests and 6 compile-fail doctests passed.
+- `cargo fmt --all -- --check`.
+- `cargo clippy --workspace --all-targets --all-features --locked -- -D warnings`.
+- `cargo test --workspace --all-targets --all-features --locked`.
+- `cargo test -p core-workspace --test git_system hostile_dual_output_is_capped_without_deadlock -- --exact --nocapture`.
+- `python scripts/validate_governance.py`.
+- `git diff --check`.
+
+The evidence and GEF records retain these local results and mark the CD-04 commit's hosted CI as pending at publication. Re-run the listed gates after those derived records are added and before committing.
+
+### Scope and handoff boundary
+
+The CD-04 delta is limited to `crates/core-run-state/src/contracts.rs`, `crates/core-run-state/src/lib.rs`, `crates/core-run-state/tests/public_contracts.rs`, `.engineering/evidence/CORE-WO-M04-001.json`, `.engineering/gef/GEF-CURRENT.json`, and this handoff. The full PR remains within the previously admitted Pack A/Cargo scope, the corrected M02 test helper, and these derived records; the Work Order file map and frozen canonical sources are unchanged.
+
+Current executor status is `BLOCKED` until a new workflow completes on the exact pushed CD-04 head and the independent reviewer examines that same head. The prior 839cb657 / run 36255642619 green result is historical for CD-04. Keep PR #106 open. Do not submit an executor review, merge, promote the checkpoint, start Pack B, or change any EV-M04 state. All 23 EV-M04 items remain `PENDING`, including reviewer-owned EV-M04-023 / AC-M04-023. This is not the Work Order's global `READY_FOR_REVIEW` state.

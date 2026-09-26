@@ -281,8 +281,17 @@ fn event_payloads() -> Vec<(EventKindV1, EventPayloadV1)> {
 }
 
 fn canonical_event(kind: EventKindV1, payload: EventPayloadV1) -> CanonicalEventV1 {
+    canonical_event_with_domain(FingerprintDomainV1::Event, kind, payload)
+        .expect("event kind and domain must be valid")
+}
+
+fn canonical_event_with_domain(
+    domain: FingerprintDomainV1,
+    kind: EventKindV1,
+    payload: EventPayloadV1,
+) -> Result<CanonicalEventV1, M04ErrorV1> {
     CanonicalEventV1::try_new(
-        FingerprintDomainV1::Event,
+        domain,
         kind,
         EventId::new("event-1").expect("valid event id"),
         RunId::new("run-17").expect("valid run id"),
@@ -297,7 +306,20 @@ fn canonical_event(kind: EventKindV1, payload: EventPayloadV1) -> CanonicalEvent
         JournalRoot::new("f".repeat(64)).expect("valid journal root"),
         payload,
     )
-    .expect("event kind must match its payload")
+}
+
+fn continuation_frame(domain: FingerprintDomainV1) -> Result<ContinuationFrameV1, M04ErrorV1> {
+    ContinuationFrameV1::try_new(
+        domain,
+        RunId::new("run-17").expect("valid run id"),
+        AttemptId::new("attempt-1").expect("valid attempt id"),
+        RunGeneration::new(1),
+        EventSequenceV1::new(1),
+        JournalRoot::new("e".repeat(64)).expect("valid journal root"),
+        fingerprint('b'),
+        ExecutionEpoch::new(1),
+        fingerprint('c'),
+    )
 }
 
 fn assert_round_trip_and_reject_unknown_header<T>(valid: &T)
@@ -347,19 +369,8 @@ fn versioned_contract_headers_validate_and_fail_closed_for_every_dto() {
     );
 
     let (boundary, _) = boundary_fixture();
-    let continuation = ContinuationFrameV1 {
-        schema: schema(),
-        version: version(),
-        domain: FingerprintDomainV1::Continuation,
-        run_id: RunId::new("run-17").expect("valid run id"),
-        source_attempt_id: AttemptId::new("attempt-1").expect("valid attempt id"),
-        last_committed_generation: RunGeneration::new(1),
-        last_event_sequence: EventSequenceV1::new(1),
-        journal_root: JournalRoot::new("e".repeat(64)).expect("valid journal root"),
-        boundary_fingerprint: fingerprint('b'),
-        execution_epoch: ExecutionEpoch::new(1),
-        cursor_fingerprint: fingerprint('c'),
-    };
+    let continuation = continuation_frame(FingerprintDomainV1::Continuation)
+        .expect("continuation domain must be accepted");
     let reference = external_reference();
     let projection = RunProjectionV1 {
         run_id: RunId::new("run-17").expect("valid run id"),
@@ -455,4 +466,55 @@ fn canonical_event_enforces_every_kind_payload_pair_on_construction_and_deserial
     })
     .unwrap();
     assert!(serde_json::from_value::<CanonicalEventV1>(mismatched_wire).is_err());
+}
+
+#[test]
+fn event_and_continuation_domains_are_fixed_in_construction_and_wire_contracts() {
+    let (event_kind, event_payload) = event_payloads().remove(0);
+    let wrong_event_domain =
+        canonical_event_with_domain(FingerprintDomainV1::Request, event_kind, event_payload)
+            .expect_err("request domain cannot construct a canonical event");
+    assert_eq!(wrong_event_domain.code, M04ErrorCodeV1::InvalidInput);
+
+    let wrong_continuation_domain = continuation_frame(FingerprintDomainV1::Event)
+        .expect_err("event domain cannot construct a continuation frame");
+    assert_eq!(wrong_continuation_domain.code, M04ErrorCodeV1::InvalidInput);
+
+    let event = canonical_event(
+        EventKindV1::RunAdmitted,
+        EventPayloadV1::RunAdmitted {
+            boundary_fingerprint: fingerprint('b'),
+        },
+    );
+    event.validate().expect("constructed event must validate");
+    assert_eq!(event.domain(), FingerprintDomainV1::Event);
+    let event_wire = serde_json::to_value(&event).expect("serialize event");
+    assert_eq!(event_wire["domain"], "EVENT");
+    assert!(event_wire.get("event_kind").is_some());
+    assert!(event_wire.get("payload").is_some());
+    assert_eq!(
+        serde_json::from_value::<CanonicalEventV1>(event_wire.clone()).unwrap(),
+        event
+    );
+    let mut wrong_event_wire = event_wire;
+    wrong_event_wire["domain"] = serde_json::json!("REQUEST");
+    assert!(serde_json::from_value::<CanonicalEventV1>(wrong_event_wire).is_err());
+
+    let continuation = continuation_frame(FingerprintDomainV1::Continuation)
+        .expect("continuation domain must be accepted");
+    continuation
+        .validate()
+        .expect("constructed continuation must validate");
+    assert_eq!(continuation.domain(), FingerprintDomainV1::Continuation);
+    let continuation_wire = serde_json::to_value(&continuation).expect("serialize continuation");
+    assert_eq!(continuation_wire["domain"], "CONTINUATION");
+    assert!(continuation_wire.get("run_id").is_some());
+    assert!(continuation_wire.get("cursor_fingerprint").is_some());
+    assert_eq!(
+        serde_json::from_value::<ContinuationFrameV1>(continuation_wire.clone()).unwrap(),
+        continuation
+    );
+    let mut wrong_continuation_wire = continuation_wire;
+    wrong_continuation_wire["domain"] = serde_json::json!("EVENT");
+    assert!(serde_json::from_value::<ContinuationFrameV1>(wrong_continuation_wire).is_err());
 }

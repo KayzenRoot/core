@@ -5,8 +5,8 @@
 
 use crate::{
     AttemptId, AttemptOrdinalV1, CanonicalFingerprint, EventId, EventSequenceV1, ExecutionEpoch,
-    FingerprintDomainV1, IdempotencyKey, JournalRoot, M04ErrorV1, RunGeneration, RunId, StepId,
-    StepOrdinalV1,
+    FingerprintDomainV1, IdempotencyKey, JournalRoot, M04ErrorClassV1, M04ErrorCodeV1, M04ErrorV1,
+    M04RetryabilityV1, RunGeneration, RunId, StepId, StepOrdinalV1,
 };
 use core_work_order::{AdmittedWorkOrderV1, RunStartRevalidationV1, WorkOrderIdentityRefV1};
 use serde::{de, Deserialize, Deserializer, Serialize, Serializer};
@@ -208,6 +208,21 @@ pub fn validate_v1_contract_header(schema: &str, version: u16) -> Result<(), M04
         return Err(M04ErrorV1::unsupported_version());
     }
     Ok(())
+}
+
+fn validate_fingerprint_domain(
+    domain: FingerprintDomainV1,
+    expected: FingerprintDomainV1,
+) -> Result<(), M04ErrorV1> {
+    if domain == expected {
+        return Ok(());
+    }
+
+    Err(M04ErrorV1::new(
+        M04ErrorClassV1::InvalidInput,
+        M04ErrorCodeV1::InvalidInput,
+        M04RetryabilityV1::Never,
+    ))
 }
 
 mod sealed {
@@ -477,12 +492,12 @@ pub struct BoundaryRevalidationCapsuleV1 {
 }
 
 /// Versioned, host-neutral continuation cursor. It carries no recovery policy.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct ContinuationFrameV1 {
     pub schema: M04SchemaV1,
     pub version: M04VersionV1,
-    pub domain: FingerprintDomainV1,
+    domain: FingerprintDomainV1,
     pub run_id: RunId,
     pub source_attempt_id: AttemptId,
     pub last_committed_generation: RunGeneration,
@@ -491,6 +506,87 @@ pub struct ContinuationFrameV1 {
     pub boundary_fingerprint: CanonicalFingerprint,
     pub execution_epoch: ExecutionEpoch,
     pub cursor_fingerprint: CanonicalFingerprint,
+}
+
+impl ContinuationFrameV1 {
+    #[allow(clippy::too_many_arguments)]
+    pub fn try_new(
+        domain: FingerprintDomainV1,
+        run_id: RunId,
+        source_attempt_id: AttemptId,
+        last_committed_generation: RunGeneration,
+        last_event_sequence: EventSequenceV1,
+        journal_root: JournalRoot,
+        boundary_fingerprint: CanonicalFingerprint,
+        execution_epoch: ExecutionEpoch,
+        cursor_fingerprint: CanonicalFingerprint,
+    ) -> Result<Self, M04ErrorV1> {
+        validate_fingerprint_domain(domain, FingerprintDomainV1::Continuation)?;
+        Ok(Self {
+            schema: M04SchemaV1::supported(),
+            version: M04VersionV1::supported(),
+            domain,
+            run_id,
+            source_attempt_id,
+            last_committed_generation,
+            last_event_sequence,
+            journal_root,
+            boundary_fingerprint,
+            execution_epoch,
+            cursor_fingerprint,
+        })
+    }
+
+    pub const fn domain(&self) -> FingerprintDomainV1 {
+        self.domain
+    }
+
+    pub fn validate(&self) -> Result<(), M04ErrorV1> {
+        validate_v1_contract_header(self.schema.as_str(), self.version.get())?;
+        validate_fingerprint_domain(self.domain, FingerprintDomainV1::Continuation)
+    }
+}
+
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct ContinuationFrameV1Wire {
+    schema: M04SchemaV1,
+    version: M04VersionV1,
+    domain: FingerprintDomainV1,
+    run_id: RunId,
+    source_attempt_id: AttemptId,
+    last_committed_generation: RunGeneration,
+    last_event_sequence: EventSequenceV1,
+    journal_root: JournalRoot,
+    boundary_fingerprint: CanonicalFingerprint,
+    execution_epoch: ExecutionEpoch,
+    cursor_fingerprint: CanonicalFingerprint,
+}
+
+impl<'de> Deserialize<'de> for ContinuationFrameV1 {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let wire = ContinuationFrameV1Wire::deserialize(deserializer)?;
+        validate_v1_contract_header(wire.schema.as_str(), wire.version.get())
+            .map_err(de::Error::custom)?;
+        validate_fingerprint_domain(wire.domain, FingerprintDomainV1::Continuation)
+            .map_err(de::Error::custom)?;
+        Ok(Self {
+            schema: wire.schema,
+            version: wire.version,
+            domain: wire.domain,
+            run_id: wire.run_id,
+            source_attempt_id: wire.source_attempt_id,
+            last_committed_generation: wire.last_committed_generation,
+            last_event_sequence: wire.last_event_sequence,
+            journal_root: wire.journal_root,
+            boundary_fingerprint: wire.boundary_fingerprint,
+            execution_epoch: wire.execution_epoch,
+            cursor_fingerprint: wire.cursor_fingerprint,
+        })
+    }
 }
 
 /// Closed target union for transition requests; Pack B supplies transition laws.
@@ -565,7 +661,7 @@ pub enum EventPayloadV1 {
 pub struct CanonicalEventV1 {
     pub schema: M04SchemaV1,
     pub version: M04VersionV1,
-    pub domain: FingerprintDomainV1,
+    domain: FingerprintDomainV1,
     event_kind: EventKindV1,
     pub event_id: EventId,
     pub run_id: RunId,
@@ -599,6 +695,7 @@ impl CanonicalEventV1 {
         resulting_journal_root: JournalRoot,
         payload: EventPayloadV1,
     ) -> Result<Self, M04ErrorV1> {
+        validate_fingerprint_domain(domain, FingerprintDomainV1::Event)?;
         validate_event_kind_payload(event_kind, &payload)?;
         Ok(Self {
             schema: M04SchemaV1::supported(),
@@ -624,12 +721,17 @@ impl CanonicalEventV1 {
         self.event_kind
     }
 
+    pub const fn domain(&self) -> FingerprintDomainV1 {
+        self.domain
+    }
+
     pub fn payload(&self) -> &EventPayloadV1 {
         &self.payload
     }
 
     pub fn validate(&self) -> Result<(), M04ErrorV1> {
         validate_v1_contract_header(self.schema.as_str(), self.version.get())?;
+        validate_fingerprint_domain(self.domain, FingerprintDomainV1::Event)?;
         validate_event_kind_payload(self.event_kind, &self.payload)
     }
 }
@@ -680,6 +782,10 @@ impl<'de> Deserialize<'de> for CanonicalEventV1 {
         D: Deserializer<'de>,
     {
         let wire = CanonicalEventV1Wire::deserialize(deserializer)?;
+        validate_v1_contract_header(wire.schema.as_str(), wire.version.get())
+            .map_err(de::Error::custom)?;
+        validate_fingerprint_domain(wire.domain, FingerprintDomainV1::Event)
+            .map_err(de::Error::custom)?;
         validate_event_kind_payload(wire.event_kind, &wire.payload).map_err(de::Error::custom)?;
         Ok(Self {
             schema: wire.schema,
@@ -994,3 +1100,69 @@ impl_contract!(M04ResourceLimitsV1, ResourceLimits);
 impl_contract!(BoundaryRevalidationCapsuleV1, BoundaryRevalidationCapsule);
 impl_contract!(ContinuationFrameV1, ContinuationFrame);
 impl_contract!(crate::M04ErrorV1, Error);
+
+#[cfg(test)]
+mod domain_validation_tests {
+    use super::*;
+
+    fn fingerprint(value: char) -> CanonicalFingerprint {
+        CanonicalFingerprint::new(value.to_string().repeat(64)).expect("valid fingerprint")
+    }
+
+    #[test]
+    fn validate_rejects_a_mutated_event_domain() {
+        let mut event = CanonicalEventV1::try_new(
+            FingerprintDomainV1::Event,
+            EventKindV1::RunAdmitted,
+            EventId::new("event-1").expect("valid event id"),
+            RunId::new("run-1").expect("valid run id"),
+            None,
+            None,
+            EventSequenceV1::new(1),
+            RunGeneration::new(0),
+            RunGeneration::new(1),
+            IdempotencyKey::new("event:1").expect("valid idempotency key"),
+            fingerprint('a'),
+            JournalRoot::new("b".repeat(64)).expect("valid journal root"),
+            JournalRoot::new("c".repeat(64)).expect("valid journal root"),
+            EventPayloadV1::RunAdmitted {
+                boundary_fingerprint: fingerprint('d'),
+            },
+        )
+        .expect("event domain must be accepted");
+
+        event.domain = FingerprintDomainV1::Request;
+        assert_eq!(
+            event
+                .validate()
+                .expect_err("wrong event domain must fail")
+                .code,
+            M04ErrorCodeV1::InvalidInput
+        );
+    }
+
+    #[test]
+    fn validate_rejects_a_mutated_continuation_domain() {
+        let mut continuation = ContinuationFrameV1::try_new(
+            FingerprintDomainV1::Continuation,
+            RunId::new("run-1").expect("valid run id"),
+            AttemptId::new("attempt-1").expect("valid attempt id"),
+            RunGeneration::new(1),
+            EventSequenceV1::new(1),
+            JournalRoot::new("b".repeat(64)).expect("valid journal root"),
+            fingerprint('c'),
+            ExecutionEpoch::new(1),
+            fingerprint('d'),
+        )
+        .expect("continuation domain must be accepted");
+
+        continuation.domain = FingerprintDomainV1::Event;
+        assert_eq!(
+            continuation
+                .validate()
+                .expect_err("wrong continuation domain must fail")
+                .code,
+            M04ErrorCodeV1::InvalidInput
+        );
+    }
+}

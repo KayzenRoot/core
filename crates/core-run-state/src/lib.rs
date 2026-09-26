@@ -27,6 +27,47 @@
 //!     event.event_kind = EventKindV1::RunCreated;
 //! }
 //! ```
+//!
+//! Contract domains are fixed by the validating constructors and cannot be
+//! reassigned through the public API:
+//!
+//! ```compile_fail
+//! use core_run_state::{CanonicalEventV1, FingerprintDomainV1};
+//! fn mutate_domain(event: &mut CanonicalEventV1) {
+//!     event.domain = FingerprintDomainV1::Request;
+//! }
+//! ```
+//!
+//! ```compile_fail
+//! use core_run_state::{ContinuationFrameV1, FingerprintDomainV1};
+//! fn mutate_domain(frame: &mut ContinuationFrameV1) {
+//!     frame.domain = FingerprintDomainV1::Event;
+//! }
+//! ```
+//!
+//! Struct update syntax cannot substitute the continuation domain either:
+//!
+//! ```compile_fail
+//! use core_run_state::{
+//!     AttemptId, CanonicalFingerprint, ContinuationFrameV1, EventSequenceV1, ExecutionEpoch,
+//!     FingerprintDomainV1, JournalRoot, RunGeneration, RunId,
+//! };
+//! let frame = ContinuationFrameV1::try_new(
+//!     FingerprintDomainV1::Continuation,
+//!     RunId::new("run-1").unwrap(),
+//!     AttemptId::new("attempt-1").unwrap(),
+//!     RunGeneration::new(1),
+//!     EventSequenceV1::new(1),
+//!     JournalRoot::new("e".repeat(64)).unwrap(),
+//!     CanonicalFingerprint::new("a".repeat(64)).unwrap(),
+//!     ExecutionEpoch::new(1),
+//!     CanonicalFingerprint::new("b".repeat(64)).unwrap(),
+//! ).unwrap();
+//! let _substituted = ContinuationFrameV1 {
+//!     domain: FingerprintDomainV1::Event,
+//!     ..frame
+//! };
+//! ```
 
 #[allow(dead_code)]
 // Internal framing primitive is retained for future allow-listed semantic builders.

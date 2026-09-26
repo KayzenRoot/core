@@ -3,7 +3,7 @@
   "increment": "CORE-M04-FREEZE-001",
   "workOrder": "CORE-WO-M04-001",
   "repository": "KayzenRoot/core",
-  "status": "INITIAL_PR_HEAD_GATES_PASSED_PENDING_FINAL_HEAD_CI_AND_INDEPENDENT_AUDIT",
+  "status": "PACK_A_CD04_DOMAIN_CORRECTION_AWAITING_EXACT_HEAD_CI_AND_INDEPENDENT_AUDIT",
   "planningCandidate": {
     "branch": "planning/m04-final-freeze-round5",
     "planningBase": "0f448c708aafd8f5b4cb6303effdabd7e028bc6f",
@@ -61,9 +61,9 @@
     "fabricatedMeasurements": false
   },
   "implementation": {
-    "status": "INITIAL_PR_HEAD_GATES_PASSED_PENDING_FINAL_HEAD_CI_AND_INDEPENDENT_AUDIT",
+    "status": "PACK_A_CD04_DOMAIN_CORRECTION_AWAITING_EXACT_HEAD_CI_AND_INDEPENDENT_AUDIT",
     "authorizedBase": "f6b422be5465d5a93d0b8fcf4c9507c205663072",
-    "finalHead": "2a553a11c5bfe2bedd0ea05754d2fc71b3ea579b",
+    "finalHead": "839cb6576326b4c0e96e2aa4729dce4cf6bd3c59",
     "productFilesCreated": true,
     "executionBranch": "feat/m04-run-state",
     "preflightStatus": "PASS",
@@ -527,16 +527,16 @@
     }
   },
   "packAStop": {
-    "status": "PACK_A_CD03_CORRECTION_AWAITING_EXACT_HEAD_CI_AND_INDEPENDENT_AUDIT",
+    "status": "PACK_A_CD04_DOMAIN_CORRECTION_AWAITING_EXACT_HEAD_CI_AND_INDEPENDENT_AUDIT",
     "packet": "A",
-    "candidateGitHead": "2a553a11c5bfe2bedd0ea05754d2fc71b3ea579b",
-    "workingTreeHasUncommittedChanges": false,
+    "candidateGitHead": "839cb6576326b4c0e96e2aa4729dce4cf6bd3c59",
+    "workingTreeHasUncommittedChanges": true,
     "platform": "Windows",
     "checks": [
       {
         "command": "cargo test -p core-run-state --locked",
         "result": "PASS",
-        "details": "5 internal canonical unit tests, 1 integration test, 5 public contract integration tests, and 2 compile-fail doctests passed."
+      "details": "7 crate unit tests, 1 canonical identity integration test, 9 public contract tests, and 6 compile-fail doctests passed after CD04."
       },
       {
         "command": "cargo test --workspace --all-targets --all-features --locked",
@@ -561,9 +561,9 @@
         "result": "PASS"
       }
     ],
-    "stopCondition": "F-01 and F-02 correction is recorded separately from the historical cfa82f6 / run 36249941196 green state. The new correction commit requires its own exact-head GitHub run. Keep all EV-M04 pending, Pack B stopped, and checkpoint promotion stopped until independent review.",
-    "hostedExactHeadCi": "PASS on initial PR head 2a553a11c5bfe2bedd0ea05754d2fc71b3ea579b: workflow 36248160958, latest attempt 10/10 jobs successful. First M02 Ubuntu attempt failed hostile_git_deadline_kills_reaps_and_does_not_poison_next_inspection with None; rerun job 108423661915 passed all steps. Re-resolve CI on the current PR head after the Evidence/Handoff follow-up.",
-    "implementationPullRequest": "OPEN #106 https://github.com/KayzenRoot/core/pull/106; base main at d2b750f917f841fe715aafea9e0f80fbd3bc1035; initial head 2a553a11c5bfe2bedd0ea05754d2fc71b3ea579b.",
+    "stopCondition": "CD04 corrects the known-domain cross-domain substitution at the Pack A public contract boundary. Its commit requires a new exact-head GitHub run and independent review. Keep all EV-M04 pending, Pack B stopped, and checkpoint promotion stopped.",
+    "hostedExactHeadCi": "PENDING for the CD04 commit. Prior workflow 36255642619 passed 10/10 jobs only on pre-correction head 839cb6576326b4c0e96e2aa4729dce4cf6bd3c59 and does not validate CD04.",
+    "implementationPullRequest": "OPEN #106 https://github.com/KayzenRoot/core/pull/106; base main at d2b750f917f841fe715aafea9e0f80fbd3bc1035; reviewed pre-correction head 839cb6576326b4c0e96e2aa4729dce4cf6bd3c59.",
     "hostedWorkflowRunId": 36248160958,
     "initialUbuntuM02FailureRerunJobId": 108423661915,
     "finalHeadCiAfterEvidenceHandoffUpdate": "PASS on pre-correction head cfa82f6183a5e44ccfff0bba50a72706f3458928: run 36249941196 completed with 10/10 successful jobs. This run does not validate the CD-03 correction head.",
@@ -748,8 +748,8 @@
       "packBStarted": false,
       "allEvNodesRemainPending": true
     },
-    "finalDisposition": "CD-02 corrected the M02 test fixture; baseline-plus-fix and Pack A candidate full workspace gates pass locally. Exact-head PR CI and independent review remain required; Pack B is not started.",
-    "commitOrPush": "PENDING_LOCAL_AUDIT; no commit or push has occurred at this evidence point.",
+  "finalDisposition": "CD04 corrects cross-domain substitution for event and continuation contracts; local gates pass. Commit/push, exact-head CI, and independent audit remain required; Pack B is not started.",
+  "commitOrPush": "PENDING_AT_CD04_EVIDENCE_WRITE; commit and push the authorized correction without force after the final scope audit.",
     "cd02Correction": {
       "prompt": "CORE-M04-PACK-A-CD02-WINDOWS-M02-HELPER.pdf",
       "reviewDate": "2026-09-26",
@@ -1039,6 +1039,82 @@
       "allEvNodesRemainPending": true,
       "reviewerOwnedAcceptance": "AC-M04-023 / EV-M04-023 remains assigned to the independent reviewer"
     },
-    "nextLegalGate": "Run the required local gates on the correction tree, commit and push without force, resolve all 10 checks on that exact PR head, then leave the PR open for independent audit. Do not start Pack B or promote the checkpoint."
+    "cd04Correction": {
+      "prompt": "CORE-M04-PACK-A-CD04-PROMPT-DE-REVISAO.pdf",
+      "reviewDate": "2026-09-26",
+      "userRequest": "The direct My request field was blank; the attached execution prompt supplies the authorized in-scope sequence under AGENTS.md.",
+      "branch": "feat/m04-run-state",
+      "reviewedBaseSha": "d2b750f917f841fe715aafea9e0f80fbd3bc1035",
+      "reviewedPreCorrectionHeadSha": "839cb6576326b4c0e96e2aa4729dce4cf6bd3c59",
+      "reviewedPreCorrectionWorkflow": {
+        "runId": 36255642619,
+        "status": "completed",
+        "conclusion": "success",
+        "successfulJobs": 10,
+        "totalJobs": 10,
+        "appliesOnlyToHead": "839cb6576326b4c0e96e2aa4729dce4cf6bd3c59"
+      },
+      "preflight": {
+        "mode": "SOLO_GIT_CANONICAL",
+        "canonicalRemote": "origin",
+        "canonicalBranch": "main",
+        "canonicalMainSha": "d2b750f917f841fe715aafea9e0f80fbd3bc1035",
+        "executionBranch": "feat/m04-run-state",
+        "executionHeadBeforeCorrection": "839cb6576326b4c0e96e2aa4729dce4cf6bd3c59",
+        "workOrderBlobSha": "8beffbc19e73a60f49a1e4d7797427391680d5e3",
+        "contextLockBlobSha": "846db75e80956cfe9fdcc447bc5a216699469bde",
+        "sourceFingerprintsMatched": 9,
+        "authorizedBase": "f6b422be5465d5a93d0b8fcf4c9507c205663072",
+        "hiveAvailability": "AVAILABLE_BUT_STALE_SOURCE_NOT_CURRENT",
+        "hiveEvidenceFabricated": false,
+        "mainCheckoutPreexistingChangesPreserved": true
+      },
+      "finding": {
+        "summary": "Known FingerprintDomainV1 values could be substituted across public Pack A contracts: CanonicalEventV1 did not enforce EVENT and ContinuationFrameV1 did not enforce CONTINUATION.",
+        "correction": "Both domain fields are private with read accessors; validated constructors and custom deserializers reject cross-domain values, validate() rechecks the domain, and wire field names and enum serialization remain unchanged.",
+        "typedError": "Existing M04ErrorClassV1::InvalidInput / M04ErrorCodeV1::InvalidInput with Never retryability; no new error code.",
+        "eventPayloadPairingPreserved": true,
+        "dependenciesOrArchitectureChanged": false
+      },
+      "changedFiles": [
+        "crates/core-run-state/src/contracts.rs",
+        "crates/core-run-state/src/lib.rs",
+        "crates/core-run-state/tests/public_contracts.rs",
+        ".engineering/gef/GEF-CURRENT.json",
+        ".engineering/evidence/CORE-WO-M04-001.json",
+        "docs/work-orders/CODEX-HANDOFF-M04.md"
+      ],
+      "localVerification": {
+        "platform": "Windows",
+        "focusedRunStateTests": {
+          "command": "cargo test -p core-run-state --locked",
+          "result": "PASS",
+          "unitTests": 7,
+          "integrationTests": 10,
+          "compileFailDoctests": 6
+        },
+        "format": "PASS: cargo fmt --all -- --check",
+        "clippy": "PASS: cargo clippy --workspace --all-targets --all-features --locked -- -D warnings",
+        "workspaceTests": {
+          "command": "cargo test --workspace --all-targets --all-features --locked",
+          "result": "PASS",
+          "exitCode": 0
+        },
+        "focusedM02Helper": {
+          "command": "cargo test -p core-workspace --test git_system hostile_dual_output_is_capped_without_deadlock -- --exact --nocapture",
+          "result": "PASS"
+        },
+        "governance": "PASS: python scripts/validate_governance.py",
+        "diffCheck": "PASS: git diff --check"
+      },
+      "newCorrectionHead": "The commit containing this correction record; exact SHA is resolved from PR #106 after push.",
+      "newCorrectionHeadCiAtPublication": "PENDING_EXACT_HEAD_GITHUB_RUN",
+      "independentAudit": "PENDING; executor does not approve or merge",
+      "packBStarted": false,
+      "checkpointPromotion": false,
+      "allEvNodesRemainPending": true,
+      "reviewerOwnedAcceptance": "AC-M04-023 / EV-M04-023 remains assigned to the independent reviewer"
+    },
+    "nextLegalGate": "Commit and push the CD04 correction without force, resolve all 10 checks on that exact PR head, then leave the PR open for independent audit. Do not start Pack B or promote the checkpoint."
   }
 }
