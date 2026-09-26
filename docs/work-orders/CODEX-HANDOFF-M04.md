@@ -205,3 +205,37 @@ Workflow run `36248160958` ran on that exact PR head. The first attempt's Ubuntu
 To investigate the first Ubuntu failure, the exact isolated deadline test was run on both the clean base and candidate in a writable Linux container with Git installed; both passed (0.59s and 0.60s respectively). The raw logs are retained at `C:\Users\csn19\AppData\Local\Temp\core-m04-packa-cd02\A.log` (SHA-256 `9E5570D3BED81EDFBA2DC538C2F8ECC11E176DAFD3C5EA09603101CB99F4FE1D`) and `C:\Users\csn19\AppData\Local\Temp\core-m04-packa-cd02\C.log` (SHA-256 `6C829383AE5DBFE43CDC50C4334086F0E8E8AD0517315562EAFBA9B800D69274`). Earlier local Docker attempts with a read-only source mount failed before running the test because the existing deadline fixture writes under `target/`; those attempts are not counted as test evidence.
 
 This Evidence/Handoff correction itself advances the PR head with documentation-only changes. Resolve workflow checks again against the current PR head after this update. Independent exact-head audit is still pending; all 23 EV-M04 nodes remain PENDING, Pack B is not started, and checkpoint promotion/merge are not authorized by this handoff.
+
+## CORE-M04-PACK-A CD-03 independent-review correction — 2026-09-26
+
+The complete four-page `CORE-M04-PACK-A-CD03-INDEPENDENT-REVIEW-CORRECTION-PROMPT.pdf` was read. Its direct `My request` field was blank, so the repository's PDF execution rule applies the attached correction prompt within the frozen Pack A scope.
+
+### Exact state and review boundary
+
+- Repository: `KayzenRoot/core`; PR #106 remains open and unmerged on `feat/m04-run-state`.
+- Review base: `d2b750f917f841fe715aafea9e0f80fbd3bc1035`.
+- Head reviewed before this correction: `cfa82f6183a5e44ccfff0bba50a72706f3458928`.
+- The historical exact-head workflow `36249941196` completed successfully with 10/10 jobs on that `cfa82f6` head. It does not validate the new correction commit.
+- The correction commit's GitHub CI is pending until that exact head is pushed and its workflow completes. Keep PR #106 open for independent audit.
+- The current HIVE CORE registration is available but dirty at `fdb4dbe165e74b009c43df3874b6043c9b94710b`; HIVE checkpoint reads returned `source_not_current`. As allowed by CORE-WO-M04-001, this execution continues in `SOLO_GIT_CANONICAL` mode and makes no fabricated HIVE claim.
+
+### Correction scope
+
+- **F-01:** the five versioned Pack A DTOs use validated schema/version value types. Unknown metadata returns `UnsupportedSchema` or `UnsupportedVersion` through typed validation; deserialization fails closed, including nested boundary/snapshot and external-reference/event values. Existing JSON field names and primitive wire encodings remain unchanged. `RawM04EnvelopeV1` remains explicitly untrusted until its existing typed `validate()` path converts it to `M04EnvelopeV1`.
+- **F-02:** `CanonicalEventV1` validates all ten event-kind/payload pairs during public construction and deserialization. Its kind and payload fields are private with read accessors, so callers cannot mutate a valid event into a mismatched pair. Mismatches use `KindPayloadMismatch`.
+- **F-03:** the records in `.engineering/gef/GEF-CURRENT.json` and `.engineering/evidence/CORE-WO-M04-001.json` retain the `cfa82f6`/`36249941196` success as history and identify the correction commit as a separate exact-head CI boundary.
+- **F-04:** the M02 helper can emit 512 KiB on stdout and stderr concurrently. The test exercises that pressure with `env_clear()` and the default budget under a five-second assertion. `SystemGitInspector`, production limits, and production M02 behavior are unchanged.
+
+### Files and stop conditions
+
+The correction delta is limited to:
+
+- `crates/core-run-state/src/contracts.rs`
+- `crates/core-run-state/src/lib.rs`
+- `crates/core-run-state/tests/public_contracts.rs`
+- `crates/core-workspace/tests/git_system.rs` (test helper only)
+- `.engineering/gef/GEF-CURRENT.json`
+- `.engineering/evidence/CORE-WO-M04-001.json`
+- `docs/work-orders/CODEX-HANDOFF-M04.md`
+
+All 23 EV-M04 entries remain `PENDING`, including reviewer-owned EV-M04-023 / AC-M04-023. Pack B has not started. No checkpoint promotion, PR approval, merge, or Pack B-H execution is part of this correction. The CD-03 correction can be offered for independent review only after the required local gates and a new exact-head 10/10 GitHub run pass; this does not satisfy the Work Order's overall `READY_FOR_REVIEW` stop condition for Packs A-H.

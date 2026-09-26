@@ -17,6 +17,16 @@
 //! ```compile_fail
 //! use core_run_state::CanonicalFrameV1;
 //! ```
+//!
+//! Canonical event discriminators and their payload variants can only be set
+//! together through a validating constructor or closed deserialization:
+//!
+//! ```compile_fail
+//! use core_run_state::{CanonicalEventV1, EventKindV1};
+//! fn mutate_kind(event: &mut CanonicalEventV1) {
+//!     event.event_kind = EventKindV1::RunCreated;
+//! }
+//! ```
 
 #[allow(dead_code)]
 // Internal framing primitive is retained for future allow-listed semantic builders.

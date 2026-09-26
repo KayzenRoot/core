@@ -37,14 +37,38 @@ fn make_dual_output_helper(root: &Path, name: &str) -> PathBuf {
         &source,
         r#"use std::io::Write;
 
-fn main() {
-    let mut stdout = std::io::stdout().lock();
-    stdout.write_all(&[b'x'; 50]).unwrap();
-    stdout.flush().unwrap();
+fn write_stream(byte: u8, length: usize, stderr: bool) {
+    let chunk = [byte; 8192];
+    let mut written = 0;
+    if stderr {
+        let mut stream = std::io::stderr().lock();
+        while written < length {
+            let chunk_len = (length - written).min(chunk.len());
+            stream.write_all(&chunk[..chunk_len]).unwrap();
+            written += chunk_len;
+        }
+        stream.flush().unwrap();
+    } else {
+        let mut stream = std::io::stdout().lock();
+        while written < length {
+            let chunk_len = (length - written).min(chunk.len());
+            stream.write_all(&chunk[..chunk_len]).unwrap();
+            written += chunk_len;
+        }
+        stream.flush().unwrap();
+    }
+}
 
-    let mut stderr = std::io::stderr().lock();
-    stderr.write_all(&[b'y'; 50]).unwrap();
-    stderr.flush().unwrap();
+fn main() {
+    let root = std::env::current_dir().unwrap();
+    let pipe_pressure = root.join("exercise-pipe-pressure").is_file();
+    let length = if pipe_pressure { 512 * 1024 } else { 50 };
+    std::thread::scope(|scope| {
+        let stdout = scope.spawn(|| write_stream(b'x', length, false));
+        let stderr = scope.spawn(|| write_stream(b'y', length, true));
+        stdout.join().unwrap();
+        stderr.join().unwrap();
+    });
 }
 "#,
     )
@@ -245,6 +269,7 @@ fn hostile_dual_output_is_capped_without_deadlock() {
     let helper = make_dual_output_helper(&root, "dual-output-helper");
 
     let helper_output = Command::new(&helper)
+        .current_dir(&root)
         .env_clear()
         .output()
         .expect("native dual-output helper must run without inherited environment");
@@ -255,6 +280,43 @@ fn hostile_dual_output_is_capped_without_deadlock() {
     assert_eq!(helper_output.stdout.len(), 50);
     assert_eq!(helper_output.stderr.len(), 50);
     assert_ne!(helper_output.stdout, helper_output.stderr);
+
+    let pressure_root = root.join("pipe-pressure");
+    fs::create_dir_all(&pressure_root).unwrap();
+    fs::write(pressure_root.join("exercise-pipe-pressure"), b"enabled").unwrap();
+    let pressure_output = Command::new(&helper)
+        .current_dir(&pressure_root)
+        .env_clear()
+        .output()
+        .expect("simultaneous pipe-pressure helper must run without inherited environment");
+    let pressure_bytes = 512 * 1024;
+    assert!(pressure_output.status.success());
+    assert_eq!(pressure_output.stdout.len(), pressure_bytes);
+    assert_eq!(pressure_output.stderr.len(), pressure_bytes);
+    assert!(pressure_output.stdout.iter().all(|byte| *byte == b'x'));
+    assert!(pressure_output.stderr.iter().all(|byte| *byte == b'y'));
+
+    let pressure_started = Instant::now();
+    let pressure_result = SystemGitInspector {
+        git_program: helper.to_string_lossy().into_owned(),
+    }
+    .inspect(&GitInspectRequest {
+        root: pressure_root,
+        untracked_policy: UntrackedPolicy::ExcludedByPolicy,
+        budget: WorkspaceResourceBudget::default(),
+    });
+    let pressure_elapsed = pressure_started.elapsed();
+    assert!(
+        pressure_elapsed < Duration::from_secs(5),
+        "simultaneous stdout/stderr pipe pressure did not complete before the deadline: {pressure_result:?}"
+    );
+    assert!(
+        !matches!(
+            pressure_result,
+            Err(M02Error::ResourceBudgetExceeded(ref reason)) if reason.contains("process duration")
+        ),
+        "pipe pressure must not deadlock the inspector"
+    );
 
     let inspect_with_caps = |max_stdout_bytes, max_stderr_bytes| {
         let budget = WorkspaceResourceBudget {

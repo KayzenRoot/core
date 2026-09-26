@@ -5,7 +5,8 @@
 
 use crate::{
     AttemptId, AttemptOrdinalV1, CanonicalFingerprint, EventId, EventSequenceV1, ExecutionEpoch,
-    FingerprintDomainV1, IdempotencyKey, JournalRoot, RunGeneration, RunId, StepId, StepOrdinalV1,
+    FingerprintDomainV1, IdempotencyKey, JournalRoot, M04ErrorV1, RunGeneration, RunId, StepId,
+    StepOrdinalV1,
 };
 use core_work_order::{AdmittedWorkOrderV1, RunStartRevalidationV1, WorkOrderIdentityRefV1};
 use serde::{de, Deserialize, Deserializer, Serialize, Serializer};
@@ -117,6 +118,98 @@ impl<'de> Deserialize<'de> for ContractKindV1 {
     }
 }
 
+/// Validated M04 schema metadata used by every versioned V1 contract.
+///
+/// The inner value is deliberately private: public contract structs may expose
+/// this field, but callers cannot use a struct literal to attach another
+/// schema and still obtain a V1 value.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub struct M04SchemaV1(());
+
+impl M04SchemaV1 {
+    pub fn new(value: impl AsRef<str>) -> Result<Self, M04ErrorV1> {
+        validate_v1_contract_header(value.as_ref(), crate::M04_VERSION)?;
+        Ok(Self(()))
+    }
+
+    pub const fn as_str(self) -> &'static str {
+        crate::M04_SCHEMA
+    }
+
+    pub(crate) const fn supported() -> Self {
+        Self(())
+    }
+}
+
+impl Serialize for M04SchemaV1 {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.serialize_str(crate::M04_SCHEMA)
+    }
+}
+
+impl<'de> Deserialize<'de> for M04SchemaV1 {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let value = String::deserialize(deserializer)?;
+        Self::new(value).map_err(de::Error::custom)
+    }
+}
+
+/// Validated M04 version metadata used by every versioned V1 contract.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub struct M04VersionV1(());
+
+impl M04VersionV1 {
+    pub fn new(value: u16) -> Result<Self, M04ErrorV1> {
+        validate_v1_contract_header(crate::M04_SCHEMA, value)?;
+        Ok(Self(()))
+    }
+
+    pub const fn get(self) -> u16 {
+        crate::M04_VERSION
+    }
+
+    pub(crate) const fn supported() -> Self {
+        Self(())
+    }
+}
+
+impl Serialize for M04VersionV1 {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.serialize_u16(crate::M04_VERSION)
+    }
+}
+
+impl<'de> Deserialize<'de> for M04VersionV1 {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let value = u16::deserialize(deserializer)?;
+        Self::new(value).map_err(de::Error::custom)
+    }
+}
+
+/// Validate raw schema/version metadata before accepting it as any M04 V1
+/// contract. Deserializers and public typed constructors share this check.
+pub fn validate_v1_contract_header(schema: &str, version: u16) -> Result<(), M04ErrorV1> {
+    if schema != crate::M04_SCHEMA {
+        return Err(M04ErrorV1::unsupported_schema());
+    }
+    if version != crate::M04_VERSION {
+        return Err(M04ErrorV1::unsupported_version());
+    }
+    Ok(())
+}
+
 mod sealed {
     pub trait Contract {}
 }
@@ -167,7 +260,11 @@ impl<T: M04ContractV1> M04EnvelopeV1<T> {
     }
 }
 
-/// Untrusted envelope metadata kept as strings until typed validation.
+/// Untrusted envelope metadata kept raw until [`RawM04EnvelopeV1::validate`].
+///
+/// This boundary type is not a validated M04 V1 contract. Its raw schema and
+/// version fields intentionally remain readable so validation can return the
+/// corresponding typed error before converting it into [`M04EnvelopeV1`].
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct RawM04EnvelopeV1<T> {
@@ -370,8 +467,8 @@ pub struct IdempotencyRecordV1 {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct BoundaryRevalidationCapsuleV1 {
-    pub schema: String,
-    pub version: u16,
+    pub schema: M04SchemaV1,
+    pub version: M04VersionV1,
     pub admitted_work_order: AdmittedWorkOrderV1,
     pub work_order_identity: WorkOrderIdentityRefV1,
     pub revalidation: RunStartRevalidationV1,
@@ -383,8 +480,8 @@ pub struct BoundaryRevalidationCapsuleV1 {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct ContinuationFrameV1 {
-    pub schema: String,
-    pub version: u16,
+    pub schema: M04SchemaV1,
+    pub version: M04VersionV1,
     pub domain: FingerprintDomainV1,
     pub run_id: RunId,
     pub source_attempt_id: AttemptId,
@@ -463,13 +560,13 @@ pub enum EventPayloadV1 {
 }
 
 /// One canonical event envelope. Optional diagnostic timestamps are omitted by design.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct CanonicalEventV1 {
-    pub schema: String,
-    pub version: u16,
+    pub schema: M04SchemaV1,
+    pub version: M04VersionV1,
     pub domain: FingerprintDomainV1,
-    pub event_kind: EventKindV1,
+    event_kind: EventKindV1,
     pub event_id: EventId,
     pub run_id: RunId,
     pub attempt_id: Option<AttemptId>,
@@ -481,7 +578,128 @@ pub struct CanonicalEventV1 {
     pub payload_fingerprint: CanonicalFingerprint,
     pub prior_journal_root: JournalRoot,
     pub resulting_journal_root: JournalRoot,
-    pub payload: EventPayloadV1,
+    payload: EventPayloadV1,
+}
+
+impl CanonicalEventV1 {
+    #[allow(clippy::too_many_arguments)]
+    pub fn try_new(
+        domain: FingerprintDomainV1,
+        event_kind: EventKindV1,
+        event_id: EventId,
+        run_id: RunId,
+        attempt_id: Option<AttemptId>,
+        step_id: Option<StepId>,
+        event_sequence: EventSequenceV1,
+        expected_generation: RunGeneration,
+        resulting_generation: RunGeneration,
+        idempotency_key: IdempotencyKey,
+        payload_fingerprint: CanonicalFingerprint,
+        prior_journal_root: JournalRoot,
+        resulting_journal_root: JournalRoot,
+        payload: EventPayloadV1,
+    ) -> Result<Self, M04ErrorV1> {
+        validate_event_kind_payload(event_kind, &payload)?;
+        Ok(Self {
+            schema: M04SchemaV1::supported(),
+            version: M04VersionV1::supported(),
+            domain,
+            event_kind,
+            event_id,
+            run_id,
+            attempt_id,
+            step_id,
+            event_sequence,
+            expected_generation,
+            resulting_generation,
+            idempotency_key,
+            payload_fingerprint,
+            prior_journal_root,
+            resulting_journal_root,
+            payload,
+        })
+    }
+
+    pub const fn event_kind(&self) -> EventKindV1 {
+        self.event_kind
+    }
+
+    pub fn payload(&self) -> &EventPayloadV1 {
+        &self.payload
+    }
+
+    pub fn validate(&self) -> Result<(), M04ErrorV1> {
+        validate_v1_contract_header(self.schema.as_str(), self.version.get())?;
+        validate_event_kind_payload(self.event_kind, &self.payload)
+    }
+}
+
+fn validate_event_kind_payload(
+    event_kind: EventKindV1,
+    payload: &EventPayloadV1,
+) -> Result<(), M04ErrorV1> {
+    match (event_kind, payload) {
+        (EventKindV1::RunCreated, EventPayloadV1::RunCreated { .. })
+        | (EventKindV1::RunAdmitted, EventPayloadV1::RunAdmitted { .. })
+        | (EventKindV1::RunTransitioned, EventPayloadV1::RunTransitioned { .. })
+        | (EventKindV1::RunCancellationAccepted, EventPayloadV1::RunCancellationAccepted { .. })
+        | (EventKindV1::AttemptCreated, EventPayloadV1::AttemptCreated { .. })
+        | (EventKindV1::AttemptTransitioned, EventPayloadV1::AttemptTransitioned { .. })
+        | (EventKindV1::StepDeclared, EventPayloadV1::StepDeclared { .. })
+        | (EventKindV1::StepTransitioned, EventPayloadV1::StepTransitioned { .. })
+        | (EventKindV1::ContinuationCreated, EventPayloadV1::ContinuationCreated { .. })
+        | (EventKindV1::ReferenceAttached, EventPayloadV1::ReferenceAttached { .. }) => Ok(()),
+        _ => Err(M04ErrorV1::kind_payload_mismatch()),
+    }
+}
+
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct CanonicalEventV1Wire {
+    schema: M04SchemaV1,
+    version: M04VersionV1,
+    domain: FingerprintDomainV1,
+    event_kind: EventKindV1,
+    event_id: EventId,
+    run_id: RunId,
+    attempt_id: Option<AttemptId>,
+    step_id: Option<StepId>,
+    event_sequence: EventSequenceV1,
+    expected_generation: RunGeneration,
+    resulting_generation: RunGeneration,
+    idempotency_key: IdempotencyKey,
+    payload_fingerprint: CanonicalFingerprint,
+    prior_journal_root: JournalRoot,
+    resulting_journal_root: JournalRoot,
+    payload: EventPayloadV1,
+}
+
+impl<'de> Deserialize<'de> for CanonicalEventV1 {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let wire = CanonicalEventV1Wire::deserialize(deserializer)?;
+        validate_event_kind_payload(wire.event_kind, &wire.payload).map_err(de::Error::custom)?;
+        Ok(Self {
+            schema: wire.schema,
+            version: wire.version,
+            domain: wire.domain,
+            event_kind: wire.event_kind,
+            event_id: wire.event_id,
+            run_id: wire.run_id,
+            attempt_id: wire.attempt_id,
+            step_id: wire.step_id,
+            event_sequence: wire.event_sequence,
+            expected_generation: wire.expected_generation,
+            resulting_generation: wire.resulting_generation,
+            idempotency_key: wire.idempotency_key,
+            payload_fingerprint: wire.payload_fingerprint,
+            prior_journal_root: wire.prior_journal_root,
+            resulting_journal_root: wire.resulting_journal_root,
+            payload: wire.payload,
+        })
+    }
 }
 
 /// Verified journal boundary metadata used by replay and snapshot contracts.
@@ -541,8 +759,8 @@ pub struct ReplayProjectionV1 {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct RunSnapshotV1 {
-    pub schema: String,
-    pub version: u16,
+    pub schema: M04SchemaV1,
+    pub version: M04VersionV1,
     pub run_id: RunId,
     pub source_generation: RunGeneration,
     pub last_event_sequence: EventSequenceV1,
@@ -575,8 +793,8 @@ pub enum ExternalReferenceKindV1 {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct ExternalReferenceEvidenceV1 {
-    pub schema: String,
-    pub version: u16,
+    pub schema: M04SchemaV1,
+    pub version: M04VersionV1,
     pub owner: ExternalReferenceOwnerV1,
     pub kind: ExternalReferenceKindV1,
     pub immutable_locator: String,
