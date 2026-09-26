@@ -5,8 +5,8 @@
   "reviewMode": "DELTA_EXACT_HEAD",
   "assuranceMode": "ELEVATED",
   "productStage": "M04_EXECUTION_AUTHORIZED",
-  "nextLegalAction": "RESOLVE_CD04_DOMAIN_CORRECTION_EXACT_HEAD_CI_THEN_AWAIT_INDEPENDENT_AUDIT; KEEP_PACK_B_AND_CHECKPOINT_PROMOTION_STOPPED",
-  "implementationExecutionStatus": "PACK_A_CD04_DOMAIN_CORRECTION_AWAITING_EXACT_HEAD_CI_AND_INDEPENDENT_AUDIT",
+  "nextLegalAction": "RUN_EXACT_HEAD_CI_FOR_EVENT_LINEAGE_CORRECTION_THEN_AWAIT_FORMAL_INDEPENDENT_AUDIT; KEEP_PACK_B_AND_CHECKPOINT_PROMOTION_STOPPED",
+  "implementationExecutionStatus": "PACK_A_EVENT_LINEAGE_CORRECTION_AWAITING_EXACT_HEAD_CI_AND_INDEPENDENT_AUDIT",
   "productImplementationAuthorized": true,
   "canonicalCheckpoint": "docs/project-brain/13-CHECKPOINT.md",
   "lastCompletedWorkOrder": "CORE-WO-M03-001",
@@ -107,22 +107,22 @@
   },
   "executionBlocker": {
     "packet": "A",
-    "status": "PACK_A_CD04_DOMAIN_CORRECTION_PENDING_EXACT_HEAD_CI_AND_INDEPENDENT_AUDIT",
-    "triageId": "CORE-M04-PACK-A-CD04",
-    "previousTriageId": "CORE-M04-PACK-A-CD03",
+    "status": "PACK_A_EVENT_LINEAGE_CORRECTION_PENDING_EXACT_HEAD_CI_AND_INDEPENDENT_AUDIT",
+    "triageId": "CORE-M04-PACK-A-LINEAGE-001",
+    "previousTriageId": "CORE-M04-PACK-A-CD04",
     "resolvedPreviousFailure": "The unchanged M02 .cmd test fixture emitted no child output under env_clear; the test-only native Rust executable now exercises both streams.",
     "failingGate": null,
     "baselineFixtureOnlyFullWorkspaceTest": "PASS at base d2b750f917f841fe715aafea9e0f80fbd3bc1035",
-    "candidateFullWorkspaceTest": "PASS on feat/m04-run-state working tree after CD04 event/continuation domain correction; Pack A plus CD-02 fixture",
+    "candidateFullWorkspaceTest": "NOT RUN in current executor; parent 4afd7974be9c9ccf5f5eda2a8cdd9ef9f2d5f5c9 workflow 36260042945 passed 10/10 and is historical for the resulting correction head.",
     "windowsFocal": "PASS",
     "linuxFocal": "PASS in rust:1.98.1-slim-bookworm Docker container",
-    "fmtClippyGovernanceDiffCheck": "PASS",
-    "exactHeadCi": "PENDING for the CD04 commit. The prior exact-head workflow 36255642619 passed 10/10 jobs only on pre-correction PR head 839cb6576326b4c0e96e2aa4729dce4cf6bd3c59 and does not validate CD04.",
+    "fmtClippyGovernanceDiffCheck": "Historical PASS on parent 4afd7974be9c9ccf5f5eda2a8cdd9ef9f2d5f5c9; fresh exact-head workflow pending for this correction.",
+    "exactHeadCi": "PENDING for resulting lineage-correction head. Parent 4afd7974be9c9ccf5f5eda2a8cdd9ef9f2d5f5c9 workflow 36260042945 completed successfully with 10/10 jobs; it does not validate the new commit.",
     "implementationPullRequest": "OPEN #106 https://github.com/KayzenRoot/core/pull/106",
     "independentAudit": "PENDING; executor does not approve or merge",
     "packBStarted": false,
     "allEvNodesRemainPending": true,
-    "nextLegalAction": "Commit and push the CD04 correction without force, resolve all required checks on that exact head, then await independent audit; do not start Pack B or promote the checkpoint.",
+    "nextLegalAction": "Run/confirm all checks on the resulting PR head; then leave PR #106 open for formal independent review. Do not approve, merge, start Pack B, or promote the checkpoint.",
     "lastGreenPrHeadBeforeCd03Correction": {
       "headSha": "cfa82f6183a5e44ccfff0bba50a72706f3458928",
       "workflowRunId": 36249941196,
@@ -235,12 +235,45 @@
         "diffCheck": "PASS: git diff --check"
       },
       "newCorrectionHead": "The commit containing this record; resolve the exact SHA from the resulting PR head.",
-      "newCorrectionHeadCiAtPublication": "PENDING_EXACT_HEAD_GITHUB_RUN",
+      "newCorrectionHeadCiAtPublication": "PASS on 4afd7974be9c9ccf5f5eda2a8cdd9ef9f2d5f5c9: workflow 36260042945 completed successfully with 10/10 jobs; historical after the lineage correction commit.",
       "independentAudit": "PENDING; executor does not approve or merge",
       "packBStarted": false,
       "checkpointPromotion": false,
       "allEvNodesRemainPending": true,
-      "reviewerOwnedAcceptance": "AC-M04-023 / EV-M04-023 remains assigned to the independent reviewer"
+      "reviewerOwnedAcceptance": "AC-M04-023 / EV-M04-023 remains assigned to the independent reviewer",
+      "correctedHeadSha": "4afd7974be9c9ccf5f5eda2a8cdd9ef9f2d5f5c9",
+      "exactHeadWorkflowRunId": 36260042945,
+      "exactHeadWorkflowStatus": "completed",
+      "exactHeadWorkflowConclusion": "success",
+      "exactHeadWorkflowSuccessfulJobs": 10,
+      "exactHeadWorkflowTotalJobs": 10
+    },
+    "lineageCorrection": {
+      "triageId": "CORE-M04-PACK-A-LINEAGE-001",
+      "reviewedParentHeadSha": "4afd7974be9c9ccf5f5eda2a8cdd9ef9f2d5f5c9",
+      "reviewedParentWorkflowRunId": 36260042945,
+      "finding": "CanonicalEventV1 did not require envelope RunId/AttemptId/StepId to match EventPayloadV1 lineage.",
+      "correction": "Constructor, validate(), and deserialization enforce exact run/attempt/step lineage for all payload variants.",
+      "regressionCoverage": [
+        "constructor AttemptId mismatch",
+        "validate() missing StepId",
+        "deserialize mutated lineage",
+        "ReferenceAttached RunId mismatch"
+      ],
+      "changedFiles": [
+        "crates/core-run-state/src/contracts.rs",
+        "crates/core-run-state/tests/public_contracts.rs",
+        ".engineering/gef/GEF-CURRENT.json",
+        ".engineering/evidence/CORE-WO-M04-001.json",
+        "docs/work-orders/CODEX-HANDOFF-M04.md"
+      ],
+      "localVerification": "NOT_RUN in current executor; no local checkout or Rust toolchain.",
+      "resultingHead": "Resolved from PR #106 after commit; not self-referentially embedded.",
+      "resultingHeadCi": "PENDING_EXACT_HEAD_GITHUB_RUN",
+      "independentAudit": "PENDING; no formal review submitted.",
+      "allEvNodesRemainPending": true,
+      "packBStarted": false,
+      "checkpointPromotion": false
     }
   }
 }

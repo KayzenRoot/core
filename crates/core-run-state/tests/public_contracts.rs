@@ -3,10 +3,10 @@ use core_run_state::{
     BoundaryRevalidationCapsuleV1, CancelRunRequestV1, CanonicalEventV1, CanonicalFingerprint,
     ContinuationFrameV1, ContractKindV1, EventId, EventKindV1, EventPayloadV1, EventSequenceV1,
     ExecutionEpoch, ExternalReferenceEvidenceV1, ExternalReferenceKindV1, ExternalReferenceOwnerV1,
-    FingerprintDomainV1, IdempotencyKey, JournalRoot, M04EnvelopeV1, M04ErrorCodeV1, M04ErrorV1,
-    M04ReasonCodeV1, M04SchemaV1, M04VersionV1, RawM04EnvelopeV1, RunGeneration, RunId,
-    RunProjectionV1, RunSnapshotV1, RunStatusV1, StepId, StepOrdinalV1, StepStatusV1, M04_SCHEMA,
-    M04_VERSION,
+    FingerprintDomainV1, IdempotencyKey, JournalRoot, M04EnvelopeV1, M04ErrorClassV1,
+    M04ErrorCodeV1, M04ErrorV1, M04ReasonCodeV1, M04SchemaV1, M04VersionV1,
+    RawM04EnvelopeV1, RunGeneration, RunId, RunProjectionV1, RunSnapshotV1, RunStatusV1, StepId,
+    StepOrdinalV1, StepStatusV1, M04_SCHEMA, M04_VERSION,
 };
 use core_work_order::{evaluate_admission, materialize_handoff, WorkOrderIdentityRefV1};
 use serde::{de::DeserializeOwned, Serialize};
@@ -290,13 +290,36 @@ fn canonical_event_with_domain(
     kind: EventKindV1,
     payload: EventPayloadV1,
 ) -> Result<CanonicalEventV1, M04ErrorV1> {
+    let run_id = match &payload {
+        EventPayloadV1::ReferenceAttached { reference } => reference.run_id.clone(),
+        _ => RunId::new("run-17").expect("valid run id"),
+    };
+    let (attempt_id, step_id) = match &payload {
+        EventPayloadV1::AttemptCreated { attempt_id, .. }
+        | EventPayloadV1::AttemptTransitioned { attempt_id, .. } => {
+            (Some(attempt_id.clone()), None)
+        }
+        EventPayloadV1::StepDeclared {
+            attempt_id, step_id, ..
+        }
+        | EventPayloadV1::StepTransitioned {
+            attempt_id, step_id, ..
+        } => (Some(attempt_id.clone()), Some(step_id.clone())),
+        EventPayloadV1::ContinuationCreated { attempt_id, .. } => {
+            (Some(attempt_id.clone()), None)
+        }
+        EventPayloadV1::ReferenceAttached { reference } => {
+            (reference.attempt_id.clone(), reference.step_id.clone())
+        }
+        _ => (None, None),
+    };
     CanonicalEventV1::try_new(
         domain,
         kind,
         EventId::new("event-1").expect("valid event id"),
-        RunId::new("run-17").expect("valid run id"),
-        None,
-        None,
+        run_id,
+        attempt_id,
+        step_id,
         EventSequenceV1::new(1),
         RunGeneration::new(0),
         RunGeneration::new(1),
@@ -466,6 +489,58 @@ fn canonical_event_enforces_every_kind_payload_pair_on_construction_and_deserial
     })
     .unwrap();
     assert!(serde_json::from_value::<CanonicalEventV1>(mismatched_wire).is_err());
+}
+
+#[test]
+fn canonical_event_rejects_mismatched_payload_lineage() {
+    let constructor_error = CanonicalEventV1::try_new(
+        FingerprintDomainV1::Event,
+        EventKindV1::AttemptCreated,
+        EventId::new("event-2").unwrap(),
+        RunId::new("run-17").unwrap(),
+        Some(AttemptId::new("attempt-2").unwrap()),
+        None,
+        EventSequenceV1::new(2),
+        RunGeneration::new(1),
+        RunGeneration::new(2),
+        IdempotencyKey::new("event:2").unwrap(),
+        fingerprint('d'),
+        JournalRoot::new("e".repeat(64)).unwrap(),
+        JournalRoot::new("f".repeat(64)).unwrap(),
+        EventPayloadV1::AttemptCreated {
+            attempt_id: AttemptId::new("attempt-1").unwrap(),
+            ordinal: AttemptOrdinalV1::new(0),
+        },
+    )
+    .expect_err("envelope attempt ID must match AttemptCreated payload");
+    assert_eq!(constructor_error.class, M04ErrorClassV1::LineageMismatch);
+    assert_eq!(constructor_error.code, M04ErrorCodeV1::LineageMismatch);
+
+    let (step_kind, step_payload) = event_payloads()
+        .into_iter()
+        .find(|(kind, _)| *kind == EventKindV1::StepDeclared)
+        .expect("StepDeclared fixture");
+    let mut step_event = canonical_event(step_kind, step_payload);
+    assert!(step_event.attempt_id.is_some());
+    assert!(step_event.step_id.is_some());
+    step_event.step_id = None;
+    let validation_error = step_event
+        .validate()
+        .expect_err("step event must carry both matching lineage IDs");
+    assert_eq!(validation_error.code, M04ErrorCodeV1::LineageMismatch);
+    let malformed_wire = serde_json::to_value(&step_event).expect("serialize mutated event");
+    assert!(serde_json::from_value::<CanonicalEventV1>(malformed_wire).is_err());
+
+    let (reference_kind, reference_payload) = event_payloads()
+        .into_iter()
+        .find(|(kind, _)| *kind == EventKindV1::ReferenceAttached)
+        .expect("ReferenceAttached fixture");
+    let mut reference_event = canonical_event(reference_kind, reference_payload);
+    reference_event.run_id = RunId::new("run-18").unwrap();
+    let reference_error = reference_event
+        .validate()
+        .expect_err("reference event run ID must match its evidence lineage");
+    assert_eq!(reference_error.code, M04ErrorCodeV1::LineageMismatch);
 }
 
 #[test]

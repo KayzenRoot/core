@@ -278,4 +278,37 @@ The evidence and GEF records retain these local results and mark the CD-04 commi
 
 The CD-04 delta is limited to `crates/core-run-state/src/contracts.rs`, `crates/core-run-state/src/lib.rs`, `crates/core-run-state/tests/public_contracts.rs`, `.engineering/evidence/CORE-WO-M04-001.json`, `.engineering/gef/GEF-CURRENT.json`, and this handoff. The full PR remains within the previously admitted Pack A/Cargo scope, the corrected M02 test helper, and these derived records; the Work Order file map and frozen canonical sources are unchanged.
 
-Current executor status is `BLOCKED` until a new workflow completes on the exact pushed CD-04 head and the independent reviewer examines that same head. The prior 839cb657 / run 36255642619 green result is historical for CD-04. Keep PR #106 open. Do not submit an executor review, merge, promote the checkpoint, start Pack B, or change any EV-M04 state. All 23 EV-M04 items remain `PENDING`, including reviewer-owned EV-M04-023 / AC-M04-023. This is not the Work Order's global `READY_FOR_REVIEW` state.
+The exact-head CI for CD-04 completed successfully on `4afd7974be9c9ccf5f5eda2a8cdd9ef9f2d5f5c9` (workflow `36260042945`, 10/10 jobs); run `36255642619` applies only to the earlier `839cb657` head. The new event-lineage correction and evidence reconciliation below require a fresh exact-head run. No formal GitHub review was submitted because the connected profile `KayzenRoot` is the PR author. Keep PR #106 open; all 23 EV-M04 items remain `PENDING`, including reviewer-owned EV-M04-023 / AC-M04-023. Do not approve, merge, promote the checkpoint, or start Pack B. This is not the Work Order's global `READY_FOR_REVIEW` state.
+
+## CORE-M04-PACK-A technical audit — event lineage and evidence reconciliation — 2026-09-26
+
+This entry supersedes the CD-04 “current executor status” snapshot above. Earlier CD-01 through CD-04 findings remain historical records.
+
+### Verified parent state
+
+- PR #106 is open and unmerged on `feat/m04-run-state`, based on `main` at `d2b750f917f841fe715aafea9e0f80fbd3bc1035`.
+- Parent head `4afd7974be9c9ccf5f5eda2a8cdd9ef9f2d5f5c9` has exact-head GitHub workflow `36260042945` completed successfully with 10/10 jobs. This run validates the CD-04 code at that parent only; it becomes historical for this correction commit.
+- The checked-in Evidence/GEF records still named `839cb6576326b4c0e96e2aa4729dce4cf6bd3c59` as the current candidate and marked CI pending, despite the later PR head and successful exact-head run. This correction reconciles that stale status without erasing the historical record.
+- The authenticated review profile remains `KayzenRoot`, the PR author. This audit does not submit or claim a formal independent GitHub review.
+
+### Finding and correction
+
+`CanonicalEventV1` checked the event-kind/payload variant and the `EVENT` domain, but accepted envelope lineage fields that contradicted the payload. For example, an `AttemptCreated` payload for one Attempt could carry another top-level AttemptId, a Step event could omit or misstate its AttemptId/StepId, and a `ReferenceAttached` event could identify a different Run than the referenced evidence. That permits the journal envelope and projected payload to disagree.
+
+The constructor, `validate()`, and deserializer now enforce the frozen event-lineage contract:
+
+- Run events carry no AttemptId or StepId.
+- Attempt events carry the payload's exact AttemptId and no StepId.
+- Step events carry the payload's exact AttemptId and StepId.
+- `ContinuationCreated` identifies the newly created Attempt in the envelope; its source Attempt remains explicit in the payload.
+- `ReferenceAttached` matches the reference's RunId, optional AttemptId, and optional StepId exactly.
+
+Lineage violations return `M04ErrorClassV1::LineageMismatch` / `M04ErrorCodeV1::LineageMismatch` with `Never` retryability. Existing kind/payload mismatches continue to return `KindPayloadMismatch`. No wire fields, enum values, dependencies, architecture, or lifecycle behavior changed.
+
+Regression coverage exercises constructor rejection, `validate()`, and fail-closed deserialization. The shared event fixture now supplies lineage IDs required by each payload.
+
+### Current validation and gate
+
+- No local repository checkout or Rust toolchain is available in this executor, so the new code has not been locally compiled here.
+- The parent run `36260042945` is historical for the new commit. Fresh exact-head GitHub CI must complete successfully before the new correction is offered for formal independent review.
+- Work Order, active Context Lock, all nine canonical fingerprints, and canonical `main` remain unchanged. All 23 EV-M04 nodes remain `PENDING`; Pack B has not started and checkpoint promotion remains stopped.

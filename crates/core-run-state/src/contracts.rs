@@ -697,6 +697,12 @@ impl CanonicalEventV1 {
     ) -> Result<Self, M04ErrorV1> {
         validate_fingerprint_domain(domain, FingerprintDomainV1::Event)?;
         validate_event_kind_payload(event_kind, &payload)?;
+        validate_event_lineage(
+            &run_id,
+            attempt_id.as_ref(),
+            step_id.as_ref(),
+            &payload,
+        )?;
         Ok(Self {
             schema: M04SchemaV1::supported(),
             version: M04VersionV1::supported(),
@@ -732,7 +738,13 @@ impl CanonicalEventV1 {
     pub fn validate(&self) -> Result<(), M04ErrorV1> {
         validate_v1_contract_header(self.schema.as_str(), self.version.get())?;
         validate_fingerprint_domain(self.domain, FingerprintDomainV1::Event)?;
-        validate_event_kind_payload(self.event_kind, &self.payload)
+        validate_event_kind_payload(self.event_kind, &self.payload)?;
+        validate_event_lineage(
+            &self.run_id,
+            self.attempt_id.as_ref(),
+            self.step_id.as_ref(),
+            &self.payload,
+        )
     }
 }
 
@@ -755,6 +767,62 @@ fn validate_event_kind_payload(
     }
 }
 
+fn event_lineage_mismatch() -> M04ErrorV1 {
+    M04ErrorV1::new(
+        M04ErrorClassV1::LineageMismatch,
+        M04ErrorCodeV1::LineageMismatch,
+        M04RetryabilityV1::Never,
+    )
+}
+
+fn validate_event_lineage(
+    run_id: &RunId,
+    attempt_id: Option<&AttemptId>,
+    step_id: Option<&StepId>,
+    payload: &EventPayloadV1,
+) -> Result<(), M04ErrorV1> {
+    let matches_payload = match payload {
+        EventPayloadV1::RunCreated { .. }
+        | EventPayloadV1::RunAdmitted { .. }
+        | EventPayloadV1::RunTransitioned { .. }
+        | EventPayloadV1::RunCancellationAccepted { .. } => {
+            attempt_id.is_none() && step_id.is_none()
+        }
+        EventPayloadV1::AttemptCreated {
+            attempt_id: payload_attempt_id,
+            ..
+        }
+        | EventPayloadV1::AttemptTransitioned {
+            attempt_id: payload_attempt_id,
+            ..
+        } => attempt_id == Some(payload_attempt_id) && step_id.is_none(),
+        EventPayloadV1::StepDeclared {
+            attempt_id: payload_attempt_id,
+            step_id: payload_step_id,
+            ..
+        }
+        | EventPayloadV1::StepTransitioned {
+            attempt_id: payload_attempt_id,
+            step_id: payload_step_id,
+            ..
+        } => attempt_id == Some(payload_attempt_id) && step_id == Some(payload_step_id),
+        EventPayloadV1::ContinuationCreated {
+            attempt_id: created_attempt_id,
+            ..
+        } => attempt_id == Some(created_attempt_id) && step_id.is_none(),
+        EventPayloadV1::ReferenceAttached { reference } => {
+            run_id == &reference.run_id
+                && attempt_id == reference.attempt_id.as_ref()
+                && step_id == reference.step_id.as_ref()
+        }
+    };
+
+    if matches_payload {
+        Ok(())
+    } else {
+        Err(event_lineage_mismatch())
+    }
+}
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
 struct CanonicalEventV1Wire {
@@ -787,6 +855,13 @@ impl<'de> Deserialize<'de> for CanonicalEventV1 {
         validate_fingerprint_domain(wire.domain, FingerprintDomainV1::Event)
             .map_err(de::Error::custom)?;
         validate_event_kind_payload(wire.event_kind, &wire.payload).map_err(de::Error::custom)?;
+        validate_event_lineage(
+            &wire.run_id,
+            wire.attempt_id.as_ref(),
+            wire.step_id.as_ref(),
+            &wire.payload,
+        )
+        .map_err(de::Error::custom)?;
         Ok(Self {
             schema: wire.schema,
             version: wire.version,

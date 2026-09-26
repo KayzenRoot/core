@@ -3,7 +3,7 @@
   "increment": "CORE-M04-FREEZE-001",
   "workOrder": "CORE-WO-M04-001",
   "repository": "KayzenRoot/core",
-  "status": "PACK_A_CD04_DOMAIN_CORRECTION_AWAITING_EXACT_HEAD_CI_AND_INDEPENDENT_AUDIT",
+  "status": "PACK_A_EVENT_LINEAGE_CORRECTION_AWAITING_EXACT_HEAD_CI_AND_INDEPENDENT_AUDIT",
   "planningCandidate": {
     "branch": "planning/m04-final-freeze-round5",
     "planningBase": "0f448c708aafd8f5b4cb6303effdabd7e028bc6f",
@@ -61,9 +61,10 @@
     "fabricatedMeasurements": false
   },
   "implementation": {
-    "status": "PACK_A_CD04_DOMAIN_CORRECTION_AWAITING_EXACT_HEAD_CI_AND_INDEPENDENT_AUDIT",
+    "status": "PACK_A_EVENT_LINEAGE_CORRECTION_AWAITING_EXACT_HEAD_CI_AND_INDEPENDENT_AUDIT",
     "authorizedBase": "f6b422be5465d5a93d0b8fcf4c9507c205663072",
-    "finalHead": "839cb6576326b4c0e96e2aa4729dce4cf6bd3c59",
+    "finalHead": null,
+    "lastValidatedParentHead": "4afd7974be9c9ccf5f5eda2a8cdd9ef9f2d5f5c9",
     "productFilesCreated": true,
     "executionBranch": "feat/m04-run-state",
     "preflightStatus": "PASS",
@@ -241,8 +242,8 @@
   },
   "executorHandoff": {
     "path": "docs/work-orders/CODEX-HANDOFF-M04.md",
-    "blobSha": "0e9a29761d7121df24b6de764c7a7278d4cc0894",
-    "status": "INITIAL_PR_HEAD_GATES_PASSED_PENDING_FINAL_HEAD_CI_AND_INDEPENDENT_AUDIT / PACK_B_NOT_STARTED"
+    "blobSha": "0fd29a117a3e0487a8d8ccbbdf72aacc44823069",
+    "status": "PACK_A_EVENT_LINEAGE_CORRECTION_AWAITING_EXACT_HEAD_CI_AND_INDEPENDENT_AUDIT / PACK_B_NOT_STARTED"
   },
   "executionAdmission": {
     "increment": "CORE-M04-ADMIT-001",
@@ -527,10 +528,12 @@
     }
   },
   "packAStop": {
-    "status": "PACK_A_CD04_DOMAIN_CORRECTION_AWAITING_EXACT_HEAD_CI_AND_INDEPENDENT_AUDIT",
+    "status": "PACK_A_EVENT_LINEAGE_CORRECTION_AWAITING_EXACT_HEAD_CI_AND_INDEPENDENT_AUDIT",
     "packet": "A",
-    "candidateGitHead": "839cb6576326b4c0e96e2aa4729dce4cf6bd3c59",
-    "workingTreeHasUncommittedChanges": true,
+    "candidateGitHead": null,
+    "lastValidatedParentHead": "4afd7974be9c9ccf5f5eda2a8cdd9ef9f2d5f5c9",
+    "workingTreeHasUncommittedChanges": null,
+    "localWorkingTreeState": "NOT_AVAILABLE_IN_CURRENT_REVIEW_EXECUTOR",
     "platform": "Windows",
     "checks": [
       {
@@ -561,9 +564,10 @@
         "result": "PASS"
       }
     ],
-    "stopCondition": "CD04 corrects the known-domain cross-domain substitution at the Pack A public contract boundary. Its commit requires a new exact-head GitHub run and independent review. Keep all EV-M04 pending, Pack B stopped, and checkpoint promotion stopped.",
-    "hostedExactHeadCi": "PENDING for the CD04 commit. Prior workflow 36255642619 passed 10/10 jobs only on pre-correction head 839cb6576326b4c0e96e2aa4729dce4cf6bd3c59 and does not validate CD04.",
-    "implementationPullRequest": "OPEN #106 https://github.com/KayzenRoot/core/pull/106; base main at d2b750f917f841fe715aafea9e0f80fbd3bc1035; reviewed pre-correction head 839cb6576326b4c0e96e2aa4729dce4cf6bd3c59.",
+    "checksScope": "Historical Windows CD-04 checks apply to parent head 4afd7974be9c9ccf5f5eda2a8cdd9ef9f2d5f5c9 only; they do not validate the new event-lineage correction commit.",
+    "stopCondition": "The event-lineage correction closes cross-lineage envelope/payload acceptance in Pack A. Its resulting PR head requires fresh exact-head GitHub CI and formal independent review. Keep all EV-M04 pending, Pack B stopped, and checkpoint promotion stopped.",
+    "hostedExactHeadCi": "PENDING for the event-lineage correction commit. Parent head 4afd7974be9c9ccf5f5eda2a8cdd9ef9f2d5f5c9 passed exact-head workflow 36260042945 with 10/10 jobs; that run is historical after this commit.",
+    "implementationPullRequest": "OPEN #106 https://github.com/KayzenRoot/core/pull/106; base main d2b750f917f841fe715aafea9e0f80fbd3bc1035; correction parent head 4afd7974be9c9ccf5f5eda2a8cdd9ef9f2d5f5c9.",
     "hostedWorkflowRunId": 36248160958,
     "initialUbuntuM02FailureRerunJobId": 108423661915,
     "finalHeadCiAfterEvidenceHandoffUpdate": "PASS on pre-correction head cfa82f6183a5e44ccfff0bba50a72706f3458928: run 36249941196 completed with 10/10 successful jobs. This run does not validate the CD-03 correction head.",
@@ -748,8 +752,8 @@
       "packBStarted": false,
       "allEvNodesRemainPending": true
     },
-  "finalDisposition": "CD04 corrects cross-domain substitution for event and continuation contracts; local gates pass. Commit/push, exact-head CI, and independent audit remain required; Pack B is not started.",
-  "commitOrPush": "PENDING_AT_CD04_EVIDENCE_WRITE; commit and push the authorized correction without force after the final scope audit.",
+  "finalDisposition": "The new Pack A event-lineage correction is recorded; fresh exact-head CI and formal independent audit remain pending. Pack B is not started.",
+  "commitOrPush": "The correction and its evidence reconciliation are included in the resulting PR commit; resolve its SHA from PR #106. Fresh exact-head CI remains pending.",
     "cd02Correction": {
       "prompt": "CORE-M04-PACK-A-CD02-WINDOWS-M02-HELPER.pdf",
       "reviewDate": "2026-09-26",
@@ -1107,14 +1111,54 @@
         "governance": "PASS: python scripts/validate_governance.py",
         "diffCheck": "PASS: git diff --check"
       },
-      "newCorrectionHead": "The commit containing this correction record; exact SHA is resolved from PR #106 after push.",
-      "newCorrectionHeadCiAtPublication": "PENDING_EXACT_HEAD_GITHUB_RUN",
+      "newCorrectionHead": "4afd7974be9c9ccf5f5eda2a8cdd9ef9f2d5f5c9 (CD-04 correction head; historical parent for the lineage correction commit).",
+      "newCorrectionHeadCiAtPublication": "PASS on 4afd7974be9c9ccf5f5eda2a8cdd9ef9f2d5f5c9: workflow 36260042945 succeeded with 10/10 jobs; historical for the lineage correction commit.",
+      "exactHeadWorkflowRunId": 36260042945,
+      "exactHeadSha": "4afd7974be9c9ccf5f5eda2a8cdd9ef9f2d5f5c9",
       "independentAudit": "PENDING; executor does not approve or merge",
       "packBStarted": false,
       "checkpointPromotion": false,
       "allEvNodesRemainPending": true,
       "reviewerOwnedAcceptance": "AC-M04-023 / EV-M04-023 remains assigned to the independent reviewer"
     },
-    "nextLegalGate": "Commit and push the CD04 correction without force, resolve all 10 checks on that exact PR head, then leave the PR open for independent audit. Do not start Pack B or promote the checkpoint."
+    "nextLegalGate": "Run all required checks on the resulting exact PR head, then leave PR #106 open for formal independent review. Do not approve, merge, promote the checkpoint, change EV states, or start Pack B.",
+    "lineageCorrection": {
+      "reviewDate": "2026-09-26",
+      "triageId": "CORE-M04-PACK-A-LINEAGE-001",
+      "reviewedParentHeadSha": "4afd7974be9c9ccf5f5eda2a8cdd9ef9f2d5f5c9",
+      "reviewedParentWorkflow": {
+        "runId": 36260042945,
+        "status": "completed",
+        "conclusion": "success",
+        "successfulJobs": 10,
+        "totalJobs": 10,
+        "appliesOnlyToHead": "4afd7974be9c9ccf5f5eda2a8cdd9ef9f2d5f5c9"
+      },
+      "staleStateFinding": "The checked-in CD04 records still identified 839cb6576326b4c0e96e2aa4729dce4cf6bd3c59 and marked exact-head CI pending, while PR #106 had advanced to 4afd7974be9c9ccf5f5eda2a8cdd9ef9f2d5f5c9 and workflow 36260042945 passed 10/10.",
+      "finding": "CanonicalEventV1 accepted event envelope RunId/AttemptId/StepId that contradicted EventPayloadV1 lineage after the event-kind/payload pair had passed.",
+      "correction": "Constructor, validate(), and Deserialize require run events to omit descendant IDs, attempt events to bind the exact AttemptId, step events to bind exact AttemptId and StepId, continuation events to bind the created AttemptId, and reference events to match embedded reference lineage.",
+      "typedError": "M04ErrorClassV1::LineageMismatch / M04ErrorCodeV1::LineageMismatch / Never",
+      "regressionCoverage": [
+        "mismatched AttemptId rejected by constructor",
+        "missing StepId rejected by validate()",
+        "mutated lineage rejected by deserialization",
+        "ReferenceAttached RunId mismatch rejected"
+      ],
+      "changedFiles": [
+        "crates/core-run-state/src/contracts.rs",
+        "crates/core-run-state/tests/public_contracts.rs",
+        ".engineering/gef/GEF-CURRENT.json",
+        ".engineering/evidence/CORE-WO-M04-001.json",
+        "docs/work-orders/CODEX-HANDOFF-M04.md"
+      ],
+      "localVerification": "NOT_RUN in this executor: no local checkout or Rust toolchain; parent checks are historical.",
+      "newCorrectionHead": "Resolved from PR #106 after this commit; exact SHA is not embedded self-referentially.",
+      "newCorrectionHeadCiAtPublication": "PENDING_EXACT_HEAD_GITHUB_RUN",
+      "independentAudit": "PENDING; authenticated GitHub profile is the PR author; no formal review submitted.",
+      "packBStarted": false,
+      "checkpointPromotion": false,
+      "allEvNodesRemainPending": true,
+      "reviewerOwnedAcceptance": "AC-M04-023 / EV-M04-023 remains assigned to an independent reviewer"
+    }
   }
 }
