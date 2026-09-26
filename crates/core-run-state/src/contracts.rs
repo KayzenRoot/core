@@ -697,12 +697,7 @@ impl CanonicalEventV1 {
     ) -> Result<Self, M04ErrorV1> {
         validate_fingerprint_domain(domain, FingerprintDomainV1::Event)?;
         validate_event_kind_payload(event_kind, &payload)?;
-        validate_event_lineage(
-            &run_id,
-            attempt_id.as_ref(),
-            step_id.as_ref(),
-            &payload,
-        )?;
+        validate_event_lineage(&run_id, attempt_id.as_ref(), step_id.as_ref(), &payload)?;
         Ok(Self {
             schema: M04SchemaV1::supported(),
             version: M04VersionV1::supported(),

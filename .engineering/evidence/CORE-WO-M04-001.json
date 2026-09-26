@@ -3,7 +3,7 @@
   "increment": "CORE-M04-FREEZE-001",
   "workOrder": "CORE-WO-M04-001",
   "repository": "KayzenRoot/core",
-  "status": "PACK_A_EVENT_LINEAGE_CORRECTION_AWAITING_EXACT_HEAD_CI_AND_INDEPENDENT_AUDIT",
+  "status": "PACK_A_EVENT_LINEAGE_FORMAT_CORRECTED_AWAITING_EXACT_HEAD_CI_AND_INDEPENDENT_AUDIT",
   "planningCandidate": {
     "branch": "planning/m04-final-freeze-round5",
     "planningBase": "0f448c708aafd8f5b4cb6303effdabd7e028bc6f",
@@ -61,7 +61,7 @@
     "fabricatedMeasurements": false
   },
   "implementation": {
-    "status": "PACK_A_EVENT_LINEAGE_CORRECTION_AWAITING_EXACT_HEAD_CI_AND_INDEPENDENT_AUDIT",
+    "status": "PACK_A_EVENT_LINEAGE_FORMAT_CORRECTED_AWAITING_EXACT_HEAD_CI_AND_INDEPENDENT_AUDIT",
     "authorizedBase": "f6b422be5465d5a93d0b8fcf4c9507c205663072",
     "finalHead": null,
     "lastValidatedParentHead": "4afd7974be9c9ccf5f5eda2a8cdd9ef9f2d5f5c9",
@@ -242,8 +242,8 @@
   },
   "executorHandoff": {
     "path": "docs/work-orders/CODEX-HANDOFF-M04.md",
-    "blobSha": "0fd29a117a3e0487a8d8ccbbdf72aacc44823069",
-    "status": "PACK_A_EVENT_LINEAGE_CORRECTION_AWAITING_EXACT_HEAD_CI_AND_INDEPENDENT_AUDIT / PACK_B_NOT_STARTED"
+    "blobSha": "c70d2914acb8c4a1f998f34ae09a1a3db023988f",
+    "status": "PACK_A_EVENT_LINEAGE_FORMAT_CORRECTED_AWAITING_EXACT_HEAD_CI_AND_INDEPENDENT_AUDIT / PACK_B_NOT_STARTED"
   },
   "executionAdmission": {
     "increment": "CORE-M04-ADMIT-001",
@@ -528,7 +528,7 @@
     }
   },
   "packAStop": {
-    "status": "PACK_A_EVENT_LINEAGE_CORRECTION_AWAITING_EXACT_HEAD_CI_AND_INDEPENDENT_AUDIT",
+    "status": "PACK_A_EVENT_LINEAGE_FORMAT_CORRECTED_AWAITING_EXACT_HEAD_CI_AND_INDEPENDENT_AUDIT",
     "packet": "A",
     "candidateGitHead": null,
     "lastValidatedParentHead": "4afd7974be9c9ccf5f5eda2a8cdd9ef9f2d5f5c9",
@@ -539,7 +539,7 @@
       {
         "command": "cargo test -p core-run-state --locked",
         "result": "PASS",
-      "details": "7 crate unit tests, 1 canonical identity integration test, 9 public contract tests, and 6 compile-fail doctests passed after CD04."
+        "details": "7 crate unit tests, 1 canonical identity integration test, 9 public contract tests, and 6 compile-fail doctests passed after CD04."
       },
       {
         "command": "cargo test --workspace --all-targets --all-features --locked",
@@ -565,8 +565,8 @@
       }
     ],
     "checksScope": "Historical Windows CD-04 checks apply to parent head 4afd7974be9c9ccf5f5eda2a8cdd9ef9f2d5f5c9 only; they do not validate the new event-lineage correction commit.",
-    "stopCondition": "The event-lineage correction closes cross-lineage envelope/payload acceptance in Pack A. Its resulting PR head requires fresh exact-head GitHub CI and formal independent review. Keep all EV-M04 pending, Pack B stopped, and checkpoint promotion stopped.",
-    "hostedExactHeadCi": "PENDING for the event-lineage correction commit. Parent head 4afd7974be9c9ccf5f5eda2a8cdd9ef9f2d5f5c9 passed exact-head workflow 36260042945 with 10/10 jobs; that run is historical after this commit.",
+    "stopCondition": "The event-lineage contract correction is implemented; an exact-head formatting check found formatting-only drift. The follow-up commit must pass fresh exact-head CI and formal independent review. Keep all EV-M04 pending, Pack B stopped, and checkpoint promotion stopped.",
+    "hostedExactHeadCi": "Prior exact-head workflow 36266634481 on c48cc66f95062f85f9be60dcf254b5d498a6cfab completed with 4/10 jobs successful (Governance and all three fuzz jobs) and 6/10 failed solely at cargo fmt --all -- --check; Rust build/test/clippy steps were skipped. Fresh exact-head CI is pending for this formatting-only follow-up.",
     "implementationPullRequest": "OPEN #106 https://github.com/KayzenRoot/core/pull/106; base main d2b750f917f841fe715aafea9e0f80fbd3bc1035; correction parent head 4afd7974be9c9ccf5f5eda2a8cdd9ef9f2d5f5c9.",
     "hostedWorkflowRunId": 36248160958,
     "initialUbuntuM02FailureRerunJobId": 108423661915,
@@ -752,8 +752,8 @@
       "packBStarted": false,
       "allEvNodesRemainPending": true
     },
-  "finalDisposition": "The new Pack A event-lineage correction is recorded; fresh exact-head CI and formal independent audit remain pending. Pack B is not started.",
-  "commitOrPush": "The correction and its evidence reconciliation are included in the resulting PR commit; resolve its SHA from PR #106. Fresh exact-head CI remains pending.",
+    "finalDisposition": "Event-lineage correction is committed; formatting-only follow-up is prepared with exact rustfmt layout. Fresh exact-head CI and formal independent audit remain pending. Pack B is not started.",
+    "commitOrPush": "Formatting-only follow-up and updated review evidence are included in the resulting PR commit; resolve its SHA from PR #106. Fresh exact-head CI remains pending.",
     "cd02Correction": {
       "prompt": "CORE-M04-PACK-A-CD02-WINDOWS-M02-HELPER.pdf",
       "reviewDate": "2026-09-26",
@@ -1121,7 +1121,38 @@
       "allEvNodesRemainPending": true,
       "reviewerOwnedAcceptance": "AC-M04-023 / EV-M04-023 remains assigned to the independent reviewer"
     },
-    "nextLegalGate": "Run all required checks on the resulting exact PR head, then leave PR #106 open for formal independent review. Do not approve, merge, promote the checkpoint, change EV states, or start Pack B.",
+    "nextLegalGate": "Run all required checks on the formatting follow-up's exact PR head, then leave PR #106 open for formal independent review. Do not approve, merge, promote the checkpoint, change EV states, or start Pack B.",
+    "formatCorrection": {
+      "reviewDate": "2026-09-26",
+      "triageId": "CORE-M04-PACK-A-LINEAGE-FMT-001",
+      "parentHead": "c48cc66f95062f85f9be60dcf254b5d498a6cfab",
+      "priorWorkflow": {
+        "runId": 36266634481,
+        "status": "completed",
+        "conclusion": "failure",
+        "observedSuccessfulJobs": 4,
+        "observedFailedJobs": 6,
+        "observedInProgressJobs": 0,
+        "totalJobs": 10,
+        "headSha": "c48cc66f95062f85f9be60dcf254b5d498a6cfab"
+      },
+      "finding": "cargo fmt --all -- --check reported formatting differences in the new event-lineage constructor call and public event fixture/imports. The completed workflow had 4 successful Governance/fuzz jobs and 6 matrix failures at formatting; no Rust tests ran.",
+      "correction": "Applied the exact rustfmt layout reported by workflow 36266634481; no semantic changes.",
+      "changedFiles": [
+        "crates/core-run-state/src/contracts.rs",
+        "crates/core-run-state/tests/public_contracts.rs",
+        ".engineering/gef/GEF-CURRENT.json",
+        ".engineering/evidence/CORE-WO-M04-001.json",
+        "docs/work-orders/CODEX-HANDOFF-M04.md"
+      ],
+      "localVerification": "NOT_RUN: current executor has no Rust toolchain or repository checkout.",
+      "resultingHead": "Resolved from PR #106 after this commit.",
+      "resultingHeadCi": "PENDING_EXACT_HEAD_GITHUB_RUN",
+      "independentAudit": "PENDING; no formal review submitted.",
+      "allEvNodesRemainPending": true,
+      "packBStarted": false,
+      "checkpointPromotion": false
+    },
     "lineageCorrection": {
       "reviewDate": "2026-09-26",
       "triageId": "CORE-M04-PACK-A-LINEAGE-001",

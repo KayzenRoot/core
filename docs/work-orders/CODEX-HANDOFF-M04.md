@@ -312,3 +312,10 @@ Regression coverage exercises constructor rejection, `validate()`, and fail-clos
 - No local repository checkout or Rust toolchain is available in this executor, so the new code has not been locally compiled here.
 - The parent run `36260042945` is historical for the new commit. Fresh exact-head GitHub CI must complete successfully before the new correction is offered for formal independent review.
 - Work Order, active Context Lock, all nine canonical fingerprints, and canonical `main` remain unchanged. All 23 EV-M04 nodes remain `PENDING`; Pack B has not started and checkpoint promotion remains stopped.
+
+
+## Validation follow-up — formatting correction — 2026-09-26
+
+The exact-head workflow `36266634481` for `c48cc66f95062f85f9be60dcf254b5d498a6cfab` completed with 10/10 jobs: Governance and all three bounded fuzz campaigns passed, while six Rust matrix jobs failed at `cargo fmt --all -- --check`. No Rust build, test, or clippy steps ran in those jobs because the format gate stopped them. The failure was limited to formatting differences in the new constructor call and event fixture/import layout.
+
+A formatting-only follow-up applies the exact `rustfmt` output to `contracts.rs` and `public_contracts.rs`. No behavior changes. A fresh exact-head workflow remains required for the follow-up commit before formal independent review.
