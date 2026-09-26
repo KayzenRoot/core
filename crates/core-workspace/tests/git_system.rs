@@ -92,36 +92,29 @@ fn main() {
 }
 
 fn make_sleep_helper(path: &Path) {
-    if cfg!(windows) {
-        let source = path.with_extension("rs");
-        write_helper(
-            &source,
-            r#"fn main() {
+    let source = path.with_extension("rs");
+    write_helper(
+        &source,
+        r#"fn main() {
     std::thread::sleep(std::time::Duration::from_secs(30));
 }
 "#,
-        );
-        let rustc = std::env::var_os("RUSTC").unwrap_or_else(|| std::ffi::OsString::from("rustc"));
-        let output = Command::new(rustc)
-            .args([
-                "--edition=2021",
-                source.to_string_lossy().as_ref(),
-                "-o",
-                path.to_string_lossy().as_ref(),
-            ])
-            .output()
-            .unwrap();
-        assert!(
-            output.status.success(),
-            "sleep helper compilation failed: {}",
-            String::from_utf8_lossy(&output.stderr)
-        );
-    } else {
-        write_helper(
-            path,
-            "#!/bin/sh\nPATH=/usr/bin:/bin\nexport PATH\nexec sleep 30\n",
-        );
-    }
+    );
+    let rustc = std::env::var_os("RUSTC").unwrap_or_else(|| "rustc".into());
+    let output = Command::new(rustc)
+        .args([
+            "--edition=2021",
+            source.to_string_lossy().as_ref(),
+            "-o",
+            path.to_string_lossy().as_ref(),
+        ])
+        .output()
+        .expect("rustc must be available to compile the native sleep helper");
+    assert!(
+        output.status.success(),
+        "sleep helper compilation failed: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
 }
 
 fn make_fsmonitor_helper(path: &Path, canary: &Path) {
