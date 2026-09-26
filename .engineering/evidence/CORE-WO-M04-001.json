@@ -3,7 +3,7 @@
   "increment": "CORE-M04-FREEZE-001",
   "workOrder": "CORE-WO-M04-001",
   "repository": "KayzenRoot/core",
-  "status": "BLOCKED_PACK_A_STOP_M02_GATE_REPRODUCED_ON_BASELINE_AND_CANDIDATE",
+  "status": "INITIAL_PR_HEAD_GATES_PASSED_PENDING_FINAL_HEAD_CI_AND_INDEPENDENT_AUDIT",
   "planningCandidate": {
     "branch": "planning/m04-final-freeze-round5",
     "planningBase": "0f448c708aafd8f5b4cb6303effdabd7e028bc6f",
@@ -61,9 +61,9 @@
     "fabricatedMeasurements": false
   },
   "implementation": {
-    "status": "BLOCKED_PACK_A_STOP",
+    "status": "INITIAL_PR_HEAD_GATES_PASSED_PENDING_FINAL_HEAD_CI_AND_INDEPENDENT_AUDIT",
     "authorizedBase": "f6b422be5465d5a93d0b8fcf4c9507c205663072",
-    "finalHead": null,
+    "finalHead": "2a553a11c5bfe2bedd0ea05754d2fc71b3ea579b",
     "productFilesCreated": true,
     "executionBranch": "feat/m04-run-state",
     "preflightStatus": "PASS",
@@ -241,8 +241,8 @@
   },
   "executorHandoff": {
     "path": "docs/work-orders/CODEX-HANDOFF-M04.md",
-    "blobSha": "a1cf3e23ef8b75f0b5c58caec493aa6cc9b1d7a6",
-    "status": "BLOCKED_PACK_A_STOP / CD01_BASELINE_FAILURE_REPRODUCED / PACK_B_NOT_STARTED"
+    "blobSha": "0e9a29761d7121df24b6de764c7a7278d4cc0894",
+    "status": "INITIAL_PR_HEAD_GATES_PASSED_PENDING_FINAL_HEAD_CI_AND_INDEPENDENT_AUDIT / PACK_B_NOT_STARTED"
   },
   "executionAdmission": {
     "increment": "CORE-M04-ADMIT-001",
@@ -527,37 +527,28 @@
     }
   },
   "packAStop": {
-    "status": "LOCAL_GATES_PASSED_PENDING_PR_HEAD_CI",
+    "status": "INITIAL_PR_HEAD_CI_PASSED_PENDING_FINAL_HEAD_RECHECK_AND_INDEPENDENT_AUDIT",
     "packet": "A",
-    "candidateGitHead": "d2b750f917f841fe715aafea9e0f80fbd3bc1035",
-    "workingTreeHasUncommittedChanges": true,
+    "candidateGitHead": "2a553a11c5bfe2bedd0ea05754d2fc71b3ea579b",
+    "workingTreeHasUncommittedChanges": false,
     "platform": "Windows",
     "checks": [
       {
         "command": "cargo test -p core-run-state --locked",
         "result": "PASS",
-        "details": "8 integration tests and 1 compile-fail documentation test passed."
+        "details": "5 internal canonical unit tests, 1 integration test, 5 public contract integration tests, and 2 compile-fail doctests passed."
       },
       {
-        "command": "cargo fmt --all -- --check",
-        "result": "PASS"
+        "command": "cargo test --workspace --all-targets --all-features --locked",
+        "result": "PASS",
+        "details": "Final Windows candidate run passed; the corrected M02 helper focused test also passed on Windows and Linux Docker."
       },
       {
         "command": "cargo clippy --workspace --all-targets --all-features --locked -- -D warnings",
         "result": "PASS"
       },
       {
-        "command": "cargo test --workspace --all-targets --all-features --locked",
-        "result": "FAIL",
-        "details": "The M02 core-workspace test hostile_dual_output_is_capped_without_deadlock failed at crates/core-workspace/tests/git_system.rs:225:6 with 'dual output must exceed an independent cap: None'."
-      },
-      {
-        "command": "cargo test -p core-workspace --test git_system hostile_dual_output_is_capped_without_deadlock -- --exact --nocapture",
-        "result": "FAIL",
-        "details": "The same assertion failed on isolated rerun; no M04 product file is in the failing test path."
-      },
-      {
-        "command": "python -m py_compile scripts/validate_governance.py scripts/hive_bootstrap.py scripts/hive_mcp.py",
+        "command": "cargo fmt --all -- --check",
         "result": "PASS"
       },
       {
@@ -566,18 +557,16 @@
         "details": "GEF/HIVE bridges consistent; 27 required artifacts present."
       },
       {
-        "command": "python -m unittest discover -s tests -p \"test_*.py\" -v",
-        "result": "PASS",
-        "details": "6 tests passed."
-      },
-      {
-        "command": "git diff --check",
+        "command": "git diff --check and git diff --cached --check",
         "result": "PASS"
       }
     ],
-    "stopCondition": "The exact full workspace test gate fails on the clean baseline and the Pack A candidate with the same unchanged M02 test failure; the candidate isolated rerun also fails. STOP A remains blocked.",
-    "hostedExactHeadCi": "PENDING_PUSH_AND_PR; resolve from required checks on the exact current PR head.",
-    "implementationPullRequest": "PENDING_LOCAL_AUDIT; CD-02 requires opening or updating the PR after the final local scope audit.",
+    "stopCondition": "STOP Pack B and checkpoint promotion. The initial PR-head CI at 2a553a11c5bfe2bedd0ea05754d2fc71b3ea579b completed with 10 of 10 latest-attempt jobs successful after the M02 Ubuntu job was rerun; the Evidence/Handoff follow-up advances the PR head and requires a fresh exact-head CI run. Independent audit remains pending.",
+    "hostedExactHeadCi": "PASS on initial PR head 2a553a11c5bfe2bedd0ea05754d2fc71b3ea579b: workflow 36248160958, latest attempt 10/10 jobs successful. First M02 Ubuntu attempt failed hostile_git_deadline_kills_reaps_and_does_not_poison_next_inspection with None; rerun job 108423661915 passed all steps. Re-resolve CI on the current PR head after the Evidence/Handoff follow-up.",
+    "implementationPullRequest": "OPEN #106 https://github.com/KayzenRoot/core/pull/106; base main at d2b750f917f841fe715aafea9e0f80fbd3bc1035; initial head 2a553a11c5bfe2bedd0ea05754d2fc71b3ea579b.",
+    "hostedWorkflowRunId": 36248160958,
+    "initialUbuntuM02FailureRerunJobId": 108423661915,
+    "finalHeadCiAfterEvidenceHandoffUpdate": "PENDING",
     "packBStarted": false,
     "allEvNodesRemainPending": true,
     "cd01Triage": {
@@ -991,8 +980,8 @@
         "PackBStarted": false,
         "EV_M04_001_through_023": "PENDING"
       },
-      "nextLegalGate": "Complete staged/unstaged/untracked scope audit, commit/push feat/m04-run-state, open/update PR, and resolve all exact-head Windows/Ubuntu PR checks; independent review must decide approval.",
-      "statusAtWrite": "Final Windows candidate full workspace gate, Linux focal helper test, Pack A tests and all local static/governance/diff gates pass after evidence updates. origin/main remains at the authorized base and the remote execution branch is absent. Commit, push, PR checks and independent review remain pending."
+      "nextLegalGate": "Resolve Windows/Ubuntu CI on the current PR head after this Evidence/Handoff update, then await independent review; do not start Pack B or promote the checkpoint.",
+      "statusAtWrite": "PR #106 is open at initial head 2a553a11c5bfe2bedd0ea05754d2fc71b3ea579b. Workflow 36248160958 completed with 10 of 10 latest-attempt jobs successful after rerunning the initially failed M02 Ubuntu job. This Evidence/Handoff follow-up will advance the PR head, so the new exact-head workflow result remains pending. Independent review is pending; Pack B has not started and all 23 EV-M04 nodes remain pending."
     }
   }
 }

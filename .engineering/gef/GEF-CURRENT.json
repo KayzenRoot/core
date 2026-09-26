@@ -5,8 +5,8 @@
   "reviewMode": "DELTA_EXACT_HEAD",
   "assuranceMode": "ELEVATED",
   "productStage": "M04_EXECUTION_AUTHORIZED",
-  "nextLegalAction": "RESOLVE_BASELINE_REPRODUCED_M02_WORKSPACE_TEST_GATE_BEFORE_STOP_A",
-  "implementationExecutionStatus": "BLOCKED_PACK_A_STOP",
+  "nextLegalAction": "UPDATE_EVIDENCE_HANDOFF_THEN_RESOLVE_FINAL_EXACT_HEAD_CI_AND_INDEPENDENT_AUDIT",
+  "implementationExecutionStatus": "INITIAL_PR_HEAD_GATES_PASSED_PENDING_FINAL_HEAD_CI_AND_INDEPENDENT_AUDIT",
   "productImplementationAuthorized": true,
   "canonicalCheckpoint": "docs/project-brain/13-CHECKPOINT.md",
   "lastCompletedWorkOrder": "CORE-WO-M03-001",
@@ -107,7 +107,7 @@
   },
   "executionBlocker": {
     "packet": "A",
-    "status": "LOCAL_GATES_PASSED_PENDING_EXACT_HEAD_PR_CHECKS",
+    "status": "INITIAL_PR_HEAD_CI_PASSED_PENDING_FINAL_HEAD_RECHECK_AND_INDEPENDENT_AUDIT",
     "triageId": "CORE-M04-PACK-A-CD02",
     "previousTriageId": "CORE-M04-PACK-A-CD01",
     "resolvedPreviousFailure": "The unchanged M02 .cmd test fixture emitted no child output under env_clear; the test-only native Rust executable now exercises both streams.",
@@ -117,10 +117,11 @@
     "windowsFocal": "PASS",
     "linuxFocal": "PASS in rust:1.98.1-slim-bookworm Docker container",
     "fmtClippyGovernanceDiffCheck": "PASS",
-    "exactHeadCi": "PENDING; required checks must resolve on the final PR head",
+    "exactHeadCi": "PASS at initial PR head 2a553a11c5bfe2bedd0ea05754d2fc71b3ea579b; workflow 36248160958 latest attempt has 10/10 jobs successful after M02 Ubuntu rerun job 108423661915. Re-run and resolve against current PR head after Evidence/Handoff follow-up.",
+    "implementationPullRequest": "OPEN #106 https://github.com/KayzenRoot/core/pull/106",
     "independentAudit": "PENDING; executor does not approve or merge",
     "packBStarted": false,
     "allEvNodesRemainPending": true,
-    "nextLegalAction": "Commit and push the audited feat/m04-run-state delta, open/update its PR, then await exact-head checks and independent review."
+    "nextLegalAction": "Resolve CI on the current exact PR head after the Evidence/Handoff follow-up, then await independent audit; no Pack B or checkpoint promotion."
   }
 }
