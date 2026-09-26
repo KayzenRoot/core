@@ -15,4 +15,4 @@ CORE V0.0 - Modular Construction
 3 - M03 Complete / M04 Execution Authorized
 
 ## NEXT STEP
-After CORE-M04-SYNC-005 is independently approved and promoted, run fresh Git/HIVE/governance preflight for CORE-WO-M04-001 Pack A from canonical main. Validate the ACTIVE Context Lock, all nine source fingerprints, the exact Work Order blob and frozen authorized-base ancestry. Begin Pack A only if preflight passes; M04 remains authorized, ACTIVE and NOT_STARTED. Do not widen frozen M04 scope.
+After CORE-M04-SYNC-006 is independently approved and promoted, run fresh Git/HIVE/governance preflight for CORE-WO-M04-001 Pack A from canonical main. Validate the ACTIVE Context Lock, all nine source fingerprints, the exact Work Order blob and frozen authorized-base ancestry. Begin Pack A only if preflight passes; M04 remains authorized, ACTIVE and NOT_STARTED. Do not widen frozen M04 scope.

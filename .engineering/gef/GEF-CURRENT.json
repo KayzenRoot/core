@@ -5,11 +5,11 @@
   "reviewMode": "DELTA_EXACT_HEAD",
   "assuranceMode": "ELEVATED",
   "productStage": "M04_EXECUTION_AUTHORIZED",
-  "nextLegalAction": "PREFLIGHT_CORE_WO_M04_001_PACK_A",
+  "nextLegalAction": "PREFLIGHT_CORE_WO_M04_001_PACK_A_AFTER_CORE_M04_SYNC_006_PROMOTION",
   "productImplementationAuthorized": true,
   "canonicalCheckpoint": "docs/project-brain/13-CHECKPOINT.md",
   "lastCompletedWorkOrder": "CORE-WO-M03-001",
-  "lastPromotedMerge": "b2ac8e0db72a2145948e7773295b1b252c5e4eab",
+  "lastPromotedMerge": "251f15495b82df8270ebc12fa93807ffaa15fba4",
   "authorizedScope": "M04_RUN_ATTEMPT_STEP_ENGINE",
   "activeWorkOrder": "CORE-WO-M04-001",
   "authorizationEffectiveOnlyOnCanonicalMain": true,
@@ -39,6 +39,18 @@
     "reviewedHead": "19123d50bebe1a13257d8e2768fca7a1ca1d3393",
     "workflowRun": 36013624792,
     "promotionMerge": "b2ac8e0db72a2145948e7773295b1b252c5e4eab",
+    "unresolvedHighCritical": 0
+  },
+  "canonicalPromotionSynchronization": {
+    "increment": "CORE-M04-SYNC-005",
+    "branch": "fix/m04-post-review-promotion-state",
+    "status": "APPROVED_PROMOTED",
+    "reviewIssue": 102,
+    "pullRequest": 101,
+    "reviewedHead": "e8b0548c2ecd7c22edbeb3f02de8a238f9c49ffc",
+    "workflowRun": 36033275191,
+    "workflowJobsSuccessful": 10,
+    "promotionMerge": "251f15495b82df8270ebc12fa93807ffaa15fba4",
     "unresolvedHighCritical": 0
   },
   "m03Implementation": {

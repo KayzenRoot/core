@@ -2,7 +2,7 @@
 
 Work Order: `CORE-WO-M04-001`  
 Increment: `CORE-M04-FREEZE-001`  
-Status: `EXECUTION_AUTHORIZED_NOT_STARTED / SYNC_005_PROMOTION_REVIEW_PENDING`
+Status: `EXECUTION_AUTHORIZED_NOT_STARTED / SYNC_005_PROMOTED_SYNC_006_REVIEW_PENDING`
 Future execution branch: `feat/m04-run-state`
 
 ## STOP BEFORE EXECUTION
@@ -114,4 +114,6 @@ CORE-M04-SYNC-003 was APPROVED by M04-REVIEW-009 / Issue #97 at exact head `f9a5
 
 CORE-M04-SYNC-004 was independently APPROVED by M04-REVIEW-010 / Issue #100 at exact head `19123d50bebe1a13257d8e2768fca7a1ca1d3393`; PR #99; workflow `36013624792` completed 10/10 jobs SUCCESS; squash promotion merge `b2ac8e0db72a2145948e7773295b1b252c5e4eab`; unresolved HIGH/CRITICAL: 0.
 
-CORE-M04-SYNC-005 is a governance-only post-review state synchronization and does not start Pack A. After this state delta is independently reviewed, APPROVED and promoted, the next legal action is a fresh Git/HIVE/governance preflight for CORE-WO-M04-001 Pack A on canonical `origin/main`. Verify the ACTIVE Context Lock, all nine source fingerprints, the exact Work Order blob and frozen authorized-base ancestry. Only after every preflight check passes may `feat/m04-run-state` be created from that exact canonical main and Pack A begin.
+CORE-M04-SYNC-005 was independently APPROVED by M04-REVIEW-011 / Issue #102 at exact head `e8b0548c2ecd7c22edbeb3f02de8a238f9c49ffc`; PR #101; workflow `36033275191` completed 10/10 jobs SUCCESS; promotion merge `251f15495b82df8270ebc12fa93807ffaa15fba4`; unresolved HIGH/CRITICAL: 0.
+
+CORE-M04-SYNC-006 is a governance-only post-promotion state correction and does not start Pack A. After this state delta is independently reviewed, APPROVED and promoted, the next legal action is a fresh Git/HIVE/governance preflight for CORE-WO-M04-001 Pack A on canonical `origin/main`. Verify the ACTIVE Context Lock, all nine current source fingerprints, the exact frozen Work Order blob and frozen authorized-base ancestry. Only after every preflight check passes may `feat/m04-run-state` be created from that exact canonical main and Pack A begin.
