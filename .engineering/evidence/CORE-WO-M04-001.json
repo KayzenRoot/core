@@ -3,7 +3,7 @@
   "increment": "CORE-M04-FREEZE-001",
   "workOrder": "CORE-WO-M04-001",
   "repository": "KayzenRoot/core",
-  "status": "PACK_B_CANDIDATE_EXACT_HEAD_VALIDATION_PENDING",
+  "status": "PACK_B_OWNER_SELF_AUDIT_APPROVED_PACK_C_DESIGN_BLOCKED",
   "planningCandidate": {
     "branch": "planning/m04-final-freeze-round5",
     "planningBase": "0f448c708aafd8f5b4cb6303effdabd7e028bc6f",
@@ -1341,11 +1341,11 @@
     "reviewIssue": 110,
     "baseSha": "15179cf07d703f074cf50f793a5b1968ba356fc0",
     "codeHeadBeforeEvidenceUpdate": "202740112758424569d2bbd016303e1b279aa37a",
-    "codeWorkflowRun": 36313725829,
-    "codeWorkflowResult": "IN_PROGRESS_WHEN_RECORDED",
-    "currentCandidateHead": "RESOLVE_FROM_PR_AT_AUDIT_TIME",
-    "status": "TECHNICAL_VALIDATION_PENDING",
-    "packBSubgate": "PENDING_OWNER_SELF_AUDIT",
+    "codeWorkflowRun": 36316437914,
+    "codeWorkflowResult": "SUCCESS_10_OF_10_AT_REVIEWED_HEAD",
+    "currentCandidateHead": "98da5a13619ab82969602e4cf3738a099a15734a",
+    "status": "OWNER_SELF_AUDIT_APPROVED_PACK_B_ONLY",
+    "packBSubgate": "APPROVED_PACK_B_ONLY_NOT_INDEPENDENT",
     "executionBranch": "feat/m04-run-state",
     "changedProductFiles": [
       "crates/core-run-state/src/lib.rs",
@@ -1363,7 +1363,8 @@
       "contiguous unique zero-based attempt and step ordinals",
       "Run success requires a completed qualifying Attempt and all descendants terminal",
       "Step SKIPPED requires explicit reason and lineage-bound authority reference shape",
-      "ExplicitAuthorizedSkip prohibited for all other Step dispositions"
+      "ExplicitAuthorizedSkip prohibited for all other Step dispositions",
+      "all nine legal non-SKIPPED terminal Step edges require a closed reason code and forged reasonless terminal projection fails"
     ],
     "deferredProofs": [
       "Pack C canonical journal/replay/root and durable projection authority",
@@ -1379,16 +1380,39 @@
       "Windows/Ubuntu exact-head hosted checks",
       "advisory, dependency policy and SBOM"
     ],
-    "provenFinalCIChecks": 0,
-    "unresolvedHighCritical": "PENDING_EXACT_HEAD_AUDIT",
-    "notes": "Candidate status is not evidence of PASS. All global EV-M04 nodes, including EV-M04-023, stay PENDING until complete M04 final evidence."
+    "provenFinalCIChecks": 10,
+    "unresolvedHighCritical": 0,
+    "notes": "Pack B owner subgate approved at exact reviewed head 98da5a13619ab82969602e4cf3738a099a15734a in Issue #110 (10/10 jobs, 0 unresolved HIGH/CRITICAL, NOT INDEPENDENT); this metadata synchronization creates a later exact head requiring fresh CI. All 23 global EV-M04 nodes remain PENDING; Pack C blocked on Issue #111 governed Contract/Architecture Delta."
   },
   "proposedCheckpointDelta": {
     "status": "PROPOSED_NOT_PROMOTED",
     "canonicalPath": "docs/project-brain/13-CHECKPOINT.md",
     "currentCanonicalBlobSha": "015f6613852b65f1d0ecbc3cf374f0af61461af5",
     "workOrder": "CORE-WO-M04-001",
-    "proposal": "Record Pack A owner self-audit subgate APPROVED (NOT INDEPENDENT), Pack B implemented as a candidate with exact-head audit pending, and keep Pack C/global M04 DoD blocked until Pack B audit passes.",
+    "proposal": "Record historical Pack A and Pack B bounded owner self-audit subgates APPROVED at their exact reviewed heads (NOT INDEPENDENT), and Pack C IMPLEMENTATION BLOCKED pending governed Contract/Architecture Delta for both genesis BRC and idempotency provenance (Issue #111, draft PR #113). Keep all 23 EV-M04 nodes PENDING, PR #106 unmerged and canonical checkpoint unpromoted.",
     "promotionRule": "Do not change canonical Checkpoint on this candidate branch; canonical-source fingerprints and ACTIVE Context Lock remain frozen until a separately reviewed, promoted checkpoint delta."
+  },
+  "packBSubgateAudit": {
+    "reviewId": "M04-REVIEW-014",
+    "issue": 110,
+    "identity": "KayzenRoot",
+    "mode": "OWNER_SELF_AUDIT",
+    "independent": false,
+    "verdict": "OWNER_SELF_AUDIT_APPROVED_PACK_B_ONLY",
+    "baseSha": "15179cf07d703f074cf50f793a5b1968ba356fc0",
+    "reviewedHead": "98da5a13619ab82969602e4cf3738a099a15734a",
+    "workflowRun": 36316437914,
+    "workflowJobsPassed": 10,
+    "lockedSourceFingerprintsPassed": 11,
+    "unresolvedThreads": 0,
+    "unresolvedHighCritical": 0,
+    "authorizesOnly": "GOVERNED_PACK_C_CONTRACT_DELTA_NOT_PACK_C_IMPLEMENTATION",
+    "contractDeltaIssue": 111,
+    "contractDeltaProposalPR": 113,
+    "m01WindowsTimingInvestigationIssue": 112,
+    "m02DeadlineFixtureInvestigationIssue": 115,
+    "globalM04DoDApproved": false,
+    "all23GlobalEVNodesPending": true,
+    "metadataSyncHead": "RESOLVE_FROM_PR_AT_SYNC_AUDIT_TIME"
   }
 }

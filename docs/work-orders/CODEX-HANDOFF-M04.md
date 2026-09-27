@@ -2,7 +2,7 @@
 
 Work Order: `CORE-WO-M04-001`  
 Increment: `CORE-M04-FREEZE-001`  
-Status: `PACK_B_CANDIDATE_OPEN / TECHNICAL_VALIDATION_PENDING`
+Status: `PACK_B_OWNER_SELF_AUDIT_APPROVED / PACK_C_CONTRACT_DELTA_BLOCKED`
 Execution branch: `feat/m04-run-state`
 
 ## CURRENT EXECUTION STATUS
@@ -11,11 +11,11 @@ CORE-D-203 was promoted to canonical main by PR #108 (squash commit 15179cf07d70
 
 Pack A passed the restricted owner-audit subgate M04-REVIEW-013 / Issue #109 at exact base 15179cf07d703f074cf50f793a5b1968ba356fc0 and head fecdb4c7069a815a63146c58192575e80c592334. Exact-head workflow 36311844093 passed 10/10 required/current jobs. This subgate authorized starting Pack B only, not global M04 completion, EV-M04-023, merge or checkpoint promotion.
 
-Pack B has a provisional implementation candidate in PR #106 / feat/m04-run-state: pure closed Run/Attempt/Step transitions, provisional deterministic projection, zero-based non-reused ordinals and parent/child completion guards. Current code-before-evidence-update head: 202740112758424569d2bbd016303e1b279aa37a; Pack B audit candidate M04-REVIEW-014 / Issue #110. Resolve the exact **new** PR head and new exact-head CI after every code/evidence update before declaring a verdict.
+Pack B completed the bounded owner self-audit in PR #106 / Issue #110 at exact base 15179cf07d703f074cf50f793a5b1968ba356fc0 and code-reviewed head 98da5a13619ab82969602e4cf3738a099a15734a. Exact-head workflow 36316437914 completed all 10 configured jobs SUCCESS on Windows/Ubuntu, including M01/M02/M03 fuzz, governance, security scans and SBOM where configured. The pure Run/Attempt/Step transitions enforce closed terminal reason codes (including a corrected missing-reason regression), terminal immutability, provisional contiguous ordinals and parent/child closure. This later metadata-only sync creates a new branch head that requires fresh exact-head validation before any subsequent audit; historical reviewed head remains 98da5a13619ab82969602e4cf3738a099a15734a.
 
 Step SKIPPED checks only the explicit reason and reference shape/lineage at this stage. Pack E still owns verifying the prior durable attachment and external reference evidence. Neither the Pack B helper nor a projected snapshot is an authoritative journal/store receipt. The pure transition and projection helpers never advance generation, append journal events, choose retry policy or perform I/O.
 
-Pack B remains TECHNICAL_VALIDATION_PENDING until current-head Windows/Ubuntu fmt/Clippy/tests/security/supply-chain/fuzz evidence and owner self-audit pass. Pack C, PR merge, EV-M04-023 and canonical checkpoint promotion stay stopped until their respective later gates.
+Pack B subgate is OWNER_SELF_AUDIT_APPROVED_PACK_B_ONLY / NOT INDEPENDENT. **Pack C product implementation has NOT started** and remains blocked on a separate governed Contract/Architecture Delta in Issue #111 and proposal-only PR #113, addressing missing genesis BRC and unproven idempotency provenance for full replay. No frozen canonical contracts may change from this handoff; PR merge, all 23 EV-M04 final nodes and canonical checkpoint promotion stay blocked under later gates.
 
 ## CANONICAL READ ORDER
 
@@ -113,4 +113,4 @@ CORE-M04-SYNC-004 was independently APPROVED by M04-REVIEW-010 / Issue #100 at e
 
 CORE-M04-SYNC-005 was independently APPROVED by M04-REVIEW-011 / Issue #102 at exact head `e8b0548c2ecd7c22edbeb3f02de8a238f9c49ffc`; PR #101; workflow `36033275191` completed 10/10 jobs SUCCESS; promotion merge `251f15495b82df8270ebc12fa93807ffaa15fba4`; unresolved HIGH/CRITICAL: 0.
 
-PR #106 is now the existing CORE-M04-SYNC-006 / Pack B candidate after restricted Pack A approval in Issue #109. The new Pack B audit candidate is Issue #110 and requires a complete exact-current-head CI result, valid canonical source/lock fingerprints, full diff review and zero unresolved HIGH/CRITICAL. Record NOT INDEPENDENT. Pack C, M04-wide EV-M04-023, merge and canonical checkpoint promotion remain stopped pending their governed gates.
+PR #106 carries completed bounded Pack A/Pack B owner subgates, both explicitly NOT INDEPENDENT. Pack B exact reviewed head is 98da5a13619ab82969602e4cf3738a099a15734a and source/lock fingerprints were 11/11 MATCH with zero unresolved HIGH/CRITICAL; owner decision of record Issue #110. This derived metadata synchronization needs a NEW exact-head 10/10 CI but does not rewrite the historical reviewed code head. The next legal task is a SEPARATE governed Contract/Architecture Delta for Pack C (Issue #111, draft proposal PR #113), not a silent frozen V1 rewrite. All 23 EV-M04 global nodes remain PENDING; PR #106 must remain unmerged and the canonical checkpoint unpromoted.

@@ -4,8 +4,8 @@
   "promptMode": "GEF_V1_HIVE_FIRST",
   "reviewMode": "DELTA_EXACT_HEAD",
   "assuranceMode": "ELEVATED",
-  "productStage": "M04_PACK_B_CANDIDATE_EXACT_HEAD_VALIDATION_PENDING",
-  "nextLegalAction": "PACK_B_EXACT_HEAD_CI_AND_OWNER_SELF_AUDIT_PR_106_ISSUE_110",
+  "productStage": "M04_PACK_B_OWNER_SELF_AUDIT_APPROVED_PACK_C_DESIGN_BLOCKED",
+  "nextLegalAction": "M04_GOVERNED_PACK_C_CONTRACT_DELTA_ISSUE_111_PR_113_PROPOSAL_ONLY",
   "productImplementationAuthorized": true,
   "canonicalCheckpoint": "docs/project-brain/13-CHECKPOINT.md",
   "lastCompletedWorkOrder": "CORE-WO-M03-001",
@@ -65,5 +65,19 @@
   "admissionPromotionMerge": "bb6f631284361fae29479c66f62ca88bebf3d79c",
   "reviewIdentityPolicy": "SINGLE_ACCOUNT_OWNER_SELF_AUDIT",
   "ownerAuditIdentity": "KayzenRoot",
-  "reviewAuditIndependence": false
+  "reviewAuditIndependence": false,
+  "packBSubgate": {
+    "reviewIssue": 110,
+    "status": "OWNER_SELF_AUDIT_APPROVED_PACK_B_ONLY",
+    "reviewedHead": "98da5a13619ab82969602e4cf3738a099a15734a",
+    "workflowRun": 36316437914,
+    "workflowJobsPassed": 10,
+    "independent": false
+  },
+  "packCDesignGate": {
+    "issue": 111,
+    "proposalPR": 113,
+    "status": "PROPOSED_CONTRACT_DELTA_NOT_ADMITTED",
+    "blocksFullReplayImplementation": true
+  }
 }
