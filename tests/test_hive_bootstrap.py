@@ -150,6 +150,17 @@ class HiveProjectResolutionTests(unittest.TestCase):
         self.assertEqual(json.loads(stderr.getvalue())["reason"], "local_bootstrap_unavailable")
         self.assertNotIn(CANARY, stderr.getvalue())
 
+    def test_invalid_cli_arguments_never_echo_user_private_paths(self) -> None:
+        stderr, stdout = io.StringIO(), io.StringIO()
+        with (
+            patch.object(sys, "argv", ["hive_bootstrap.py", "--unknown-private-path", CANARY]),
+            contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr),
+        ):
+            self.assertEqual(cli(), 1)
+        self.assertEqual(json.loads(stderr.getvalue())["reason"], "invalid_cli_arguments")
+        self.assertNotIn(CANARY, stderr.getvalue() + stdout.getvalue())
+        self.assertNotIn("--unknown-private-path", stderr.getvalue() + stdout.getvalue())
+
     def test_invalid_api_head_is_never_echoed(self) -> None:
         def bad_head(url: str, method: str, path: str, payload: dict | None = None) -> object:
             if path.endswith("/inspect"):
