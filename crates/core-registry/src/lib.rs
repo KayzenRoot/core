@@ -515,6 +515,39 @@ impl CapabilityRegistry {
             return Err(RegistryError::AdmissionClosed);
         }
         self.prune_expired(&mut state);
+        // Existing bindings snapshot providers at bind time. The registered
+        // provider may have been quarantined or degraded since that snapshot.
+        // Check its CURRENT state under the same exclusive lock that issues
+        // the lease, without invalidating an already-issued lease.
+        let binding = state
+            .bindings
+            .get(capability)
+            .ok_or_else(|| RegistryError::NoProvider(capability.to_owned()))?;
+        if binding
+            .runtime_generation
+            .as_ref()
+            .is_some_and(|expected| expected != runtime_generation)
+        {
+            return Err(RegistryError::StaleLease);
+        }
+        let live_provider_is_eligible = state
+            .providers
+            .get(capability)
+            .and_then(|registered| {
+                registered.iter().find(|provider| {
+                    provider.provider_id == binding.provider.provider_id
+                        && provider.fingerprint == binding.provider.fingerprint
+                        && provider.activation_generation == binding.provider.activation_generation
+                })
+            })
+            .is_some_and(|provider| {
+                provider.health == ProviderHealth::Healthy
+                    && provider.readiness
+                    && !provider.quarantined
+            });
+        if !live_provider_is_eligible {
+            return Err(RegistryError::NoProvider(capability.to_owned()));
+        }
         let lease_id = format!("lease-{}", state.next_lease);
         state.next_lease = state.next_lease.saturating_add(1);
         let expires_at_monotonic_ms = state.now_ms().saturating_add(ttl_ms);
@@ -1148,6 +1181,162 @@ mod tests {
             registry.bind(&requirement, "test").unwrap().provider_id,
             "hive"
         );
+    }
+
+    #[test]
+    fn quarantine_after_binding_refuses_new_leases_but_preserves_existing_lease() {
+        let registry = CapabilityRegistry::new();
+        registry
+            .register_provider(provider(
+                "native",
+                "core",
+                "health",
+                ProviderOrigin::CoreNative,
+                90,
+            ))
+            .unwrap();
+        let generation = RuntimeGeneration::new(4);
+        let req = CapabilityRequirement::new("health", SemVer::new(1, 0, 0));
+        registry
+            .bind_with_generation(&req, "initial", &generation)
+            .unwrap();
+        let existing = registry
+            .acquire_lease_with_generation("health", &generation, 60_000)
+            .unwrap();
+        let clone = registry.clone();
+
+        registry.quarantine_provider("native", true).unwrap();
+        for view in [&registry, &clone] {
+            assert!(matches!(
+                view.acquire_lease_with_generation("health", &generation, 60_000),
+                Err(RegistryError::NoProvider(_))
+            ));
+        }
+        // Quarantine closes NEW admission; existing leases are drained or
+        // explicitly revoked by the owning policy, not silently rewritten.
+        registry.validate_lease(&existing, &generation).unwrap();
+        assert_eq!(registry.total_active_leases(), 1);
+
+        registry.quarantine_provider("native", false).unwrap();
+        let fresh = registry
+            .acquire_lease_with_generation("health", &generation, 60_000)
+            .unwrap();
+        registry.revoke_lease(&existing.lease_id).unwrap();
+        assert!(matches!(
+            registry.validate_lease(&existing, &generation),
+            Err(RegistryError::StaleLease)
+        ));
+        registry.release_lease(&fresh).unwrap();
+    }
+
+    #[test]
+    fn degraded_unknown_unavailable_or_unready_bound_provider_cannot_get_new_leases() {
+        let registry = CapabilityRegistry::new();
+        registry
+            .register_provider(provider(
+                "native",
+                "core",
+                "health",
+                ProviderOrigin::CoreNative,
+                90,
+            ))
+            .unwrap();
+        let generation = RuntimeGeneration::new(4);
+        let req = CapabilityRequirement::new("health", SemVer::new(1, 0, 0));
+        registry
+            .bind_with_generation(&req, "initial", &generation)
+            .unwrap();
+        let prior = registry
+            .acquire_lease_with_generation("health", &generation, 60_000)
+            .unwrap();
+
+        for unhealthy in [
+            ProviderHealth::Degraded,
+            ProviderHealth::Unavailable,
+            ProviderHealth::Unknown,
+        ] {
+            registry.set_provider_health("native", unhealthy).unwrap();
+            assert!(matches!(
+                registry.acquire_lease_with_generation("health", &generation, 60_000),
+                Err(RegistryError::NoProvider(_))
+            ));
+            registry.validate_lease(&prior, &generation).unwrap();
+        }
+        registry
+            .set_provider_health("native", ProviderHealth::Healthy)
+            .unwrap();
+
+        // Even if health is healthy, live readiness and quarantine are
+        // independent current admission gates, never stale binding flags.
+        {
+            let mut state = registry.inner.write().unwrap();
+            state.providers.get_mut("health").unwrap()[0].readiness = false;
+        }
+        assert!(matches!(
+            registry.acquire_lease_with_generation("health", &generation, 60_000),
+            Err(RegistryError::NoProvider(_))
+        ));
+        registry
+            .set_provider_health("native", ProviderHealth::Healthy)
+            .unwrap();
+        let fresh = registry
+            .acquire_lease_with_generation("health", &generation, 60_000)
+            .unwrap();
+        registry.release_lease(&prior).unwrap();
+        registry.release_lease(&fresh).unwrap();
+    }
+
+    #[test]
+    fn missing_or_identity_changed_registered_provider_fails_closed_on_new_lease() {
+        let registry = CapabilityRegistry::new();
+        registry
+            .register_provider(provider(
+                "native",
+                "core",
+                "health",
+                ProviderOrigin::CoreNative,
+                90,
+            ))
+            .unwrap();
+        let generation = RuntimeGeneration::new(4);
+        let req = CapabilityRequirement::new("health", SemVer::new(1, 0, 0));
+        registry
+            .bind_with_generation(&req, "initial", &generation)
+            .unwrap();
+
+        let (fingerprint, activation) = {
+            let state = registry.inner.read().unwrap();
+            let provider = &state.providers["health"][0];
+            (provider.fingerprint.clone(), provider.activation_generation)
+        };
+        {
+            let mut state = registry.inner.write().unwrap();
+            state.providers.get_mut("health").unwrap()[0].fingerprint =
+                "foreign-fingerprint".into();
+        }
+        assert!(matches!(
+            registry.acquire_lease_with_generation("health", &generation, 60_000),
+            Err(RegistryError::NoProvider(_))
+        ));
+        {
+            let mut state = registry.inner.write().unwrap();
+            state.providers.get_mut("health").unwrap()[0].fingerprint = fingerprint;
+            state.providers.get_mut("health").unwrap()[0].activation_generation =
+                activation.saturating_add(1);
+        }
+        assert!(matches!(
+            registry.acquire_lease_with_generation("health", &generation, 60_000),
+            Err(RegistryError::NoProvider(_))
+        ));
+        {
+            let mut state = registry.inner.write().unwrap();
+            state.providers.get_mut("health").unwrap().clear();
+        }
+        assert!(matches!(
+            registry.acquire_lease_with_generation("health", &generation, 60_000),
+            Err(RegistryError::NoProvider(_))
+        ));
+        assert_eq!(registry.total_active_leases(), 0);
     }
 
     #[test]
