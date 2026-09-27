@@ -12,13 +12,13 @@
   "canonicalSources": {
     "docs/project-brain/13-CHECKPOINT.md": "44d58c6900d5ea416920f6c2012c99bb812c961a",
     "docs/project-brain/03-SCOPE.md": "6e6f66b7fe3f3e3780b14c7b68dca7c2af137c61",
-    "docs/project-brain/15-DEFINITION-OF-DONE.md": "5479324cdacb5bd924f0674a23241251a0901155",
-    "docs/project-brain/04-ARCHITECTURE.md": "2ae3a1db61efe31f493010a8c22b81618f15b176",
-    "docs/project-brain/02-REQUIREMENTS.md": "30ad66b3800e81b7b4f9c7b6965b03afcf84dab8",
+    "docs/project-brain/15-DEFINITION-OF-DONE.md": "037fe33a36e279d162719007dff692c2dfc6a04f",
+    "docs/project-brain/04-ARCHITECTURE.md": "2bd2b6760e62ed304a269d6d7316ca36df4fba1e",
+    "docs/project-brain/02-REQUIREMENTS.md": "3dc4417b30516761e81d50315c26dd3986a45510",
     "docs/project-brain/10-SECURITY-GOVERNANCE.md": "1d1256ebbbd666a36eeee245bf2f03caa7b43b3b",
-    "docs/project-brain/11-TEST-PLAN.md": "0daf19dcd2b4f484c16b682002a3b238056d10ba",
-    "docs/modules/M04-RUN-ATTEMPT-STEP-ENGINE.md": "63683058e8fa849cf15935d0f69ef69fda5073f8",
-    "docs/project-brain/16-DECISIONS-LEDGER.md": "542357f4184d8ee1ceebeedebaff3f6db8a37e89"
+    "docs/project-brain/11-TEST-PLAN.md": "7bd488db675292d013d97e8b66cf655a00d030b2",
+    "docs/modules/M04-RUN-ATTEMPT-STEP-ENGINE.md": "88340369b7b5fcae7aed9436311120e401a62844",
+    "docs/project-brain/16-DECISIONS-LEDGER.md": "e0555db4f497a727b585c3e574fea7a2a8ee6e62"
   },
   "upstream": {
     "gef": {
@@ -34,7 +34,7 @@
   "promotionRule": "CORE-M04-CONTRACT-DELTA-001 is a proposal on this branch. If protected-main promotes the exact revised source set, old M04 product authorization is SUSPENDED. The separate post-delta Work Order re-admission must explicitly activate a new lock against exact source/Work Order Git blobs; the old PR #106 Pack A/B audits remain historical only. No Pack C code is authorized by this candidate.",
   "workOrderSource": {
     "path": ".engineering/work-orders/CORE-WO-M04-001.md",
-    "blobSha": "86677896e627682850eaf34d85294b7a18d82352"
+    "blobSha": "17779df8ed6ef6def36036523eb41d0d126b02db"
   },
   "authorizationEffectiveOnlyOnCanonicalMain": true,
   "canonicalMain": "origin/main",
@@ -111,12 +111,14 @@
     "status": "SOURCE_AMENDMENT_CANDIDATE_PENDING_GOVERNED_REVIEW_AND_PROMOTION",
     "designIssue": 111,
     "proposalPR": 113,
-    "consumerInventory": "PENDING_BLOCKING",
+    "consumerInventory": "INTERNAL_REPO_ONLY_VERIFIED_EXTERNAL_UNKNOWN_BLOCKING",
     "compatibilityDisposition": "PRE_RELEASE_BREAKING_V1_ONLY_IF_NO_LEGACY_DURABLE_CONSUMERS",
     "requiredCapsules": "GENESIS_AND_EVERY_CONTINUATION",
     "requiredEventIdentity": "OPERATION_DOMAIN_AND_ORIGINAL_REQUEST_FINGERPRINT",
     "postPromotionStatus": "SUSPENDED_PENDING_SEPARATE_RE_ADMISSION",
     "packAandBAudits": "HISTORICAL_ONLY_NOT_INDEPENDENT",
-    "all23GlobalEV": "PENDING"
+    "all23GlobalEV": "PENDING",
+    "runAdmissionInput": "FULL_BRC_REQUIRED_NONDEFAULTABLE",
+    "internalInventory": "MAIN_6394eba9_ZERO_MERGED_CORE_RUN_STATE_FILES"
   }
 }

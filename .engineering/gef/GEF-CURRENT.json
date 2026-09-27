@@ -74,6 +74,8 @@
     "contextLockActivation": "SUSPENDED_PENDING_RE_ADMISSION_ON_DELTA_PROMOTION",
     "originalPR106Unmerged": true,
     "packAandBAuditsHistorical": true,
-    "all23GlobalEVNodesPending": true
+    "all23GlobalEVNodesPending": true,
+    "consumerInventory": "EXTERNAL_UNKNOWN_BLOCKING",
+    "runAdmissionFullBrcRequired": true
   }
 }
