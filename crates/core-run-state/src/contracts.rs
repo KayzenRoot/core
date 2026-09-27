@@ -952,7 +952,7 @@ mod idempotency_records_serde {
     use serde::{
         de::{self, MapAccess, Visitor},
         ser::SerializeMap,
-        Deserialize, Deserializer, Serialize, Serializer,
+        Deserializer, Serializer,
     };
     use std::{collections::BTreeMap, fmt};
 
