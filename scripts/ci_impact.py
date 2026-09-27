@@ -75,9 +75,15 @@ M04_FUZZ_PREFIX = "fuzz/fuzz_targets/m04_"
 CRITICAL_SOURCE_PREFIXES = (
     "docs/project-brain/", "docs/modules/M04-",
     ".engineering/context-locks/", ".engineering/work-orders/",
-    ".engineering/decisions/",
+    ".engineering/decisions/", ".engineering/gef/",
+    ".engineering/evidence/CORE-WO-M04-",
+    ".engineering/evidence/CORE-M04-",
+    "docs/work-orders/CORE-M04-",
 )
-CRITICAL_SOURCE_FILES = {".engineering/CHECKPOINT.json", ".engineering/CHECKPOINT.md"}
+CRITICAL_SOURCE_FILES = {
+    ".engineering/CHECKPOINT.json", ".engineering/CHECKPOINT.md",
+    "docs/work-orders/CODEX-HANDOFF-M04.md",
+}
 
 
 @dataclass(frozen=True)

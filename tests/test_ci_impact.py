@@ -11,6 +11,10 @@ class CiImpactTests(unittest.TestCase):
             ".engineering/context-locks/CORE-WO-M04-001.json",
             ".engineering/work-orders/CORE-WO-M04-001.md",
             ".engineering/CHECKPOINT.json",
+            ".engineering/gef/GEF-CURRENT.json",
+            ".engineering/evidence/CORE-WO-M04-001.json",
+            ".engineering/evidence/CORE-M04-SYNC-004.md",
+            "docs/work-orders/CODEX-HANDOFF-M04.md",
         ):
             with self.subTest(path=path):
                 self.assertTrue(classify([path]).full)
