@@ -269,8 +269,9 @@ fn hostile_git_deadline_kills_reaps_and_does_not_poison_next_inspection() {
     let ready_seen = ready.exists();
     if early_exit.is_none() {
         probe.kill().expect("terminate the probe helper");
-        probe.wait().expect("reap the probe helper");
     }
+    // wait() must be called on both the early-exit and the kill paths.
+    probe.wait().expect("reap the probe helper");
     assert!(
         ready_seen && early_exit.is_none(),
         "native sleep helper did not become ready: early_exit={early_exit:?}"
