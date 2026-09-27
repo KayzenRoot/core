@@ -60,6 +60,11 @@ class CiImpactTests(unittest.TestCase):
     def test_workspace_manifest_is_full(self):
         self.assertTrue(classify(["Cargo.lock"]).full)
 
+    def test_workflow_never_interpolates_untrusted_classifier_reason_in_shell(self):
+        from pathlib import Path
+        workflow = (Path(__file__).resolve().parents[1] / ".github/workflows/governance.yml").read_text(encoding="utf-8")
+        self.assertNotIn("echo \"reason=$" + "{{ needs.impact.outputs.reason }}\"", workflow)
+
     def test_workflow_change_is_full(self):
         self.assertTrue(classify([".github/workflows/governance.yml"]).full)
 

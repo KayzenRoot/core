@@ -88,7 +88,8 @@ jobs:
         shell: bash
         run: |
           echo "mode=${{ needs.impact.outputs.mode }}"
-          echo "reason=${{ needs.impact.outputs.reason }}"
+          # Do not interpolate PR-filename-derived reason into executable shell.
+          echo "reason=see CI impact classifier job"
           echo "run_m01=${{ needs.impact.outputs.run_m01 }}"
           echo "run_supply_chain=${{ needs.impact.outputs.run_supply_chain }}"
 
