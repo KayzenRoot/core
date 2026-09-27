@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import hashlib
 import json
+import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -86,9 +86,16 @@ def section(text: str, heading: str) -> str:
 
 
 def git_blob_sha(relative: str) -> str:
-    content = (ROOT / relative).read_bytes()
-    header = f"blob {len(content)}\0".encode("ascii")
-    return hashlib.sha1(header + content).hexdigest()
+    # Let Git apply clean filters (especially CRLF normalization on Windows)
+    # before calculating the canonical blob ID.
+    result = subprocess.run(
+        ["git", "hash-object", f"--path={relative}", relative],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    return result.stdout.strip()
 
 
 for relative in REQUIRED:
