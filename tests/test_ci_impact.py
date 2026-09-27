@@ -16,7 +16,7 @@ class CiImpactTests(unittest.TestCase):
                 self.assertTrue(classify([path]).full)
 
     def test_docs_only_is_governance_only(self):
-        result = classify(["docs/project-brain/13-CHECKPOINT.md", ".engineering/evidence/x.md"])
+        result = classify(["docs/HIVE-INTEGRATION.md", ".engineering/evidence/x.md"])
         self.assertEqual(result.mode, "governance-only")
         self.assertFalse(result.rust_changed)
         self.assertFalse(result.run_supply_chain)

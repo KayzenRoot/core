@@ -88,3 +88,7 @@ The exact historical head `d15806f023c867aca1e6cc0c096862479f54b762` failed host
 Protect critical M04 source/lock/governance amendment paths by fail-closed FULL classification even when file extension is Markdown/JSON; retain normal low-risk docs-only fast path. Add deterministic tests for the critical canonical paths. No frozen M04 source or product code change.
 
 Re-sync non-force against latest protected main using a two-parent merge tree with only the FOUR originally scoped AIG paths over the exact main tree, preserving all unrelated main fixes. The earlier 10+ job failure is HISTORICAL; fresh exact merge-head CI, actual required job conclusions and owner self-audit `NOT INDEPENDENT` are PENDING and required before any PR #98 promotion. No performance claim is accepted until hosted evidence exists.
+
+## CI correction delta #2: stale test-fixture expectation
+
+New exact head `7ed992b0cc0766985d8986a0b4921d36e634d32c` [workflow #36330552740](https://github.com/KayzenRoot/core/actions/runs/36330552740) Governance executed 34 unit tests and identified one reviewer-introduced stale test expectation: original `test_docs_only_is_governance_only` still used canonical `docs/project-brain/13-CHECKPOINT.md` after the intended fail-closed critical-source rule. Update that fixture to an actually noncritical `docs/HIVE-INTEGRATION.md` and retain separate explicit canonical FULL assertions. Zero product/contract/scope changes; run evidence at this previous head is historical and new CI is required. No merge until the fresh exact head is all green and audited.
