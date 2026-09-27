@@ -62,10 +62,13 @@
     "fabricatedMeasurements": false
   },
   "implementation": {
-    "status": "AUTHORIZED_NOT_STARTED",
+    "status": "UNMERGED_PR106_HISTORICAL_PACK_A_B_SUSPENDED_PENDING_CONTRACT_DELTA_READMISSION",
     "authorizedBase": "f6b422be5465d5a93d0b8fcf4c9507c205663072",
     "finalHead": null,
-    "productFilesCreated": false
+    "productFilesCreated": false,
+    "productFilesCreatedInterpretation": "NO_M04_PRODUCT_CODE_ON_CANONICAL_MAIN;PR106_CONTAINS_UNMERGED_HISTORICAL_PACK_A_B",
+    "candidatePullRequest": 106,
+    "candidateHead": "0c0bde8afdd5645102bafd143d1752e5af6f6b29"
   },
   "evidenceNodes": {
     "EV-M04-001": {
@@ -372,7 +375,7 @@
     "requiresProtectedMainPromotion": true,
     "requiresConsumerInventoryBeforeApproval": true,
     "requiresSeparateReadmission": true,
-    "packAandBAudits": "PRESERVED_AS_HISTORICAL_NOT_INDEPENDENT",
+    "packAandBAudits": "PRESERVED_IN_HISTORICAL_PACK_AUDITS_WITH_EXACT_PR106_HEADS",
     "remainingGlobalEV": 23,
     "consumerInventory": "PARTIAL_INTERNAL_MAIN_EXTERNAL_UNKNOWN_BLOCKING",
     "runAdmissionFullBrcRequired": true
@@ -380,5 +383,34 @@
   "proposedCheckpointDelta": {
     "status": "PROPOSED_NOT_PROMOTED",
     "proposal": "Upon separate governed source amendment promotion, record suspended old lock pending fresh Work Order admission. Do not promote an implementation/EV checkpoint by a source correction."
+  },
+  "historicalPackAudits": {
+    "source": "PR106_BRANCH_ONLY_NOT_CANONICAL_MAIN",
+    "scope": "PR106_PACK_A_B_PARTIAL_AUDITS_NOT_INDEPENDENT",
+    "historicalReviewedBase": "15179cf07d703f074cf50f793a5b1968ba356fc0",
+    "authorizedFrozenBase": "f6b422be5465d5a93d0b8fcf4c9507c205663072",
+    "packA": {
+      "issue": 109,
+      "reviewedHead": "fecdb4c7069a815a63146c58192575e80c592334",
+      "workflowRun": 36311844093,
+      "successfulJobs": 10,
+      "verdict": "OWNER_SELF_AUDIT_APPROVED_PACK_A_ONLY_NOT_INDEPENDENT"
+    },
+    "packB": {
+      "issue": 110,
+      "reviewedHead": "98da5a13619ab82969602e4cf3738a099a15734a",
+      "workflowRun": 36316437914,
+      "successfulJobs": 10,
+      "verdict": "OWNER_SELF_AUDIT_APPROVED_PACK_B_ONLY_NOT_INDEPENDENT"
+    },
+    "postPackBDerivedSync": {
+      "issue": 110,
+      "reviewedHead": "0c0bde8afdd5645102bafd143d1752e5af6f6b29",
+      "workflowRun": 36318018621,
+      "successfulJobs": 10,
+      "verdict": "OWNER_SELF_AUDIT_APPROVED_DERIVED_SYNC_ONLY_NOT_INDEPENDENT"
+    },
+    "newAuthority": "NONE_UNTIL_CONTRACT_DELTA_PROMOTED_AND_SEPARATE_READMISSION",
+    "globalEvidence": "ALL_23_EV_M04_PENDING"
   }
 }
