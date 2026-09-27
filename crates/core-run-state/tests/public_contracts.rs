@@ -333,6 +333,66 @@ fn canonical_event_with_domain(
     )
 }
 
+fn assert_lineage_mismatch_on_all_boundaries(
+    kind: EventKindV1,
+    payload: EventPayloadV1,
+    run_id: Option<RunId>,
+    attempt_id: Option<Option<AttemptId>>,
+    step_id: Option<Option<StepId>>,
+) {
+    let valid = canonical_event(kind, payload.clone());
+    let invalid_run_id = run_id.unwrap_or_else(|| valid.run_id.clone());
+    let invalid_attempt_id = attempt_id.unwrap_or_else(|| valid.attempt_id.clone());
+    let invalid_step_id = step_id.unwrap_or_else(|| valid.step_id.clone());
+
+    let constructor_error = CanonicalEventV1::try_new(
+        FingerprintDomainV1::Event,
+        kind,
+        EventId::new("event-lineage-mismatch").unwrap(),
+        invalid_run_id.clone(),
+        invalid_attempt_id.clone(),
+        invalid_step_id.clone(),
+        EventSequenceV1::new(2),
+        RunGeneration::new(1),
+        RunGeneration::new(2),
+        IdempotencyKey::new("event:lineage-mismatch").unwrap(),
+        fingerprint('d'),
+        JournalRoot::new("e".repeat(64)).unwrap(),
+        JournalRoot::new("f".repeat(64)).unwrap(),
+        payload,
+    )
+    .expect_err("constructor must reject mismatched envelope lineage");
+    assert_eq!(constructor_error.class, M04ErrorClassV1::LineageMismatch);
+    assert_eq!(constructor_error.code, M04ErrorCodeV1::LineageMismatch);
+    assert_eq!(
+        constructor_error.retryability,
+        core_run_state::M04RetryabilityV1::Never
+    );
+
+    let mut invalid_event = valid.clone();
+    invalid_event.run_id = invalid_run_id.clone();
+    invalid_event.attempt_id = invalid_attempt_id.clone();
+    invalid_event.step_id = invalid_step_id.clone();
+    let validation_error = invalid_event
+        .validate()
+        .expect_err("validate() must reject mismatched envelope lineage");
+    assert_eq!(validation_error.class, M04ErrorClassV1::LineageMismatch);
+    assert_eq!(validation_error.code, M04ErrorCodeV1::LineageMismatch);
+    assert_eq!(
+        validation_error.retryability,
+        core_run_state::M04RetryabilityV1::Never
+    );
+
+    let mut malformed_wire = serde_json::to_value(valid).unwrap();
+    malformed_wire["run_id"] = serde_json::to_value(invalid_run_id).unwrap();
+    malformed_wire["attempt_id"] = serde_json::to_value(invalid_attempt_id).unwrap();
+    malformed_wire["step_id"] = serde_json::to_value(invalid_step_id).unwrap();
+    assert!(
+        serde_json::from_value::<CanonicalEventV1>(malformed_wire).is_err(),
+        "deserialization must reject mismatched envelope lineage"
+    );
+}
+
 fn continuation_frame(domain: FingerprintDomainV1) -> Result<ContinuationFrameV1, M04ErrorV1> {
     ContinuationFrameV1::try_new(
         domain,
@@ -558,6 +618,75 @@ fn canonical_event_rejects_mismatched_payload_lineage() {
     assert_eq!(
         same_attempt_continuation.code,
         M04ErrorCodeV1::LineageMismatch
+    );
+
+    let (attempt_kind, attempt_payload) = event_payloads()
+        .into_iter()
+        .find(|(kind, _)| *kind == EventKindV1::AttemptCreated)
+        .expect("AttemptCreated fixture");
+    assert_lineage_mismatch_on_all_boundaries(
+        attempt_kind,
+        attempt_payload,
+        None,
+        Some(Some(AttemptId::new("attempt-2").unwrap())),
+        None,
+    );
+
+    let (step_kind, step_payload) = event_payloads()
+        .into_iter()
+        .find(|(kind, _)| *kind == EventKindV1::StepDeclared)
+        .expect("StepDeclared fixture");
+    assert_lineage_mismatch_on_all_boundaries(
+        step_kind,
+        step_payload.clone(),
+        None,
+        Some(Some(AttemptId::new("attempt-2").unwrap())),
+        None,
+    );
+    assert_lineage_mismatch_on_all_boundaries(
+        step_kind,
+        step_payload,
+        None,
+        None,
+        Some(Some(StepId::new("step-2").unwrap())),
+    );
+
+    let (reference_kind, reference_payload) = event_payloads()
+        .into_iter()
+        .find(|(kind, _)| *kind == EventKindV1::ReferenceAttached)
+        .expect("ReferenceAttached fixture");
+    assert_lineage_mismatch_on_all_boundaries(
+        reference_kind,
+        reference_payload.clone(),
+        Some(RunId::new("run-18").unwrap()),
+        None,
+        None,
+    );
+    assert_lineage_mismatch_on_all_boundaries(
+        reference_kind,
+        reference_payload.clone(),
+        None,
+        Some(Some(AttemptId::new("attempt-2").unwrap())),
+        None,
+    );
+    assert_lineage_mismatch_on_all_boundaries(
+        reference_kind,
+        reference_payload,
+        None,
+        None,
+        Some(Some(StepId::new("step-2").unwrap())),
+    );
+
+    let (continuation_kind, continuation_payload) = event_payloads()
+        .into_iter()
+        .find(|(kind, _)| *kind == EventKindV1::ContinuationCreated)
+        .expect("ContinuationCreated fixture");
+    assert_lineage_mismatch_on_all_boundaries(
+        continuation_kind,
+        continuation_payload,
+        None,
+        Some(Some(AttemptId::new("attempt-3").unwrap())),
+        None,
     );
 }
 

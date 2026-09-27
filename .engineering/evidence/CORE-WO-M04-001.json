@@ -3,7 +3,7 @@
   "increment": "CORE-M04-FREEZE-001",
   "workOrder": "CORE-WO-M04-001",
   "repository": "KayzenRoot/core",
-  "status": "PACK_A_EVENT_LINEAGE_DEADLINE_HELPER_CORRECTED_AWAITING_EXACT_HEAD_CI_AND_INDEPENDENT_AUDIT",
+  "status": "PACK_A_AWAITING_INDEPENDENT_AUDIT",
   "planningCandidate": {
     "branch": "planning/m04-final-freeze-round5",
     "planningBase": "0f448c708aafd8f5b4cb6303effdabd7e028bc6f",
@@ -61,10 +61,10 @@
     "fabricatedMeasurements": false
   },
   "implementation": {
-    "status": "PACK_A_EVENT_LINEAGE_DEADLINE_HELPER_CORRECTED_AWAITING_EXACT_HEAD_CI_AND_INDEPENDENT_AUDIT",
+    "status": "PACK_A_AWAITING_INDEPENDENT_AUDIT",
     "authorizedBase": "f6b422be5465d5a93d0b8fcf4c9507c205663072",
     "finalHead": null,
-    "lastValidatedParentHead": "4afd7974be9c9ccf5f5eda2a8cdd9ef9f2d5f5c9",
+    "lastValidatedParentHead": "2721b89598998dad08c19f581fe650be53d3c882",
     "productFilesCreated": true,
     "executionBranch": "feat/m04-run-state",
     "preflightStatus": "PASS",
@@ -242,8 +242,8 @@
   },
   "executorHandoff": {
     "path": "docs/work-orders/CODEX-HANDOFF-M04.md",
-    "blobSha": "b1aa76984f4a36f74c8625cc06badb8c8431122e",
-    "status": "PACK_A_EVENT_LINEAGE_DEADLINE_HELPER_CORRECTED_AWAITING_EXACT_HEAD_CI_AND_INDEPENDENT_AUDIT / PACK_B_NOT_STARTED"
+    "blobSha": "b273b5c694ff2c80f005859a8cdfa90f72a5b90c",
+    "status": "PACK_A_AWAITING_INDEPENDENT_AUDIT / PACK_B_NOT_STARTED"
   },
   "executionAdmission": {
     "increment": "CORE-M04-ADMIT-001",
@@ -528,12 +528,12 @@
     }
   },
   "packAStop": {
-    "status": "PACK_A_EVENT_LINEAGE_DEADLINE_HELPER_CORRECTED_AWAITING_EXACT_HEAD_CI_AND_INDEPENDENT_AUDIT",
+    "status": "PACK_A_AWAITING_INDEPENDENT_AUDIT",
     "packet": "A",
     "candidateGitHead": null,
-    "lastValidatedParentHead": "4afd7974be9c9ccf5f5eda2a8cdd9ef9f2d5f5c9",
-    "workingTreeHasUncommittedChanges": null,
-    "localWorkingTreeState": "NOT_AVAILABLE_IN_CURRENT_REVIEW_EXECUTOR",
+    "lastValidatedParentHead": "2721b89598998dad08c19f581fe650be53d3c882",
+    "workingTreeHasUncommittedChanges": true,
+    "localWorkingTreeState": "D:/Projects/core-pr106-audit-fix is detached at the 2721b895 parent with the follow-up changes locally verified before publication.",
     "platform": "Windows",
     "checks": [
       {
@@ -564,10 +564,19 @@
         "result": "PASS"
       }
     ],
-    "checksScope": "Historical Windows CD-04 checks apply to parent head 4afd7974be9c9ccf5f5eda2a8cdd9ef9f2d5f5c9 only; they do not validate the new event-lineage correction commit.",
-    "stopCondition": "The event-lineage contract correction is implemented; an exact-head formatting check found formatting-only drift. The follow-up commit must pass fresh exact-head CI and formal independent review. Keep all EV-M04 pending, Pack B stopped, and checkpoint promotion stopped.",
-    "hostedExactHeadCi": "On head a1520b11bd066f83035e2f192e1b744a16608fb9, workflow 36267433641 had completed 7/10 jobs when this record was prepared: six passed (Governance, three fuzz campaigns, M01 Ubuntu, M03 Ubuntu); M02 Ubuntu failed in workspace tests because hostile_git_deadline_kills_reaps_and_does_not_poison_next_inspection returned Ok(None) instead of the expected typed timeout in 0.28 s; three Windows matrix jobs were still running. A test-only follow-up replaces the Unix shell sleep helper with a native Rust helper on both platforms. Fresh exact-head CI is pending.",
-    "implementationPullRequest": "OPEN #106 https://github.com/KayzenRoot/core/pull/106; base main d2b750f917f841fe715aafea9e0f80fbd3bc1035; correction parent head 4afd7974be9c9ccf5f5eda2a8cdd9ef9f2d5f5c9.",
+    "checksScope": "Historical CD-04 checks apply to parent head 4afd7974be9c9ccf5f5eda2a8cdd9ef9f2d5f5c9. The ContinuationCreated coverage follow-up was locally tested in a detached Windows worktree based on 2721b89598998dad08c19f581fe650be53d3c882; hosted exact-head CI for the resulting commit is still required.",
+    "stopCondition": "The ContinuationCreated envelope-lineage regression matrix passes local Windows checks. Verify fresh 10/10 exact-head GitHub CI on the resulting PR head before formal independent review. Keep all EV-M04 pending, Pack B stopped, and checkpoint promotion stopped.",
+    "hostedExactHeadCi": "Before this coverage follow-up, PR head 2721b89598998dad08c19f581fe650be53d3c882 passed workflow 36270689343 with 10/10 jobs. This commit adds the ContinuationCreated envelope-lineage regression matrix and synchronizes this handoff/evidence; it creates a new PR head, so workflow 36270689343 is historical for the follow-up. Verify the current PR head has completed exact-head CI before formal independent review.",
+    "latestVerifiedPrHeadBeforeFollowup": {
+      "headSha": "2721b89598998dad08c19f581fe650be53d3c882",
+      "workflowRunId": 36270689343,
+      "workflowStatus": "completed",
+      "workflowConclusion": "success",
+      "successfulJobs": 10,
+      "totalJobs": 10,
+      "historicalForFollowup": true
+    },
+    "implementationPullRequest": "OPEN #106 https://github.com/KayzenRoot/core/pull/106; base main d2b750f917f841fe715aafea9e0f80fbd3bc1035; coverage-follow-up parent head 2721b89598998dad08c19f581fe650be53d3c882.",
     "hostedWorkflowRunId": 36248160958,
     "initialUbuntuM02FailureRerunJobId": 108423661915,
     "finalHeadCiAfterEvidenceHandoffUpdate": "PASS on pre-correction head cfa82f6183a5e44ccfff0bba50a72706f3458928: run 36249941196 completed with 10/10 successful jobs. This run does not validate the CD-03 correction head.",
@@ -1246,6 +1255,40 @@
       "resultingHead": "Resolve from PR #106 after this follow-up commit.",
       "exactHeadCi": "PENDING_EXACT_HEAD_GITHUB_RUN",
       "independentAudit": "PENDING; no formal review submitted.",
+      "allEvNodesRemainPending": true,
+      "packBStarted": false,
+      "checkpointPromotion": false
+    },
+    "lineageCoverageFollowup": {
+      "reviewDate": "2026-09-26",
+      "parentHead": "2721b89598998dad08c19f581fe650be53d3c882",
+      "parentWorkflow": {
+        "runId": 36270689343,
+        "status": "completed",
+        "conclusion": "success",
+        "successfulJobs": 10,
+        "totalJobs": 10,
+        "appliesOnlyToHead": "2721b89598998dad08c19f581fe650be53d3c882"
+      },
+      "finding": "The shared event-lineage validator was used by construction, validate(), and deserialization, but regression tests sampled mismatches across these paths without exercising each payload-bound RunId, AttemptId, and StepId through all three entry points.",
+      "correction": "Added table-driven mismatch cases for AttemptCreated, StepDeclared, ReferenceAttached, and ContinuationCreated. The cases substitute the applicable envelope RunId, AttemptId, or StepId; construction and validate() assert LineageMismatch/Never, and custom deserialization rejects each malformed wire event.",
+      "changedFiles": [
+        "crates/core-run-state/tests/public_contracts.rs",
+        ".engineering/gef/GEF-CURRENT.json",
+        ".engineering/evidence/CORE-WO-M04-001.json",
+        "docs/work-orders/CODEX-HANDOFF-M04.md"
+      ],
+      "localVerification": {
+        "focusedRunStateTests": "PASS: 7 unit, 1 canonical identity, 11 public contract tests, and 6 compile-fail doctests",
+        "workspaceTests": "PASS: cargo test --workspace --all-targets --all-features --locked; includes hostile_git_deadline_kills_reaps_and_does_not_poison_next_inspection",
+        "format": "PASS: cargo fmt --all -- --check",
+        "clippy": "PASS: cargo clippy --workspace --all-targets --all-features --locked -- -D warnings",
+        "governance": "PASS: python scripts/validate_governance.py; GEF/HIVE bridges consistent and 27 required artifacts",
+        "diffCheck": "PASS: git diff --check"
+      },
+      "resultingHead": "Resolved from PR #106 metadata after publication; not self-embedded.",
+      "resultingHeadCi": "A fresh exact-head GitHub run is required; workflow 36270689343 validates only parent 2721b89598998dad08c19f581fe650be53d3c882.",
+      "independentAudit": "PENDING; authenticated KayzenRoot identity is the PR author.",
       "allEvNodesRemainPending": true,
       "packBStarted": false,
       "checkpointPromotion": false
