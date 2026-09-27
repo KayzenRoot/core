@@ -1,6 +1,6 @@
 # M06 Capability Negotiation — Round 1 discovery candidate
 
-Status: NON_AUTHORITATIVE_DISCOVERY_R1_CANDIDATE  
+Status: R1_DOCUMENTED / R2_NON_AUTHORITATIVE_DISCOVERY_CANDIDATE  
 Initial protected-main base: 7c68b829541ddbbc97a1a957f64883e23c26a94a  
 Work Order: https://github.com/KayzenRoot/core/issues/154  
 Public M06 API frozen: NO | Product code authorized: NO | M05 host API admitted: NO | M04 V1/V2 contract accepted: NO
@@ -98,3 +98,110 @@ Round 1 proposes mission/ownership, HIVE overlap and SOLO/HIVE behavior, high-le
 ## 9. Round 1 STOP
 
 Promote only this non-authoritative discovery document plus its separately bound source evidence after exact-head applicable Governance and required status contexts, zero unresolved HIGH/CRITICAL, scoped logical owner self-audit `OWNER_SELF_AUDIT_APPROVED / NOT INDEPENDENT`, protected squash merge, then **new real FULL 11/11 main-push CI**. That closes a planning increment only: the M06 public contract and implementation still require distinct final planning freeze and executable Work Order admission. It cannot resolve external M04 prior-V1 issue #111, owner-local HIVE issue #4 or any EV-M04/M05/M06 product evidence.
+
+
+---
+
+## Round 2 — dependency graph feasibility, authority-safe group proposals and gap assessment
+
+Status: R2_NON_AUTHORITATIVE_GROUP_FEASIBILITY_CANDIDATE  
+Work Order: https://github.com/KayzenRoot/core/issues/157  
+Exact initial protected-main basis: c2e8c0a307408e77028b5a1c8f99326afee03927  
+Existing M01 registry remains the sole authoritative eligibility, binding and lease owner. **No public M06 DTO, group transaction, numeric budget or implementation is frozen.**
+
+### R2.1 — Specific M01 capability and the genuinely missing property
+
+Actual accepted `core-registry` blob `91bfa3d02789cfb36fdf8bdeddedc5991d5f6e14` contains four mechanisms relevant to M06 planning:
+
+1. `ModuleRegistry.validate_graph` detects cycles in **module startup** dependencies (`ModuleManifest.startup_dependencies`), not an already-demonstrated admission of provider `dependency_capabilities`.
+2. `CapabilityRegistry.graph_snapshot` returns the **currently registered** provider descriptors and active binding identities/provenance within one registry read lock. This is a bounded observation if its cardinality and source access are later admitted, not a frozen transaction or independently authenticated descriptor.
+3. `CapabilityRegistry.substitution_impact_details` **already traverses transitive dependent capabilities** starting from an *active binding*, reports active leases, evidence dependencies, cache affinities and safety-critical dependent capabilities, and whether revalidation is needed. M06 must reuse its result when considering replacement, rather than implement an inconsistent second impact walker. It is an impact view, **not** proof that a new group of candidates can be admitted.
+4. `resolve` checks an individual requirement's contract, required features/authorities, assurance/trust/quality, origin/class, policy/cache, latency/cost and health/readiness/quarantine, then applies the accepted preference order. `bind_with_generation` / `acquire_lease_with_generation` and `validate_lease` are **per capability**, and `generation_coherence` compares the accepted runtime/activation/binding basis. `resolve_from_state` does not traverse each eligible provider's `dependency_capabilities` before returning a selected candidate. A `graph_snapshot` followed by separate `resolve` calls does **not** share one atomic lock/transaction.
+
+`core-contracts` blob `0cd1d56a4ac761ff1c8b761cde0e0d19dfa76bc9` exposes provider `dependency_capabilities` and `evidence_dependencies` as different sets. The latter cannot be silently treated as a capability provider, authenticated artifact or loaded file because the current type provides no general verification protocol for arbitrary evidence string identifiers.
+
+**Only proposed net-new value for M06:** explain graph-level feasibility of a *caller-authorized set* without promoting individual eligibility to a false group admission. It may compose **read-only** M01 observations and policy-proof references. It must not create a competing provider registry, copy M01's requirement filter or modify frozen M01 semantics without a distinct reviewed change.
+
+### R2.2 — Candidate pure, bounded graph preflight, all findings provisional
+
+The following stages describe a potential **pure, side-effect-free, zero-LLM** M06 planning function. Its final public signature, traits, limits and failure encoding remain unfrozen.
+
+1. **Bind caller input.** Accept an explicit finite set of caller-owned `CapabilityRequirement` values and references to the *already admitted* M03 scope/Work Order and M01 `RuntimeGeneration`; no free-form model prompt, ambient workspace or remote manifest can add requirements. Reject empty/duplicate conflicting requirements rather than silently choose one version/quality policy. A repeated capability name with a different required major, feature, origin, policy, security floor or budget is a conflict until the caller supplies one authoritative merged requirement; no OR merge or floor downgrade.
+2. **Acquire one observation.** Request a bounded M01 `graph_snapshot` in a single read operation and capture the caller-supplied current runtime/graph/policy generation and verified provenance **references**. Snapshot consistency applies to the descriptor/binding collection *at the time of that call*; no existing API guarantees a later independent `resolve` sees the same registry contents or proves the runtime generation was globally locked.
+3. **Corroborate input classes.** Separate trusted caller/M11/M22 evidence of provider/process/source identity from the descriptors' claimed `origin`, `features`, `trust`, `health`, `performance_score` and `fingerprint`. Provider claims remain tainted until an independently admitted port authenticates them. If independent proof for a required external provider is missing, report `PROVENANCE_UNVERIFIED`, not eligible. No HIVE protocol identifier, release tag or signed-looking digest alone is a verified owner-local runtime.
+4. **Use M01, never reimplement eligibility.** For each **already-authorized canonical requirement**, obtain an M01 `resolve` result for a best eligible candidate under the accepted single-capability ordering, and bind its descriptor identity back to the snapshot. If resolution returned no provider or selected a fingerprint/activation generation missing or changed in the observation, report BLOCKED/STALE. A proposed graph-wide search for alternative combinations would need **a separately admitted M01 read-only eligible-set API** with the *identical* accepted selector semantics; M06 cannot secretly fork that algorithm and claim equivalent security.
+5. **Examine dependency closure.** For each provisionally selected descriptor, inspect `dependency_capabilities` transitively using only bounded snapshot data. A dependency must either be explicitly present in the authorized requirement set or be independently shown to have an **existing, caller-authorized, still-current M01 binding/lease**, with its relevant trust/policy/version proof. A named dependency cannot silently enroll a new capability or grant authority. Missing dependency, self-edge, cycle, name collision, incompatible per-edge requirement or provider-choice contradiction produce a typed **provisional plan BLOCKED** result. Provider dependency names alone do not encode version, security floor or a verified binding; those must be separately supplied by a future governed capability-contract source.
+6. **Keep evidence dependencies separate.** For every `evidence_dependencies` reference, require the respective source/security/evidence owner to specify an authoritative verification port and the caller's scope. Merely finding a same-named capability, cache affinity or textual evidence reference in `graph_snapshot` is insufficient. Absent or ambiguous references yield `EVIDENCE_NOT_VERIFIED`; no content fetch or M04 journal mutation occurs in the pure function.
+7. **Compute conservative result.** A dependency-complete, conflict-free set may be described only as `PROVISIONAL_FEASIBILITY` at the observed generation, with exact referenced M01 descriptors, unsatisfied/UNKNOWN conditions and the missing independent proof gates. Any conflict, inability to enumerate needed alternatives, stale provider, unverified external authority or inability to guarantee group atomicity yields `BLOCKED` or `NOT_ATOMICALLY_ADMITTED`, **never** `READY`, a live lease, a tool permit or an M04 Run state. The caller may request separately governed M01 per-capability bindings only when no actual side effect can occur until all independent execution gates are met.
+
+A future final plan fingerprint should be derived from canonical, bounded caller requirements plus exact source/graph/policy/runtime/provenance basis with domain separation, but R2 **does not** invent an encoding, hashing domain or implicit persisted cache.
+
+### R2.3 — Capability conflicts, cycles and partial-admission examples
+
+These are hypothetical negative-fixture descriptions, not observed bugs or executable tests.
+
+| Fixture | Expected conservative interpretation |
+| --- | --- |
+| A requires B; B provider unregistered | `MISSING_DEPENDENCY` even if M01 resolves A individually. |
+| A requires B; B requires A, or A requires itself | `DEPENDENCY_CYCLE`, with a bounded canonical cycle reference, no recursive stack exhaustion. |
+| Duplicate caller requirement X major 1 and X major 2 | `CONFLICTING_REQUIREMENTS`, no silent version substitution. |
+| X's provider declares B but caller did not admit B | `DEPENDENCY_NOT_AUTHORIZED` unless separately proven pre-existing caller-owned binding. |
+| X and Y individually resolve, but selected providers require incompatible source/realm/authority versions | `CROSS_CAPABILITY_CONFLICT`, do not treat both `resolve` successes as a group. |
+| Provider alternatives could make a group feasible, but accepted M01 exposes only its chosen candidate | `ALTERNATIVE_SEARCH_NOT_ADMITTED`; no independent M06 algorithm, unproven plan remains blocked. |
+| Snapshot says provider P, later M01 resolution/binding changes its fingerprint or activation generation | `PLAN_STALE`; reread and revalidate, never silently reuse old permission. |
+| Owner-supplied HIVE provider announces features but peer proof is absent | `PROVENANCE_UNVERIFIED`; HIVE remains optional with truthful SOLO behavior. |
+| `evidence_dependencies` contains opaque E with no separately verified source | `EVIDENCE_NOT_VERIFIED`; do not map E to a provider or claim artifact authenticity. |
+| Provider P replaced while transitive dependents have active leases or safety-critical state | Use **M01 `substitution_impact_details`** and current change notifications; `REVALIDATION_REQUIRED`, no automatic live reroute. |
+| Two individual binds succeed, third fails, or M01 generation changes mid-sequence | `GROUP_PARTIAL_OR_STALE`; do not label success, undo unknown external effects, infer rollback from lease release or write durable M04 history. |
+
+Do not conflate M01 module startup graph validation with this prospective *capability* graph. Do not conflate M01's impact graph (what could break when an already bound provider changes) with selecting a new multi-provider dependency-complete plan.
+
+### R2.4 — Consistency, safety-critical leases and the transaction boundary
+
+The observed set has a time-of-check/time-of-use gap across `graph_snapshot`, individual M01 `resolve`, individual `bind_with_generation`, per-capability `acquire_lease_with_generation` and separate host-session validation. The accepted M01 `generation_coherence` compares one binding's runtime/activation basis; it is **not** a transaction that freezes the entire provider graph while multiple capabilities bind. M01 `substitution_impact_details` reports a transitive impact but does not atomically close external effects.
+
+**Safe R2 conclusion:** M06 may draft a group-feasibility proposal and reject provable inconsistencies, but **cannot guarantee atomic multi-provider admission with existing APIs**. A future implementation must pick one of two separately reviewed designs:
+
+- **Option A, reduced scope:** M06 remains a read-only preflight/diagnostic module. Any multi-provider side-effectful execution is denied until an external admitted orchestrator independently verifies the final per-capability M01 leases, policy/sandbox/peer proofs, generation and effect boundaries. Partial leases remain revocable, but their release does not undo remote side effects.
+- **Option B, separately governed M01 extension:** after independent architecture/security review, M01 may expose a true snapshot-bound batch eligibility and atomic group binding/lease admission contract, with exact all-or-nothing semantics, fairness, shutdown/race and cross-platform tests. That is a **different M01 source/Work Order/lock admission**, not a hidden M06 wrapper. R2 authorizes no change to current M01.
+
+These options are **alternatives for future decision**; neither is accepted by R2. No source-independent performance or low-latency claim follows from either.
+
+### R2.5 — SOLO, HIVE, external transport and owner boundaries
+
+SOLO may propose an admitted local CORE-owned capability graph without HIVE. A HIVE-owned intelligence requirement may use a minimal admitted CORE fallback **only** when its required version/features/quality/trust/assurance and explicit caller policy already permit it; absence of owner-local HIVE #4 cannot be used to advertise a verified HIVE binding. No HIVE RAG/cache/decision fabric is reproduced inside M06.
+
+A future M05 R1–R4 host observation (source blob `222dace08091637e0192eb0259ba13109e418ba7`) is non-authoritative: its declared protocol features, process ID and MCP manifest do not establish process identity, permission, filesystem scope, sandbox or remote TLS/auth. M11/M22 must admit independently verified peer/provenance/security references; M10/M12 independently authorize actual effects. M07–M09 select specialists/models/effort, M18 handles policy-governed recovery and M19 budgets actual measured resources.
+
+M04 remains the sole durable Run/Attempt/Step owner. The prior-V1 external-consumer inventory and replay BRC/idempotency amendment are still blocked [#111](https://github.com/KayzenRoot/core/issues/111); do not serialize draft PR #118 fields, infer a V2 migration or close M04's 23 pending EVs based on a provisional M06 proposal.
+
+### R2.6 — Future negative tests, measured budgets and redacted evidence
+
+All of the following **future R2 discovery IDs are PENDING** and are not an implementation AEG or proof from current M01 CI:
+
+| ID | Future required negative/positive fixture or evidence |
+| --- | --- |
+| EV-M06-D15 | Existing M01 `ModuleRegistry.validate_graph` startup-cycle proof distinguished from provider dependency-closure preflight. |
+| EV-M06-D16 | M01 `graph_snapshot` and `substitution_impact_details` reused with no competing registry, impact algorithm or selection reimplementation. |
+| EV-M06-D17 | Selected candidate with missing, self, circular or unadmitted transitive `dependency_capabilities` blocked deterministically. |
+| EV-M06-D18 | Duplicate/conflicting caller version, security and provider-origin constraints rejected without silent merges/downgrades. |
+| EV-M06-D19 | Individually eligible providers with incompatible group policy/authority/realm or no admitted alternative enumeration remain BLOCKED. |
+| EV-M06-D20 | Unverified or substituted `evidence_dependencies` and host-declared peer/feature/quality claims do not grant new capability trust. |
+| EV-M06-D21 | Repeated/stale `graph_snapshot`, delayed resolver, changed M01 epoch/generation/provider fingerprint and late M05 session fail closed. |
+| EV-M06-D22 | `substitution_impact_details` active lease, critical dependent, evidence/cache-affinity and revalidation cases preserve existing accepted semantics. |
+| EV-M06-D23 | Partial group bind/lease outcomes do not claim atomic success or compensate unknown external effects with lease release. |
+| EV-M06-D24 | SOLO/fallback and HIVE-owned optionality tested at exact required quality/trust/version floors, independent of owner-local #4. |
+| EV-M06-D25 | Empty, oversized, deep/cyclic, duplicate, malicious/tainted provider/evidence graphs bounded, redacted and zero-LLM. |
+| EV-M06-D26 | Calibrate real candidate provider/requirement/edge/evidence counts, graph depth and change-storm/latency/memory budgets against actual M01 snapshots on Linux/Windows; **no invented numeric cap or speedup**. |
+| EV-M06-D27 | Pure preflight has no Git/HIVE/M04/host process/network/tool side effects; actual action execution remains independently gated. |
+| EV-M06-D28 | After separately accepted final contracts, exact-head Linux/Windows, governance, supply-chain, bounded fuzz, source/lock and logical owner review NOT INDEPENDENT. |
+
+A final frozen M06 acceptance graph must later assign each accepted requirement a concrete fixture, source owner, platform, expected result, invariant/quality floor, reproducible selected/rejected budget and review gate. R1 `EV-M06-D01..D14` and R2 `D15..D28` remain **28 discovery hypotheses, all pending**, distinct from M04's still-pending 23 global EVs and M05's 28 future candidate EVs.
+
+### R2.7 — Round 3 entry, all 19 planning dimensions and STOP
+
+R1 established mission/owner split, SOLO/HIVE boundary, provisional negotiation lifecycle, threat model and a 14-node discovery matrix. R2 provides source-backed differential analysis of M01's implemented graph/impact facilities, proposed group-feasibility laws, race/partial-admission alternatives, bounded negative fixtures and source-specific missing fields. **Still unfrozen:** final M06 public/internal DTOs and proof-port contracts, executable crate/file map, M05 actual admitted host observation API, M11/M22 independently verified identity/provenance schema, M10/M12 policy/action admission, exact dependency metadata semantics, group transaction decision, measured finite budgets and selected transport/SDK dependencies, migration compatibility, complete DoD and an audited executable Work Order/Context Lock. These are not silently declared solved.
+
+**Round 3 may draft a candidate file/port map only after re-reading the actual promoted M01 and R2 sources**, and must either keep read-only M06 scope or explicitly flag a separately governed M01 batch-admission prerequisite. Final M06 Work Order freeze is later and also blocked from binding unadmitted M05/M04 contracts or claiming HIVE #4 proof.
+
+**Round 2 STOP:** scope-limited append to this planning document plus new source-bound evidence; exact-head docs-only Governance and required successful status contexts with truthful Rust/fuzz no-op; scoped logical owner self-audit `NOT INDEPENDENT`, zero unresolved HIGH/CRITICAL/threads, protected squash merge and **new real FULL 11/11 main-push validation**. That proves only this non-authoritative planning increment was reviewed. No M06 API, M01 change, atomic multi-provider admission, remote trust, public implementation, new numeric floor or M04/HIVE external acceptance results from Round 2.
