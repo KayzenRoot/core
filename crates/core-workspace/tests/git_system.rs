@@ -282,7 +282,10 @@ fn hostile_dual_output_is_capped_without_deadlock() {
         .unwrap()
         .read_to_end(&mut stderr)
         .unwrap();
-    assert!(exited && status.success(), "native dual-output preflight failed");
+    assert!(
+        exited && status.success(),
+        "native dual-output preflight failed"
+    );
     assert_eq!(stdout, vec![b'x'; 64]);
     assert_eq!(stderr, vec![b'y'; 64]);
 
