@@ -1,13 +1,31 @@
+"""Stateful local HIVE v1.0.0 project preparation with redacted CLI diagnostics.
+
+Actual runtime and separately connected Codex tool invocations must be proven
+with the dedicated read-only local evidence collectors, never this bootstrap.
+"""
+
 from __future__ import annotations
 
 import argparse
 import json
 import os
+import re
 import sys
 import urllib.error
 import urllib.request
 from pathlib import Path
 from typing import Any
+
+
+class BootstrapBlocked(RuntimeError):
+    """Static or machine-independent reason; no raw API data or local paths."""
+
+
+class RedactedArgumentParser(argparse.ArgumentParser):
+    def error(self, message: str) -> None:
+        # argparse normally echoes an unrecognized argument, which may be a
+        # private local path or token. Convert it to a static typed reason.
+        raise BootstrapBlocked("invalid_cli_arguments")
 
 
 def request(base_url: str, method: str, path: str, payload: dict[str, Any] | None = None) -> Any:
@@ -23,10 +41,11 @@ def request(base_url: str, method: str, path: str, payload: dict[str, Any] | Non
             raw = response.read()
             return json.loads(raw.decode("utf-8")) if raw else None
     except urllib.error.HTTPError as exc:
-        body = exc.read().decode("utf-8", errors="replace")
-        raise RuntimeError(f"{method} {path} -> HTTP {exc.code}: {body}") from exc
-    except urllib.error.URLError as exc:
-        raise RuntimeError(f"HIVE unavailable at {base_url}: {exc.reason}") from exc
+        # The HTTP body can contain UUIDs, absolute paths or credentials.
+        raise BootstrapBlocked(f"hive_http_status_{int(exc.code)}") from None
+    except urllib.error.URLError:
+        # Never include request URL, host/path or a provider-supplied reason.
+        raise BootstrapBlocked("hive_api_unavailable") from None
 
 
 def resolve_registered_project(
@@ -45,18 +64,19 @@ def resolve_registered_project(
         if item.get("name") == name and item.get("relative_path") != relative_path
     ]
     if name_collisions:
-        collision_paths = ", ".join(
-            sorted(str(item.get("relative_path")) for item in name_collisions)
-        )
-        raise RuntimeError(
-            f'HIVE already has project name "{name}" at a different path: '
-            f"{collision_paths}. Resolve the identity explicitly instead of guessing."
-        )
+        # This is also used by the redacted evidence/probe collectors.
+        raise BootstrapBlocked("project name exists at a different path; resolve identity explicitly")
     return None
 
 
+def _required_sha(value: object) -> str:
+    if not isinstance(value, str) or re.fullmatch(r"[0-9a-fA-F]{40}", value) is None:
+        raise BootstrapBlocked("core_inspection_head_invalid")
+    return value.lower()
+
+
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Register and prepare CORE in HIVE v1.0.0")
+    parser = RedactedArgumentParser(description="Register and prepare CORE in HIVE v1.0.0")
     parser.add_argument("--base-url", default=os.getenv("HIVE_API_URL", "http://localhost:8000"))
     parser.add_argument("--name", default="CORE")
     parser.add_argument(
@@ -67,11 +87,17 @@ def main() -> int:
     args = parser.parse_args()
 
     health = request(args.base_url, "GET", "/api/v1/health")
-    print("HIVE health:", health)
+    if (
+        not isinstance(health, dict)
+        or health.get("status") != "ok"
+        or health.get("version") != "1.0.0"
+    ):
+        raise BootstrapBlocked("hive_release_or_health_unavailable")
+    print("HIVE health: ok (release 1.0.0)")
 
     projects = request(args.base_url, "GET", "/api/v1/projects")
-    if not isinstance(projects, list):
-        raise RuntimeError("HIVE project list returned an unexpected payload")
+    if not isinstance(projects, list) or any(not isinstance(item, dict) for item in projects):
+        raise BootstrapBlocked("invalid_project_registry_response")
 
     target = resolve_registered_project(
         projects,
@@ -89,23 +115,21 @@ def main() -> int:
     else:
         print("Resolved existing CORE registration by exact relative path.")
 
-    project_id = target.get("project_id")
-    if not project_id:
-        raise RuntimeError("HIVE did not return project_id")
+    if not isinstance(target, dict) or not isinstance(target.get("project_id"), str) or not target["project_id"]:
+        raise BootstrapBlocked("project_identity_unavailable")
+    project_id = target["project_id"]
 
     inspected = request(args.base_url, "POST", f"/api/v1/projects/{project_id}/inspect")
-    if inspected.get("state") != "READY":
-        raise RuntimeError(f"CORE is not READY in HIVE: {inspected}")
+    if not isinstance(inspected, dict) or inspected.get("state") != "READY":
+        raise BootstrapBlocked("core_inspection_not_ready")
     if inspected.get("relative_path") != args.relative_path:
-        raise RuntimeError(
-            "HIVE inspection resolved a different canonical path; "
-            "refuse to prepare an ambiguous project identity."
-        )
-    print("Inspection: READY", inspected.get("git_head_sha"))
+        raise BootstrapBlocked("core_inspection_identity_mismatch")
+    core_head = _required_sha(inspected.get("git_head_sha"))
+    print("Inspection: READY", core_head)
 
     index = request(args.base_url, "POST", f"/api/v1/projects/{project_id}/index")
-    if index.get("status") != "COMPLETED":
-        raise RuntimeError(f"CORE indexing did not complete: {index}")
+    if not isinstance(index, dict) or index.get("status") != "COMPLETED":
+        raise BootstrapBlocked("core_index_incomplete")
     print("Repository index: COMPLETED")
 
     corpus = request(
@@ -113,29 +137,42 @@ def main() -> int:
         "POST",
         f"/api/v1/projects/{project_id}/retrieval/corpus/sync",
     )
-    if corpus.get("status") not in {"COMPLETED", "CURRENT"}:
-        raise RuntimeError(f"CORE retrieval corpus is not current: {corpus}")
-    print("Retrieval corpus:", corpus.get("status"))
+    if not isinstance(corpus, dict) or corpus.get("status") not in {"COMPLETED", "CURRENT"}:
+        raise BootstrapBlocked("core_retrieval_corpus_incomplete")
+    print("Retrieval corpus:", corpus["status"])
 
+    # Include only a validated Git SHA and static status enum values; never
+    # print project UUID, relative/absolute path, API payloads or private data.
     print(
         json.dumps(
             {
-                "project_id": project_id,
-                "relative_path": inspected.get("relative_path"),
-                "git_head_sha": inspected.get("git_head_sha"),
-                "state": inspected.get("state"),
-                "index_status": index.get("status"),
-                "corpus_status": corpus.get("status"),
+                "schema": "CORE_HIVE_BOOTSTRAP_STATUS_V1",
+                "hive_release": "v1.0.0",
+                "core_git_head": core_head,
+                "state": "READY",
+                "index_status": "COMPLETED",
+                "corpus_status": corpus["status"],
+                "local_read_only_evidence": "PENDING_SEPARATE_COLLECTORS",
+                "codex_client_proof": "PENDING_ACTUAL_CODEX_CLIENT_INVOCATIONS",
             },
             indent=2,
+            sort_keys=True,
         )
     )
     return 0
 
 
-if __name__ == "__main__":
+def cli() -> int:
     try:
-        raise SystemExit(main())
-    except Exception as exc:
-        print(f"HIVE bootstrap failed: {exc}", file=sys.stderr)
-        raise SystemExit(1)
+        return main()
+    except BootstrapBlocked as exc:
+        # Only our own static reasons are permitted here.
+        print(json.dumps({"status": "BLOCKED", "reason": str(exc)}), file=sys.stderr)
+    except Exception:
+        # API, JSON and OS errors may contain sensitive environment data.
+        print(json.dumps({"status": "BLOCKED", "reason": "local_bootstrap_unavailable"}), file=sys.stderr)
+    return 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(cli())
