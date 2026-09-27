@@ -1,6 +1,6 @@
 # M05 Host Adapter Fabric — Round 1 discovery candidate
 
-Status: NON_AUTHORITATIVE_DISCOVERY_R1_CANDIDATE  
+Status: R1_DOCUMENTED / R2_NON_AUTHORITATIVE_DISCOVERY_CANDIDATE  
 Base: 3b7d184ad50ef22320d57572dfade965a98fbad4  
 Work Order: https://github.com/KayzenRoot/core/issues/133  
 Public contract frozen: NO | Product implementation authorized: NO | M04 contract decision: BLOCKED_EXTERNALLY
@@ -96,3 +96,84 @@ OUT OF SCOPE: Rust code, direct host invocation, installing credentials/provider
 A later Round 2 must reconcile exact actual M01 worker/registry interfaces with the M06/M11/M12 policy boundary; define candidate transport/handshake semantics and hostile fixtures. Detailed M04-bound invocation DTOs remain dependent on the separately governed outcome of issue #111. Round 3+ may evaluate finite budgets and process/transport options with measured evidence; final planning freeze and a **separate** execution-admission delta are mandatory before M05 code.
 
 Round 1 may close only after exact-head governance/CI, an explicitly NOT INDEPENDENT scoped owner self-audit with zero unresolved HIGH/CRITICAL, protected docs-only squash merge and real full main-push validation. This promotes a documented **discovery candidate only**, never public-contract freeze or product implementation authority.
+
+
+---
+
+## Round 2 — source-backed host handshake and failure laws (discovery candidate)
+
+Status: R2_NON_AUTHORITATIVE_CANDIDATE  
+Parent Work Order: https://github.com/KayzenRoot/core/issues/136  
+Planning base: eb231f57e8dffff0db811cf4b87c645e7022af59  
+Public API frozen: NO | Rust code authorized: NO | External M04 V1 decision: UNKNOWN / BLOCKED
+
+This round refines **transport/session semantics only** using existing source, not an invented generic IPC layer or newly authorized external execution capability. M04 durable state, M06 selection, M11 isolation/authentication, M12 tool execution, M18 recovery and M22 security policy remain with their owning modules.
+
+### R2.1 — Actual M01 source contract, verified before this proposal
+
+The existing `crates/core-ipc/src/lib.rs` exposes `ProtocolVersion` (CURRENT major=1, minor=0), `Frame` with an epoch and binary payload, `Handshake` with version/epoch/max_frame_size, `encode`, `decode`, `negotiate`, and async `read_frame/write_frame`. The accepted first-party control frame uses a 19-byte header: `CR1` magic (3), major/minor (2+2), u32 declared length (4) and epoch u64 (8). Encoding rejects oversized payloads and payload lengths unrepresentable as u32; decoding rejects short/bad magic, incompatible major, excessive declared length, stale epoch, truncation and trailing bytes.
+
+`negotiate(local, remote)` currently requires **equal major and epoch** and chooses `min(minor)` and `min(max_frame_size)`. It does NOT independently authenticate a host, negotiate capability features, enforce a required minimum minor, validate trust/authority, bind an M04 operation or establish that a remote process actually uses a named Git release. Those are separate candidate caller/M06/M11/M22 obligations. A compatible version tuple is a transport observation, never sufficient execution authorization.
+
+`read_frame` does check the declared length before allocating the body; its **full** magic/major/epoch validation currently occurs when `decode` is called after the bounded body read. For any future admission of an untrusted/third-party transport, assess whether prevalidating header authenticity and epoch **before** accepting a declared body would reduce avoidable bounded work. If this proves a defect, use a separate M01-scoped security Correction Delta and tests, not an unauthorized modification under this M05 documentation Work Order.
+
+Existing OS adapters are `core_ipc::unix` (Unix domain socket) and `core_ipc::windows` (Windows named pipe); the Windows server requests `reject_remote_clients(true)` and byte pipe mode. Neither transport choice, a Unix socket path nor that Windows option alone verifies a peer process identity or grants trust. Concrete Unix peer credentials, filesystem permissions, Windows pipe ACLs, process ancestry and executable provenance must be assessed by M11/M22 with a platform-specific threat/assurance policy. Do not launch a second unreviewed codec in M05.
+
+### R2.2 — Reuse the actual registry and lease seams
+
+`core-registry` already owns ModuleRegistry, CapabilityRegistry, provider health/quarantine, deterministic bindings, generation-aware leases, expiry/revocation, snapshot and subscription primitives. `core-contracts` already defines `RuntimeGeneration` (boot, config, module graph, capability graph, policy), `CapabilityProviderDescriptor`, `CapabilityBindingReceipt`, `CapabilityLease`, `IsolationClass` and `ProviderOrigin`. A descriptor fingerprint over self-declared metadata can prove equality to those metadata bytes, **not** third-party identity authenticity; a host process must never raise its own trust or assurance class.
+
+Proposed host session adapters should carry only immutable, caller-validated **references** to the current binding/lease/generation. M05 may compare a returned adapter-generation/endpoint-fingerprint observation with previously admitted input, but **only** M01/M06's registry validates or revokes leases and only later M10/M11/M22 policy can admit executable external operations. Failure to independently verify provider origin, active lease, required feature/policy/quality or generation returns a typed refusal before any host action.
+
+### R2.3 — Candidate first-party handshake procedure
+
+1. **DISCOVERED (zero authority):** caller supplies an endpoint description and independently obtained M01 runtime epoch/worker identity; M05 records no client-provided trust claim as approval.
+2. **CONFIG_VALIDATED:** M01/M11/M22 supply actual process/transport/peer authorization and finite resource bounds. Invalid or unknown origin fails closed. Local namespace/path is *not* authority by itself.
+3. **HANDSHAKING:** for already-admitted first-party IPC, reuse M01's `Handshake` and its `negotiate` result. Verify both endpoints have the exact current runtime epoch, a compatible protocol major and a bounded, actually admitted frame size. Caller/M06 additionally rejects required-feature loss or an insufficient negotiated minor; never silently treat minor=min as full feature compatibility.
+4. **READY (not yet an invocation permit):** publish only a typed observed session receipt binding actual peer proof reference, current M01 epoch, adapter generation, negotiated protocol, finite caps and optional untrusted advertised feature claims. No M04 Run/Attempt/Step or host invocation becomes authorized merely because READY was reached.
+5. **DRAIN/CLOSE or QUARANTINE/LOSS:** propagate M01 cancellation and bounded deadlines, revoke *new* transport admissions and report active-call ambiguity. Only the effect-owning caller/M18 decides reconciliation or retry.
+
+This sequence is a **candidate**, not an admitted public method, complete state transition matrix, new IPC protocol, or permission to use external providers. A future external MCP/stdio/remote adapter needs a **separate protocol translation and provenance review** rather than treating the `CR1` frame as if every protocol shares its byte format.
+
+### R2.4 — Request/result/cancellation candidate invariants
+
+- **Identity:** request correlation, adapter session, worker identity, current M01 runtime epoch and registry binding generation must be bound together. Cross-session IDs, stale generation and mismatched observed peer fail typed.
+- **Delivery versus effect:** a successful write/transport acknowledgment does not prove an external operation completed; a reply received by an authenticated connection is not automatically trustworthy semantic evidence. If a request might have reached the host before crash, cancellation, timeout or connection loss, return `EXTERNAL_EFFECT_UNKNOWN` and preserve the invocation fingerprint/authority references for the effect owner to reconcile. M05 itself never retries an ambiguous non-idempotent operation.
+- **Pure transport outcome:** M05 observations cannot call `M04StateStoreV1.compare_and_commit`, mint M03 admission, select M06 provider, execute an M12 command or mutate files. Later code must not wire a known-new V1 journal request field before M04 issue #111 resolves.
+- **Streams:** enforce finite header/body size, bounded per-session pending messages, bounded diagnostic bytes and read/write/cancellation deadlines. If resource evidence is incomplete, return a typed blocked/degraded outcome, not a successful truncated result. Values require later reproducible calibration; no provisional cap is an accepted production threshold.
+- **Untrusted data:** keep raw host text, stdout/stderr, model prompts, env vars, authentication headers, local paths, peer IDs and M04 journal contents out of durable public evidence. Use bounded, typed reason codes and redacted counters. Future LLM consumers must treat host text as untrusted input.
+- **HIVE:** HIVE MCP protocol `mcp-core-surface-v1` is not a Git release tag or proof that HIVE v1.0.0 is running on the owner's machine; local HIVE issue #4 and M23 integration authority are separate.
+
+### R2.5 — Candidate typed failure/ambiguity matrix (names not frozen)
+
+| Situation | Candidate M05 observation | Later owner/gate |
+| --- | --- | --- |
+| Bad `CR1` magic, incompatible major, stale epoch, frame too large, truncated or trailing bytes | `TRANSPORT_PROTOCOL_REJECTED`, preserving precise safe M01 `IpcError` classification | M01 codec; M05 adapter maps errors without printing untrusted frame |
+| Negotiated minor insufficient for required feature or unknown security-critical extension | `REQUIRED_FEATURE_UNAVAILABLE` / fail closed | M06 compatibility and M10/M22 policy; `negotiate` alone does not check this |
+| Peer process/protocol identity not independently corroborated | `ENDPOINT_PROVENANCE_UNVERIFIED` | M11/M22, zero invocation authority |
+| Valid transport but invalid/expired/revoked capability lease or changed runtime generation | `AUTHORITY_STALE_OR_ABSENT` | M01/M06 validate actual active lease; M05 must not forge |
+| Host crash/timeout/disconnect after potential request delivery | `EXTERNAL_EFFECT_UNKNOWN` | Effect owner and M18, never blind M05 resend |
+| Known-undelivered request before any side effect could occur | `REQUEST_NOT_DELIVERED` **only with proof of non-delivery** | Effect owner must validate claim before any retry |
+| Duplicate, late or cross-session completion | `STALE_OR_UNEXPECTED_REPLY` | M05 rejects publication, M04 immutable state unaffected |
+| Read/write/cancellation/diagnostic/resource limit exceeded | `TRANSPORT_RESOURCE_EXHAUSTED` | M01 lifecycle and M19 finite budget; no partial success |
+| Authenticated/authorized first-party handshake succeeded but no applicable execution policy exists | `SESSION_READY / INVOCATION_BLOCKED` | M10/M11/M12 own actual action permit |
+
+### R2.6 — Security and executable negative-fixture plan
+
+All **future** tests below are PENDING, not claimed to have executed on M05:
+
+1. Real `core-ipc` golden frame/header round trip and major/minor/epoch/min-cap negotiation at the current exact dependency.
+2. Bad magic, truncated header, oversize u32 length, trailing bytes, stale epoch, unsupported major and required-minor feature-lowering negative cases.
+3. Verify bounded `read_frame` memory and timing for a forged header with a max-size declared body. Decide whether a separate M01 correction is justified before admitting any third-party codec.
+4. Unix socket path substitution/permissions and platform-specific peer identity proof; Windows named-pipe remote rejection, ACL and local-user impersonation adversarial cases.
+5. Invalid/expired/revoked binding generation and lease; provider fingerprint computed from false metadata must not be misrepresented as authenticated trust.
+6. Cross-session/cross-epoch/duplicate correlation, unsolicited notification flood, max+1 bytes, partial stream, crash after request delivery and cancellation/late reply races.
+7. Header or stdout containing private filesystem path, prompt text, token/credential or provider-supplied instructions must never enter public receipts/logs or become permissions.
+8. SOLO mode works with missing HIVE/remote endpoint and does not require a model, GitHub token or privileged OS operation.
+9. Later admitted Linux/Windows exact-head tests, bounded fuzz/property coverage, benchmark-calibrated ceilings, supply-chain/SBOM and NOT INDEPENDENT owner audit; no future evidence result is inferred from this Round 2 doc-only CI.
+
+### R2.7 — Deferred decisions / explicit non-admission
+
+Pending M06/M11/M12 and M04 disposition: concrete M05 public request/result DTOs, representation of M04 lineage and actual idempotency guarantees, authenticated provider discovery, remote/TLS choice and secrets, first required external protocol, sandbox defaults, exact module/crate/file map, dependency admission, tool-execution semantics, numeric resource budgets, acceptance and production DoD.
+
+**Round 2 STOP:** source-backed append and new evidence record, exact-head docs-only Governance with successful preserved status contexts, scoped owner self-audit NOT INDEPENDENT with zero unresolved HIGH/CRITICAL, protected squash merge and real full main-push CI. This documents a candidate transport/handshake failure model only, not public-contract freeze, executed M05 tests or any permission to advance blocked M04.
