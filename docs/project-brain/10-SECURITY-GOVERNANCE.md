@@ -136,11 +136,11 @@ M02 threat model details and adversarial fixtures are maintained in `docs/module
 ## M04 Round 5 authorization and evidence security
 
 - The final-freeze Context Lock is non-authoritative: `PENDING_PROMOTION`, null authorized base, implementation authorization false.
-- Execution is fail-closed unless a later independently promoted admission binds the exact final-freeze canonical main and candidate source fingerprints.
+- Execution is fail-closed unless a later promoted admission binds the exact final-freeze canonical main and candidate source fingerprints; its audit uses the single-account owner self-audit policy.
 - Branch-local status cannot mint implementation authority.
 - Work Order, canonical source fingerprints and active lock are all staleness-sensitive.
 - Packs A-H cannot widen scope or dependencies through test helpers, benchmarks, fuzz harnesses or calibration tooling.
 - Pack H may alter only finite numeric resource defaults/thresholds and evidence explicitly authorized by the Calibration Delta.
-- A failed/missing/UNKNOWN AC or EV blocks `READY_FOR_REVIEW`.
-- The executor cannot self-approve; independent review owns APPROVED.
+- A failed/missing/UNKNOWN AC or EV blocks `READY_FOR_OWNER_AUDIT`.
+- The executor cannot approve its own work. The separate owner-audit stage may be performed by KayzenRoot, records `OWNER_SELF_AUDIT_APPROVED` and `NOT INDEPENDENT`, and never submits a native GitHub self-approval. No second account is required.
 - Optional HIVE context is advisory only and absent/unresolved context cannot be promoted into fabricated authority.

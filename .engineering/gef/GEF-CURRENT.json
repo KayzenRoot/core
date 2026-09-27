@@ -4,8 +4,8 @@
   "promptMode": "GEF_V1_HIVE_FIRST",
   "reviewMode": "DELTA_EXACT_HEAD",
   "assuranceMode": "ELEVATED",
-  "productStage": "M04_EXECUTION_AUTHORIZED",
-  "nextLegalAction": "PREFLIGHT_CORE_WO_M04_001_PACK_A_AFTER_CORE_M04_SYNC_006_PROMOTION",
+  "productStage": "M04_PACK_A_CANDIDATE_OPEN_OWNER_AUDIT_PENDING",
+  "nextLegalAction": "PROMOTE_CORE_D_203_POLICY_THEN_OWNER_SELF_AUDIT_CORE_PR_106_EXACT_HEAD",
   "productImplementationAuthorized": true,
   "canonicalCheckpoint": "docs/project-brain/13-CHECKPOINT.md",
   "lastCompletedWorkOrder": "CORE-WO-M03-001",
@@ -62,5 +62,8 @@
     "promotionMerge": "c63df6ad581c44bac66a8b1dab9a86522ce7fe3b",
     "unresolvedHighCritical": 0
   },
-  "admissionPromotionMerge": "bb6f631284361fae29479c66f62ca88bebf3d79c"
+  "admissionPromotionMerge": "bb6f631284361fae29479c66f62ca88bebf3d79c",
+  "reviewIdentityPolicy": "SINGLE_ACCOUNT_OWNER_SELF_AUDIT",
+  "ownerAuditIdentity": "KayzenRoot",
+  "reviewAuditIndependence": false
 }

@@ -10,7 +10,7 @@ Review the exact candidate/head against Scope, Architecture, Requirements, accep
 4. Verify required tests/evidence are exact-head and successful.
 5. Check scope drift, architectural drift, security/integrity regressions and hidden assumptions.
 6. Classify findings by severity.
-7. Return one verdict: `APPROVED`, `CORRECTION REQUIRED`, or `BLOCKED`.
+7. Return one verdict: `OWNER_SELF_AUDIT_APPROVED`, `CORRECTION REQUIRED`, or `BLOCKED_EVIDENCE`.
 
 No checkpoint promotion with unresolved HIGH/CRITICAL findings.
 
@@ -44,3 +44,11 @@ Delegate back to Codex/another executor only when the correction requires substa
 A corrective executor prompt MUST describe only the residual executor-required findings and MUST preserve already-closed findings.
 
 The reviewer MUST NOT use delegation as a convenience substitute for a safe direct fix.
+
+## Single-account owner self-audit
+
+CORE has one operational GitHub identity: `KayzenRoot`. Executor and auditor are separate logical lifecycle stages, not separate accounts or reviewer sessions. The exact-head audit may be performed by KayzenRoot after executor handoff and must record the exact base/head, full changed surface, source/lock bindings, required checks, findings and severity, unresolved HIGH/CRITICAL count, and verdict.
+
+Use `OWNER_SELF_AUDIT_APPROVED` only when every required exact-head CI/security/evidence gate passes, scope and source bindings are valid, and unresolved HIGH/CRITICAL findings are zero. State `NOT INDEPENDENT` in the audit record. Never submit a native GitHub `APPROVE` review from the PR author account. The absence of another identity alone is never `BLOCKED_EVIDENCE`; missing/failed technical evidence, invalid scope/source bindings, or unresolved HIGH/CRITICAL findings remain blockers.
+
+An owner self-audit verdict does not itself merge code, promote a checkpoint, release, or waive the protected-main ruleset.

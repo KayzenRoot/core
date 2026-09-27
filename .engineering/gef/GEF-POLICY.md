@@ -9,10 +9,11 @@
 5. Deterministic proof precedes LLM inference when practical.
 6. HIGH/CRITICAL known defects block promotion.
 7. Evidence must bind the exact candidate/head.
-8. Canonical checkpoint promotion occurs only after audit.
+8. Canonical checkpoint promotion occurs only after the exact-head owner-audit verdict and all required technical gates.
 9. Scope discoveries are classified as NECESSARY, IMPORTANT, FUTURE or OUT OF SCOPE before admission.
 10. Destructive Git/history operations require explicit governed authorization.
-11. Reviews follow reviewer-first correction: safe bounded findings are corrected directly by the reviewer when current tools can implement and validate them; delegation to Codex/another executor is reserved for corrections that genuinely require broader execution capabilities or governance.
+11. Reviews follow reviewer-first correction: safe bounded findings are corrected directly by the auditor when current tools can implement and validate them; delegation to Codex/another executor is reserved for corrections that genuinely require broader execution capabilities or governance.
+12. CORE has one operational GitHub identity, `KayzenRoot`. The owner self-audit is a separate logical stage, is explicitly `NOT INDEPENDENT`, and never requires a second account or a native self-approval.
 
 ## HIVE
 
@@ -33,3 +34,7 @@ Direct review fixes MUST NOT:
 Any direct fix creates a new exact head and invalidates prior head-bound evidence for changed inputs.
 
 Codex/another executor is used only when the correction cannot be completed and validated safely in the review environment.
+
+## Single-account audit
+
+The owner self-audit must inspect the exact base/head and full delta, confirm required technical evidence and checks, report findings/severity and zero unresolved HIGH/CRITICAL before returning `OWNER_SELF_AUDIT_APPROVED`. Missing another reviewer identity is not evidence failure. Missing or failed technical gates remain fail-closed.

@@ -10,15 +10,15 @@
   "assuranceMode": "ELEVATED",
   "productImplementationAuthorized": true,
   "canonicalSources": {
-    "docs/project-brain/13-CHECKPOINT.md": "e0b659e997433c09f6cb82139f9774c6f8cc0abf",
-    "docs/project-brain/16-DECISIONS-LEDGER.md": "6b7e873745e2ec6a81fedb6dbea5b0e0b271cde5",
-    "docs/project-brain/03-SCOPE.md": "83a2509dab36c2b1676750d0e23542592255bc87",
-    "docs/project-brain/15-DEFINITION-OF-DONE.md": "864f1974b340fca9a5a2d2e7e297c8f4fcfe5553",
-    "docs/project-brain/04-ARCHITECTURE.md": "09f56adc576ee477fe61c5588fee201eac841bc2",
-    "docs/project-brain/02-REQUIREMENTS.md": "b68bbdf41bbf06b1f1587261f39c31eee32e7cb9",
-    "docs/project-brain/10-SECURITY-GOVERNANCE.md": "66a39179fb312eb229870aa5367e89708f6bfd66",
-    "docs/project-brain/11-TEST-PLAN.md": "cc9e84fdbdea8a8d4e5a621756918ba361f5a031",
-    "docs/modules/M04-RUN-ATTEMPT-STEP-ENGINE.md": "51894d86ca39186eb5345881d457021ab90e34ed"
+    "docs/project-brain/13-CHECKPOINT.md": "f65e46169fc5439d2692bc54dd3ff6484277553a",
+    "docs/project-brain/16-DECISIONS-LEDGER.md": "857259e42855f09cd98a07b67c1912f11bf87d3b",
+    "docs/project-brain/03-SCOPE.md": "6e6f66b7fe3f3e3780b14c7b68dca7c2af137c61",
+    "docs/project-brain/15-DEFINITION-OF-DONE.md": "fd31c15a2966d39abca464ad5f945a5b10103f16",
+    "docs/project-brain/04-ARCHITECTURE.md": "6c9054aeeb7fb72116f7246323251b6ec240d56c",
+    "docs/project-brain/02-REQUIREMENTS.md": "2840687ef61e8653ba9f2ad392ef288f93feb41c",
+    "docs/project-brain/10-SECURITY-GOVERNANCE.md": "2c5276f2be520f0e1d47f101c3c0a02041cff53e",
+    "docs/project-brain/11-TEST-PLAN.md": "59c641ba140c89233da323fe336aa74c9c098b0b",
+    "docs/modules/M04-RUN-ATTEMPT-STEP-ENGINE.md": "337db097ec5a7a856d4d7b34f108ebbc149ad04c"
   },
   "upstream": {
     "gef": {
@@ -30,16 +30,16 @@
       "commit": "a53b5b9fcf55c32a5696180fb1b1ef80ccd1edcf"
     }
   },
-  "stalenessRule": "Any material change to the later admitted authorizedBase, any of the nine canonical source blobs, CORE-WO-M04-001, or governing GEF policy makes an active M04 lock STALE and blocks execution until governed re-admission.",
-  "promotionRule": "CORE-M04-ADMIT-001 and CORE-M04-SYNC-003 through CORE-M04-SYNC-005 are APPROVED_PROMOTED. This ACTIVE lock preserves M04 implementation authorization as NOT_STARTED on canonical main. CORE-M04-SYNC-006 is the current governance-only post-promotion state correction; after it is independently reviewed and promoted, repeat a fresh Git/HIVE/governance preflight before Pack A.",
+  "stalenessRule": "Any material change to the authorized base, one of the nine canonical source blobs, CORE-WO-M04-001, or the bound GEF review policy makes this active M04 lock STALE and blocks progression until governed re-admission/correction. Missing a second account never makes the lock stale.",
+  "promotionRule": "CORE-M04-ADMIT-001 and CORE-M04-SYNC-003 through CORE-M04-SYNC-005 are APPROVED_PROMOTED. The ACTIVE lock authorizes only M04_RUN_ATTEMPT_STEP_ENGINE. The current Pack A candidate is PR #106; after CORE-D-203 is promoted, KayzenRoot performs an exact-base/exact-head owner self-audit, explicitly NOT INDEPENDENT, with required checks green and zero unresolved HIGH/CRITICAL before any governed promotion.",
   "workOrderSource": {
     "path": ".engineering/work-orders/CORE-WO-M04-001.md",
-    "blobSha": "8beffbc19e73a60f49a1e4d7797427391680d5e3"
+    "blobSha": "9b6b54f2cfa77c170773272e876493656946cc04"
   },
   "authorizationEffectiveOnlyOnCanonicalMain": true,
   "canonicalMain": "origin/main",
   "activationRule": "Execution authority is effective only when this exact ACTIVE lock, synchronized GEF state and authorized Work Order are present on canonical origin/main. A branch-local copy or stale fingerprint is non-authoritative.",
-  "executionStartRule": "Only after CORE-M04-SYNC-006 state synchronization is independently reviewed and promoted, repeat fresh Git/HIVE/governance preflight on canonical origin/main; verify this ACTIVE lock, all nine current canonical source fingerprints, exact frozen Work Order blob, frozen authorizedBase f6b422be5465d5a93d0b8fcf4c9507c205663072 ancestry, and that intervening changes are limited to governed admission/state synchronization, including CORE-M04-SYNC-003 through CORE-M04-SYNC-006. Then create feat/m04-run-state from that exact canonical main and begin Pack A only if preflight passes.",
+  "executionStartRule": "The existing PR #106 candidate records CORE-M04-SYNC-006 preflight and Pack A work on the authorized M04 branch. After CORE-D-203 is canonical, audit the exact current PR #106 base/head, full diff, ACTIVE lock, all nine canonical source fingerprints, exact Work Order blob, authorizedBase ancestry, and required CI/security/evidence results. Record NOT INDEPENDENT. Do not require another account or submit native self-approval. Pack B remains stopped until Pack A audit and acceptance evidence pass.",
   "finalPlanningReview": {
     "status": "APPROVED_PROMOTED",
     "issue": 93,
@@ -50,7 +50,7 @@
     "promotionMerge": "f6b422be5465d5a93d0b8fcf4c9507c205663072"
   },
   "evidence": ".engineering/evidence/CORE-WO-M04-001.json",
-  "executionStatus": "ACTIVE_AUTHORIZED_NOT_STARTED",
+  "executionStatus": "ACTIVE_AUTHORIZED_PACK_A_CANDIDATE_OPEN_OWNER_AUDIT_PENDING",
   "admissionIncrement": "CORE-M04-ADMIT-001",
   "admissionBranch": "planning/m04-execution-admission",
   "planningCandidate": {
@@ -98,5 +98,11 @@
     "workflowJobsSuccessful": 10,
     "promotionMerge": "251f15495b82df8270ebc12fa93807ffaa15fba4",
     "unresolvedHighCritical": 0
+  },
+  "reviewIdentityPolicy": "SINGLE_ACCOUNT_OWNER_SELF_AUDIT",
+  "ownerAuditIdentity": "KayzenRoot",
+  "reviewPolicy": {
+    "path": ".engineering/gef/GEF-REVIEW-PROTOCOL.md",
+    "blobSha": "4b28ffbbf1f42445906eb260c5618e0cbe320be7"
   }
 }

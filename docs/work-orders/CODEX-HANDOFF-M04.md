@@ -95,12 +95,12 @@ Maintain `.engineering/evidence/CORE-WO-M04-001.json`.
 
 AC-M04-001..023 map exactly one-to-one to EV-M04-001..023.
 
-For each implementation-owned criterion record exact head, command/artifact, platform where applicable, result and evidence path/reference. Do not mark AC-M04-023/EV-M04-023 satisfied. That criterion belongs to the independent reviewer.
+For each implementation-owned criterion record exact head, command/artifact, platform where applicable, result and evidence path/reference. Do not mark AC-M04-023/EV-M04-023 satisfied during execution. That criterion belongs to the separate owner-audit stage, which KayzenRoot may perform on the same account and must disclose as `NOT INDEPENDENT`.
 
 ## TERMINAL STATES
 
-### READY_FOR_REVIEW
-Allowed only after Packs A-H, AC-M04-001..022, calibration/post-calibration reruns, required exact-head CI/security/supply-chain evidence and the implementation PR are complete with no unresolved HIGH/CRITICAL executor finding.
+### READY_FOR_OWNER_AUDIT
+Allowed only after Packs A-H, AC-M04-001..022, calibration/post-calibration reruns, required exact-head CI/security/supply-chain evidence and the implementation PR are complete with no unresolved HIGH/CRITICAL executor finding. It hands the exact base/head to KayzenRoot's separate logical audit stage; it is not independent review.
 
 ### BLOCKED
 Use when any authorization, locked source, packet obligation, acceptance/evidence node, finite resource selection, CI/security gate or frozen contract is missing/stale/conflicting/failing or requires out-of-scope change.
@@ -116,4 +116,4 @@ CORE-M04-SYNC-004 was independently APPROVED by M04-REVIEW-010 / Issue #100 at e
 
 CORE-M04-SYNC-005 was independently APPROVED by M04-REVIEW-011 / Issue #102 at exact head `e8b0548c2ecd7c22edbeb3f02de8a238f9c49ffc`; PR #101; workflow `36033275191` completed 10/10 jobs SUCCESS; promotion merge `251f15495b82df8270ebc12fa93807ffaa15fba4`; unresolved HIGH/CRITICAL: 0.
 
-CORE-M04-SYNC-006 is a governance-only post-promotion state correction and does not start Pack A. After this state delta is independently reviewed, APPROVED and promoted, the next legal action is a fresh Git/HIVE/governance preflight for CORE-WO-M04-001 Pack A on canonical `origin/main`. Verify the ACTIVE Context Lock, all nine current source fingerprints, the exact frozen Work Order blob and frozen authorized-base ancestry. Only after every preflight check passes may `feat/m04-run-state` be created from that exact canonical main and Pack A begin.
+The open PR #106 is the existing CORE-M04-SYNC-006 / Pack A candidate. After CORE-D-203 is promoted, audit its exact current base/head, full diff, ACTIVE Context Lock, nine canonical source fingerprints, exact Work Order blob, authorized-base ancestry and required CI/security results. The audit is KayzenRoot's owner self-audit and must say `NOT INDEPENDENT`; missing another identity cannot block it. Pack B remains stopped until the Pack A audit and acceptance evidence pass.
