@@ -76,6 +76,7 @@ mod contracts;
 mod errors;
 mod identity;
 mod transition;
+mod projection;
 
 pub use canonical::FingerprintDomainV1;
 pub use contracts::*;
@@ -83,6 +84,11 @@ pub use errors::{M04ErrorClassV1, M04ErrorCodeV1, M04ErrorV1, M04RetryabilityV1}
 pub use identity::{
     AttemptId, AttemptOrdinalV1, CanonicalFingerprint, EventId, EventSequenceV1, ExecutionEpoch,
     IdempotencyKey, JournalRoot, RunGeneration, RunId, StepId, StepOrdinalV1,
+};
+pub use projection::{
+    attempt_satisfies_completion, derive_attempt_created, derive_attempt_transition,
+    derive_run_transition, derive_step_declared, derive_step_transition, step_satisfies_completion,
+    validate_projection_structure, validate_run_completion,
 };
 pub use transition::{
     is_terminal_attempt, is_terminal_run, is_terminal_step, validate_attempt_transition,
