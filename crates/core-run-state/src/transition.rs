@@ -196,7 +196,9 @@ pub fn validate_step_transition(
         }
         let reference = authority_reference.ok_or_else(invalid_transition)?;
         validate_skip_authority(reference, run_id, attempt_id, step_id)?;
-    } else if reason == Some(M04ReasonCodeV1::ExplicitAuthorizedSkip) {
+    } else if reason == Some(M04ReasonCodeV1::ExplicitAuthorizedSkip)
+        || (is_terminal_step(to) && reason.is_none())
+    {
         return Err(invalid_transition());
     }
     Ok(())

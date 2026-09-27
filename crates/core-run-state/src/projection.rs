@@ -88,7 +88,9 @@ pub fn validate_projection_structure(run: &RunProjectionV1) -> Result<(), M04Err
                 if step.reason != Some(M04ReasonCodeV1::ExplicitAuthorizedSkip) {
                     return Err(invalid_projection());
                 }
-            } else if step.reason == Some(M04ReasonCodeV1::ExplicitAuthorizedSkip) {
+            } else if step.reason == Some(M04ReasonCodeV1::ExplicitAuthorizedSkip)
+                || (is_terminal_step(step.status) && step.reason.is_none())
+            {
                 return Err(invalid_projection());
             }
         }

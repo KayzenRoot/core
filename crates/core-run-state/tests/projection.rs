@@ -416,3 +416,28 @@ fn duplicate_attempt_or_step_ordinals_fail_closed_without_mutating_the_candidate
         M04ErrorCodeV1::InternalInvariantViolation
     );
 }
+
+#[test]
+fn terminal_step_projection_without_machine_reason_is_rejected() {
+    let (mut run, attempt_id) = with_attempt();
+    let step_id = StepId::new("step-terminal-reason").unwrap();
+    let mut step =
+        derive_step_declared(&run, &attempt_id, step_id.clone(), StepOrdinalV1::new(0)).unwrap();
+    step.status = StepStatusV1::Cancelled;
+    run.attempts
+        .get_mut(&attempt_id)
+        .unwrap()
+        .steps
+        .insert(step_id.clone(), step.clone());
+    assert_eq!(
+        validate_projection_structure(&run).unwrap_err().code,
+        M04ErrorCodeV1::InternalInvariantViolation,
+    );
+    step.reason = Some(M04ReasonCodeV1::CallerCancellation);
+    run.attempts
+        .get_mut(&attempt_id)
+        .unwrap()
+        .steps
+        .insert(step_id, step);
+    assert!(validate_projection_structure(&run).is_ok());
+}

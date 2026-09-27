@@ -188,8 +188,16 @@ fn every_step_transition_pair_matches_the_frozen_matrix() {
                 ),
                 _ => false,
             };
-            let reason =
-                (to == StepStatusV1::Skipped).then_some(M04ReasonCodeV1::ExplicitAuthorizedSkip);
+            let reason = match to {
+                StepStatusV1::Skipped => Some(M04ReasonCodeV1::ExplicitAuthorizedSkip),
+                StepStatusV1::Blocked => Some(M04ReasonCodeV1::InvariantProtection),
+                StepStatusV1::Cancelled => Some(M04ReasonCodeV1::CallerCancellation),
+                StepStatusV1::Interrupted => Some(M04ReasonCodeV1::RuntimeShutdown),
+                StepStatusV1::Succeeded | StepStatusV1::Failed => {
+                    Some(M04ReasonCodeV1::ExecutionOutcome)
+                }
+                _ => None,
+            };
             let result =
                 validate_step_transition(from, to, reason, Some(&authority), &run, &attempt, &step);
             if expected {
@@ -336,6 +344,79 @@ fn explicit_skip_reason_is_rejected_for_every_other_valid_step_disposition() {
             .unwrap_err()
             .code,
             M04ErrorCodeV1::InvalidTransition,
+        );
+    }
+}
+
+#[test]
+fn all_non_skip_terminal_step_transitions_require_a_closed_reason() {
+    let (run, attempt, step) = lineage();
+    for (from, to, valid_reason) in [
+        (
+            StepStatusV1::Declared,
+            StepStatusV1::Blocked,
+            M04ReasonCodeV1::InvariantProtection,
+        ),
+        (
+            StepStatusV1::Declared,
+            StepStatusV1::Cancelled,
+            M04ReasonCodeV1::CallerCancellation,
+        ),
+        (
+            StepStatusV1::Ready,
+            StepStatusV1::Blocked,
+            M04ReasonCodeV1::InvariantProtection,
+        ),
+        (
+            StepStatusV1::Ready,
+            StepStatusV1::Cancelled,
+            M04ReasonCodeV1::CallerCancellation,
+        ),
+        (
+            StepStatusV1::Active,
+            StepStatusV1::Succeeded,
+            M04ReasonCodeV1::ExecutionOutcome,
+        ),
+        (
+            StepStatusV1::Active,
+            StepStatusV1::Failed,
+            M04ReasonCodeV1::ExecutionOutcome,
+        ),
+        (
+            StepStatusV1::Active,
+            StepStatusV1::Blocked,
+            M04ReasonCodeV1::InvariantProtection,
+        ),
+        (
+            StepStatusV1::Active,
+            StepStatusV1::Cancelled,
+            M04ReasonCodeV1::CallerCancellation,
+        ),
+        (
+            StepStatusV1::Active,
+            StepStatusV1::Interrupted,
+            M04ReasonCodeV1::RuntimeShutdown,
+        ),
+    ] {
+        assert_eq!(
+            validate_step_transition(from, to, None, None, &run, &attempt, &step)
+                .unwrap_err()
+                .code,
+            M04ErrorCodeV1::InvalidTransition,
+            "{from:?} -> {to:?} must carry a closed reason",
+        );
+        assert!(
+            validate_step_transition(
+                from,
+                to,
+                Some(valid_reason),
+                None,
+                &run,
+                &attempt,
+                &step,
+            )
+            .is_ok(),
+            "{from:?} -> {to:?} must accept a versioned reason",
         );
     }
 }
