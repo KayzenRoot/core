@@ -313,3 +313,29 @@ fn skip_reference_shape_and_lineage_are_fail_closed() {
         );
     }
 }
+
+#[test]
+fn explicit_skip_reason_is_rejected_for_every_other_valid_step_disposition() {
+    let (run, attempt, step) = lineage();
+    let reference = skip_reference(&run, &attempt, &step);
+    for (from, to) in [
+        (StepStatusV1::Declared, StepStatusV1::Ready),
+        (StepStatusV1::Ready, StepStatusV1::Active),
+        (StepStatusV1::Active, StepStatusV1::Succeeded),
+    ] {
+        assert_eq!(
+            validate_step_transition(
+                from,
+                to,
+                Some(M04ReasonCodeV1::ExplicitAuthorizedSkip),
+                Some(&reference),
+                &run,
+                &attempt,
+                &step,
+            )
+            .unwrap_err()
+            .code,
+            M04ErrorCodeV1::InvalidTransition,
+        );
+    }
+}
