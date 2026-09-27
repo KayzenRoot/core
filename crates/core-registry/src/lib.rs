@@ -1312,7 +1312,7 @@ mod tests {
         };
         {
             let mut state = registry.inner.write().unwrap();
-            state.providers["health"][0].fingerprint = "foreign-fingerprint".into();
+            state.providers.get_mut("health").unwrap()[0].fingerprint = "foreign-fingerprint".into();
         }
         assert!(matches!(
             registry.acquire_lease_with_generation("health", &generation, 60_000),
