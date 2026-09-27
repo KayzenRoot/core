@@ -106,7 +106,8 @@ fn attempts_have_contiguous_ordinals_and_never_reuse_identity() {
             .code,
         M04ErrorCodeV1::InvalidInput
     );
-    let next = derive_attempt_created(&run, second.clone(), AttemptOrdinalV1::new(1)).unwrap();
+    let next: AttemptProjectionV1 =
+        derive_attempt_created(&run, second.clone(), AttemptOrdinalV1::new(1)).unwrap();
     run.attempts.insert(second, next);
     assert!(validate_projection_structure(&run).is_ok());
     run.status = RunStatusV1::Cancelled;
