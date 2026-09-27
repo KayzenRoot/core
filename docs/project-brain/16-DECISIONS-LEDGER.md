@@ -618,7 +618,7 @@ Status: `ACTIVE`
 
 
 ## CORE-D-149 - GitHub main protection is enforced by an active no-bypass ruleset
-**Decision:** CORE `main` uses the active repository ruleset `CORE main protection` (id `23769853`) to require pull-request entry, block deletion/non-fast-forward updates, require resolved review threads and enforce the current strict seven-context CI gate with no bypass actor. GitHub-native approving-review count remains zero for solo-maintainer compatibility; the independent GEF exact-head audit verdict and no-HIGH/CRITICAL promotion rule remain separate mandatory process gates, and auto-merge may be armed only after that governed verdict permits promotion.
+**Decision:** CORE `main` uses the active repository ruleset `CORE main protection` (id `23769853`) to require pull-request entry, block deletion/non-fast-forward updates, require resolved review threads and enforce the current strict seven-context CI gate with no bypass actor. GitHub-native approving-review count remains zero for single-account compatibility. The separate exact-head GEF audit is performed by KayzenRoot as an owner self-audit explicitly recorded `NOT INDEPENDENT`; it requires green mandatory checks and zero unresolved HIGH/CRITICAL findings. Auto-merge may be armed only after that governed verdict permits promotion.
 **State:** ACCEPTED
 
 
@@ -847,3 +847,9 @@ Status: `ACTIVE`
 ## CORE-D-202 - M04 execution admission is promoted and CORE-WO-M04-001 is authorized
 **Decision:** M04-REVIEW-008 / Issue #95 APPROVED CORE-M04-ADMIT-001 at exact head `f29dcb6b327c5fdceda31fe306e52d506c1eae72`; workflow `35992752646` completed all 10 hosted jobs SUCCESS and PR #94 was squash-promoted as merge `bb6f631284361fae29479c66f62ca88bebf3d79c`. The exact M04 Context Lock is now effective on canonical main. CORE-WO-M04-001 is the active authorized Work Order for scope `M04_RUN_ATTEMPT_STEP_ENGINE`, with frozen authorized base `f6b422be5465d5a93d0b8fcf4c9507c205663072`. Execution must begin from post-admission canonical main after the required preflight and may not change frozen Round 1-5 semantics.
 **State:** ACCEPTED
+
+
+## CORE-D-203 - Single-account owner self-audit replaces reviewer-identity gate
+**Decision:** `KayzenRoot` is the sole operational GitHub identity for CORE. Executor and auditor remain separate logical lifecycle stages, but do not require separate accounts or reviewer sessions. For M04, an exact-base/exact-head owner self-audit may produce `OWNER_SELF_AUDIT_APPROVED` only after required CI/security checks pass, scope and source bindings are valid, and unresolved HIGH/CRITICAL findings are zero. The audit record must name the exact base/head, changed surface, checks, findings and severity, and state `NOT INDEPENDENT`. Never submit native GitHub self-approval from the author account. Missing a second identity alone is never a blocker; missing/failed technical evidence remains fail-closed. This decision does not auto-merge, promote checkpoints, or waive protected-main rules.
+**State:** ACCEPTED under the owner's 2026-09-27 single-account directive; effective on canonical main after the governed policy PR is promoted.
+
