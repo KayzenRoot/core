@@ -384,13 +384,17 @@ fn duplicate_attempt_or_step_ordinals_fail_closed_without_mutating_the_candidate
     let other_attempt_id = AttemptId::new("attempt-02").unwrap();
     let mut forged_attempt = run.attempts.get(&attempt_id).unwrap().clone();
     forged_attempt.attempt_id = other_attempt_id.clone();
-    run.attempts.insert(other_attempt_id.clone(), forged_attempt);
+    run.attempts
+        .insert(other_attempt_id.clone(), forged_attempt);
     let original = run.clone();
     assert_eq!(
         validate_projection_structure(&run).unwrap_err().code,
         M04ErrorCodeV1::InternalInvariantViolation
     );
-    assert_eq!(run, original, "a failed projection check cannot repair input");
+    assert_eq!(
+        run, original,
+        "a failed projection check cannot repair input"
+    );
 
     run.attempts.remove(&other_attempt_id);
     let first_step_id = StepId::new("step-01").unwrap();
