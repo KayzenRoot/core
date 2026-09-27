@@ -43,7 +43,7 @@ The future result should distinguish: transport success, externally confirmed ef
 
 ## 5. Candidate lifecycle and invariants
 
-Round 2 may evaluate \`DISCOVERED -> CONFIG_VALIDATED -> HANDSHAKING -> READY -> DRAINING -> CLOSED\`, with typed \`REJECTED/QUARANTINED/LOST\` paths. These labels are candidate names, **not** a frozen state machine.
+Round 2 may evaluate `DISCOVERED -> CONFIG_VALIDATED -> HANDSHAKING -> READY -> DRAINING -> CLOSED`, with typed `REJECTED/QUARANTINED/LOST` paths. These labels are candidate names, **not** a frozen state machine.
 
 1. Discovery and handshake alone grant ZERO process/tool/network/filesystem authority.
 2. Every request/result is scoped to one immutable M01 runtime epoch, adapter generation and request correlation identity. Stale/late messages cannot publish current-gen success.

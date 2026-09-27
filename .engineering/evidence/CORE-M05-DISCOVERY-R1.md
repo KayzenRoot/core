@@ -6,14 +6,14 @@ Initial base: 3b7d184ad50ef22320d57572dfade965a98fbad4
 
 ## Git authoritative source snapshot read before drafting
 
-- Module inventory and M04->M05->M06 planning order: \`docs/modules/00-MASTER-MODULE-MAP.md\`, blob \`df2736686ada12cd5cd4fcdc5cd933c84d91ab25\`.
-- M01 worker/registry, IPC, cancellation and provider isolation: \`docs/modules/M01-CORE-RUNTIME-LIFECYCLE.md\`, blob \`1bbb4e1b3d02e775b41c77259ce44f1ad9afb287\`.
-- M04 state, replay and later-module separation: \`docs/modules/M04-RUN-ATTEMPT-STEP-ENGINE.md\`, blob \`337db097ec5a7a856d4d7b34f108ebbc149ad04c\`.
-- Planning-before-code and 19 planning dimensions: \`docs/engineering/CORE-MODULAR-DELIVERY-MODEL.md\`, blob \`0265293a529f9850cc63c72e8aedbe617951cafd\`.
-- Source hierarchy: \`.engineering/SOURCE-HIERARCHY.md\`, blob \`19e138183baaf633917ee32022db536dfc582556\`.
-- Product architecture: \`docs/project-brain/04-ARCHITECTURE.md\`, blob \`6c9054aeeb7fb72116f7246323251b6ec240d56c\`.
-- Requirements: \`docs/project-brain/02-REQUIREMENTS.md\`, blob \`2840687ef61e8653ba9f2ad392ef288f93feb41c\`.
-- Security: \`docs/project-brain/10-SECURITY-GOVERNANCE.md\`, blob \`2c5276f2be520f0e1d47f101c3c0a02041cff53e\`.
+- Module inventory and M04->M05->M06 planning order: `docs/modules/00-MASTER-MODULE-MAP.md`, blob `df2736686ada12cd5cd4fcdc5cd933c84d91ab25`.
+- M01 worker/registry, IPC, cancellation and provider isolation: `docs/modules/M01-CORE-RUNTIME-LIFECYCLE.md`, blob `1bbb4e1b3d02e775b41c77259ce44f1ad9afb287`.
+- M04 state, replay and later-module separation: `docs/modules/M04-RUN-ATTEMPT-STEP-ENGINE.md`, blob `337db097ec5a7a856d4d7b34f108ebbc149ad04c`.
+- Planning-before-code and 19 planning dimensions: `docs/engineering/CORE-MODULAR-DELIVERY-MODEL.md`, blob `0265293a529f9850cc63c72e8aedbe617951cafd`.
+- Source hierarchy: `.engineering/SOURCE-HIERARCHY.md`, blob `19e138183baaf633917ee32022db536dfc582556`.
+- Product architecture: `docs/project-brain/04-ARCHITECTURE.md`, blob `6c9054aeeb7fb72116f7246323251b6ec240d56c`.
+- Requirements: `docs/project-brain/02-REQUIREMENTS.md`, blob `2840687ef61e8653ba9f2ad392ef288f93feb41c`.
+- Security: `docs/project-brain/10-SECURITY-GOVERNANCE.md`, blob `2c5276f2be520f0e1d47f101c3c0a02041cff53e`.
 
 ## Reviewed exclusion and evidence limitations
 
