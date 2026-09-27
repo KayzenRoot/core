@@ -9,7 +9,7 @@ use crate::{
     M04RetryabilityV1, RunGeneration, RunId, StepId, StepOrdinalV1,
 };
 use core_work_order::{AdmittedWorkOrderV1, RunStartRevalidationV1, WorkOrderIdentityRefV1};
-use serde::{de, Deserialize, Deserializer, Serialize, Serializer};
+use serde::{de, ser::SerializeStruct, Deserialize, Deserializer, Serialize, Serializer};
 use std::collections::BTreeMap;
 
 /// Stable closed registry of serialized V1 contract kinds.
@@ -662,8 +662,7 @@ pub enum EventPayloadV1 {
 }
 
 /// One canonical event envelope. Optional diagnostic timestamps are omitted by design.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
-#[serde(deny_unknown_fields)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct CanonicalEventV1 {
     pub schema: M04SchemaV1,
     pub version: M04VersionV1,
@@ -681,6 +680,33 @@ pub struct CanonicalEventV1 {
     pub prior_journal_root: JournalRoot,
     pub resulting_journal_root: JournalRoot,
     payload: EventPayloadV1,
+}
+
+impl Serialize for CanonicalEventV1 {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        self.validate().map_err(serde::ser::Error::custom)?;
+        let mut wire = serializer.serialize_struct("CanonicalEventV1", 16)?;
+        wire.serialize_field("schema", &self.schema)?;
+        wire.serialize_field("version", &self.version)?;
+        wire.serialize_field("domain", &self.domain)?;
+        wire.serialize_field("event_kind", &self.event_kind)?;
+        wire.serialize_field("event_id", &self.event_id)?;
+        wire.serialize_field("run_id", &self.run_id)?;
+        wire.serialize_field("attempt_id", &self.attempt_id)?;
+        wire.serialize_field("step_id", &self.step_id)?;
+        wire.serialize_field("event_sequence", &self.event_sequence)?;
+        wire.serialize_field("expected_generation", &self.expected_generation)?;
+        wire.serialize_field("resulting_generation", &self.resulting_generation)?;
+        wire.serialize_field("idempotency_key", &self.idempotency_key)?;
+        wire.serialize_field("payload_fingerprint", &self.payload_fingerprint)?;
+        wire.serialize_field("prior_journal_root", &self.prior_journal_root)?;
+        wire.serialize_field("resulting_journal_root", &self.resulting_journal_root)?;
+        wire.serialize_field("payload", &self.payload)?;
+        wire.end()
+    }
 }
 
 impl CanonicalEventV1 {
@@ -920,6 +946,115 @@ pub struct AttemptProjectionV1 {
     pub steps: BTreeMap<StepId, StepProjectionV1>,
 }
 
+mod idempotency_records_serde {
+    use super::{IdempotencyRecordKeyV1, IdempotencyRecordV1, M04OperationDomainV1};
+    use crate::{IdempotencyKey, RunId};
+    use serde::{
+        de::{self, MapAccess, Visitor},
+        ser::SerializeMap,
+        Deserialize, Deserializer, Serialize, Serializer,
+    };
+    use std::{collections::BTreeMap, fmt};
+
+    // Identifier validation excludes '|', making this key format unambiguous.
+    fn encode_key(key: &IdempotencyRecordKeyV1) -> String {
+        let domain = match key.domain {
+            M04OperationDomainV1::RunAdmission => "RUN_ADMISSION",
+            M04OperationDomainV1::AttemptCreation => "ATTEMPT_CREATION",
+            M04OperationDomainV1::StepDeclaration => "STEP_DECLARATION",
+            M04OperationDomainV1::Transition => "TRANSITION",
+            M04OperationDomainV1::Cancellation => "CANCELLATION",
+            M04OperationDomainV1::Continuation => "CONTINUATION",
+            M04OperationDomainV1::ReferenceAttachment => "REFERENCE_ATTACHMENT",
+        };
+        format!("{}|{}|{}", key.run_id.as_str(), domain, key.key.as_str())
+    }
+
+    fn decode_key(value: &str) -> Option<IdempotencyRecordKeyV1> {
+        let mut parts = value.split('|');
+        let run_id = RunId::new(parts.next()?.to_owned()).ok()?;
+        let domain = match parts.next()? {
+            "RUN_ADMISSION" => M04OperationDomainV1::RunAdmission,
+            "ATTEMPT_CREATION" => M04OperationDomainV1::AttemptCreation,
+            "STEP_DECLARATION" => M04OperationDomainV1::StepDeclaration,
+            "TRANSITION" => M04OperationDomainV1::Transition,
+            "CANCELLATION" => M04OperationDomainV1::Cancellation,
+            "CONTINUATION" => M04OperationDomainV1::Continuation,
+            "REFERENCE_ATTACHMENT" => M04OperationDomainV1::ReferenceAttachment,
+            _ => return None,
+        };
+        let key = IdempotencyKey::new(parts.next()?.to_owned()).ok()?;
+        if parts.next().is_some() {
+            return None;
+        }
+        Some(IdempotencyRecordKeyV1 {
+            run_id,
+            domain,
+            key,
+        })
+    }
+
+    pub fn serialize<S>(
+        records: &BTreeMap<IdempotencyRecordKeyV1, IdempotencyRecordV1>,
+        serializer: S,
+    ) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut map = serializer.serialize_map(Some(records.len()))?;
+        for (key, record) in records {
+            if key != &record.key {
+                return Err(serde::ser::Error::custom(
+                    "idempotency record map key does not match record key",
+                ));
+            }
+            map.serialize_entry(&encode_key(key), record)?;
+        }
+        map.end()
+    }
+
+    struct IdempotencyRecordsVisitor;
+
+    impl<'de> Visitor<'de> for IdempotencyRecordsVisitor {
+        type Value = BTreeMap<IdempotencyRecordKeyV1, IdempotencyRecordV1>;
+
+        fn expecting(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+            formatter.write_str("an object keyed by RunId, operation domain, and idempotency key")
+        }
+
+        fn visit_map<A>(self, mut map: A) -> Result<Self::Value, A::Error>
+        where
+            A: MapAccess<'de>,
+        {
+            let mut records = BTreeMap::new();
+            while let Some((encoded_key, record)) =
+                map.next_entry::<String, IdempotencyRecordV1>()?
+            {
+                let key = decode_key(&encoded_key)
+                    .ok_or_else(|| de::Error::custom("invalid idempotency record map key"))?;
+                if key != record.key {
+                    return Err(de::Error::custom(
+                        "idempotency record map key does not match record key",
+                    ));
+                }
+                if records.insert(key, record).is_some() {
+                    return Err(de::Error::custom("duplicate idempotency record map key"));
+                }
+            }
+            Ok(records)
+        }
+    }
+
+    pub fn deserialize<'de, D>(
+        deserializer: D,
+    ) -> Result<BTreeMap<IdempotencyRecordKeyV1, IdempotencyRecordV1>, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        deserializer.deserialize_map(IdempotencyRecordsVisitor)
+    }
+}
+
 /// Derived Run state. It cannot supersede the canonical journal.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -931,6 +1066,7 @@ pub struct RunProjectionV1 {
     pub journal_root: JournalRoot,
     pub boundary: BoundaryRevalidationCapsuleV1,
     pub attempts: BTreeMap<AttemptId, AttemptProjectionV1>,
+    #[serde(with = "idempotency_records_serde")]
     pub idempotency_records: BTreeMap<IdempotencyRecordKeyV1, IdempotencyRecordV1>,
 }
 

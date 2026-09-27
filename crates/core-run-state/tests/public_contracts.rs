@@ -3,8 +3,9 @@ use core_run_state::{
     BoundaryRevalidationCapsuleV1, CancelRunRequestV1, CanonicalEventV1, CanonicalFingerprint,
     ContinuationFrameV1, ContractKindV1, EventId, EventKindV1, EventPayloadV1, EventSequenceV1,
     ExecutionEpoch, ExternalReferenceEvidenceV1, ExternalReferenceKindV1, ExternalReferenceOwnerV1,
-    FingerprintDomainV1, IdempotencyKey, JournalRoot, M04EnvelopeV1, M04ErrorClassV1,
-    M04ErrorCodeV1, M04ErrorV1, M04ReasonCodeV1, M04SchemaV1, M04VersionV1, RawM04EnvelopeV1,
+    FingerprintDomainV1, IdempotencyKey, IdempotencyRecordKeyV1, IdempotencyRecordV1,
+    JournalRoot, M04EnvelopeV1, M04ErrorClassV1, M04ErrorCodeV1, M04ErrorV1,
+    M04OperationDomainV1, M04ReasonCodeV1, M04SchemaV1, M04VersionV1, RawM04EnvelopeV1,
     RunGeneration, RunId, RunProjectionV1, RunSnapshotV1, RunStatusV1, StepId, StepOrdinalV1,
     StepStatusV1, TransitionTargetV1, M04_SCHEMA, M04_VERSION,
 };
@@ -457,15 +458,35 @@ fn versioned_contract_headers_validate_and_fail_closed_for_every_dto() {
     let continuation = continuation_frame(FingerprintDomainV1::Continuation)
         .expect("continuation domain must be accepted");
     let reference = external_reference();
+    let run_id = RunId::new("run-17").expect("valid run id");
+    let idempotency_records = ["operation:2", "operation:1"]
+        .into_iter()
+        .map(|operation_key| {
+            let key = IdempotencyRecordKeyV1 {
+                run_id: run_id.clone(),
+                domain: M04OperationDomainV1::Transition,
+                key: IdempotencyKey::new(operation_key).expect("valid idempotency key"),
+            };
+            let record = IdempotencyRecordV1 {
+                key: key.clone(),
+                request_fingerprint: fingerprint('b'),
+                event_sequence: EventSequenceV1::new(1),
+                resulting_generation: RunGeneration::new(1),
+                resulting_journal_root: JournalRoot::new("f".repeat(64))
+                    .expect("valid journal root"),
+            };
+            (key, record)
+        })
+        .collect::<BTreeMap<_, _>>();
     let projection = RunProjectionV1 {
-        run_id: RunId::new("run-17").expect("valid run id"),
+        run_id,
         status: RunStatusV1::Created,
         generation: RunGeneration::new(1),
         last_event_sequence: EventSequenceV1::new(1),
         journal_root: JournalRoot::new("e".repeat(64)).expect("valid journal root"),
         boundary: boundary.clone(),
         attempts: BTreeMap::new(),
-        idempotency_records: BTreeMap::new(),
+        idempotency_records,
     };
     let snapshot = RunSnapshotV1 {
         schema: schema(),
@@ -487,6 +508,82 @@ fn versioned_contract_headers_validate_and_fail_closed_for_every_dto() {
         },
     ));
     assert_round_trip_and_reject_unknown_header(&snapshot);
+
+    let snapshot_wire = serde_json::to_value(&snapshot).expect("serialize snapshot records");
+    let records_wire = snapshot_wire["projection"]["idempotency_records"]
+        .as_object()
+        .expect("idempotency records use a JSON object");
+    assert_eq!(records_wire.len(), 2);
+    assert_eq!(
+        records_wire.keys().cloned().collect::<Vec<_>>(),
+        vec![
+            "run-17|TRANSITION|operation:1",
+            "run-17|TRANSITION|operation:2",
+        ]
+    );
+
+    let mut mismatched_record_wire = snapshot_wire.clone();
+    mismatched_record_wire["projection"]["idempotency_records"]
+        ["run-17|TRANSITION|operation:1"]["key"]["key"] =
+        serde_json::json!("operation:different");
+    assert!(
+        serde_json::from_value::<RunSnapshotV1>(mismatched_record_wire).is_err(),
+        "deserialization must reject a map key that disagrees with the record"
+    );
+
+    let mut mismatched_snapshot = snapshot.clone();
+    mismatched_snapshot
+        .projection
+        .idempotency_records
+        .values_mut()
+        .next()
+        .expect("record fixture")
+        .key
+        .key = IdempotencyKey::new("operation:different").unwrap();
+    assert!(
+        serde_json::to_value(&mismatched_snapshot).is_err(),
+        "serialization must reject a map key that disagrees with the record"
+    );
+
+    let first_key = "run-17|TRANSITION|operation:1";
+    let first_record = snapshot
+        .projection
+        .idempotency_records
+        .get(&IdempotencyRecordKeyV1 {
+            run_id: RunId::new("run-17").unwrap(),
+            domain: M04OperationDomainV1::Transition,
+            key: IdempotencyKey::new("operation:1").unwrap(),
+        })
+        .expect("first idempotency record");
+    let first_record_json = serde_json::to_string(first_record).unwrap();
+    let first_key_json = serde_json::to_string(first_key).unwrap();
+    let second_key = "run-17|TRANSITION|operation:2";
+    let second_record = snapshot
+        .projection
+        .idempotency_records
+        .get(&IdempotencyRecordKeyV1 {
+            run_id: RunId::new("run-17").unwrap(),
+            domain: M04OperationDomainV1::Transition,
+            key: IdempotencyKey::new("operation:2").unwrap(),
+        })
+        .expect("second idempotency record");
+    let second_record_json = serde_json::to_string(second_record).unwrap();
+    let second_key_json = serde_json::to_string(second_key).unwrap();
+    let records_json = format!(
+        "{{{first_key_json}:{first_record_json},{second_key_json}:{second_record_json}}}"
+    );
+    let duplicate_records_json = format!(
+        "{{{first_key_json}:{first_record_json},{first_key_json}:{first_record_json}}}"
+    );
+    let snapshot_json = serde_json::to_string(&snapshot).unwrap();
+    let duplicate_snapshot_json =
+        snapshot_json.replacen(&records_json, &duplicate_records_json, 1);
+    assert_ne!(duplicate_snapshot_json, snapshot_json);
+    assert!(
+        serde_json::from_str::<RunSnapshotV1>(&duplicate_snapshot_json).is_err(),
+        "deserialization must reject duplicate idempotency map keys"
+    );
+
     assert_round_trip_and_reject_unknown_header(&reference);
 
     for wrong_header in [
@@ -585,12 +682,18 @@ fn canonical_event_rejects_mismatched_payload_lineage() {
     let mut step_event = canonical_event(step_kind, step_payload);
     assert!(step_event.attempt_id.is_some());
     assert!(step_event.step_id.is_some());
+    let mut malformed_wire =
+        serde_json::to_value(&step_event).expect("serialize valid event before mutation");
     step_event.step_id = None;
     let validation_error = step_event
         .validate()
         .expect_err("step event must carry both matching lineage IDs");
     assert_eq!(validation_error.code, M04ErrorCodeV1::LineageMismatch);
-    let malformed_wire = serde_json::to_value(&step_event).expect("serialize mutated event");
+    assert!(
+        serde_json::to_value(&step_event).is_err(),
+        "serialization must reject mutated invalid event lineage"
+    );
+    malformed_wire["step_id"] = serde_json::Value::Null;
     assert!(serde_json::from_value::<CanonicalEventV1>(malformed_wire).is_err());
 
     let (reference_kind, reference_payload) = event_payloads()
@@ -598,11 +701,20 @@ fn canonical_event_rejects_mismatched_payload_lineage() {
         .find(|(kind, _)| *kind == EventKindV1::ReferenceAttached)
         .expect("ReferenceAttached fixture");
     let mut reference_event = canonical_event(reference_kind, reference_payload);
+    let mut malformed_reference_wire =
+        serde_json::to_value(&reference_event).expect("serialize valid reference event");
+    malformed_reference_wire["run_id"] = serde_json::json!("run-18");
+    assert!(serde_json::from_value::<CanonicalEventV1>(malformed_reference_wire).is_err());
+
     reference_event.run_id = RunId::new("run-18").unwrap();
     let reference_error = reference_event
         .validate()
         .expect_err("reference event run ID must match its evidence lineage");
     assert_eq!(reference_error.code, M04ErrorCodeV1::LineageMismatch);
+    assert!(
+        serde_json::to_value(&reference_event).is_err(),
+        "serialization must reject a mutated reference run ID"
+    );
 
     let same_attempt_continuation = canonical_event_with_domain(
         FingerprintDomainV1::Event,
