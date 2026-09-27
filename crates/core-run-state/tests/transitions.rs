@@ -406,16 +406,8 @@ fn all_non_skip_terminal_step_transitions_require_a_closed_reason() {
             "{from:?} -> {to:?} must carry a closed reason",
         );
         assert!(
-            validate_step_transition(
-                from,
-                to,
-                Some(valid_reason),
-                None,
-                &run,
-                &attempt,
-                &step,
-            )
-            .is_ok(),
+            validate_step_transition(from, to, Some(valid_reason), None, &run, &attempt, &step,)
+                .is_ok(),
             "{from:?} -> {to:?} must accept a versioned reason",
         );
     }
