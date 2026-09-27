@@ -27,38 +27,38 @@ fn write_helper(path: &Path, body: &str) {
 }
 
 fn make_sleep_helper(path: &Path) {
-    if cfg!(windows) {
-        let source = path.with_extension("rs");
-        write_helper(
-            &source,
-            r#"fn main() {
+    // Compile the same native helper on both OSes. A shell script plus an
+    // external sleep binary can exit before the inspector's timeout path,
+    // turning a deadline regression test into a false "not a Git repo".
+    let source = path.with_extension("rs");
+    write_helper(
+        &source,
+        r#"fn main() {
+    if let Some(path) = std::env::args()
+        .find_map(|arg| arg.strip_prefix("--probe-ready=").map(str::to_owned))
+    {
+        std::fs::write(path, b"ready").expect("probe marker");
+    }
     std::thread::sleep(std::time::Duration::from_secs(30));
 }
 "#,
-        );
-        let rustc = std::env::var_os("RUSTC").unwrap_or_else(|| std::ffi::OsString::from("rustc"));
-        let output = Command::new(rustc)
-            .args([
-                "--edition=2021",
-                source.to_string_lossy().as_ref(),
-                "-o",
-                path.to_string_lossy().as_ref(),
-            ])
-            .output()
-            .unwrap();
-        assert!(
-            output.status.success(),
-            "sleep helper compilation failed: {}",
-            String::from_utf8_lossy(&output.stderr)
-        );
-    } else {
-        write_helper(
-            path,
-            "#!/bin/sh\nPATH=/usr/bin:/bin\nexport PATH\nexec sleep 30\n",
-        );
-    }
+    );
+    let rustc = std::env::var_os("RUSTC").unwrap_or_else(|| std::ffi::OsString::from("rustc"));
+    let output = Command::new(rustc)
+        .args([
+            "--edition=2021",
+            source.to_string_lossy().as_ref(),
+            "-o",
+            path.to_string_lossy().as_ref(),
+        ])
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "sleep helper compilation failed: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
 }
-
 fn make_fsmonitor_helper(path: &Path, canary: &Path) {
     let canary = canary.to_string_lossy();
     if cfg!(windows) {
@@ -238,12 +238,42 @@ fn hostile_git_deadline_kills_reaps_and_does_not_poison_next_inspection() {
         .join("target")
         .join(format!("m02-git-deadline-{}", std::process::id()));
     fs::create_dir_all(&root).unwrap();
-    let helper = if cfg!(windows) {
-        root.join("sleep-helper.exe")
+    let helper = root.join(if cfg!(windows) {
+        "sleep-helper.exe"
     } else {
-        helper_path(&root, "sleep-helper")
-    };
+        "sleep-helper"
+    });
     make_sleep_helper(&helper);
+
+    // Prove the exact helper starts with no inherited environment before
+    // asserting timeout behavior. Diagnose an early exit instead of silently
+    // treating the test as proof that the inspector missed a deadline.
+    let ready = root.join("native-helper-ready");
+    let mut probe = Command::new(&helper)
+        .arg(format!("--probe-ready={}", ready.display()))
+        .current_dir(&root)
+        .env_clear()
+        .spawn()
+        .expect("native sleep helper must start with an empty environment");
+    let preflight_deadline = Instant::now() + Duration::from_secs(5);
+    let mut early_exit = None;
+    while !ready.exists() && Instant::now() < preflight_deadline {
+        early_exit = probe.try_wait().expect("probe helper status");
+        if early_exit.is_some() {
+            break;
+        }
+        std::thread::sleep(Duration::from_millis(5));
+    }
+    let ready_seen = ready.exists();
+    if early_exit.is_none() {
+        probe.kill().expect("terminate the probe helper");
+        probe.wait().expect("reap the probe helper");
+    }
+    assert!(
+        ready_seen && early_exit.is_none(),
+        "native sleep helper did not become ready: early_exit={early_exit:?}"
+    );
+
     let budget = WorkspaceResourceBudget {
         max_git_process_duration_ms: 500,
         ..WorkspaceResourceBudget::default()
