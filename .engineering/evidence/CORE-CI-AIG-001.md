@@ -1,9 +1,21 @@
 # CORE-CI-AIG-001 — Adaptive Integrity Gate
 
-Status: `REVIEW_CANDIDATE`  
+Status: `PROMOTED / EXACT_HEAD_AND_POST_MERGE_CI_VERIFIED`  
 Type: CI reliability/performance optimization  
-Canonical base: `b79891f489d8c7117aee15e1dca47abb9e23dea3`  
+Initial proposal base: `b79891f489d8c7117aee15e1dca47abb9e23dea3`  
 Product semantics changed: `NO`
+
+## Verified promotion record / 2026-09-27
+
+This record supersedes the original candidate-status header and historical pending-CI language in the correction trail below; that trail is retained for provenance rather than treated as current instructions.
+
+- **Exact reviewed candidate:** [PR #98](https://github.com/KayzenRoot/core/pull/98), head `dbc96349991ff0b4164125cc3001b83dab9d31be`, current-at-review base `71b9323f41f3ce84fabc92d6fc223f686a000aa5`; final [audit issue #126](https://github.com/KayzenRoot/core/issues/126): `OWNER_SELF_AUDIT_APPROVED / NOT INDEPENDENT` with zero unresolved HIGH/CRITICAL. No native author self-APPROVE.
+- **Exact-head CI:** [workflow #36330798931](https://github.com/KayzenRoot/core/actions/runs/36330798931) `SUCCESS`, 11/11 jobs, including Governance/classifier, M01/M02/M03 Linux and Windows, all three bounded fuzz jobs; M01 Ubuntu `cargo-deny check`, `cargo audit`, full Clippy/tests, SBOM, soak and PRB/WNF passed.
+- **Protected-main promotion:** squash merge `ff3278384da75646865a7088a06843ac0294f772`; subsequent independent **main-push** [workflow #36331968664](https://github.com/KayzenRoot/core/actions/runs/36331968664) `SUCCESS`, 11/11 jobs, proving the full push path on the promoted commit.
+- **Four-file scope:** workflow `.github/workflows/governance.yml`, classifier `scripts/ci_impact.py`, deterministic tests `tests/test_ci_impact.py`, this evidence file. CORE M04 canonical source, Work Order, product code and active Context Lock were unchanged (lock blob `7c62aad48f84040d68f7fc70958e851a42f0e1d0`).
+- **Safety corrections captured:** correct Cargo audit invocation; fail-closed canonical and derived M04 authority paths; noncritical docs-only fixture; eliminate untrusted PR filename interpolation into a GitHub Actions shell command.
+- **Measured outcomes:** functionality and required check behavior are evidenced above, but no numerical CI runtime-speed improvement has yet been established by repeated comparable hosted samples. Do not assert a percentage or guaranteed latency reduction.
+- **Separate gates unaffected:** local HIVE proof [#4](https://github.com/KayzenRoot/core/issues/4) and external M04 legacy-V1 compatibility [#111](https://github.com/KayzenRoot/core/issues/111) remain OPEN; this evidence correction grants no M04 source or product promotion.
 
 ## Problem
 
@@ -79,9 +91,9 @@ Promote only after:
 - Governance passes;
 - because this PR changes the workflow and classifier tooling, the classifier intentionally selects FULL assurance for its own validation;
 - all hosted jobs on the exact head succeed;
-- independent review finds zero unresolved HIGH/CRITICAL.
+- exact-head owner self-audit under the current GEF policy, explicitly `NOT INDEPENDENT`, finds zero unresolved HIGH/CRITICAL findings.
 
-## Reviewer-first Correction Delta (2026-09-27, SAME PR #98)
+## Historical pre-promotion reviewer-first corrections (2026-09-27, PR #98)
 
 The exact historical head `d15806f023c867aca1e6cc0c096862479f54b762` failed hosted workflow [#36001862823](https://github.com/KayzenRoot/core/actions/runs/36001862823) only in the M01 Ubuntu Advisory scan: raw job logs show bare `cargo-audit` printed Cargo subcommand usage and exited 2, even though the pinned `cargo-audit 0.22.2` installation succeeded and `cargo-deny check` passed. Replace the single incorrect bare binary invocation with `cargo audit` so Cargo dispatches the installed plugin with the required `audit` subcommand.
 
