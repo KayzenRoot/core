@@ -1,7 +1,7 @@
 //! Versioned M04 Run / Attempt / Step contracts and canonical identity framing.
 //!
-//! Pack A declares the public value surface. Lifecycle, journal, persistence,
-//! replay and service behavior remain in their later construction packets.
+//! Pack A declares public value contracts. Pack B adds pure, closed lifecycle
+//! transition laws. Journal, replay and service behavior remain in later packs.
 //!
 //! Domain identity wrappers prevent accidental Rust-level substitution:
 //!
@@ -75,10 +75,15 @@ mod canonical;
 mod contracts;
 mod errors;
 mod identity;
+mod transition;
 
 pub use canonical::FingerprintDomainV1;
 pub use contracts::*;
 pub use errors::{M04ErrorClassV1, M04ErrorCodeV1, M04ErrorV1, M04RetryabilityV1};
+pub use transition::{
+    is_terminal_attempt, is_terminal_run, is_terminal_step, validate_attempt_transition,
+    validate_run_transition, validate_skip_authority, validate_step_transition,
+};
 pub use identity::{
     AttemptId, AttemptOrdinalV1, CanonicalFingerprint, EventId, EventSequenceV1, ExecutionEpoch,
     IdempotencyKey, JournalRoot, RunGeneration, RunId, StepId, StepOrdinalV1,
