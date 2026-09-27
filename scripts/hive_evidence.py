@@ -95,6 +95,7 @@ def collect_evidence(
         or detail.get("relative_path") != relative_path
         or detail.get("state") != "READY"
         or detail.get("git_head_sha") != core_head
+        or detail.get("working_tree_clean") is not True
     ):
         raise EvidenceBlocked("core_project_not_ready_or_head_mismatch")
 

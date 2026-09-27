@@ -124,3 +124,30 @@ come from actual bounded `checkpoint.read` and `context.search` tool calls
 made in the connected Codex client. Do not change that field manually or
 claim that a local check happened just because unit tests passed in CI.
 
+## Verify the local HIVE MCP server without exposing retrieved data
+
+After the released redacted HIVE API/index/corpus helper succeeds on your real
+local machine, run from the **same clean and indexed local CORE checkout**:
+
+```powershell
+python scripts/hive_mcp_probe.py --relative-path core
+```
+
+The MCP probe first requires the same full local HIVE v1.0.0 release and
+fresh/current indexed CORE proof as `hive_evidence.py`. It then starts the
+real v1.0.0 MCP server through `docker compose exec -T api python -m app.mcp_server`,
+establishes a bounded JSON-RPC session, verifies the exact seven stable
+read-only tools, and makes the real `checkpoint.read` and two-result-bounded
+`context.search` calls. It prints only safe release/head, tool-count and
+boolean/count outcomes, **never** complete checkpoints, private search snippets,
+UUIDs, local machine paths or Docker logs. Failures emit typed `BLOCKED`.
+
+Use `--hive-repo` when your HIVE checkout is not a sibling and no
+`HIVE_REPO_PATH` is configured. The actual CORE checkout must have a clean
+tracked Git worktree: the official HIVE `checkpoint.read` rejects dirty
+project inventories even if an old project registry response still says READY.
+
+**Important boundary:** this verifies the real local HIVE **server**, not
+registration and invocation by the separate **Codex client**. Issue #4 still
+requires genuine redacted `checkpoint.read` and `context.search` calls made
+inside that actual client before closing the end-to-end integration gate.

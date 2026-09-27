@@ -35,6 +35,7 @@ def fake_api(_url: str, method: str, path: str) -> object:
             "relative_path": "core",
             "state": "READY",
             "git_head_sha": CORE_SHA,
+            "working_tree_clean": True,
             "absolute_path": "C:/Users/private/core",
         }
     if path == "/api/v1/projects/secret-project-id/index/status":
@@ -89,6 +90,25 @@ class HiveLocalEvidenceTests(unittest.TestCase):
             patch("scripts.hive_evidence.request", side_effect=stale_api),
         ):
             with self.assertRaisesRegex(EvidenceBlocked, "repository_index_not_current"):
+                collect_evidence(
+                    base_url="http://localhost:8000",
+                    relative_path="core",
+                    core_repo=Path("/private/core"),
+                    hive_repo=Path("/private/hive"),
+                )
+
+    def test_dirty_local_worktree_is_not_accepted_as_mcp_proof(self) -> None:
+        def dirty_api(url: str, method: str, path: str) -> object:
+            value = fake_api(url, method, path)
+            if path == "/api/v1/projects/secret-project-id" and isinstance(value, dict):
+                return {**value, "working_tree_clean": False}
+            return value
+
+        with (
+            patch("scripts.hive_evidence.git_revision", side_effect=[CORE_SHA, HIVE_SHA, HIVE_SHA]),
+            patch("scripts.hive_evidence.request", side_effect=dirty_api),
+        ):
+            with self.assertRaisesRegex(EvidenceBlocked, "core_project_not_ready_or_head_mismatch"):
                 collect_evidence(
                     base_url="http://localhost:8000",
                     relative_path="core",
