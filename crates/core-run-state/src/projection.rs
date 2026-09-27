@@ -92,9 +92,7 @@ pub fn validate_projection_structure(run: &RunProjectionV1) -> Result<(), M04Err
                 return Err(invalid_projection());
             }
         }
-        if attempt.status == AttemptStatusV1::Succeeded
-            && !attempt_satisfies_completion(attempt)
-        {
+        if attempt.status == AttemptStatusV1::Succeeded && !attempt_satisfies_completion(attempt) {
             return Err(invalid_projection());
         }
     }
@@ -108,7 +106,11 @@ pub fn validate_projection_structure(run: &RunProjectionV1) -> Result<(), M04Err
 /// Steps satisfied. All Attempts must be terminal before the Run succeeds.
 /// M04 does not choose a winning Attempt or implement retry policy.
 pub fn validate_run_completion(run: &RunProjectionV1) -> Result<(), M04ErrorV1> {
-    if !run.attempts.values().all(|attempt| is_terminal_attempt(attempt.status)) {
+    if !run
+        .attempts
+        .values()
+        .all(|attempt| is_terminal_attempt(attempt.status))
+    {
         return Err(invalid_transition());
     }
     if !run.attempts.values().any(|attempt| {

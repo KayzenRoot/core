@@ -75,8 +75,8 @@ mod canonical;
 mod contracts;
 mod errors;
 mod identity;
-mod transition;
 mod projection;
+mod transition;
 
 pub use canonical::FingerprintDomainV1;
 pub use contracts::*;

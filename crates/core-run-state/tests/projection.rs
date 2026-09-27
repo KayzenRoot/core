@@ -5,10 +5,10 @@ use core_run_state::{
     derive_run_transition, derive_step_declared, derive_step_transition, step_satisfies_completion,
     validate_projection_structure, AttemptId, AttemptOrdinalV1, AttemptProjectionV1,
     AttemptStatusV1, BoundaryRevalidationCapsuleV1, CanonicalFingerprint, EventSequenceV1,
-    ExecutionEpoch, ExternalReferenceEvidenceV1, ExternalReferenceKindV1,
-    ExternalReferenceOwnerV1, JournalRoot, M04ErrorCodeV1, M04ReasonCodeV1, M04SchemaV1,
-    M04VersionV1, RunGeneration, RunId, RunProjectionV1, RunStatusV1, StepId, StepOrdinalV1,
-    StepProjectionV1, StepStatusV1, M04_SCHEMA, M04_VERSION,
+    ExecutionEpoch, ExternalReferenceEvidenceV1, ExternalReferenceKindV1, ExternalReferenceOwnerV1,
+    JournalRoot, M04ErrorCodeV1, M04ReasonCodeV1, M04SchemaV1, M04VersionV1, RunGeneration, RunId,
+    RunProjectionV1, RunStatusV1, StepId, StepOrdinalV1, StepProjectionV1, StepStatusV1,
+    M04_SCHEMA, M04_VERSION,
 };
 use core_work_order::{evaluate_admission, materialize_handoff, WorkOrderIdentityRefV1};
 use std::collections::BTreeMap;
@@ -32,8 +32,10 @@ fn boundary_fixture() -> BoundaryRevalidationCapsuleV1 {
                 &fixture.context,
                 &compiled.frozen,
             );
-            let receipt = evaluate_admission(&compiled.frozen, &admission, &fixture.budget).unwrap();
-            let admitted = materialize_handoff(&compiled.frozen, &receipt, &fixture.budget).unwrap();
+            let receipt =
+                evaluate_admission(&compiled.frozen, &admission, &fixture.budget).unwrap();
+            let admitted =
+                materialize_handoff(&compiled.frozen, &receipt, &fixture.budget).unwrap();
             let identity = WorkOrderIdentityRefV1 {
                 work_order_id: admitted.work_order_id().clone(),
                 revision: admitted.revision(),
@@ -125,7 +127,11 @@ fn steps_require_live_parent_and_contiguous_nonreused_ordinals() {
     let (mut run, attempt) = with_attempt();
     let first = StepId::new("step-01").unwrap();
     let step = derive_step_declared(&run, &attempt, first.clone(), StepOrdinalV1::new(0)).unwrap();
-    run.attempts.get_mut(&attempt).unwrap().steps.insert(first.clone(), step);
+    run.attempts
+        .get_mut(&attempt)
+        .unwrap()
+        .steps
+        .insert(first.clone(), step);
     assert_eq!(
         derive_step_declared(&run, &attempt, first, StepOrdinalV1::new(1))
             .unwrap_err()
@@ -141,7 +147,11 @@ fn steps_require_live_parent_and_contiguous_nonreused_ordinals() {
     );
     let second_step =
         derive_step_declared(&run, &attempt, second.clone(), StepOrdinalV1::new(1)).unwrap();
-    run.attempts.get_mut(&attempt).unwrap().steps.insert(second, second_step);
+    run.attempts
+        .get_mut(&attempt)
+        .unwrap()
+        .steps
+        .insert(second, second_step);
     assert!(validate_projection_structure(&run).is_ok());
     run.attempts.get_mut(&attempt).unwrap().status = AttemptStatusV1::Blocked;
     assert_eq!(
@@ -162,11 +172,15 @@ fn parent_success_requires_satisfied_steps_and_terminal_attempts() {
     let (mut run, attempt) = with_attempt();
     run.status = RunStatusV1::Active;
     let step_id = StepId::new("step-01").unwrap();
-    let mut step = derive_step_declared(&run, &attempt, step_id.clone(), StepOrdinalV1::new(0))
-        .unwrap();
+    let mut step =
+        derive_step_declared(&run, &attempt, step_id.clone(), StepOrdinalV1::new(0)).unwrap();
     step.status = StepStatusV1::Active;
     run.attempts.get_mut(&attempt).unwrap().status = AttemptStatusV1::Active;
-    run.attempts.get_mut(&attempt).unwrap().steps.insert(step_id.clone(), step);
+    run.attempts
+        .get_mut(&attempt)
+        .unwrap()
+        .steps
+        .insert(step_id.clone(), step);
     assert_eq!(
         derive_attempt_transition(&run, &attempt, AttemptStatusV1::Succeeded)
             .unwrap_err()
@@ -183,7 +197,11 @@ fn parent_success_requires_satisfied_steps_and_terminal_attempts() {
     )
     .unwrap();
     assert!(step_satisfies_completion(&completed));
-    run.attempts.get_mut(&attempt).unwrap().steps.insert(step_id, completed);
+    run.attempts
+        .get_mut(&attempt)
+        .unwrap()
+        .steps
+        .insert(step_id, completed);
     assert_eq!(
         derive_run_transition(&run, RunStatusV1::Succeeded)
             .unwrap_err()
@@ -194,9 +212,20 @@ fn parent_success_requires_satisfied_steps_and_terminal_attempts() {
         derive_attempt_transition(&run, &attempt, AttemptStatusV1::Succeeded).unwrap();
     assert!(attempt_satisfies_completion(&completed_attempt));
     run.attempts.insert(attempt, completed_attempt);
-    assert_eq!(derive_run_transition(&run, RunStatusV1::Succeeded).unwrap(), RunStatusV1::Succeeded);
-    assert_eq!(run.generation.get(), 1, "derivation cannot mint generation authority");
-    assert_eq!(run.last_event_sequence.get(), 1, "derivation cannot append a journal event");
+    assert_eq!(
+        derive_run_transition(&run, RunStatusV1::Succeeded).unwrap(),
+        RunStatusV1::Succeeded
+    );
+    assert_eq!(
+        run.generation.get(),
+        1,
+        "derivation cannot mint generation authority"
+    );
+    assert_eq!(
+        run.last_event_sequence.get(),
+        1,
+        "derivation cannot append a journal event"
+    );
 }
 
 #[test]
@@ -204,9 +233,13 @@ fn skipped_requires_explicit_lineage_bound_evidence_and_closed_reason() {
     let (mut run, attempt) = with_attempt();
     run.status = RunStatusV1::Active;
     let step_id = StepId::new("step-01").unwrap();
-    let step = derive_step_declared(&run, &attempt, step_id.clone(), StepOrdinalV1::new(0))
-        .unwrap();
-    run.attempts.get_mut(&attempt).unwrap().steps.insert(step_id.clone(), step);
+    let step =
+        derive_step_declared(&run, &attempt, step_id.clone(), StepOrdinalV1::new(0)).unwrap();
+    run.attempts
+        .get_mut(&attempt)
+        .unwrap()
+        .steps
+        .insert(step_id.clone(), step);
     let authority = skip_authority(&run.run_id, &attempt, &step_id);
     assert_eq!(
         derive_step_transition(
@@ -249,7 +282,11 @@ fn skipped_requires_explicit_lineage_bound_evidence_and_closed_reason() {
     .unwrap();
     assert!(step_satisfies_completion(&skipped));
     run.attempts.get_mut(&attempt).unwrap().status = AttemptStatusV1::Active;
-    run.attempts.get_mut(&attempt).unwrap().steps.insert(step_id, skipped);
+    run.attempts
+        .get_mut(&attempt)
+        .unwrap()
+        .steps
+        .insert(step_id, skipped);
     let completed = derive_attempt_transition(&run, &attempt, AttemptStatusV1::Succeeded).unwrap();
     run.attempts.insert(attempt, completed);
     assert!(derive_run_transition(&run, RunStatusV1::Succeeded).is_ok());
@@ -277,13 +314,21 @@ fn invalid_projection_fails_closed_on_cross_keys_gaps_and_fake_success() {
         reason: None,
     };
     let step_id = step.step_id.clone();
-    run.attempts.get_mut(&attempt).unwrap().steps.insert(step_id.clone(), step.clone());
+    run.attempts
+        .get_mut(&attempt)
+        .unwrap()
+        .steps
+        .insert(step_id.clone(), step.clone());
     assert_eq!(
         validate_projection_structure(&run).unwrap_err().code,
         M04ErrorCodeV1::InternalInvariantViolation
     );
     step.reason = Some(M04ReasonCodeV1::ExplicitAuthorizedSkip);
-    run.attempts.get_mut(&attempt).unwrap().steps.insert(step_id, step);
+    run.attempts
+        .get_mut(&attempt)
+        .unwrap()
+        .steps
+        .insert(step_id, step);
     assert!(validate_projection_structure(&run).is_ok());
     run.attempts.get_mut(&attempt).unwrap().status = AttemptStatusV1::Succeeded;
     assert!(validate_projection_structure(&run).is_ok());
@@ -295,10 +340,14 @@ fn invalid_projection_fails_closed_on_cross_keys_gaps_and_fake_success() {
 fn terminal_parent_blocks_new_activation_but_permits_existing_closeout() {
     let (mut run, attempt) = with_attempt();
     let step_id = StepId::new("step-01").unwrap();
-    let mut step = derive_step_declared(&run, &attempt, step_id.clone(), StepOrdinalV1::new(0))
-        .unwrap();
+    let mut step =
+        derive_step_declared(&run, &attempt, step_id.clone(), StepOrdinalV1::new(0)).unwrap();
     step.status = StepStatusV1::Active;
-    run.attempts.get_mut(&attempt).unwrap().steps.insert(step_id.clone(), step);
+    run.attempts
+        .get_mut(&attempt)
+        .unwrap()
+        .steps
+        .insert(step_id.clone(), step);
     run.attempts.get_mut(&attempt).unwrap().status = AttemptStatusV1::Active;
     run.status = RunStatusV1::Interrupted;
     assert_eq!(
