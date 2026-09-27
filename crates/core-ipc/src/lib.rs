@@ -79,36 +79,52 @@ pub fn encode(frame: &Frame, max_frame_size: usize) -> Result<Vec<u8>, IpcError>
     Ok(bytes)
 }
 
-pub fn decode(bytes: &[u8], max_frame_size: usize, expected_epoch: u64) -> Result<Frame, IpcError> {
-    if bytes.len() < HEADER_LEN {
+/// Checks all available fixed-header evidence before any payload is read or allocated.
+/// This must be the shared validation order for both slice decode and stream I/O.
+fn checked_header(
+    header: &[u8],
+    max_frame_size: usize,
+    expected_epoch: u64,
+) -> Result<usize, IpcError> {
+    if header.len() < HEADER_LEN {
         return Err(IpcError::Truncated);
     }
-    if &bytes[..3] != MAGIC {
+    if &header[..MAGIC.len()] != MAGIC {
         return Err(IpcError::BadMagic);
     }
-    let major = u16::from_be_bytes([bytes[3], bytes[4]]);
-    let minor = u16::from_be_bytes([bytes[5], bytes[6]]);
+    let major = u16::from_be_bytes([header[3], header[4]]);
     if major != ProtocolVersion::CURRENT.major {
         return Err(IpcError::ProtocolMismatch);
     }
-    let length = u32::from_be_bytes([bytes[7], bytes[8], bytes[9], bytes[10]]) as usize;
+    let length = u32::from_be_bytes([header[7], header[8], header[9], header[10]]) as usize;
     if length > max_frame_size {
         return Err(IpcError::FrameTooLarge);
     }
-    let epoch = u64::from_be_bytes(bytes[11..19].try_into().expect("header length checked"));
+    let epoch = u64::from_be_bytes(header[11..19].try_into().expect("header length checked"));
     if epoch != expected_epoch {
         return Err(IpcError::StaleEpoch);
     }
-    if bytes.len() < HEADER_LEN + length {
+    Ok(length)
+}
+
+pub fn decode(bytes: &[u8], max_frame_size: usize, expected_epoch: u64) -> Result<Frame, IpcError> {
+    let length = checked_header(bytes, max_frame_size, expected_epoch)?;
+    let end = HEADER_LEN
+        .checked_add(length)
+        .ok_or(IpcError::FrameTooLarge)?;
+    if bytes.len() < end {
         return Err(IpcError::Truncated);
     }
-    if bytes.len() != HEADER_LEN + length {
+    if bytes.len() != end {
         return Err(IpcError::TrailingBytes);
     }
     Ok(Frame {
-        version: ProtocolVersion { major, minor },
-        epoch,
-        payload: bytes[HEADER_LEN..].to_vec(),
+        version: ProtocolVersion {
+            major: u16::from_be_bytes([bytes[3], bytes[4]]),
+            minor: u16::from_be_bytes([bytes[5], bytes[6]]),
+        },
+        epoch: expected_epoch,
+        payload: bytes[HEADER_LEN..end].to_vec(),
     })
 }
 
@@ -147,7 +163,7 @@ pub enum LocalIpcError {
 }
 
 /// Reads one bounded frame from an already-connected OS-local stream.
-/// The declared payload length is checked before allocating the payload buffer.
+/// All fixed-header validity checks run before allocating or awaiting the body.
 pub async fn read_frame<R: AsyncRead + Unpin>(
     reader: &mut R,
     max_frame_size: usize,
@@ -155,11 +171,11 @@ pub async fn read_frame<R: AsyncRead + Unpin>(
 ) -> Result<Frame, LocalIpcError> {
     let mut header = [0_u8; HEADER_LEN];
     reader.read_exact(&mut header).await?;
-    let length = u32::from_be_bytes(header[7..11].try_into().expect("header length")) as usize;
-    if length > max_frame_size {
-        return Err(IpcError::FrameTooLarge.into());
-    }
-    let mut encoded = Vec::with_capacity(HEADER_LEN + length);
+    let length = checked_header(&header, max_frame_size, expected_epoch)?;
+    let capacity = HEADER_LEN
+        .checked_add(length)
+        .ok_or(IpcError::FrameTooLarge)?;
+    let mut encoded = Vec::with_capacity(capacity);
     encoded.extend_from_slice(&header);
     let mut payload = vec![0_u8; length];
     reader.read_exact(&mut payload).await?;
@@ -308,6 +324,43 @@ mod tests {
         encoded[7..11].copy_from_slice(&(u32::MAX).to_be_bytes());
         assert_eq!(decode(&encoded, 32, 1), Err(IpcError::FrameTooLarge));
         assert_eq!(decode(&[0, 1], 32, 1), Err(IpcError::Truncated));
+    }
+
+    #[tokio::test]
+    async fn invalid_stream_headers_are_rejected_before_attempting_body_read() {
+        use tokio::io::AsyncWriteExt;
+
+        let frame = Frame {
+            version: ProtocolVersion::CURRENT,
+            epoch: 7,
+            payload: vec![0_u8; 8],
+        };
+        let encoded = encode(&frame, 64).unwrap();
+        let header = &encoded[..HEADER_LEN];
+
+        let mut bad_magic = header.to_vec();
+        bad_magic[0] = b'X';
+        let mut bad_major = header.to_vec();
+        bad_major[3..5].copy_from_slice(&2_u16.to_be_bytes());
+        let mut stale_epoch = header.to_vec();
+        stale_epoch[11..19].copy_from_slice(&8_u64.to_be_bytes());
+        let mut oversized = header.to_vec();
+        oversized[7..11].copy_from_slice(&u32::MAX.to_be_bytes());
+
+        for (bad_header, expected) in [
+            (bad_magic, IpcError::BadMagic),
+            (bad_major, IpcError::ProtocolMismatch),
+            (stale_epoch, IpcError::StaleEpoch),
+            (oversized, IpcError::FrameTooLarge),
+        ] {
+            let (mut writer, mut reader) = tokio::io::duplex(64);
+            writer.write_all(&bad_header).await.unwrap();
+            drop(writer); // No body: old behavior returned UnexpectedEof, not the typed error.
+            match read_frame(&mut reader, 64, 7).await {
+                Err(LocalIpcError::Protocol(actual)) => assert_eq!(actual, expected),
+                other => panic!("incorrect early header rejection: {other:?}"),
+            }
+        }
     }
 
     #[test]
