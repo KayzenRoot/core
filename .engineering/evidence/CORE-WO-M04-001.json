@@ -17,7 +17,7 @@
   "sourceCheck": {
     "candidateCanonicalSourceBlobShaKind": "git_blob_sha1",
     "candidateCanonicalSourceBlobShas": {
-      "docs/project-brain/13-CHECKPOINT.md": "8ef7eb7d0ace6b588c6a88c915eaca14bce991d8",
+      "docs/project-brain/13-CHECKPOINT.md": "015f6613852b65f1d0ecbc3cf374f0af61461af5",
       "docs/project-brain/16-DECISIONS-LEDGER.md": "857259e42855f09cd98a07b67c1912f11bf87d3b",
       "docs/project-brain/03-SCOPE.md": "6e6f66b7fe3f3e3780b14c7b68dca7c2af137c61",
       "docs/project-brain/15-DEFINITION-OF-DONE.md": "fd31c15a2966d39abca464ad5f945a5b10103f16",
@@ -33,7 +33,7 @@
   "contextLock": {
     "path": ".engineering/context-locks/CORE-WO-M04-001.json",
     "status": "ACTIVE",
-    "blobSha": "7c62aad48f84040d68f7fc70958e851a42f0e1d0",
+    "blobSha": "e30104d7b43062147f41678880e172889e7e5fec",
     "authorizedBase": "f6b422be5465d5a93d0b8fcf4c9507c205663072",
     "productImplementationAuthorized": true,
     "executionStatus": "ACTIVE_AUTHORIZED_PACK_A_CANDIDATE_OPEN_OWNER_AUDIT_PENDING"
@@ -229,7 +229,7 @@
     },
     "EV-M04-023": {
       "acceptanceCriterion": "AC-M04-023",
-      "obligation": "KayzenRoot exact-head owner self-audit, zero unresolved HIGH/CRITICAL, explicitly NOT INDEPENDENT",
+      "obligation": "KayzenRoot owner self-audit on the exact current head, with zero unresolved HIGH/CRITICAL findings; disclose NOT INDEPENDENT.",
       "status": "PENDING",
       "owner": "SOLO_OWNER_AUDITOR",
       "artifacts": []
@@ -245,7 +245,7 @@
   },
   "executorHandoff": {
     "path": "docs/work-orders/CODEX-HANDOFF-M04.md",
-    "blobSha": "850c41edee19b5e98387f326a5d60ad7fd399568",
+    "blobSha": "3581fd919dc16df6cbde06007a606cd3d1d49e5b",
     "status": "PACK_A_CANDIDATE_OPEN / OWNER_SELF_AUDIT_PENDING"
   },
   "executionAdmission": {

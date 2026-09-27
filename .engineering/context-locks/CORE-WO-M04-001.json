@@ -10,7 +10,7 @@
   "assuranceMode": "ELEVATED",
   "productImplementationAuthorized": true,
   "canonicalSources": {
-    "docs/project-brain/13-CHECKPOINT.md": "8ef7eb7d0ace6b588c6a88c915eaca14bce991d8",
+    "docs/project-brain/13-CHECKPOINT.md": "015f6613852b65f1d0ecbc3cf374f0af61461af5",
     "docs/project-brain/16-DECISIONS-LEDGER.md": "857259e42855f09cd98a07b67c1912f11bf87d3b",
     "docs/project-brain/03-SCOPE.md": "6e6f66b7fe3f3e3780b14c7b68dca7c2af137c61",
     "docs/project-brain/15-DEFINITION-OF-DONE.md": "fd31c15a2966d39abca464ad5f945a5b10103f16",
@@ -31,7 +31,7 @@
     }
   },
   "stalenessRule": "Any material change to the authorized base, one of the nine canonical source blobs, CORE-WO-M04-001, or the bound GEF review policy makes this active M04 lock STALE and blocks progression until governed re-admission/correction. Missing a second account never makes the lock stale.",
-  "promotionRule": "CORE-M04-ADMIT-001 and CORE-M04-SYNC-003 through CORE-M04-SYNC-005 are APPROVED_PROMOTED. The ACTIVE lock authorizes only M04_RUN_ATTEMPT_STEP_ENGINE. The current Pack A candidate is PR #106; after CORE-D-203 is promoted, KayzenRoot performs an exact-base/exact-head owner self-audit, explicitly NOT INDEPENDENT, with required checks green and zero unresolved HIGH/CRITICAL before any governed promotion.",
+  "promotionRule": "CORE-M04-ADMIT-001 and CORE-M04-SYNC-003 through CORE-M04-SYNC-005 are APPROVED_PROMOTED. CORE-D-203 is canonical on main via PR #108 (squash commit 15179cf07d703f074cf50f793a5b1968ba356fc0). The ACTIVE lock authorizes only M04_RUN_ATTEMPT_STEP_ENGINE. The current Pack A candidate is PR #106; after all required exact-head CI/security/evidence gates pass, KayzenRoot performs the exact-base/exact-head owner self-audit, explicitly NOT INDEPENDENT, with zero unresolved HIGH/CRITICAL findings before any governed promotion.",
   "workOrderSource": {
     "path": ".engineering/work-orders/CORE-WO-M04-001.md",
     "blobSha": "9b6b54f2cfa77c170773272e876493656946cc04"
@@ -39,7 +39,7 @@
   "authorizationEffectiveOnlyOnCanonicalMain": true,
   "canonicalMain": "origin/main",
   "activationRule": "Execution authority is effective only when this exact ACTIVE lock, synchronized GEF state and authorized Work Order are present on canonical origin/main. A branch-local copy or stale fingerprint is non-authoritative.",
-  "executionStartRule": "The existing PR #106 candidate records CORE-M04-SYNC-006 preflight and Pack A work on the authorized M04 branch. After CORE-D-203 is canonical, audit the exact current PR #106 base/head, full diff, ACTIVE lock, all nine canonical source fingerprints, exact Work Order blob, authorizedBase ancestry, and required CI/security/evidence results. Record NOT INDEPENDENT. Do not require another account or submit native self-approval. Pack B remains stopped until Pack A audit and acceptance evidence pass.",
+  "executionStartRule": "The existing PR #106 candidate records CORE-M04-SYNC-006 preflight and Pack A work on the authorized M04 branch. CORE-D-203 is already canonical on main via PR #108. Audit the exact current PR #106 base/head, full diff, ACTIVE Context Lock, all nine canonical source fingerprints, exact Work Order blob, authorizedBase ancestry, and required CI/security/evidence results. Record the KayzenRoot owner self-audit as NOT INDEPENDENT. Do not require another account/session or submit native self-approval. Pack B remains stopped until Pack A audit and acceptance evidence pass.",
   "finalPlanningReview": {
     "status": "APPROVED_PROMOTED",
     "issue": 93,

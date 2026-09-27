@@ -14,7 +14,7 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 
 ## IN PROGRESS
 - M03 canonical closeout was promoted through PR #74 as merge `2fdf595cc6b450d1be0038eb67d0a5160035d9bd` after M03-REVIEW-010 / Issue #75.
-- M04 Rounds 1-5 planning and CORE-M04-ADMIT-001 are promoted. CORE-WO-M04-001 is authorized for M04-only implementation on canonical main. PR #106 contains the open Pack A candidate at exact head `2721b89598998dad08c19f581fe650be53d3c882`; its exact-head hosted workflow passed 10/10 jobs. The required owner self-audit is pending and will be explicitly `NOT INDEPENDENT`.
+- M04 Rounds 1-5 planning and CORE-M04-ADMIT-001 are promoted. CORE-WO-M04-001 authorizes M04-only implementation on canonical main. PR #106 contains the open Pack A candidate; bind its current base/head and exact-head check results in the PR conversation because earlier workflow runs validate only earlier heads. KayzenRoot's owner self-audit remains pending and must disclose `NOT INDEPENDENT`.
 - CORE-M04-SYNC-003 was APPROVED by M04-REVIEW-009 / Issue #97 at exact head `f9a5a7847e268000a5249ae8e69c81ed22b924ad`; PR #96, workflow `35994572596` (10/10 SUCCESS), promotion merge `b79891f489d8c7117aee15e1dca47abb9e23dea3`, unresolved HIGH/CRITICAL: 0.
 - CORE-M04-SYNC-004 was APPROVED by M04-REVIEW-010 / Issue #100 at exact head `19123d50bebe1a13257d8e2768fca7a1ca1d3393`; PR #99, workflow `36013624792` (10/10 SUCCESS), squash promotion merge `b2ac8e0db72a2145948e7773295b1b252c5e4eab`, unresolved HIGH/CRITICAL: 0.
 - CORE-M04-SYNC-005 was APPROVED by M04-REVIEW-011 / Issue #102 at exact head `e8b0548c2ecd7c22edbeb3f02de8a238f9c49ffc`; PR #101, workflow `36033275191` (10/10 SUCCESS), promotion merge `251f15495b82df8270ebc12fa93807ffaa15fba4`, unresolved HIGH/CRITICAL: 0.
@@ -42,22 +42,22 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - CORE-GOV-002-C01 GitHub hardening independently reviewed (Review 001 / Issue #57) and promoted through PR #56; active ruleset `CORE main protection` id `23769853` protects `main` with no bypass actors and the seven-context strict CI gate.
 
 ## PENDING
-- After CORE-D-203 is canonical under normal protected-main checks, perform KayzenRoot's exact-base/exact-head owner self-audit of PR #106. Validate the ACTIVE Context Lock, all nine source fingerprints, the exact Work Order blob, frozen authorized-base ancestry, required CI/security evidence and zero unresolved HIGH/CRITICAL findings. Disclose `NOT INDEPENDENT`; do not require another account or native self-approval.
+- CORE-D-203 is canonical on `main` through CORE PR #108. After the required exact-current-head checks for PR #106 pass, KayzenRoot performs the owner self-audit of the current PR base/head, ACTIVE Context Lock, nine source fingerprints, Work Order blob, authorized-base ancestry and findings. Disclose `NOT INDEPENDENT`; no second account or native self-approval is required.
 - Deep-plan M04 through M24 in dependency order.
 - Freeze each module Requirements/Architecture/DoD/Work Order before implementation authorization.
 - Live local HIVE bootstrap evidence against current main.
 
 ## BLOCKERS
 - No unresolved HIGH/CRITICAL finding is recorded in promoted M03 implementation or M04 planning/admission/synchronization reviews.
-- PR #106 is an unmerged Pack A candidate; exact-head CI passed 10/10, but the owner self-audit and AC-M04-023 remain pending. The separate-account identity gate is removed by CORE-D-203 after its policy PR is promoted. No Pack B or checkpoint promotion is authorized before the exact-head owner audit and required technical evidence pass.
+- PR #106 is an unmerged Pack A candidate. Its remaining gate is the exact-current-head owner self-audit and Pack A acceptance evidence; the second-account identity gate was removed by CORE-D-203, now canonical on `main`. Keep Pack B and checkpoint promotion stopped until the Pack A audit and required technical evidence pass.
 - M05-M24 implementation remains gated by their own planning freezes and admissions.
 
 ## NEXT STEP
-After CORE-D-203 / Issue #107 is canonical, perform KayzenRoot's exact-base/exact-head owner self-audit on the current CORE PR #106 head 2721b89598998dad08c19f581fe650be53d3c882. Record NOT INDEPENDENT, confirm required CI/security checks, source/lock bindings and zero unresolved HIGH/CRITICAL findings. Keep Pack B stopped until Pack A audit and acceptance evidence pass; do not promote a checkpoint from an unaudited head.
+After all required checks pass on PR #106's exact current head, KayzenRoot performs an owner self-audit of the exact current base/head and full diff. Record `NOT INDEPENDENT`, verify source/lock bindings and zero unresolved HIGH/CRITICAL findings, and use no second account or native self-approval. Keep Pack B stopped until Pack A audit and acceptance evidence pass; do not promote a checkpoint from an unaudited head.
 
 ## EVIDENCE
 - M04 execution admission Review 008 / Issue #95 — APPROVED; PR #94; exact head `f29dcb6b327c5fdceda31fe306e52d506c1eae72`; workflow `35992752646`; promotion merge `bb6f631284361fae29479c66f62ca88bebf3d79c`; 10/10 hosted jobs SUCCESS.
-- CORE-WO-M04-001 frozen authorized base remains `f6b422be5465d5a93d0b8fcf4c9507c205663072`; PR #106 is an unmerged candidate based on canonical main `d2b750f917f841fe715aafea9e0f80fbd3bc1035`. Its exact-head code has not been promoted. CORE-D-203 defines the single-account audit policy; it becomes effective on canonical main. The remaining PR #106 gate is its exact-head owner self-audit, recorded `NOT INDEPENDENT`, before any Pack B work or checkpoint promotion.
+- CORE-WO-M04-001 frozen authorized base remains `f6b422be5465d5a93d0b8fcf4c9507c205663072`; PR #106 is an unmerged Pack A candidate based on the current canonical main. Resolve its exact current base/head from the PR at audit time; older candidate heads and CI runs are historical. CORE-D-203 is canonical and defines the KayzenRoot-only owner self-audit, recorded `NOT INDEPENDENT`, before Pack B or checkpoint promotion.
 - M04 final planning freeze Review 007 / Issue #93 — APPROVED; PR #92; exact head `aa65784c66a16f918d694f25cde1a9ba88663b5a`; workflow `35981285696`; promotion merge `f6b422be5465d5a93d0b8fcf4c9507c205663072`; 10/10 hosted jobs SUCCESS.
 - CORE-M04-ADMIT-001 is APPROVED_PROMOTED as merge `bb6f631284361fae29479c66f62ca88bebf3d79c`; CORE-M04-SYNC-003 subsequently made the authorized state canonical at `b79891f489d8c7117aee15e1dca47abb9e23dea3`.
 - CORE-M04-SYNC-003 Review 009 / Issue #97 — APPROVED; PR #96; exact head `f9a5a7847e268000a5249ae8e69c81ed22b924ad`; workflow `35994572596`; 10/10 hosted jobs SUCCESS; promotion merge `b79891f489d8c7117aee15e1dca47abb9e23dea3`; unresolved HIGH/CRITICAL: 0.

@@ -2,23 +2,18 @@
 
 Work Order: `CORE-WO-M04-001`  
 Increment: `CORE-M04-FREEZE-001`  
-Status: `EXECUTION_AUTHORIZED_NOT_STARTED / SYNC_005_PROMOTED_SYNC_006_REVIEW_PENDING`
-Future execution branch: `feat/m04-run-state`
+Status: `PACK_A_CANDIDATE_OPEN / OWNER_SELF_AUDIT_PENDING`
+Execution branch: `feat/m04-run-state`
 
-## STOP BEFORE EXECUTION
+## CURRENT EXECUTION STATUS
 
-Do **not** modify product code, Cargo manifests/lockfiles, fuzz targets, benchmark code or runtime crates unless all of the following are true on canonical `origin/main`:
+CORE-D-203 was promoted to canonical `main` by CORE PR #108 (squash commit `15179cf07d703f074cf50f793a5b1968ba356fc0`). It establishes the KayzenRoot-only owner self-audit: disclose `NOT INDEPENDENT`; no second account, separate reviewer session, or native GitHub `APPROVE` is required.
 
-1. CORE-M04-FREEZE-001 has been independently exact-head reviewed and promoted as canonical base `f6b422be5465d5a93d0b8fcf4c9507c205663072`.
-2. CORE-M04-ADMIT-001 has been independently reviewed and promoted to canonical `origin/main` as merge `bb6f631284361fae29479c66f62ca88bebf3d79c`.
-3. `.engineering/context-locks/CORE-WO-M04-001.json` on canonical main is `ACTIVE`.
-4. The lock contains a concrete `authorizedBase`.
-5. `productImplementationAuthorized = true`.
-6. The lock binds the exact current `CORE-WO-M04-001` blob and the exact locked canonical source fingerprints.
-7. The execution branch is exactly `feat/m04-run-state` and is created from the admitted post-promotion canonical main.
-8. Git/governance preflight passes and optional HIVE preflight is recorded honestly if available.
+The authorized M04 candidate is open in `feat/m04-run-state` / PR #106. Continue its Pack A exact-head verification and owner self-audit before beginning Pack B or promoting a checkpoint.
 
-If any condition is absent, stale, UNKNOWN, conflicting or exists only on a PR branch, stop with `BLOCKED / NOT_AUTHORIZED`.
+Before the audit, confirm on canonical `origin/main` that the ACTIVE Context Lock has the concrete authorized base, product authorization, exact Work Order blob and all nine canonical source fingerprints; confirm the PR's exact base/head and required technical checks. Optional HIVE context is used only when actually reachable and current. If it is unavailable or stale, record that truthfully and use the authorized SOLO Git-canonical path; do not fabricate HIVE evidence.
+
+Stop with `BLOCKED / NOT_AUTHORIZED` only for missing/stale/conflicting authorization or source bindings. Stop with `BLOCKED_EVIDENCE` for missing or failed exact-head technical/security evidence, unresolved scope mismatch, or HIGH/CRITICAL findings. Do not use absence of another account as a blocker. Keep Pack B stopped until the Pack A owner audit and acceptance evidence pass.
 
 ## CANONICAL READ ORDER
 
@@ -105,7 +100,7 @@ Allowed only after Packs A-H, AC-M04-001..022, calibration/post-calibration reru
 ### BLOCKED
 Use when any authorization, locked source, packet obligation, acceptance/evidence node, finite resource selection, CI/security gate or frozen contract is missing/stale/conflicting/failing or requires out-of-scope change.
 
-Never return `APPROVED`. Never merge your own implementation.
+The executor stage does not submit a GitHub review or merge. After executor handoff, the KayzenRoot owner-audit stage may record `OWNER_SELF_AUDIT_APPROVED`, explicitly `NOT INDEPENDENT`, and squash-merge only after the exact-head review is clean, every required check passes, scope/lock/source bindings are valid, review threads are resolved, and unresolved HIGH/CRITICAL findings are zero. No second account/session or native self-approval is required.
 
 
 ## Admission candidate note
@@ -116,4 +111,4 @@ CORE-M04-SYNC-004 was independently APPROVED by M04-REVIEW-010 / Issue #100 at e
 
 CORE-M04-SYNC-005 was independently APPROVED by M04-REVIEW-011 / Issue #102 at exact head `e8b0548c2ecd7c22edbeb3f02de8a238f9c49ffc`; PR #101; workflow `36033275191` completed 10/10 jobs SUCCESS; promotion merge `251f15495b82df8270ebc12fa93807ffaa15fba4`; unresolved HIGH/CRITICAL: 0.
 
-The open PR #106 is the existing CORE-M04-SYNC-006 / Pack A candidate. After CORE-D-203 is promoted, audit its exact current base/head, full diff, ACTIVE Context Lock, nine canonical source fingerprints, exact Work Order blob, authorized-base ancestry and required CI/security results. The audit is KayzenRoot's owner self-audit and must say `NOT INDEPENDENT`; missing another identity cannot block it. Pack B remains stopped until the Pack A audit and acceptance evidence pass.
+The open PR #106 is the existing CORE-M04-SYNC-006 / Pack A candidate. CORE-D-203 is already canonical on `main` via PR #108. After all required checks pass on PR #106's exact current head, KayzenRoot performs the owner self-audit of its current base/head, full diff, ACTIVE Context Lock, nine canonical source fingerprints, exact Work Order blob and authorized-base ancestry. The audit must say `NOT INDEPENDENT`; no second identity or native approval is required. Pack B remains stopped until the Pack A audit and acceptance evidence pass.

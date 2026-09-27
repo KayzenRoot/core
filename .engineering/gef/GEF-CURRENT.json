@@ -5,7 +5,7 @@
   "reviewMode": "DELTA_EXACT_HEAD",
   "assuranceMode": "ELEVATED",
   "productStage": "M04_PACK_A_CANDIDATE_OPEN_OWNER_AUDIT_PENDING",
-  "nextLegalAction": "PROMOTE_CORE_D_203_POLICY_THEN_OWNER_SELF_AUDIT_CORE_PR_106_EXACT_HEAD",
+  "nextLegalAction": "OWNER_SELF_AUDIT_CORE_PR_106_CURRENT_EXACT_HEAD_AFTER_REQUIRED_CHECKS",
   "productImplementationAuthorized": true,
   "canonicalCheckpoint": "docs/project-brain/13-CHECKPOINT.md",
   "lastCompletedWorkOrder": "CORE-WO-M03-001",
