@@ -151,3 +151,8 @@ project inventories even if an old project registry response still says READY.
 registration and invocation by the separate **Codex client**. Issue #4 still
 requires genuine redacted `checkpoint.read` and `context.search` calls made
 inside that actual client before closing the end-to-end integration gate.
+
+
+### Bootstrap terminal output is not proof
+
+The stateful `scripts/hive_bootstrap.py` first registers/inspects and triggers indexing and corpus sync, and its terminal output is deliberately redacted: static health/progress statuses, a validated Git HEAD and typed failure codes. It does **not** print the HIVE project UUID, relative/absolute local paths, raw API bodies or connection errors. Do not share raw Docker logs, environment variables or credentials as evidence. After preparation, use the separate **read-only** `hive_evidence.py` and `hive_mcp_probe.py` from the same clean indexed checkout, followed by real Codex-client invocations. A green GitHub workflow or successful local bootstrap alone cannot close issue #4.
