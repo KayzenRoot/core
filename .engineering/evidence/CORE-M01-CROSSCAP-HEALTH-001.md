@@ -1,0 +1,15 @@
+# CORE-M01-CROSSCAP-HEALTH-001: provider-ID-wide quarantine and health propagation
+
+Status: CORRECTION_CANDIDATE / NO_NEW_CI_ASSUMED
+Work Order: https://github.com/KayzenRoot/core/issues/166
+Original protected-main: `302c95976d2185e58c33120af9c57c71d295f533`
+
+## Actual accepted baseline and source-bound defect
+
+Protected-merged parent [PR #164](https://github.com/KayzenRoot/core/pull/164) corrected `acquire_lease_with_generation` to check the LIVE same provider ID/fingerprint/activation under an exclusive registry lock, with [actual full main-push #36348956113](https://github.com/KayzenRoot/core/actions/runs/36348956113) **11/11 SUCCESS**, including actual M01/M02/M03 Linux/Windows, all bounded fuzz and Ubuntu supply-chain. Prior accepted `crates/core-registry/src/lib.rs` blob `1bbb34ba36fbaabd7efc12eefc6d9e889bed5573` still allows one `provider_id` across distinct `capability` buckets while `quarantine_provider(provider_id,...)` and `set_provider_health(provider_id,...)` return after updating ONLY the first bucket. Thus a multi-capability provider can remain live-lease eligible on a different capability despite ID-wide quarantine or degradation. Frozen M01 spec `docs/modules/M01-CORE-RUNTIME-LIFECYCLE.md` blob `1bbb4e1b3d02e775b41c77259ce44f1ad9afb287` forbids NEW leases for quarantined providers and allows established coherent leases to drain/revoke per separate owner policy.
+
+This bounded candidate updates **both** provider-ID mutation methods to visit all matching descriptors across capability buckets atomically under the existing exclusive registry lock; preserves existing public signatures, existing typed `NoProvider` when no match, unrelated providers and prior lease drain/revoke semantics. Same-file deterministic Rust tests cover two capabilities on the same provider, cloned registry live access, prior lease validity, unrelated provider unchanged, all unhealthy states, recovery and unquarantine independence, and missing ID refusal. No new dependencies or off-scope source edits.
+
+## Actual CI and audit still required
+
+Fresh exact-head selective M01 mode with all 11 status contexts, actual Ubuntu/Windows M01 test/Clippy/PRB, actual bounded M01 fuzz and Ubuntu advisory/dependency/SBOM, real Governance Python tests. Separate logical GEF owner audit explicitly **NOT INDEPENDENT** with zero unresolved HIGH/CRITICAL and threads; protected exact-head squash merge; *new* real **FULL 11/11 post-merge main-push** before closing this narrow Work Order. Existing HIVE owner-local [#4](https://github.com/KayzenRoot/core/issues/4) and M04 external prior-V1 consumer [#111](https://github.com/KayzenRoot/core/issues/111) stay OPEN; blocked M04 #118/#106 untouched; active M04 Context Lock `7c62aad48f84040d68f7fc70958e851a42f0e1d0` must be unchanged. No claim that synthetic Rust tests prove a remote host or prior-V1 absence.

@@ -385,17 +385,25 @@ impl CapabilityRegistry {
         health: ProviderHealth,
     ) -> Result<(), RegistryError> {
         let mut state = self.inner.write().expect("registry lock poisoned");
+        // One provider ID may expose multiple capability descriptors. Apply
+        // its current health/readiness state across ALL of them under one
+        // exclusive lock, rather than leaving a later capability leaseable.
+        let mut found = false;
         for providers in state.providers.values_mut() {
-            if let Some(provider) = providers
+            for provider in providers
                 .iter_mut()
-                .find(|item| item.provider_id == provider_id)
+                .filter(|item| item.provider_id == provider_id)
             {
                 provider.health = health;
                 provider.readiness = matches!(health, ProviderHealth::Healthy);
-                return Ok(());
+                found = true;
             }
         }
-        Err(RegistryError::NoProvider(provider_id.to_owned()))
+        if found {
+            Ok(())
+        } else {
+            Err(RegistryError::NoProvider(provider_id.to_owned()))
+        }
     }
 
     pub fn quarantine_provider(
@@ -404,16 +412,23 @@ impl CapabilityRegistry {
         quarantined: bool,
     ) -> Result<(), RegistryError> {
         let mut state = self.inner.write().expect("registry lock poisoned");
+        // Quarantine targets the entire logical provider ID, not just the
+        // first capability encountered in the registry's sorted map.
+        let mut found = false;
         for providers in state.providers.values_mut() {
-            if let Some(provider) = providers
+            for provider in providers
                 .iter_mut()
-                .find(|item| item.provider_id == provider_id)
+                .filter(|item| item.provider_id == provider_id)
             {
                 provider.quarantined = quarantined;
-                return Ok(());
+                found = true;
             }
         }
-        Err(RegistryError::NoProvider(provider_id.to_owned()))
+        if found {
+            Ok(())
+        } else {
+            Err(RegistryError::NoProvider(provider_id.to_owned()))
+        }
     }
 
     pub fn resolve(
@@ -1334,6 +1349,157 @@ mod tests {
         }
         assert!(matches!(
             registry.acquire_lease_with_generation("health", &generation, 60_000),
+            Err(RegistryError::NoProvider(_))
+        ));
+        assert_eq!(registry.total_active_leases(), 0);
+    }
+
+    #[test]
+    fn shared_provider_quarantine_blocks_new_leases_across_all_capabilities() {
+        let registry = CapabilityRegistry::new();
+        for capability in ["alpha", "beta"] {
+            registry
+                .register_provider(provider(
+                    "shared",
+                    "core",
+                    capability,
+                    ProviderOrigin::CoreNative,
+                    90,
+                ))
+                .unwrap();
+        }
+        registry
+            .register_provider(provider(
+                "other",
+                "core",
+                "third",
+                ProviderOrigin::CoreNative,
+                90,
+            ))
+            .unwrap();
+        let generation = RuntimeGeneration::new(5);
+        for capability in ["alpha", "beta", "third"] {
+            registry
+                .bind_with_generation(
+                    &CapabilityRequirement::new(capability, SemVer::new(1, 0, 0)),
+                    "initial",
+                    &generation,
+                )
+                .unwrap();
+        }
+        let previous_alpha = registry
+            .acquire_lease_with_generation("alpha", &generation, 60_000)
+            .unwrap();
+        let previous_beta = registry
+            .acquire_lease_with_generation("beta", &generation, 60_000)
+            .unwrap();
+        let clone = registry.clone();
+        registry.quarantine_provider("shared", true).unwrap();
+
+        for view in [&registry, &clone] {
+            for capability in ["alpha", "beta"] {
+                assert!(matches!(
+                    view.acquire_lease_with_generation(capability, &generation, 60_000),
+                    Err(RegistryError::NoProvider(_))
+                ));
+            }
+        }
+        // Already-issued coherent leases are not silently revoked.
+        registry
+            .validate_lease(&previous_alpha, &generation)
+            .unwrap();
+        registry
+            .validate_lease(&previous_beta, &generation)
+            .unwrap();
+        let unrelated = registry
+            .acquire_lease_with_generation("third", &generation, 60_000)
+            .unwrap();
+
+        registry.quarantine_provider("shared", false).unwrap();
+        for capability in ["alpha", "beta"] {
+            let lease = registry
+                .acquire_lease_with_generation(capability, &generation, 60_000)
+                .unwrap();
+            registry.release_lease(&lease).unwrap();
+        }
+        registry.revoke_lease(&previous_alpha.lease_id).unwrap();
+        registry.revoke_lease(&previous_beta.lease_id).unwrap();
+        registry.release_lease(&unrelated).unwrap();
+        assert_eq!(registry.total_active_leases(), 0);
+    }
+
+    #[test]
+    fn shared_provider_health_propagates_to_all_capabilities_and_can_recover() {
+        let registry = CapabilityRegistry::new();
+        for capability in ["alpha", "beta"] {
+            registry
+                .register_provider(provider(
+                    "shared",
+                    "core",
+                    capability,
+                    ProviderOrigin::CoreNative,
+                    90,
+                ))
+                .unwrap();
+            registry
+                .bind_with_generation(
+                    &CapabilityRequirement::new(capability, SemVer::new(1, 0, 0)),
+                    "initial",
+                    &RuntimeGeneration::new(6),
+                )
+                .unwrap();
+        }
+        let generation = RuntimeGeneration::new(6);
+        for health in [
+            ProviderHealth::Degraded,
+            ProviderHealth::Unknown,
+            ProviderHealth::Unavailable,
+        ] {
+            registry.set_provider_health("shared", health).unwrap();
+            let snapshot = registry.graph_snapshot();
+            assert_eq!(
+                snapshot
+                    .providers
+                    .iter()
+                    .filter(|item| item.provider_id == "shared"
+                        && item.health == health
+                        && !item.readiness)
+                    .count(),
+                2
+            );
+            for capability in ["alpha", "beta"] {
+                assert!(matches!(
+                    registry.acquire_lease_with_generation(capability, &generation, 60_000),
+                    Err(RegistryError::NoProvider(_))
+                ));
+            }
+        }
+        registry
+            .set_provider_health("shared", ProviderHealth::Healthy)
+            .unwrap();
+        for capability in ["alpha", "beta"] {
+            let lease = registry
+                .acquire_lease_with_generation(capability, &generation, 60_000)
+                .unwrap();
+            registry.release_lease(&lease).unwrap();
+        }
+        registry.quarantine_provider("shared", true).unwrap();
+        registry
+            .set_provider_health("shared", ProviderHealth::Healthy)
+            .unwrap();
+        for capability in ["alpha", "beta"] {
+            assert!(matches!(
+                registry.acquire_lease_with_generation(capability, &generation, 60_000),
+                Err(RegistryError::NoProvider(_))
+            ));
+        }
+        registry.quarantine_provider("shared", false).unwrap();
+        assert!(matches!(
+            registry.quarantine_provider("missing", true),
+            Err(RegistryError::NoProvider(_))
+        ));
+        assert!(matches!(
+            registry.set_provider_health("missing", ProviderHealth::Unknown),
             Err(RegistryError::NoProvider(_))
         ));
         assert_eq!(registry.total_active_leases(), 0);
