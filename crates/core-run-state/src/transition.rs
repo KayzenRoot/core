@@ -72,10 +72,7 @@ pub const fn is_terminal_step(status: StepStatusV1) -> bool {
 }
 
 /// Frozen Round 2 Run transition matrix. Any non-table edge fails typed.
-pub fn validate_run_transition(
-    from: RunStatusV1,
-    to: RunStatusV1,
-) -> Result<(), M04ErrorV1> {
+pub fn validate_run_transition(from: RunStatusV1, to: RunStatusV1) -> Result<(), M04ErrorV1> {
     let legal = matches!(
         (from, to),
         (
@@ -96,7 +93,11 @@ pub fn validate_run_transition(
                 | RunStatusV1::Interrupted
         )
     );
-    if legal { Ok(()) } else { Err(invalid_transition()) }
+    if legal {
+        Ok(())
+    } else {
+        Err(invalid_transition())
+    }
 }
 
 /// Frozen Round 2 Attempt transition matrix.
@@ -118,7 +119,11 @@ pub fn validate_attempt_transition(
                 | AttemptStatusV1::Interrupted
         )
     );
-    if legal { Ok(()) } else { Err(invalid_transition()) }
+    if legal {
+        Ok(())
+    } else {
+        Err(invalid_transition())
+    }
 }
 
 /// Validate the *shape and lineage*, not the external truth, of an explicit

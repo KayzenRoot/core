@@ -80,13 +80,13 @@ mod transition;
 pub use canonical::FingerprintDomainV1;
 pub use contracts::*;
 pub use errors::{M04ErrorClassV1, M04ErrorCodeV1, M04ErrorV1, M04RetryabilityV1};
-pub use transition::{
-    is_terminal_attempt, is_terminal_run, is_terminal_step, validate_attempt_transition,
-    validate_run_transition, validate_skip_authority, validate_step_transition,
-};
 pub use identity::{
     AttemptId, AttemptOrdinalV1, CanonicalFingerprint, EventId, EventSequenceV1, ExecutionEpoch,
     IdempotencyKey, JournalRoot, RunGeneration, RunId, StepId, StepOrdinalV1,
+};
+pub use transition::{
+    is_terminal_attempt, is_terminal_run, is_terminal_step, validate_attempt_transition,
+    validate_run_transition, validate_skip_authority, validate_step_transition,
 };
 
 /// Canonical schema identifier for all M04 V1 envelopes.
