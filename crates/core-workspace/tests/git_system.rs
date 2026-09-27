@@ -249,6 +249,8 @@ fn hostile_git_deadline_kills_reaps_and_does_not_poison_next_inspection() {
     // asserting timeout behavior. Diagnose an early exit instead of silently
     // treating the test as proof that the inspector missed a deadline.
     let ready = root.join("native-helper-ready");
+    // A prior panic can leave this PID-scoped target directory behind.
+    let _ = fs::remove_file(&ready);
     let mut probe = Command::new(&helper)
         .arg(format!("--probe-ready={}", ready.display()))
         .current_dir(&root)
