@@ -259,7 +259,7 @@ Future implementation evidence must map the blocking EV-M04-001..023 graph to ex
 - reproducible finite resource calibration with selected/rejected candidates;
 - advisory/license/supply-chain/SBOM evidence;
 - exact-head Windows and Ubuntu CI;
-- independent exact-head review with zero unresolved HIGH/CRITICAL findings.
+- KayzenRoot exact-head owner self-audit with zero unresolved HIGH/CRITICAL findings, explicitly recorded as not independent.
 
 ### M04 future fuzz/property surfaces
 
@@ -296,7 +296,7 @@ Future implementation must provide exact-head evidence for:
 - six named bounded fuzz campaigns;
 - supply-chain/advisory/license/SBOM gates;
 - cross-platform exact-head CI;
-- complete EV-M04-001..023 traceability and final independent review.
+- complete EV-M04-001..023 traceability and final exact-head owner self-audit.
 
 ### M04 benchmark/calibration matrix
 
@@ -320,4 +320,4 @@ Each AC record must identify:
 
 Pack H must rerun every criterion affected by the selected numeric resource limits after the Calibration Delta. A pre-calibration green result cannot substitute for a required post-calibration exact-head result.
 
-The final implementation PR may report only `READY_FOR_REVIEW` or `BLOCKED`. It may not report APPROVED. Independent exact-head review is AC-M04-023 and remains unsatisfied until performed by the reviewer after executor handoff.
+The final implementation PR may report only `READY_FOR_OWNER_AUDIT` or `BLOCKED`. The executor may not approve its own work. AC-M04-023 is satisfied only after KayzenRoot completes a separate logical owner self-audit on the exact head, reports `NOT INDEPENDENT`, and finds zero unresolved HIGH/CRITICAL findings.

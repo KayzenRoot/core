@@ -82,7 +82,7 @@ The Round 5 lock is intentionally non-authoritative:
 - productImplementationAuthorized: false;
 - active execution: forbidden.
 
-Implementation is forbidden unless a later separate governed admission delta is independently reviewed/promoted and the exact lock on canonical `origin/main` becomes ACTIVE with:
+Implementation is forbidden unless a later separate governed admission delta passes the exact-head owner self-audit defined by CORE-D-203, is promoted, and the exact lock on canonical `origin/main` becomes ACTIVE with:
 - a concrete authorized base equal to the promoted final-freeze basis selected by admission;
 - execution branch `feat/m04-run-state`;
 - exact Work Order and canonical source fingerprints;
@@ -237,7 +237,7 @@ STOP G: all named properties/fuzz/security/supply-chain gates pass on the exact 
 ### Pack H — Calibration, evidence, exact-head CI and handoff
 Run `m04_run_state` calibration on deterministic synthetic fixtures, select finite positive resource defaults from evidence, apply only the authorized numeric/evidence Calibration Delta if needed, rerun affected tests, complete AC/EV mapping and open implementation PR.
 
-STOP H: all AC-M04-001..023 except reviewer-owned AC-M04-023 have exact-head evidence; Windows/Ubuntu hosted gates pass; Evidence Bundle complete; no unresolved HIGH/CRITICAL executor finding; status READY_FOR_REVIEW.
+STOP H: AC-M04-001..022 have exact-head evidence; Windows/Ubuntu hosted gates pass; required security/supply-chain evidence is green; Evidence Bundle is complete; no unresolved HIGH/CRITICAL executor finding; status READY_FOR_OWNER_AUDIT. The separate owner-audit stage then owns AC-M04-023.
 
 ## RESOURCE CALIBRATION GATE
 
@@ -287,9 +287,9 @@ One Calibration Delta may alter numeric limits/thresholds, associated fixture ex
 - AC-M04-020 -> EV-M04-020: dependency/advisory/license/SBOM.
 - AC-M04-021 -> EV-M04-021: exact-head Windows CI.
 - AC-M04-022 -> EV-M04-022: exact-head Ubuntu CI.
-- AC-M04-023 -> EV-M04-023: independent exact-head review, zero unresolved HIGH/CRITICAL.
+- AC-M04-023 -> EV-M04-023: KayzenRoot exact-head owner self-audit, zero unresolved HIGH/CRITICAL, explicitly NOT INDEPENDENT.
 
-AC-M04-023 is reviewer-owned and cannot be satisfied by the executor.
+AC-M04-023 is owner-auditor-owned and cannot be satisfied by the executor. KayzenRoot may perform that separate logical audit stage using the sole connected account; no native GitHub self-approval is allowed or required.
 
 ## EVIDENCE RULES
 
@@ -301,7 +301,7 @@ Do not claim implementation evidence during this planning increment. The Evidenc
 
 If implementation finds a reproducible defect/impossibility:
 1. stop affected packet and dependents;
-2. preserve valid independent evidence;
+2. preserve valid prior evidence;
 3. record exact head, obligation, reproduction and impact;
 4. apply only a correction already permitted by frozen scope or numeric Calibration Delta;
 5. otherwise request the smallest governed Correction Delta;
@@ -311,17 +311,17 @@ No architecture expansion by convenience.
 
 ## FINAL EXECUTOR STOP CONDITION
 
-### READY_FOR_REVIEW
+### READY_FOR_OWNER_AUDIT
 
 Only after Packs A-H are complete, AC-M04-001..022 have exact-head implementation evidence, calibration and post-calibration reruns are complete, required hosted CI/security/supply-chain evidence is green, the Evidence Bundle is complete, the implementation PR is open and no unresolved HIGH/CRITICAL executor finding remains.
 
-READY_FOR_REVIEW is not approval.
+READY_FOR_OWNER_AUDIT means the executor has stopped and handed the exact head to the separate owner-audit stage. The executor cannot produce `OWNER_SELF_AUDIT_APPROVED`.
 
 ### BLOCKED
 
 If any authorization, source binding, lock, packet obligation, AC/EV, finite resource selection, CI/security gate or frozen contract is missing, stale, conflicting or requires out-of-scope change, stop and report the exact gap.
 
-The executor MUST NEVER return APPROVED. Independent governed review owns AC-M04-023 and promotion authority.
+The executor MUST NEVER approve its own implementation. The owner-audit stage may be performed by KayzenRoot on the same account, must disclose `NOT INDEPENDENT`, and owns AC-M04-023. A self-audit verdict does not itself merge the PR or promote a checkpoint.
 
 ## PLANNING STOP CONDITION
 
@@ -355,6 +355,13 @@ Execution is authorized only for the frozen M04 scope and only under the exact a
 
 CORE-M04-SYNC-004 was APPROVED by M04-REVIEW-010 / Issue #100 at exact head `19123d50bebe1a13257d8e2768fca7a1ca1d3393`; PR #99; workflow `36013624792` completed 10/10 jobs SUCCESS; it was squash-promoted as merge `b2ac8e0db72a2145948e7773295b1b252c5e4eab`; unresolved HIGH/CRITICAL findings: 0. This governance-only promotion did not start product implementation.
 
-CORE-M04-SYNC-005 reconciles that post-review state only. After this state delta is independently reviewed, APPROVED and promoted, the next legal action is a fresh Git/HIVE/governance preflight for CORE-WO-M04-001 Pack A on canonical `origin/main`. Only if the ACTIVE Context Lock, all nine source fingerprints, exact Work Order blob, frozen authorized-base ancestry and governance-only intervening changes pass may the executor create `feat/m04-run-state` from that exact main and begin Pack A.
+CORE-M04-SYNC-005 reconciles that post-review state only. The existing PR #106 candidate records the subsequent CORE-M04-SYNC-006 preflight and Pack A work. After CORE-D-203 is promoted, perform a fresh exact-head owner self-audit of PR #106 using its current base/head, lock, nine canonical source fingerprints, Work Order blob, authorized-base ancestry, required CI/security evidence and full diff. Record `NOT INDEPENDENT`; do not require another account or submit native self-approval. Keep Pack B stopped until the Pack A audit and its acceptance evidence are complete.
 
 No planning, architecture, contract, dependency, acceptance, calibration, security or backend decision is changed by this state transition.
+
+
+## Governance amendment — CORE-D-203 / single-account owner self-audit
+
+KayzenRoot is the only required GitHub identity. Executor and auditor are separate logical stages within that account. The owner-audit record must use the exact base and head, inspect the full diff, verify all required CI/security/evidence gates and zero unresolved HIGH/CRITICAL findings, and state `NOT INDEPENDENT`. Never submit a native GitHub self-approval from the author account. Missing another account alone is not a blocker. This amendment does not waive technical evidence, widen the M04 product scope, authorize Pack B, or promote a checkpoint.
+
+The active candidate of record is CORE PR #106. After this policy amendment is promoted to canonical main, audit the exact current PR #106 head and refresh any head-bound evidence if the branch changes. Keep Pack B stopped until Pack A audit and acceptance evidence pass.

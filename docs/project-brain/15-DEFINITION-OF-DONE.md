@@ -178,7 +178,7 @@ M04 completion requires:
 - static/runtime proof of zero-LLM lifecycle semantics and no hidden filesystem/network/process/database/HIVE/GitHub I/O;
 - unit/integration/property/adversarial/fuzz coverage plus Windows/Ubuntu exact-head CI;
 - advisory/license/supply-chain/SBOM evidence;
-- complete AEG-to-artifact traceability and independent exact-head review with no unresolved HIGH/CRITICAL defect.
+- complete AEG-to-artifact traceability and KayzenRoot exact-head owner self-audit with no unresolved HIGH/CRITICAL defect, explicitly recorded as not independent.
 
 Rounds 1-3 are planning candidates/baselines only. No persistence backend, execution Work Order or M04 implementation authorization is created by these sections.
 
@@ -211,6 +211,6 @@ Round 5 planning is complete only when, on one review candidate head:
 - the executor handoff refuses implementation until a later canonical-main admission activates the exact lock;
 - canonical Requirements, Scope, Architecture, Security, Test Plan, DoD, Decisions, module plan, Checkpoint and GEF agree that implementation is unauthorized;
 - exact candidate source fingerprints and Work Order identity are recorded for future staleness/admission checks;
-- hosted CI and independent exact-head review approve the final-freeze candidate with zero unresolved HIGH/CRITICAL.
+- hosted CI passes and KayzenRoot records an exact-head owner self-audit of the final-freeze candidate with zero unresolved HIGH/CRITICAL, explicitly not independent.
 
 Promotion of this DoD closes M04 planning only. It does not satisfy the M04 product implementation DoD.
