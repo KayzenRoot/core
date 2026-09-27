@@ -1,6 +1,6 @@
 # M06 Capability Negotiation — Round 1 discovery candidate
 
-Status: R1_R2_DOCUMENTED / R3_NON_AUTHORITATIVE_DISCOVERY_CANDIDATE  
+Status: R1_R3_DOCUMENTED / R4_NON_AUTHORITATIVE_LIMITED_V0_CANDIDATE  
 Initial protected-main base: 7c68b829541ddbbc97a1a957f64883e23c26a94a  
 Work Order: https://github.com/KayzenRoot/core/issues/154  
 Public M06 API frozen: NO | Product code authorized: NO | M05 host API admitted: NO | M04 V1/V2 contract accepted: NO
@@ -301,3 +301,94 @@ R1 documented mission, HIVE/CORE ownership, SOLO/HIVE behavior, preliminary stat
 **Still blocked/unfrozen for a later Round 4 and final execution packet:** choose pure-only dependency/port option versus separately governed M01 batch change; actually admit M05 versioned host DTO after its own final freeze; independently admit M10/M11/M12/M22 action/peer-proof contracts; govern external M04 previous-V1/V2 compatibility #111; prove local HIVE #4 only if deployment is claimed; settle public versioned M06 API, exact Cargo direct/transitive dependencies and real crate paths, truthful HIVE/host migration and compatibility, measured positive finite numeric budgets, final traceable AEG/DoD, separately reviewed executable Work Order and ACTIVE Context Lock. No status shown here indicates those gates passed, and no extra discovery IDs are invented merely because the file map got longer.
 
 **Round 3 STOP:** accept only this R3 appendix plus a new bounded source-evidence Markdown file following exact-head docs-only Governance and mandatory successful status contexts, a logical owner self-audit `OWNER_SELF_AUDIT_APPROVED / NOT INDEPENDENT` with zero unresolved HIGH/CRITICAL/threads, protected non-force squash merge and independently verified real **FULL 11/11 protected-main push**. Closure remains strictly R3 discovery and does not authorize code, new public schema, provider authority, a multi-provider atomic transaction or premature M05/M04/HIVE promotion.
+
+
+---
+
+## Round 4 — limited read-only v0 direction and remaining execution-freeze gates
+
+Status: R4_NON_AUTHORITATIVE_LIMITED_V0_DIRECTION_CANDIDATE  
+Work Order: https://github.com/KayzenRoot/core/issues/169  
+Exact initial reviewed main: bac70cbb2f083322088e92694b5218c785bc68cf  
+**This is a proposed limited planning choice, not a frozen public API, code permission, production readiness or a completed AEG.**
+
+### R4.1 — Scope choice for v0: independent pure diagnostic preflight
+
+For the first **candidate** M06 increment, adopt R2's **Option A at the planning level**: a pure, bounded, caller-supplied, **read-only group-feasibility preflight**. It can prove that some selected provider configurations are *not* suitable and can provide provisional dependency observations for a trusted caller, but **never** calls `bind`, mints a lease, mutates `core-registry`, authorizes a tool/model/process or claims an all-or-nothing group transaction.
+
+The optional R2 **Option B**, a true snapshot-bound M01 atomic batch eligible-set/bind/lease admission API, is *not included in this v0 candidate*. It requires its **own** M01 Work Order, contract/source/security review and exact-head Rust/Windows/Linux race/property tests if a future actual execution requirement justifies it. Current accepted M01 supports `graph_snapshot`, per-capability `resolve`, `substitution_impact_details`, `bind_with_generation` and individual generation-aware leases; **there is no accepted multi-provider atomic group admission API**. R4 therefore does not pretend that orchestrating several single-capability calls creates atomicity.
+
+This limited scope leaves the provisional M06 interface independent of unfrozen M04 replay/BRC/idempotency, M05 host-observation DTOs and local HIVE configuration. Even pure v0 **does not become executable without a separate final freeze, accepted proof boundaries, calibrated finite limits and reviewed Work Order**. R1–R3 architecture and 28 future discovery test obligations remain source history, not completed product features.
+
+### R4.2 — Future pure function contracts: candidate groups, no serialized schema
+
+The conceptual **input** is an immutable bounded group of existing `core_contracts::CapabilityRequirement` values from an independently admitted caller plus the caller's exact immutable scope/Work Order source reference, selected **accepted** M01 `RuntimeGeneration`, a separately obtained read-only M01 `CapabilityGraphSnapshot`, exact M01 `resolve` results (or typed rejection) and a bounded set of *independently verified* evidence/peer-proof **references** whose verification semantics are owned by later admitted policy/security ports. These field groups are not accepted Rust public DTO types, a published hash format or a guarantee that separate M01 API reads were atomic.
+
+The pure **output** is one bounded typed decision family and only relevant immutable scope/generation/provenance fingerprints and redacted failure reasons: `BLOCKED` for deterministically disproven compatibility, `UNVERIFIED` for missing independently confirmed external/evidence requirements, `STALE_OR_INCONSISTENT_OBSERVATION` when snapshot and separate `resolve`/generation bases cannot be reconciled, or at most `PROVISIONAL_FEASIBILITY` when all *observed* requirements and graph edges are consistent. Every non-BLOCKED result must still declare `GROUP_NOT_ATOMICALLY_ADMITTED` and **no permission to invoke**. An unsupported unknown, absence of independent proof or cardinality breach is a denial rather than an optimistic fallback.
+
+No one may treat `CapabilityGraphSnapshot` as an atomic snapshot of a later independent `resolve`; its accepted implementation captures descriptors/bindings at one registry read-lock instant only. The snapshot type currently does **not** contain a globally locked runtime policy/graph epoch covering later M01 resolver calls. If fresh verification of that gap requires a new M01 batch-read API, that would be a separate governance request; v0 must remain conservative and refuse to upgrade a provisional observation into admission.
+
+### R4.3 — Exact source boundary and no duplicate algorithms
+
+Accepted M01 `core-registry/src/lib.rs` blob `dfe326c90ef4051813f0b2da26fdcad5522fd6c8` now includes both distinct reviewed safeguards: [PR #164](https://github.com/KayzenRoot/core/pull/164) checks the **current** provider ID/fingerprint/activation/health/readiness/quarantine before a new lease; [PR #167](https://github.com/KayzenRoot/core/pull/167) propagates health/quarantine for one logical provider ID across **all** registered capability descriptors. They were protected promoted and the latter independently FULL validated by [CI #36349930954](https://github.com/KayzenRoot/core/actions/runs/36349930954), **11/11 SUCCESS**. This is accepted M01 behavior; M06 v0 does not reimplement live admission, duplicate the registry or treat an old snapshot as a current lease.
+
+The accepted M01 `resolve_from_state` already enforces mandatory per-capability SemVer, features, authorities, assurance, trust, origin/class, policy, quality, health/readiness/quarantine, latency/cost. M06 must delegate rather than re-rank these fields, invent a second fallback route or separately honor self-attested provider identity. The *only new pure v0 analysis* is conservative caller-authorized **cross-capability** dependency closure and contradiction reporting: current M01 individual resolution does not prove complete `dependency_capabilities` closure, opaque `evidence_dependencies` authenticity or atomic group admission.
+
+`ModuleRegistry.validate_graph` checks module **startup** graph cycles; `substitution_impact_details` already computes **active binding** dependent/cache/evidence/critical impacts. M06's tentative `graph.rs` must not clone either accepted algorithm. Actual provider descriptor `origin`, `fingerprint`, `performance_score` or an MCP tool name are *claims*, not independent peer proof. No HIVE user-memory/RAG logic, host process launcher, network listener, M04 journal writer or second authorization layer belongs in the pure crate.
+
+### R4.4 — Limited dependency/port layout and STOP-first execution boundary
+
+R3's candidate `crates/core-capability-negotiation` single-crate file map remains *proposed*. The limited v0 could expose only pure `requirements`, `observation`, `graph`, `evidence`, `feasibility` and `outcome`, plus a bounded **read-only** M01 snapshot/resolve/impact adapter owned by the trusted caller. A direct `core-registry` dependency versus a `core-contracts`-only pure crate with a caller-supplied adapter is **still a final-freeze choice**: current `Cargo.toml` blob `3d9870aff7a8ee5f99f63aecfd295408f683d00e` has no M06 member and existing M01 registry depends transitively on Tokio. R4 creates neither option.
+
+The permitted conceptual data flow is:
+
+```text
+trusted caller with explicit existing scope and M01 read-only access
+  -> independently admitted snapshot/resolver/proof ports (NO M06 writes)
+  -> pure bounded v0 conflict + provider dependency-closure preflight
+  -> typed BLOCKED | UNVERIFIED | STALE | PROVISIONAL_ONLY
+  -> caller must separately revalidate M01 + policy/host/actor/effect gates
+NO: M06 -> binding/lease writes, M04 journal, direct M05 process,
+    arbitrary HIVE/RAG/LLM, M01 reverse dependency or tool execution
+```
+
+No ABI, public DTO name, serde schema/version, hash domain, host-proof receipt format, max graph depth, performance baseline or crate file actually exists. A future executor must receive these precise choices after a new source-bound freeze; an unapproved placeholder must never be confused with production code.
+
+### R4.5 — Exact fail-closed invariants and regression ownership
+
+A later implementation must prove the following with deterministic fake and real-M01 integration evidence, **not** with diagrams alone:
+
+- **No implicit capability acquisition:** every dependency is already in the caller's authorized requirement set or is a separately *actually validated* prior binding within current scope; graph traversal cannot add a capability, trust floor, action scope or evidence owner.
+- **No optimistic duplicate merge:** repeated capability requirements with contradictory major/minor/patch, source/origin, trust, assurance, quality, mandatory features or policy must block rather than intersect/union silently.
+- **Provider dependency distinct from evidence:** `dependency_capabilities` are capability edges, `evidence_dependencies` are opaque references to separately verified evidence owners, and module startup dependencies are a third independent graph. Same-named strings are not sufficient proof.
+- **No hidden alternative enumeration:** when accepted M01's chosen providers yield an incompatible group, a different combination must **not** be searched with copied M01 ranking logic or marked feasible without a separately governed read-only eligible-set API.
+- **No stable-snapshot fiction:** a different descriptor fingerprint, activation generation, runtime policy/capability graph epoch, quarantine/health or prior lease between observations and actual effect means STALE/revalidate. Single-procedure testing across a cloned registry is not proof of cross-process or global atomicity.
+- **No fake group transaction:** multiple valid M01 `resolve` outputs or individually acquired leases yield, at most, provisional diagnostics. Failures after earlier binds require actual caller/policy/M18 decisions. Dropping a lease does not undo a possible external side effect.
+- **No unverified external trust:** unadmitted M05 host session, remote MCP tool metadata or a claimed HIVE release/protocol identifier cannot mint independently authenticated M11/M22 peer/security or M10/M12 effect authority.
+- **SOLO first:** absent local HIVE #4 evidence, native CORE-only logic still reports deterministic unverified HIVE availability and only uses a CORE fallback if accepted M01 requirements explicitly permit exact compatible floors.
+- **Finite, deterministic, redacted:** empty/duplicate/deep/cyclic/malformed/oversize/tainted graph fixture handling, bounded memory/CPU/resource/cancellation checks and no live network, external subprocess, Git mutation, HIVE persistence, M04 journal or raw secret/path/prompt output.
+
+No numeric performance advantage or exact production limit is asserted by this round.
+
+### R4.6 — Mapping the existing 28 future discoveries to v0 evidence owners
+
+All `EV-M06-D01..D28` remain **PENDING discovery hypotheses**; this classification does not create a final AEG, execute tests or waive blocked external evidence.
+
+| Future fixture owner | Existing discovery hypotheses | Evidence required before executable v0 acceptance |
+| --- | --- | --- |
+| Accepted M01 interop/eligibility | D01, D02, D05, D08, D15, D16, D22 | Assert actual single-capability resolver semantics, runtime coherence and unchanged M01 health/quarantine/transitive substitution behavior through real read-only integration. |
+| Pure requirement canonicalization | D04, D17, D18 | Strict finite caller authorization basis; duplicate/version/floor/ref conflict and empty-scope negative cases. |
+| Pure dependency graph | D09, D17, D19, D23 | Missing/self/cyclic/mutually incompatible graphs, alternative enumeration refusal and no false atomic group success. |
+| Separate peer/evidence verification | D03, D07, D11, D20, D21 | Fake forged manifests, unverified evidence/provenance and stale generation observations must remain blocked; **live external security proof not available** through fake ports. |
+| SOLO/HIVE and side effects | D06, D10, D24, D27 | Deterministic no-HIVE operation, truthful fallback floors, no process/network/Git/tool/M04 effects in pure code. |
+| Platform/hostile/property resources | D12, D13, D14, D25, D26, D28 | Reproducible synthetic graph seeds, cap-1/cap/cap+1 measurements and full source-bound Windows/Ubuntu/supply-chain/fuzz and reviewer evidence when code actually exists. |
+
+Any unlisted possible future claim must be linked to an admitted requirement before a final implementation AEG is frozen; this table only **groups** previously defined hypotheses, it does not mark their realization.
+
+### R4.7 — Nineteen-dimension readiness and next separate freeze
+
+R1–R4 now document a limited mission, CORE/HIVE overlap boundaries, SOLO/connected behavior, candidate read-only role, M01 reuse, candidate file/port map, ephemeral observation states, fail-closed reason families, side-effect/owner prohibitions, future telemetry and reproducible test categories. **Still NOT frozen:** exact public/internal versioned contracts; direct Cargo/trait dependency decision; what constitutes independently admitted M11/M22 evidence-port verification; exact bounded scope/provenance receipt from M03 and M10; handling a genuinely admitted M05 host observation after its separate freeze; real M04 V1/V2 disposition before *any* durable invocation mapping; measured and reviewed finite numeric resource budgets and regression floors; compatibility/migration proof; finalized AEG with fixture owners and actual test results; complete acceptance/DoD; separate GEF reviewer-admitted executable Work Order and ACTIVE module Context Lock.
+
+A later planning/freeze round must resolve *all applicable* 19 canonical dimensions with exact accepted source bindings and reproducible measured baseline. HIVE Docker and separate Codex client [#4](https://github.com/KayzenRoot/core/issues/4) and M04 prior-V1 external consumer [#111](https://github.com/KayzenRoot/core/issues/111) are **not** automatically settled by limiting v0's pure scope. No new M04 V1 schema may be inferred from draft PR #118, and no product PR #106 or M05 R5 freeze is admitted.
+
+**Round 4 STOP:** only this non-authoritative R4 appendix plus new source-bound evidence, fresh exact-head docs-only Governance/required successful status contexts with intentional Rust/fuzz no-op identified, a scoped logical owner review `OWNER_SELF_AUDIT_APPROVED / NOT INDEPENDENT` and zero unresolved HIGH/CRITICAL/threads, protected squash merge and independent **real FULL 11/11 post-merge main-push**. Closure proves a bounded v0 planning direction, not any product M06 readiness, group transaction, host trust, local HIVE or external M04 compatibility.
