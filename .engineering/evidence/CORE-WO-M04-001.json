@@ -3,7 +3,7 @@
   "increment": "CORE-M04-FREEZE-001",
   "workOrder": "CORE-WO-M04-001",
   "repository": "KayzenRoot/core",
-  "status": "PACK_A_CANDIDATE_OPEN_OWNER_SELF_AUDIT_PENDING",
+  "status": "PACK_B_CANDIDATE_EXACT_HEAD_VALIDATION_PENDING",
   "planningCandidate": {
     "branch": "planning/m04-final-freeze-round5",
     "planningBase": "0f448c708aafd8f5b4cb6303effdabd7e028bc6f",
@@ -62,15 +62,15 @@
     "fabricatedMeasurements": false
   },
   "implementation": {
-    "status": "PACK_A_CANDIDATE_OPEN_OWNER_SELF_AUDIT_PENDING",
+    "status": "PACK_B_CANDIDATE_EXACT_HEAD_VALIDATION_PENDING",
     "authorizedBase": "f6b422be5465d5a93d0b8fcf4c9507c205663072",
     "finalHead": null,
     "productFilesCreated": true,
     "executionBranch": "feat/m04-run-state",
-    "lastExactHeadCISuccess": "293e8a7afb7f29e04d792c4d5cfb50396815febe",
-    "lastExactHeadWorkflowRun": 36285289762,
+    "lastExactHeadCISuccess": "fecdb4c7069a815a63146c58192575e80c592334",
+    "lastExactHeadWorkflowRun": 36311844093,
     "preMergeCandidateHead": "4fe14277ae4e2d86d2b29571b5a04b4e37301634",
-    "mergeHeadWorkflow": "PENDING_NEW_EXACT_HEAD_RUN"
+    "mergeHeadWorkflow": "PENDING_CURRENT_PACK_B_EXACT_HEAD_CI"
   },
   "evidenceNodes": {
     "EV-M04-001": {
@@ -1320,5 +1320,75 @@
     "exactMergedHeadCI": "PENDING",
     "packBStarted": false,
     "checkpointPromoted": false
+  },
+  "packASubgateAudit": {
+    "reviewId": "M04-REVIEW-013",
+    "issue": 109,
+    "identity": "KayzenRoot",
+    "independent": false,
+    "verdict": "OWNER_SELF_AUDIT_APPROVED_PACK_A_ONLY",
+    "baseSha": "15179cf07d703f074cf50f793a5b1968ba356fc0",
+    "reviewedHead": "fecdb4c7069a815a63146c58192575e80c592334",
+    "workflowRun": 36311844093,
+    "workflowJobsPassed": 10,
+    "openThreads": 0,
+    "unresolvedHighCritical": 0,
+    "authorizesOnly": "PACK_B",
+    "globalM04DoDApproved": false
+  },
+  "packBCandidate": {
+    "reviewId": "M04-REVIEW-014",
+    "reviewIssue": 110,
+    "baseSha": "15179cf07d703f074cf50f793a5b1968ba356fc0",
+    "codeHeadBeforeEvidenceUpdate": "202740112758424569d2bbd016303e1b279aa37a",
+    "codeWorkflowRun": 36313725829,
+    "codeWorkflowResult": "IN_PROGRESS_WHEN_RECORDED",
+    "currentCandidateHead": "RESOLVE_FROM_PR_AT_AUDIT_TIME",
+    "status": "TECHNICAL_VALIDATION_PENDING",
+    "packBSubgate": "PENDING_OWNER_SELF_AUDIT",
+    "executionBranch": "feat/m04-run-state",
+    "changedProductFiles": [
+      "crates/core-run-state/src/lib.rs",
+      "crates/core-run-state/src/transition.rs",
+      "crates/core-run-state/src/projection.rs"
+    ],
+    "changedTestFiles": [
+      "crates/core-run-state/tests/transitions.rs",
+      "crates/core-run-state/tests/projection.rs"
+    ],
+    "constructionProof": [
+      "frozen closed Run/Attempt/Step transition tables",
+      "terminal history immutability",
+      "provisional deterministic parent-child projections",
+      "contiguous unique zero-based attempt and step ordinals",
+      "Run success requires a completed qualifying Attempt and all descendants terminal",
+      "Step SKIPPED requires explicit reason and lineage-bound authority reference shape",
+      "ExplicitAuthorizedSkip prohibited for all other Step dispositions"
+    ],
+    "deferredProofs": [
+      "Pack C canonical journal/replay/root and durable projection authority",
+      "Pack D CAS and fingerprint-bound idempotency/cancellation",
+      "Pack E persistent authority evidence for Step SKIPPED and external reference verification",
+      "Pack F store port / prepared-finalized receipt / finite resource budget",
+      "Packs G-H fuzz/calibration/final evidence and M04-wide exact-head owner audit"
+    ],
+    "technicalRequired": [
+      "cargo fmt --all -- --check",
+      "cargo clippy --workspace --all-targets --locked -- -D warnings",
+      "cargo test --workspace --all-targets --all-features --locked",
+      "Windows/Ubuntu exact-head hosted checks",
+      "advisory, dependency policy and SBOM"
+    ],
+    "provenFinalCIChecks": 0,
+    "unresolvedHighCritical": "PENDING_EXACT_HEAD_AUDIT",
+    "notes": "Candidate status is not evidence of PASS. All global EV-M04 nodes, including EV-M04-023, stay PENDING until complete M04 final evidence."
+  },
+  "proposedCheckpointDelta": {
+    "status": "PROPOSED_NOT_PROMOTED",
+    "canonicalPath": "docs/project-brain/13-CHECKPOINT.md",
+    "currentCanonicalBlobSha": "015f6613852b65f1d0ecbc3cf374f0af61461af5",
+    "workOrder": "CORE-WO-M04-001",
+    "proposal": "Record Pack A owner self-audit subgate APPROVED (NOT INDEPENDENT), Pack B implemented as a candidate with exact-head audit pending, and keep Pack C/global M04 DoD blocked until Pack B audit passes.",
+    "promotionRule": "Do not change canonical Checkpoint on this candidate branch; canonical-source fingerprints and ACTIVE Context Lock remain frozen until a separately reviewed, promoted checkpoint delta."
   }
 }

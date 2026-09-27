@@ -7,13 +7,15 @@ Execution branch: `feat/m04-run-state`
 
 ## CURRENT EXECUTION STATUS
 
-CORE-D-203 was promoted to canonical `main` by CORE PR #108 (squash commit `15179cf07d703f074cf50f793a5b1968ba356fc0`). It establishes the KayzenRoot-only owner self-audit: disclose `NOT INDEPENDENT`; no second account, separate reviewer session, or native GitHub `APPROVE` is required.
+CORE-D-203 was promoted to canonical main by PR #108 (squash commit 15179cf07d703f074cf50f793a5b1968ba356fc0). The sole operational identity is KayzenRoot; any owner self-audit must say NOT INDEPENDENT, with no second account or native self-approval.
 
-The authorized M04 candidate is open in `feat/m04-run-state` / PR #106. Continue its Pack A exact-head verification and owner self-audit before beginning Pack B or promoting a checkpoint.
+Pack A passed the restricted owner-audit subgate M04-REVIEW-013 / Issue #109 at exact base 15179cf07d703f074cf50f793a5b1968ba356fc0 and head fecdb4c7069a815a63146c58192575e80c592334. Exact-head workflow 36311844093 passed 10/10 required/current jobs. This subgate authorized starting Pack B only, not global M04 completion, EV-M04-023, merge or checkpoint promotion.
 
-Before the audit, confirm on canonical `origin/main` that the ACTIVE Context Lock has the concrete authorized base, product authorization, exact Work Order blob and all nine canonical source fingerprints; confirm the PR's exact base/head and required technical checks. Optional HIVE context is used only when actually reachable and current. If it is unavailable or stale, record that truthfully and use the authorized SOLO Git-canonical path; do not fabricate HIVE evidence.
+Pack B has a provisional implementation candidate in PR #106 / feat/m04-run-state: pure closed Run/Attempt/Step transitions, provisional deterministic projection, zero-based non-reused ordinals and parent/child completion guards. Current code-before-evidence-update head: 202740112758424569d2bbd016303e1b279aa37a; Pack B audit candidate M04-REVIEW-014 / Issue #110. Resolve the exact **new** PR head and new exact-head CI after every code/evidence update before declaring a verdict.
 
-Stop with `BLOCKED / NOT_AUTHORIZED` only for missing/stale/conflicting authorization or source bindings. Stop with `BLOCKED_EVIDENCE` for missing or failed exact-head technical/security evidence, unresolved scope mismatch, or HIGH/CRITICAL findings. Do not use absence of another account as a blocker. Keep Pack B stopped until the Pack A owner audit and acceptance evidence pass.
+Step SKIPPED checks only the explicit reason and reference shape/lineage at this stage. Pack E still owns verifying the prior durable attachment and external reference evidence. Neither the Pack B helper nor a projected snapshot is an authoritative journal/store receipt. The pure transition and projection helpers never advance generation, append journal events, choose retry policy or perform I/O.
+
+Pack B remains TECHNICAL_VALIDATION_PENDING until current-head Windows/Ubuntu fmt/Clippy/tests/security/supply-chain/fuzz evidence and owner self-audit pass. Pack C, PR merge, EV-M04-023 and canonical checkpoint promotion stay stopped until their respective later gates.
 
 ## CANONICAL READ ORDER
 
@@ -111,4 +113,4 @@ CORE-M04-SYNC-004 was independently APPROVED by M04-REVIEW-010 / Issue #100 at e
 
 CORE-M04-SYNC-005 was independently APPROVED by M04-REVIEW-011 / Issue #102 at exact head `e8b0548c2ecd7c22edbeb3f02de8a238f9c49ffc`; PR #101; workflow `36033275191` completed 10/10 jobs SUCCESS; promotion merge `251f15495b82df8270ebc12fa93807ffaa15fba4`; unresolved HIGH/CRITICAL: 0.
 
-The open PR #106 is the existing CORE-M04-SYNC-006 / Pack A candidate. CORE-D-203 is already canonical on `main` via PR #108. After all required checks pass on PR #106's exact current head, KayzenRoot performs the owner self-audit of its current base/head, full diff, ACTIVE Context Lock, nine canonical source fingerprints, exact Work Order blob and authorized-base ancestry. The audit must say `NOT INDEPENDENT`; no second identity or native approval is required. Pack B remains stopped until the Pack A audit and acceptance evidence pass.
+PR #106 is now the existing CORE-M04-SYNC-006 / Pack B candidate after restricted Pack A approval in Issue #109. The new Pack B audit candidate is Issue #110 and requires a complete exact-current-head CI result, valid canonical source/lock fingerprints, full diff review and zero unresolved HIGH/CRITICAL. Record NOT INDEPENDENT. Pack C, M04-wide EV-M04-023, merge and canonical checkpoint promotion remain stopped pending their governed gates.
