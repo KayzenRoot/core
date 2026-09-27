@@ -3,11 +3,11 @@ use core_run_state::{
     BoundaryRevalidationCapsuleV1, CancelRunRequestV1, CanonicalEventV1, CanonicalFingerprint,
     ContinuationFrameV1, ContractKindV1, EventId, EventKindV1, EventPayloadV1, EventSequenceV1,
     ExecutionEpoch, ExternalReferenceEvidenceV1, ExternalReferenceKindV1, ExternalReferenceOwnerV1,
-    FingerprintDomainV1, IdempotencyKey, IdempotencyRecordKeyV1, IdempotencyRecordV1,
-    JournalRoot, M04EnvelopeV1, M04ErrorClassV1, M04ErrorCodeV1, M04ErrorV1,
-    M04OperationDomainV1, M04ReasonCodeV1, M04SchemaV1, M04VersionV1, RawM04EnvelopeV1,
-    RunGeneration, RunId, RunProjectionV1, RunSnapshotV1, RunStatusV1, StepId, StepOrdinalV1,
-    StepStatusV1, TransitionTargetV1, M04_SCHEMA, M04_VERSION,
+    FingerprintDomainV1, IdempotencyKey, IdempotencyRecordKeyV1, IdempotencyRecordV1, JournalRoot,
+    M04EnvelopeV1, M04ErrorClassV1, M04ErrorCodeV1, M04ErrorV1, M04OperationDomainV1,
+    M04ReasonCodeV1, M04SchemaV1, M04VersionV1, RawM04EnvelopeV1, RunGeneration, RunId,
+    RunProjectionV1, RunSnapshotV1, RunStatusV1, StepId, StepOrdinalV1, StepStatusV1,
+    TransitionTargetV1, M04_SCHEMA, M04_VERSION,
 };
 use core_work_order::{evaluate_admission, materialize_handoff, WorkOrderIdentityRefV1};
 use serde::{de::DeserializeOwned, Serialize};
@@ -523,9 +523,8 @@ fn versioned_contract_headers_validate_and_fail_closed_for_every_dto() {
     );
 
     let mut mismatched_record_wire = snapshot_wire.clone();
-    mismatched_record_wire["projection"]["idempotency_records"]
-        ["run-17|TRANSITION|operation:1"]["key"]["key"] =
-        serde_json::json!("operation:different");
+    mismatched_record_wire["projection"]["idempotency_records"]["run-17|TRANSITION|operation:1"]
+        ["key"]["key"] = serde_json::json!("operation:different");
     assert!(
         serde_json::from_value::<RunSnapshotV1>(mismatched_record_wire).is_err(),
         "deserialization must reject a map key that disagrees with the record"
@@ -569,15 +568,12 @@ fn versioned_contract_headers_validate_and_fail_closed_for_every_dto() {
         .expect("second idempotency record");
     let second_record_json = serde_json::to_string(second_record).unwrap();
     let second_key_json = serde_json::to_string(second_key).unwrap();
-    let records_json = format!(
-        "{{{first_key_json}:{first_record_json},{second_key_json}:{second_record_json}}}"
-    );
-    let duplicate_records_json = format!(
-        "{{{first_key_json}:{first_record_json},{first_key_json}:{first_record_json}}}"
-    );
+    let records_json =
+        format!("{{{first_key_json}:{first_record_json},{second_key_json}:{second_record_json}}}");
+    let duplicate_records_json =
+        format!("{{{first_key_json}:{first_record_json},{first_key_json}:{first_record_json}}}");
     let snapshot_json = serde_json::to_string(&snapshot).unwrap();
-    let duplicate_snapshot_json =
-        snapshot_json.replacen(&records_json, &duplicate_records_json, 1);
+    let duplicate_snapshot_json = snapshot_json.replacen(&records_json, &duplicate_records_json, 1);
     assert_ne!(duplicate_snapshot_json, snapshot_json);
     assert!(
         serde_json::from_str::<RunSnapshotV1>(&duplicate_snapshot_json).is_err(),
