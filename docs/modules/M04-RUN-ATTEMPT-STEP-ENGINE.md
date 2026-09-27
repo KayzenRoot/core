@@ -126,7 +126,7 @@ Future freeze must require:
 - Windows + Ubuntu exact-head CI;
 - no-hidden-I/O and zero-LLM proof;
 - supply-chain/SBOM evidence;
-- independent exact-head review with no unresolved HIGH/CRITICAL.
+- KayzenRoot exact-head owner self-audit with no unresolved HIGH/CRITICAL, explicitly recorded as not independent.
 
 ## Round 2 frozen semantics
 
@@ -321,7 +321,7 @@ Blocking evidence nodes for final M04 acceptance:
 - EV-M04-020 dependency/supply-chain/SBOM evidence;
 - EV-M04-021 exact-head Windows CI;
 - EV-M04-022 exact-head Ubuntu CI;
-- EV-M04-023 independent exact-head review with zero unresolved HIGH/CRITICAL.
+- EV-M04-023 KayzenRoot exact-head owner self-audit with zero unresolved HIGH/CRITICAL, explicitly not independent.
 
 All nodes are blocking unless a later frozen Work Order explicitly proves a node non-applicable without weakening a frozen requirement.
 
@@ -579,7 +579,7 @@ Round 5 compiles promoted Rounds 1-4 into one executor-addressable packet. It do
 - **Pack E — Admission/continuation/reference boundaries:** implement BRC exact M03 authority validation, ICF continuation/new-epoch rules and bounded external-reference attachment.
 - **Pack F — Resource/store/purity boundary:** implement finite `M04ResourceLimitsV1`, pure `prepare_*` and `finalize_commit`, the host-facing `M04StateStoreV1` contract and no-hidden-I/O/zero-LLM proof surfaces.
 - **Pack G — Security, properties, fuzz and supply chain:** implement the frozen adversarial/property matrix, six named fuzz targets, secret-canary checks, dependency/static boundaries, advisory/license/SBOM evidence and both-platform test coverage.
-- **Pack H — Calibration, evidence and exact-head handoff:** run the deterministic benchmark/calibration protocol, apply only the authorized numeric/evidence Calibration Delta if required, rerun affected exact-head gates, complete EV/AC traceability and open the implementation PR as `READY_FOR_REVIEW`.
+- **Pack H — Calibration, evidence and exact-head handoff:** run the deterministic benchmark/calibration protocol, apply only the authorized numeric/evidence Calibration Delta if required, rerun affected exact-head gates, complete EV/AC traceability and open the implementation PR as `READY_FOR_OWNER_AUDIT`.
 
 Packs are ordered by semantic dependency. A blocking failure stops the affected pack and all dependent packs. Valid independent evidence may be preserved.
 
@@ -611,7 +611,7 @@ The implementation acceptance graph is one-to-one and blocking:
 | AC-M04-020 | EV-M04-020 | Dependency/advisory/license/SBOM evidence |
 | AC-M04-021 | EV-M04-021 | Exact-head Windows CI |
 | AC-M04-022 | EV-M04-022 | Exact-head Ubuntu CI |
-| AC-M04-023 | EV-M04-023 | Independent exact-head review, zero unresolved HIGH/CRITICAL |
+| AC-M04-023 | EV-M04-023 | KayzenRoot exact-head owner self-audit, zero unresolved HIGH/CRITICAL, explicitly NOT INDEPENDENT |
 
 No criterion is advisory. A later Evidence Bundle may attach several artifacts to one criterion, but cannot remove or combine away a blocking node.
 
@@ -630,11 +630,11 @@ It may not alter public contract meaning, transition laws, identity/canonical fr
 
 The Round 5 Context Lock is a planning artifact only. It must remain `PENDING_PROMOTION`, with `authorizedBase = null` and `productImplementationAuthorized = false`.
 
-Even after Round 5 is independently reviewed and promoted, M04 implementation remains forbidden until a later separate execution-admission delta:
+Even after Round 5 has passed its exact-head audit and been promoted, M04 implementation remains forbidden until a later separate execution-admission delta:
 1. binds the exact promoted final-freeze canonical main;
 2. recompiles the lock against current canonical source fingerprints;
 3. sets a concrete authorized base and the execution branch `feat/m04-run-state`;
-4. is independently reviewed and promoted to canonical `origin/main`;
+4. passes the exact-head owner self-audit defined by CORE-D-203 and is promoted to canonical `origin/main`;
 5. leaves all frozen planning semantics unchanged.
 
 ### HIVE planning observation
@@ -643,7 +643,7 @@ No direct HIVE MCP/connector is available in this planning chat environment. No 
 
 ### Round 5 STOP CONDITION
 
-Stop this planning increment after the Work Order, pending Context Lock, Evidence Bundle skeleton, executor handoff, canonical source bindings, checkpoint/GEF candidate state and final-freeze evidence are complete and submitted for independent exact-head review.
+Stop this planning increment after the Work Order, pending Context Lock, Evidence Bundle skeleton, executor handoff, canonical source bindings, checkpoint/GEF candidate state and final-freeze evidence are complete and submitted for the exact-head owner self-audit defined by CORE-D-203.
 
 Do not create product code, the `core-run-state` crate, Cargo changes, fuzz targets, benchmark code, a production backend, an active Context Lock, an execution branch or implementation authorization in this increment.
 
@@ -657,7 +657,7 @@ Assurance: `ELEVATED`
 
 The final planning freeze is promoted. This admission candidate changes execution state only. It may arm the exact frozen Work Order and Context Lock against the promoted final-freeze base, but it does not alter any Round 1-5 semantic, contract, dependency, file-map, acceptance, calibration, security or ownership decision.
 
-Execution authority is effective only after the exact admission candidate is independently reviewed and promoted to canonical `origin/main`. Presence on `planning/m04-execution-admission` is not authority.
+Execution authority is effective only after the exact admission candidate passes the exact-head owner self-audit defined by CORE-D-203 and is promoted to canonical `origin/main`. Presence on `planning/m04-execution-admission` is not authority.
 
 
 ## Execution admission promotion

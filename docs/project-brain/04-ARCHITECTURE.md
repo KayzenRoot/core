@@ -631,9 +631,9 @@ M04 may depend only on admitted lower-level M01/M03/shared primitive contracts a
 
 ### Acceptance evidence architecture
 
-The candidate M04 Acceptance Evidence Graph EV-M04-001..023 is blocking and covers public contracts, legal/illegal transitions, generation/CAS races, idempotency, cancellation races, journal replay/corruption, BRC/ICF, typed-identity substitution, canonicalization vectors, resource boundaries, snapshot equivalence, reference validation, hidden-I/O and zero-LLM proof, bounded fuzzing, calibration, supply-chain/SBOM, Windows/Ubuntu exact-head CI and independent exact-head review.
+The candidate M04 Acceptance Evidence Graph EV-M04-001..023 is blocking and covers public contracts, legal/illegal transitions, generation/CAS races, idempotency, cancellation races, journal replay/corruption, BRC/ICF, typed-identity substitution, canonicalization vectors, resource boundaries, snapshot equivalence, reference validation, hidden-I/O and zero-LLM proof, bounded fuzzing, calibration, supply-chain/SBOM, Windows/Ubuntu exact-head CI and a KayzenRoot exact-head owner self-audit explicitly recorded as not independent.
 
-This is a planning candidate only. M04 product implementation remains unauthorized until the final planning freeze and a separate governed execution-admission delta are independently reviewed and promoted.
+This is a planning candidate only. M04 product implementation remains unauthorized until the final planning freeze and a separate governed execution-admission delta pass the single-account exact-head owner self-audit and are promoted.
 
 
 ## M04 Round 4 implementation-addressable architecture candidate
@@ -752,12 +752,12 @@ feat/m04-run-state
   Pack A -> B -> C -> D -> E -> F -> G -> H
         |
         v
-implementation PR / READY_FOR_REVIEW
+implementation PR / READY_FOR_OWNER_AUDIT
         |
         v
-independent exact-head review
+KayzenRoot owner self-audit (NOT INDEPENDENT)
         |
-        +--> APPROVED -> governed promotion
+        +--> OWNER_SELF_AUDIT_APPROVED -> governed promotion
         +--> CORRECTION REQUIRED / BLOCKED
 ~~~
 

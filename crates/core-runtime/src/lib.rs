@@ -2214,7 +2214,10 @@ mod tests {
     #[tokio::test]
     async fn worker_finishes_after_cancel_before_shutdown_deadline() {
         let mut shutdown_config = config("worker-before-deadline");
-        shutdown_config.shutdown_timeout_ms = 500;
+        // This success-path test includes synchronous journal I/O on Windows.
+        // The separate five-millisecond timeout test still proves fail-closed
+        // escalation when a worker never completes.
+        shutdown_config.shutdown_timeout_ms = 2_000;
         let mut supervisor = Supervisor::new(shutdown_config).unwrap();
         supervisor.bootstrap().await.unwrap();
         supervisor
@@ -2223,10 +2226,13 @@ mod tests {
         let worker = supervisor
             .worker_completion_handle("finishing-worker")
             .unwrap();
+        let (worker_ready_tx, worker_ready_rx) = tokio::sync::oneshot::channel();
         let worker_task = tokio::spawn(async move {
+            worker_ready_tx.send(()).unwrap();
             worker.wait_for_cancellation().await;
             worker.report_completed().unwrap();
         });
+        worker_ready_rx.await.unwrap();
         let receipt = supervisor.shutdown().await.unwrap();
         worker_task.await.unwrap();
         assert!(receipt.clean);
@@ -2245,10 +2251,14 @@ mod tests {
     #[tokio::test]
     async fn multiple_workers_report_completion_without_lost_notifications() {
         let mut shutdown_config = config("multiple-workers-before-deadline");
-        shutdown_config.shutdown_timeout_ms = 1_000;
+        // Three cooperating workers delay at most 50 ms once cancellation is
+        // observed; permit hosted CI/journal scheduling without accepting a
+        // lost wakeup. The separate 5 ms negative case still enforces timeout.
+        shutdown_config.shutdown_timeout_ms = 2_000;
         let mut supervisor = Supervisor::new(shutdown_config).unwrap();
         supervisor.bootstrap().await.unwrap();
         let mut worker_tasks = Vec::new();
+        let mut worker_ready_receivers = Vec::new();
         for (worker_id, delay_ms) in [
             ("worker-fast", 5_u64),
             ("worker-middle", 25),
@@ -2256,7 +2266,10 @@ mod tests {
         ] {
             supervisor.register_isolated_worker(worker_id).unwrap();
             let worker = supervisor.worker_completion_handle(worker_id).unwrap();
+            let (worker_ready_tx, worker_ready_rx) = tokio::sync::oneshot::channel();
+            worker_ready_receivers.push(worker_ready_rx);
             worker_tasks.push(tokio::spawn(async move {
+                worker_ready_tx.send(()).unwrap();
                 worker.wait_for_cancellation().await;
                 assert_eq!(
                     worker.status(),
@@ -2266,6 +2279,9 @@ mod tests {
                 worker.report_completed().unwrap();
                 worker.worker_id().to_owned()
             }));
+        }
+        for worker_ready in worker_ready_receivers {
+            worker_ready.await.unwrap();
         }
 
         let receipt = supervisor.shutdown().await.unwrap();

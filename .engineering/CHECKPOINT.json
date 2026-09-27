@@ -2,8 +2,8 @@
   "schemaVersion": "core-gef-checkpoint-bridge-v1",
   "viewStatus": "DERIVED_VIEW",
   "canonicalCheckpoint": "docs/project-brain/13-CHECKPOINT.md",
-  "status": "M01 COMPLETE / M02 COMPLETE / M03 COMPLETE",
+  "status": "M01 COMPLETE / M02 COMPLETE / M03 COMPLETE / M04 PACK A CANDIDATE OPEN",
   "version": "CORE V0.0 - Modular Construction",
   "phase": "3 - M03 Complete / M04 Execution Authorized",
-  "nextStep": "After CORE-M04-SYNC-005 is independently approved and promoted, run fresh Git/HIVE/governance preflight for CORE-WO-M04-001 Pack A from canonical main. Validate the ACTIVE Context Lock, all nine source fingerprints, the exact Work Order blob and frozen authorized-base ancestry. Begin Pack A only if preflight passes; M04 remains authorized, ACTIVE and NOT_STARTED. Do not widen frozen M04 scope."
+  "nextStep": "After CORE-D-203 / Issue #107 is canonical, perform KayzenRoot's exact-base/exact-head owner self-audit on the current CORE PR #106 head 2721b89598998dad08c19f581fe650be53d3c882. Record NOT INDEPENDENT, confirm required CI/security checks, source/lock bindings and zero unresolved HIGH/CRITICAL findings. Keep Pack B stopped until Pack A audit and acceptance evidence pass; do not promote a checkpoint from an unaudited head."
 }

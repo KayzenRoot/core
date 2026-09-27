@@ -266,7 +266,7 @@ At the end of M04 Rounds 1-3, implementation remained unauthorized pending the f
 - preserve the exact `core-run-state` file/dependency map;
 - freeze AC-M04-001..023 one-to-one against EV-M04-001..023;
 - freeze the numeric/evidence-only Resource Calibration Delta;
-- freeze executor STOP states and independent review ownership;
+- freeze executor STOP states and the single-account owner self-audit stage defined by CORE-D-203;
 - record exact canonical source fingerprints for later admission staleness checks.
 
 ### OUT OF SCOPE
