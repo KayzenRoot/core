@@ -42,7 +42,7 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - CORE-GOV-002-C01 GitHub hardening independently reviewed (Review 001 / Issue #57) and promoted through PR #56; active ruleset `CORE main protection` id `23769853` protects `main` with no bypass actors and the seven-context strict CI gate.
 
 ## PENDING
-- Promote CORE-D-203 / Issue #107 through the normal protected-main checks, then perform an exact-head KayzenRoot owner self-audit of PR #106. Validate the ACTIVE Context Lock, all nine source fingerprints, the exact Work Order blob, frozen authorized-base ancestry, required CI/security evidence and zero unresolved HIGH/CRITICAL findings. Disclose `NOT INDEPENDENT`; do not require another account or native self-approval.
+- After CORE-D-203 is canonical under normal protected-main checks, perform KayzenRoot's exact-base/exact-head owner self-audit of PR #106. Validate the ACTIVE Context Lock, all nine source fingerprints, the exact Work Order blob, frozen authorized-base ancestry, required CI/security evidence and zero unresolved HIGH/CRITICAL findings. Disclose `NOT INDEPENDENT`; do not require another account or native self-approval.
 - Deep-plan M04 through M24 in dependency order.
 - Freeze each module Requirements/Architecture/DoD/Work Order before implementation authorization.
 - Live local HIVE bootstrap evidence against current main.
@@ -57,7 +57,7 @@ After CORE-D-203 / Issue #107 is canonical, perform KayzenRoot's exact-base/exac
 
 ## EVIDENCE
 - M04 execution admission Review 008 / Issue #95 — APPROVED; PR #94; exact head `f29dcb6b327c5fdceda31fe306e52d506c1eae72`; workflow `35992752646`; promotion merge `bb6f631284361fae29479c66f62ca88bebf3d79c`; 10/10 hosted jobs SUCCESS.
-- CORE-WO-M04-001 frozen authorized base remains `f6b422be5465d5a93d0b8fcf4c9507c205663072`; PR #106 is an unmerged candidate based on canonical main `d2b750f917f841fe715aafea9e0f80fbd3bc1035`. Its exact-head code has not been promoted. The current gate is the proposed single-account policy promotion followed by a non-independent owner self-audit.
+- CORE-WO-M04-001 frozen authorized base remains `f6b422be5465d5a93d0b8fcf4c9507c205663072`; PR #106 is an unmerged candidate based on canonical main `d2b750f917f841fe715aafea9e0f80fbd3bc1035`. Its exact-head code has not been promoted. CORE-D-203 defines the single-account audit policy; it becomes effective on canonical main. The remaining PR #106 gate is its exact-head owner self-audit, recorded `NOT INDEPENDENT`, before any Pack B work or checkpoint promotion.
 - M04 final planning freeze Review 007 / Issue #93 — APPROVED; PR #92; exact head `aa65784c66a16f918d694f25cde1a9ba88663b5a`; workflow `35981285696`; promotion merge `f6b422be5465d5a93d0b8fcf4c9507c205663072`; 10/10 hosted jobs SUCCESS.
 - CORE-M04-ADMIT-001 is APPROVED_PROMOTED as merge `bb6f631284361fae29479c66f62ca88bebf3d79c`; CORE-M04-SYNC-003 subsequently made the authorized state canonical at `b79891f489d8c7117aee15e1dca47abb9e23dea3`.
 - CORE-M04-SYNC-003 Review 009 / Issue #97 — APPROVED; PR #96; exact head `f9a5a7847e268000a5249ae8e69c81ed22b924ad`; workflow `35994572596`; 10/10 hosted jobs SUCCESS; promotion merge `b79891f489d8c7117aee15e1dca47abb9e23dea3`; unresolved HIGH/CRITICAL: 0.
