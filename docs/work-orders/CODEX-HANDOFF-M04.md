@@ -1,3 +1,9 @@
+# CURRENT GOVERNED STATUS — CORE-M04-CONTRACT-DELTA-001 CANDIDATE
+
+On this source-amendment branch **M04 implementation permission is SUSPENDED_PENDING_RE_ADMISSION**, effective only if/when this candidate is reviewed and promoted to canonical main. The old PR #106 Pack A/B owner audit decisions are historical at their exact reviewed heads and **NOT INDEPENDENT**, not current authority for altered DTOs. Issue #111 now requires complete BRC history for genesis **and each continuation** and every canonical event's original operation-domain/request fingerprint. The full changed source set and pending lock must be re-admitted in a separate governed step after promotion. No Pack C code, PR #106 merge, M04 EV PASS or checkpoint promotion is authorized by this source candidate.
+
+## Prior executor handoff, frozen historical record
+
 # CODEX HANDOFF — M04 Run / Attempt / Step Engine
 
 Work Order: `CORE-WO-M04-001`  

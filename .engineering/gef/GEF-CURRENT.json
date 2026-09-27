@@ -4,9 +4,9 @@
   "promptMode": "GEF_V1_HIVE_FIRST",
   "reviewMode": "DELTA_EXACT_HEAD",
   "assuranceMode": "ELEVATED",
-  "productStage": "M04_PACK_A_CANDIDATE_OPEN_OWNER_AUDIT_PENDING",
-  "nextLegalAction": "PROMOTE_CORE_D_203_POLICY_THEN_OWNER_SELF_AUDIT_CORE_PR_106_EXACT_HEAD",
-  "productImplementationAuthorized": true,
+  "productStage": "M04_CONTRACT_DELTA_SOURCE_CANDIDATE_PENDING_READMISSION",
+  "nextLegalAction": "REVIEW_PROMOTE_M04_CONTRACT_DELTA_001_THEN_SEPARATE_M04_RE_ADMISSION",
+  "productImplementationAuthorized": false,
   "canonicalCheckpoint": "docs/project-brain/13-CHECKPOINT.md",
   "lastCompletedWorkOrder": "CORE-WO-M03-001",
   "lastPromotedMerge": "251f15495b82df8270ebc12fa93807ffaa15fba4",
@@ -15,7 +15,7 @@
   "authorizationEffectiveOnlyOnCanonicalMain": true,
   "admissionCandidateBranch": "planning/m04-execution-admission",
   "frozenAuthorizedBase": "f6b422be5465d5a93d0b8fcf4c9507c205663072",
-  "admissionStatus": "APPROVED_PROMOTED",
+  "admissionStatus": "HISTORICAL_APPROVED_PROMOTED_SUPERSEDED_ON_DELTA_PROMOTION",
   "admissionReviewIssue": 95,
   "admissionPullRequest": 94,
   "admissionReviewedHead": "f29dcb6b327c5fdceda31fe306e52d506c1eae72",
@@ -65,5 +65,15 @@
   "admissionPromotionMerge": "bb6f631284361fae29479c66f62ca88bebf3d79c",
   "reviewIdentityPolicy": "SINGLE_ACCOUNT_OWNER_SELF_AUDIT",
   "ownerAuditIdentity": "KayzenRoot",
-  "reviewAuditIndependence": false
+  "reviewAuditIndependence": false,
+  "contractDeltaCandidate": {
+    "increment": "CORE-M04-CONTRACT-DELTA-001",
+    "status": "PROPOSED_PENDING_EXACT_HEAD_REVIEW_AND_PROMOTION",
+    "governingDecision": "CORE-D-204",
+    "designIssue": 111,
+    "contextLockActivation": "SUSPENDED_PENDING_RE_ADMISSION_ON_DELTA_PROMOTION",
+    "originalPR106Unmerged": true,
+    "packAandBAuditsHistorical": true,
+    "all23GlobalEVNodesPending": true
+  }
 }
