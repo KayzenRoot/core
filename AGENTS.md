@@ -104,3 +104,21 @@ Send a correction back to Codex/another executor only when direct repair is not 
 - Record the correction in the PR/review evidence.
 - Only produce/send a corrective Codex prompt when executor-required criteria are actually met.
 - If a direct correction unexpectedly expands in scope, stop and reclassify it before continuing.
+
+## Optional published HIVE v1.0.3 context reference and compact prompts
+
+**Version boundary.** CORE's admitted HIVE runtime/integration pin remains **v1.0.0** at `a53b5b9fcf55c32a5696180fb1b1ef80ccd1edcf` (see `docs/HIVE-INTEGRATION.md`, the active Work Order and Context Lock). The published HIVE **v1.0.3** tag (`52bd3dab54dd4f16264072e198ed1fc23168f7fa`) is an **optional reference for read-only executor-context and prompt preparation**, not an installed version requirement, runtime replacement, compatibility acceptance or authority to switch Docker checkouts. Keep using the admitted v1.0.0 path unless a separate governed Work Order accepts a runtime upgrade.
+
+Both published tags expose the same seven reference read-only tools in `backend/app/mcp_server.py`: `project.list`, `project.status`, `context.build`, `context.search`, `memory.search`, `memory.get` and `checkpoint.read`. Their MCP server reports protocol surface version `mcp-core-surface-v1`, **not** the Git release tag. A successful MCP handshake or a GitHub source inspection cannot prove which release, local Docker instance, registered/indexed corpus or Codex client is actually running.
+
+### Bounded context preflight
+
+1. Resolve the real repository root, branch, HEAD and cleanliness with Git; identify the exact issue/admitted Work Order, source hierarchy, canonical checkpoint and, where applicable, the active Context Lock before requesting derived HIVE context.
+2. Use HIVE only when it is available **in this executor's actual environment**. Verify the local checkout's release/tag and Git SHA independently of the MCP handshake; inspect the server handshake and actual exposed `tools/list` rather than assuming that a named tag or a repository example proves runtime availability. Do not confuse a protocol version with a release version.
+3. Resolve only the registered CORE project identity, never a guessed project/task ID. Prefer minimal read-only `checkpoint.read` and bounded `context.search`; call `context.build` only with an independently verified existing task ID. Do not load unrelated history. Where live runtime proof is required, use the separately scoped redacted local helpers and independently exercise the real Codex MCP client; GitHub-hosted tests alone cannot close [CORE-HIVE-001](https://github.com/KayzenRoot/core/issues/4).
+4. Label HIVE-derived input with its **observed** release/Git basis (if independently verified), actual MCP handshake/protocol, registered project/task identity and only the safe source references/fingerprints actually returned. If HIVE is absent, stale, mismatched or not exposed, record `UNAVAILABLE`, `STALE` or `NOT_REQUIRED` as appropriate and use canonical Git sources only where the Work Order allows degraded-safe execution. Never invent live HIVE evidence or expose retrieved sensitive context.
+5. No corpus synchronization/reindex, new task, HIVE database write, provider call, release change, Docker replacement or remote/runtime mutation without separate explicit scope and admission. Derived HIVE summaries cannot change source authority, a frozen contract, an acceptance verdict or a STOP condition.
+
+### Compact executor handoff
+
+For each Codex/Cursor handoff include only: **identity** (repository/path, issue or Work Order, exact base/head and branch); **authority** (canonical checkpoint/source paths and active lock if any); **observed HIVE context** (actual read-only handshake and Git/release proof, registered project/task ID and minimal references, or a truthful unavailable state); **bounded work** (objective, exact allowed files, exclusions and acceptance criteria); **assurance** (required focused and exact-head checks, evidence and security constraints); and the **STOP condition**. Complete only the authorized increment, perform reviewer-first bounded corrections, retain checkpoints and never claim a test, external runtime proof or merge that has not actually occurred.
