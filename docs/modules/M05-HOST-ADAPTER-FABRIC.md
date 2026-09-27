@@ -1,6 +1,6 @@
 # M05 Host Adapter Fabric — Round 1 discovery candidate
 
-Status: R1_R2_DOCUMENTED / R3_NON_AUTHORITATIVE_DISCOVERY_CANDIDATE  
+Status: R1_R3_DOCUMENTED / R4_NON_AUTHORITATIVE_DISCOVERY_CANDIDATE  
 Base: 3b7d184ad50ef22320d57572dfade965a98fbad4  
 Work Order: https://github.com/KayzenRoot/core/issues/133  
 Public contract frozen: NO | Product implementation authorized: NO | M04 contract decision: BLOCKED_EXTERNALLY
@@ -247,3 +247,110 @@ For each knob, later implementation must demonstrate `cap-1/cap/cap+1` behavior,
 This appendix makes **no** change to M01, its accepted IPC wire protocol or single-account GEF rules. No M05 public request/receipt, crate, dependency, external command, network listener, HIVE client or numeric threshold is frozen. The ephemeral host-session proposal remains acyclic: M01 provides runtime/codec/registry, M05 observes mediated transport; M06 selects, M10/M11/M12 authorize and perform effects, M04 alone commits durable Run state, M18 reconciles unknown side effects, M22 sets security policy, M23 federates HIVE. The pending M04 external prior-V1 journal/binary/consumer inventory #111 and local HIVE/Docker/Codex issue #4 cannot be replaced by GitHub-only source proof.
 
 **Round 3 STOP CONDITION:** promote this source-grounded **planning** appendix plus separate evidence record only after exact-head docs-only CI, bounded logical owner self-audit NOT INDEPENDENT with zero unresolved HIGH/CRITICAL, protected squash merge and full real main-push validation. Round 4 may propose a candidate semantic contract/acceptance graph only if it does not freeze M04-bound DTOs or silently choose unadmitted transport/dependency/numeric limits. Final planning freeze and a separate Work Order execution admission are still prerequisites for M05 code.
+
+
+---
+
+## Round 4 — candidate session laws, provisional acceptance graph and final-freeze prerequisites
+
+Status: R4_NON_AUTHORITATIVE_CONTRACT_LAW_CANDIDATE  
+Work Order: https://github.com/KayzenRoot/core/issues/145  
+Exact initial R4 basis: fe4330b4abf772d9bb5f24615b5a3ffe05f13744  
+Public M05 schemas, resource defaults, dependency set, execution admission: ALL UNFROZEN
+
+Round 4 makes the **M04-independent** portion of the future adapter/session contract testable at the planning level while explicitly denying any product code or premature durable-M04 binding. The prior R1–R3 boundaries remain unchanged. Real old-M04-V1 external consumption is UNKNOWN under issue #111; proposed M04 V1 source PR #118 is DRAFT and implementation PR #106 has not been promoted. Consequently all invocation fields that embed M04 durable Run/BRC/ICF/idempotency bytes remain BLOCKED and cannot be guessed here. HIVE local v1.0.0/Codex proof issue #4 is separate.
+
+### R4.1 — Boundary DTO *concepts*, not frozen public types
+
+A future **HostSessionObservation** could comprise a fixed version/kind tag, ephemeral session identity, exact M01 boot epoch, adapter-generation number, transport class and protocol identity, observed negotiated version/finite frame cap, separately verified peer-proof **reference**, claimed external feature metadata tagged UNTRUSTED, bound registry provider/binding fingerprints, immutable failure/health state and a bounded reason code. No host-provided string may self-assign `Verified` trust or overwrite a policy/peer-proof reference; an observation is not a provider admission receipt.
+
+A future **HostInvocationEnvelope** should carry the *caller's* prior policy authorization reference, separately validated M06/M01 capability lease and runtime generation, stable operation/correlation identity, session-generation binding, method/schema identity, finite payload/deadline/budget and a cancellation hook. It must not mint scope from natural-language task content. The exact representation of M04 Run/Attempt/Step linkage, external idempotency, persistent outcomes and journal append remains BLOCKED until M04 issue #111 has an authorized V1-all-NO or separately governed V2 disposition, new source/Context Lock admission and fresh owner review. A successful M05 transport handshake or caller request is not that admission.
+
+A future **HostInvocationObservation** must separately encode whether bytes were definitely not delivered, delivery is acknowledged but effect unknown, the effect owner supplied independently validated proof, or transport failed without being able to disprove a previous side effect. The default after possible delivery followed by crash/cancel/timeout/disconnect is `EXTERNAL_EFFECT_UNKNOWN`, even when the local task's timeout handler returns. M05 must not use a successful stdout line, MCP response or wall-clock timestamp to mark M04 completed or authorize an automatic retry. Diagnostics are typed, size-bounded and redacted; raw credentials, paths, environment, host text and prompt content never become canonical result/evidence authority.
+
+Candidate logical error families (not serialized enum names yet): `PROTOCOL_INVALID`, `PEER_UNVERIFIED`, `REQUIRED_FEATURE_MISSING`, `AUTHORITY_ABSENT_OR_STALE`, `SESSION_STALE`, `FRAME_RESOURCE_LIMIT`, `HOST_UNAVAILABLE`, `EXTERNAL_EFFECT_UNKNOWN`, `CANCELLATION_INCOMPLETE`, `OUTPUT_UNTRUSTED`, `INTERNAL_CONTRACT_VIOLATION`. Fatal versus retryability is decided by the effect/policy owner, not inferred from a transport exception.
+
+### R4.2 — Provisional session transition and authority matrix
+
+The following are **planning-only** laws, not a final API or completed implementation state-machine proof:
+
+| Current state | Event and independently required fact | Candidate new state/outcome | Unsafe transition denied |
+| --- | --- | --- | --- |
+| `DISCOVERED` | Verified configuration, bounded source/provenance and M01 epoch supplied by trusted caller | `CONFIG_VALIDATED` | Discovery alone to READY or host invocation |
+| `DISCOVERED/CONFIG_VALIDATED` | Unknown executable origin, unapproved transport, invalid policy/source or absent finite budgets | `REJECTED` | Downgrade to a less-trusted implicit fallback |
+| `CONFIG_VALIDATED` | M01-authorized transport connected and validated peer-proof presented | `HANDSHAKING` | Self-declared host fingerprint elevated to trusted peer |
+| `HANDSHAKING` | Compatible major, exact M01 epoch, finite frame cap, caller/M06 required-minor/features verified and independent peer proof | `READY` | `core-ipc::negotiate` alone taken as authority to invoke |
+| `HANDSHAKING` | Bad CR1 header, unsupported major, stale epoch, invalid endpoint/feature or resource exhaustion | `REJECTED` or `QUARANTINED` according to *later* policy | Accept partial/invalid messages as successful handshake |
+| `READY` | Valid **current** caller policy + capability lease + session generation + M11/M12 action admission | `READY` with bounded permitted invocation observation | Sending merely because transport or tool list is available |
+| `READY` | M01 parent shutdown/drain or explicit bounded caller revocation | `DRAINING` | New action accepted after drain barrier |
+| `READY/DRAINING` | Host crash/disconnect or stale runtime epoch/generation | `LOST`, in-flight effects `UNKNOWN` unless independently proven | Late reply on old generation reactivates session |
+| `READY/HANDSHAKING` | Proven malicious/unverifiable peer or policy quarantine | `QUARANTINED` | Automatic reconnect/unquarantine as trusted without M01/M22 |
+| `DRAINING` | Finite cleanup; in-flight unknown effects captured for effect owner | `CLOSED` with bounded closeout receipt | Claim shutdown resolved ambiguous external actions |
+| `REJECTED/LOST/QUARANTINED/CLOSED` | New M01-authorized generation, separate new endpoint admission | NEW `DISCOVERED` identity, not mutation of terminal session | Reuse old identity or late old-epoch result as current |
+
+Pure guard ordering proposal: first verify session epoch/generation, then independent peer authority and current external lease/policy receipt, then compatibility/finite budgets, and only then make a caller-authorized request *eligible*. Future negative tests must cover simultaneous revocation and send, late reply versus drain, reset after quarantine and cancellation racing actual side effects. Terminal history belongs to M04 if an M04 record exists; this ephemeral session table does not supersede M04's immutable journal.
+
+### R4.3 — External effect, idempotency and source integrity laws
+
+`read_frame` now rejects invalid CR1 fixed-header fields **before reading/allocating body** after separately audited PR #140. The M01 codec already prevents known-malformed stream headers causing unnecessary body waits; neither it nor M05 proves host identity, minimum required feature, correct tool result or exactly-once effect. Keep its source and responsibility unchanged.
+
+Proposed *delivery proof* classes: `NOT_SENT_PROVEN`, `MAYBE_SENT_OR_ACK_ONLY` and `EFFECT_OWNER_PROVEN`. These are conceptual and must be backed by real verifiable source evidence before being asserted. A successful local write, process completion or response framing cannot distinguish an action that committed remotely from one that returned no acknowledgment. If the adapter cannot **prove** non-delivery, classify as possible delivery, preserve immutable input id/correlation and return UNKNOWN. Never replay a potentially non-idempotent external operation in M05, create a new M04 Attempt or falsify a cleanup receipt; M18/effect-owner policy must separately reconcile.
+
+An optional future provider idempotency token is a **provider contract claim**, not automatic durable safety. M04's canonical idempotency domain/fingerprint is not known to M05 at this gate and must not be copied from blocked draft PR #118. M05 correlation identities scope one session/epoch/generation, and any cross-epoch dedup or persisted replay must be separately admitted and independently tested.
+
+### R4.4 — Security/data classification and negative-test obligations
+
+Threat inputs: fake host executable/process ID, forged peer certificate/manifest, symlink/pipe-path substitution, Windows local-pipe impersonation, Unix socket permissions, valid CR1 bytes from an unauthorized peer, version/minor downgrade, untrusted stdout/MCP tool descriptions, oversized or partial streams, stale capability lease, cancellation/host restart, prompt injection and poisoned evidence references.
+
+All independently verifiable trust claims must come from M11/M22 policy-provenance sources, not the external host's self-authored metadata. Capability compatibility/binding remains M06, actual action permission and sandbox M10/M11/M12, external retry M18, secret lifecycle M22, costs M19 and HIVE intelligence/federation M23. Any stdout/stderr/MCP resource text is tainted; no content from it may silently become canonical Work Order edits, executable shell argv, authority, verification verdict or privileged Git operation. A headless SOLO checkout must remain usable without HIVE/remote process and truthful when an optional adapter is absent.
+
+All limits and deadlines must be finite/validated as per R3 dimensions **before product acceptance**, but R4 invents no numeric defaults and publishes no unmeasured performance improvement. Windows and Unix need separate peer/security, cancellation/drain and IPC fixtures; successful identical payload frames are not proof of identical OS privilege behavior.
+
+### R4.5 — Provisional M05 acceptance-evidence graph, every node PENDING
+
+The below is a **future** traceability candidate. It neither creates a final frozen AEG nor implies that passing existing M01 tests proves M05. Conditional nodes may become explicitly NOT APPLICABLE **only** through the final governed transport/Scope freeze; they cannot be silently deleted.
+
+| Future node | Evidence to require before *implemented* M05 acceptance |
+| --- | --- |
+| EV-M05-001 | Exact admitted public contract/version schema plus backwards/unsupported-major compatibility tests. |
+| EV-M05-002 | Exhaustive ephemeral session-state legal transition table and deterministic receipts. |
+| EV-M05-003 | Illegal transition/property tests, terminal/quarantine and no hidden recovery. |
+| EV-M05-004 | M01 CR1 canonical framing/handshake golden vectors reused through the actual `core-ipc` boundary. |
+| EV-M05-005 | M06 required-minor/feature/protocol downgrade and critical-unknown refusal. |
+| EV-M05-006 | Runtime epoch, adapter generation, correlation and stale/late cross-session rejection. |
+| EV-M05-007 | Independent peer provenance/OS identity/source proof for each admitted transport. |
+| EV-M05-008 | Host-supplied manifest/protocol fingerprint spoofing and trust-escalation negative fixtures. |
+| EV-M05-009 | Live M01/M06 lease expiry, revocation, binding-fingerprint/generation mismatch rejection. |
+| EV-M05-010 | M10/M11/M12 caller action-admission receipt mandatory before any effectful send. |
+| EV-M05-011 | Exact caller Scope/Work Order/reference provenance; no ambient working directory or host-reported path authority. |
+| EV-M05-012 | Finite frame/request/response/resource budget cap-1/cap/cap+1 atomic refusal. |
+| EV-M05-013 | Malformed/fragmented/oversized/deep/notification-flood protocol/property/fuzz corpus. |
+| EV-M05-014 | If admitted, child-process/stdio process-tree isolation and stdout/stderr/deadlock/kill tests; otherwise formally scoped-out evidence. |
+| EV-M05-015 | If admitted, MCP client tool/resource/prompt injection, version/feature and tainted-output tests; otherwise formally scoped-out evidence. |
+| EV-M05-016 | Remote disabled by default and no hidden network; if later admitted, separate TLS/auth/egress threat/evidence. |
+| EV-M05-017 | Cancel/timeout/crash between before-send/possible-delivery/after-reply with mandatory UNKNOWN classification. |
+| EV-M05-018 | Caller-owned idempotency, duplicate/late result refusal and no automatic ambiguous-effect replay. |
+| EV-M05-019 | M01 process/worker crash, restart, quarantine, drain and prior-epoch reply revocation. |
+| EV-M05-020 | SOLO local-first operation and explicit absence of optional host/HIVE dependencies. |
+| EV-M05-021 | Optional HIVE read-only context bridge: actual owner-host runtime/client proof separately captured if claimed, never inferred from Git tags or protocol identity. |
+| EV-M05-022 | Secret/credential/host text/path/diagnostic redaction, prompt-injection taint and bounded receipt payloads. |
+| EV-M05-023 | Zero-LLM deterministic transport/session core and no hidden Git/network/process/database mutation outside admitted host ports. |
+| EV-M05-024 | Reproducible same-platform M01-baseline comparisons, resource calibration and selected/rejected finite budget evidence. |
+| EV-M05-025 | Exact-head Ubuntu workspace/integration/hostile fixtures and bounded fuzz where applicable. |
+| EV-M05-026 | Exact-head Windows workspace/integration/hostile fixtures, including local-pipe security boundary. |
+| EV-M05-027 | Exact-head dependency/license/advisory/provenance/SBOM and architecture graph proof; no unapproved SDK/new deps. |
+| EV-M05-028 | KayzenRoot owner exact-head self-audit explicitly NOT INDEPENDENT, no unresolved HIGH/CRITICAL and protected-push verification. |
+
+The R1/R2 discovery identifiers `EV-M05-D01..D14` and R3 fixture directions are planning ancestry, not already completed EV-M05-001..028 implementation evidence. M04's **different** EV-M04-001..023 remain globally pending. A future final frozen AEG must explicitly link each accepted requirement/criterion to evidence owner, fixture, platform and STOP gate before code is authorized.
+
+### R4.6 — File-map-to-evidence and the 19-dimension planning gap
+
+The R3 **candidate** `crates/core-host-adapter` single-crate map remains conditional. The eventual contract/session/provenance/budget/outcome modules should have pure/fake-port law tests that exercise most EV-M05-001..013 and 017..023 with no actual process or M04 store. OS-local `core-ipc` wrapper fixtures exercise EV-M05-004/006/007/025/026. Any future stdio/MCP/remote adapter must receive separate path/dependency, sandbox, optionality and negative fixture admission, not be declared mandatory by the candidate file table. The executable final file map, exact Cargo dependencies, public crate exports, M04 lineage DTOs and transport selection remain UNFROZEN.
+
+Current planning dimension coverage: mission/ownership and HIVE non-duplication documented R1; SOLO/optional HIVE, trust and failure bounds R1–R2; candidate transport/dependency/file map plus calibration protocol R3; provisional contract laws/AEG, STOP and security/DoD traceability this R4. **Pending for final freeze:** authoritative M04 V1 or V2 compatibility disposition and admitted immutable source/lock; exact M06/M10/M11/M12 action-admission and peer-provenance port contracts; selected host types and their SDK/dependency threat review; measured finite numeric budget defaults and regression floors; admitted final crate/file map/trait API; immutable Work Order+Context Lock handoff; actual local HIVE evidence only if such integration is claimed; reviewer-admitted implementation DoD and redacted Evidence Bundle. No missing dimension is silently represented as complete.
+
+### R4.7 — Round 5 entry gate and STOP
+
+**Round 4 STOP:** this appendix and separate source-bound evidence record pass exact-head docs-only Governance and required successful status contexts; a separate bounded logical owner audit `OWNER_SELF_AUDIT_APPROVED / NOT INDEPENDENT` records source/lock binding, zero unresolved HIGH/CRITICAL and zero review threads; protected squash merge is followed by **real full** main-push CI 11/11. Closure means R4 planning **candidate documented only**, never admission of a public API, M05 code, a new transport, arbitrary host authority, numeric resource values or M04 durable-contract version.
+
+**Round 5 prerequisite:** after real external M04 consumer inventory issue #111 yields an owner/source-governed V1-no-legacy or separate versioned V2 archival/migration disposition, explicitly reconcile accepted M04 handoff with M05's caller-owned opaque effect references; obtain separately admitted M06/M10/M11/M12/M22 trust/authority contract details, transport/dependency candidate acceptance and measured calibration. Only then compile a final proposed M05 Work Order, pending Context Lock, source/criteria/evidence graph and executor handoff. A distinct reviewed/promoted execution-admission delta remains required before product code, and HIVE #4 is never auto-proven by this planning work.
