@@ -1,0 +1,101 @@
+//! Versioned M04 Run / Attempt / Step contracts and canonical identity framing.
+//!
+//! Pack A declares public value contracts. Pack B adds pure, closed lifecycle
+//! transition laws. Journal, replay and service behavior remain in later packs.
+//!
+//! Domain identity wrappers prevent accidental Rust-level substitution:
+//!
+//! ```compile_fail
+//! use core_run_state::{AttemptId, RunId};
+//! let run_id = RunId::new("run-1").unwrap();
+//! let _: AttemptId = run_id;
+//! ```
+//!
+//! Raw canonical frame construction is crate-private. Public fingerprint
+//! creation must use a future semantic builder with an allow-listed projection:
+//!
+//! ```compile_fail
+//! use core_run_state::CanonicalFrameV1;
+//! ```
+//!
+//! Canonical event discriminators and their payload variants can only be set
+//! together through a validating constructor or closed deserialization:
+//!
+//! ```compile_fail
+//! use core_run_state::{CanonicalEventV1, EventKindV1};
+//! fn mutate_kind(event: &mut CanonicalEventV1) {
+//!     event.event_kind = EventKindV1::RunCreated;
+//! }
+//! ```
+//!
+//! Contract domains are fixed by the validating constructors and cannot be
+//! reassigned through the public API:
+//!
+//! ```compile_fail
+//! use core_run_state::{CanonicalEventV1, FingerprintDomainV1};
+//! fn mutate_domain(event: &mut CanonicalEventV1) {
+//!     event.domain = FingerprintDomainV1::Request;
+//! }
+//! ```
+//!
+//! ```compile_fail
+//! use core_run_state::{ContinuationFrameV1, FingerprintDomainV1};
+//! fn mutate_domain(frame: &mut ContinuationFrameV1) {
+//!     frame.domain = FingerprintDomainV1::Event;
+//! }
+//! ```
+//!
+//! Struct update syntax cannot substitute the continuation domain either:
+//!
+//! ```compile_fail
+//! use core_run_state::{
+//!     AttemptId, CanonicalFingerprint, ContinuationFrameV1, EventSequenceV1, ExecutionEpoch,
+//!     FingerprintDomainV1, JournalRoot, RunGeneration, RunId,
+//! };
+//! let frame = ContinuationFrameV1::try_new(
+//!     FingerprintDomainV1::Continuation,
+//!     RunId::new("run-1").unwrap(),
+//!     AttemptId::new("attempt-1").unwrap(),
+//!     RunGeneration::new(1),
+//!     EventSequenceV1::new(1),
+//!     JournalRoot::new("e".repeat(64)).unwrap(),
+//!     CanonicalFingerprint::new("a".repeat(64)).unwrap(),
+//!     ExecutionEpoch::new(1),
+//!     CanonicalFingerprint::new("b".repeat(64)).unwrap(),
+//! ).unwrap();
+//! let _substituted = ContinuationFrameV1 {
+//!     domain: FingerprintDomainV1::Event,
+//!     ..frame
+//! };
+//! ```
+
+#[allow(dead_code)]
+// Internal framing primitive is retained for future allow-listed semantic builders.
+mod canonical;
+mod contracts;
+mod errors;
+mod identity;
+mod projection;
+mod transition;
+
+pub use canonical::FingerprintDomainV1;
+pub use contracts::*;
+pub use errors::{M04ErrorClassV1, M04ErrorCodeV1, M04ErrorV1, M04RetryabilityV1};
+pub use identity::{
+    AttemptId, AttemptOrdinalV1, CanonicalFingerprint, EventId, EventSequenceV1, ExecutionEpoch,
+    IdempotencyKey, JournalRoot, RunGeneration, RunId, StepId, StepOrdinalV1,
+};
+pub use projection::{
+    attempt_satisfies_completion, derive_attempt_created, derive_attempt_transition,
+    derive_run_transition, derive_step_declared, derive_step_transition, step_satisfies_completion,
+    validate_projection_structure, validate_run_completion,
+};
+pub use transition::{
+    is_terminal_attempt, is_terminal_run, is_terminal_step, validate_attempt_transition,
+    validate_run_transition, validate_skip_authority, validate_step_transition,
+};
+
+/// Canonical schema identifier for all M04 V1 envelopes.
+pub const M04_SCHEMA: &str = "nexlabs.core.run-state";
+/// Supported M04 envelope version.
+pub const M04_VERSION: u16 = 1;

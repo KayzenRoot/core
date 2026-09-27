@@ -5,5 +5,5 @@
   "status": "M01 COMPLETE / M02 COMPLETE / M03 COMPLETE / M04 PACK A CANDIDATE OPEN",
   "version": "CORE V0.0 - Modular Construction",
   "phase": "3 - M03 Complete / M04 Execution Authorized",
-  "nextStep": "After CORE-D-203 / Issue #107 is canonical, perform KayzenRoot's exact-base/exact-head owner self-audit on the current CORE PR #106 head 2721b89598998dad08c19f581fe650be53d3c882. Record NOT INDEPENDENT, confirm required CI/security checks, source/lock bindings and zero unresolved HIGH/CRITICAL findings. Keep Pack B stopped until Pack A audit and acceptance evidence pass; do not promote a checkpoint from an unaudited head."
+  "nextStep": "After all required checks pass on PR #106's exact current head, KayzenRoot performs an owner self-audit of the exact current base/head and full diff. Record `NOT INDEPENDENT`, verify source/lock bindings and zero unresolved HIGH/CRITICAL findings, and use no second account or native self-approval. Keep Pack B stopped until Pack A audit and acceptance evidence pass; do not promote a checkpoint from an unaudited head."
 }

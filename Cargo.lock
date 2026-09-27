@@ -204,6 +204,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "core-run-state"
+version = "0.1.0"
+dependencies = [
+ "core-identity",
+ "core-work-order",
+ "serde",
+ "serde_json",
+ "thiserror",
+]
+
+[[package]]
 name = "core-runtime"
 version = "0.1.0"
 dependencies = [
