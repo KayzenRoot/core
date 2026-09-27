@@ -1,6 +1,6 @@
 # M05 Host Adapter Fabric — Round 1 discovery candidate
 
-Status: R1_DOCUMENTED / R2_NON_AUTHORITATIVE_DISCOVERY_CANDIDATE  
+Status: R1_R2_DOCUMENTED / R3_NON_AUTHORITATIVE_DISCOVERY_CANDIDATE  
 Base: 3b7d184ad50ef22320d57572dfade965a98fbad4  
 Work Order: https://github.com/KayzenRoot/core/issues/133  
 Public contract frozen: NO | Product implementation authorized: NO | M04 contract decision: BLOCKED_EXTERNALLY
@@ -177,3 +177,73 @@ All **future** tests below are PENDING, not claimed to have executed on M05:
 Pending M06/M11/M12 and M04 disposition: concrete M05 public request/result DTOs, representation of M04 lineage and actual idempotency guarantees, authenticated provider discovery, remote/TLS choice and secrets, first required external protocol, sandbox defaults, exact module/crate/file map, dependency admission, tool-execution semantics, numeric resource budgets, acceptance and production DoD.
 
 **Round 2 STOP:** source-backed append and new evidence record, exact-head docs-only Governance with successful preserved status contexts, scoped owner self-audit NOT INDEPENDENT with zero unresolved HIGH/CRITICAL, protected squash merge and real full main-push CI. This documents a candidate transport/handshake failure model only, not public-contract freeze, executed M05 tests or any permission to advance blocked M04.
+
+
+---
+
+## Round 3 — host transport options, candidate single-crate map and evidence calibration
+
+Status: R3_NON_AUTHORITATIVE_DISCOVERY_CANDIDATE  
+Planning Work Order: https://github.com/KayzenRoot/core/issues/142  
+Exact initial Round 3 main basis: d02462309f47632e409d0d3a7d6b265809b5dcb4  
+Product implementation and public DTO freeze: NOT AUTHORIZED
+
+Round 3 identifies an incremental and verifiable **technology direction**, not an admitted dependency set or permission to create a host process. The admitted M01 `core-ipc` already supplies the first-party CR1 framed protocol; after a separately scoped fix in PR #140 its parser rejects a malformed fixed header before allocating/reading a body. A transport handshake still does not authenticate a third-party host, select a capability or authorize an execution side effect.
+
+### R3.1 — Source-backed option matrix, no invented results
+
+| Candidate | Source basis and SOLO behavior | Unresolved trust/security and cost | Round 3 disposition |
+| --- | --- | --- | --- |
+| Reuse first-party `core-ipc` Unix socket/Windows local-only named pipe | Existing M01 `Frame`, `Handshake`, current CR1 header/version/epoch/limit checks and already implemented platform adapters. First-party isolated worker remains independent of HIVE or remote service. | M01 supervisor owns launch/drain; M11/M22 still must verify executable/OS peer, path/ACL and effective authority. `negotiate` does not verify required features/quality or third-party identity. No separate M05 framing codec. | **Reuse the existing admitted M01 primitive**, with M05 as a candidate session/mediation wrapper only. This is not an additional transport selection or M05 code approval. |
+| Child process with separate stdio streams | Candidate narrow external adapter when a tool/host already supports a versioned framed/line protocol. Avoids remote network prerequisite but requires an independently governed subprocess boundary. | A hostile executable, malformed stdout/notification floods, mixed log/control output, deadlock on full stderr pipe, process-tree cleanup, leaked environment and ambiguous external effects. M01 supervises and M11/M12/M22 admit process execution. | **Evaluate**, not required or selected until executable provenance, framing and sandbox tests support it. Do not repurpose stdio diagnostic output as trusted semantics. |
+| MCP client/protocol bridge | Candidate for tools served by a separately configured process or endpoint. The existing HIVE read-only MCP surface is an optional context-provider example, **not** proof of installed v1.0.0 on the owner's machine. | MCP protocol release/version and server software release are distinct; tools/list is untrusted data, server prompts/resources can contain hostile instructions, and transport can be stdio or remote with different trust models. Policy/lease/auth is not defined by MCP discovery. | **Evaluate as an external protocol adapter after separate admission**. Do not fork the HIVE retrieval/memory implementation or silently require an MCP SDK dependency. |
+| Authenticated remote API transport | Not needed for first SOLO/local-first M05 implementation; later service providers may require a network path. | TLS/identity/credential lifecycle, replay protection, egress policy, revocation, remote quota, tool/result trust and distributed ambiguous effects remain unfrozen M11/M19/M22/M23 responsibilities. | **DEFER to explicit future dependency/security admission**; no remote listener or network package is authorized by this discovery. |
+| Arbitrary in-process dynamic/plugin libraries | Conflicts with accepted M01 process-isolation and no-arbitrary-dynamic-loading policy. | Foreign memory safety/privilege crossings and unbounded side effects; would bypass host and sandbox boundary. | **Excluded** unless a later full architecture/security Change Request explicitly supersedes M01 policy. |
+
+These are governance dispositions based on the **existing architecture** and identified threats, not benchmark scores or a relative speed ranking.
+
+### R3.2 — Proposed one-crate decomposition, all paths provisional
+
+If final planning later admits M05, a *candidate* single cohesive crate `crates/core-host-adapter` can hold **only** transport/adapter-session semantics and independently testable ports. It must not be created by this R3 change:
+
+| Candidate path | One responsibility | Negative boundary |
+| --- | --- | --- |
+| `src/lib.rs` | Re-export the admitted candidate host-port/session API after final contract freeze | No runtime supervisor or M04 journal writes |
+| `src/contract.rs` | Versioned bounded observed handshake, session/invocation/outcome references and typed errors, if later admitted | No new M04 V1-specific Run/BRC/idempotency serializer while #111 blocked |
+| `src/session.rs` | Pure session-generation/epoch/correlation state machine and finite admission/cancel/drain transitions | No model decisions, command invocation, retry strategy, provider replacement or unbounded timers |
+| `src/local.rs` | First-party adapter wrappers **around existing** `core-ipc` encode/decode/handshake and M01-owned local transport | No duplicated CR1 codec, second socket server or worker manager |
+| `src/stdio.rs` | Only if separately admitted: bounded parsed stdio session adapter with stdout control/stderr diagnostic separation | No implicit shell, unverified executable or arbitrary environment inheritance |
+| `src/provenance.rs` | Compare independently provided peer-proof/lease/epoch/generation references; report unverified status | No self-attested trust upgrade, credential storage or duplicate capability registry |
+| `src/budget.rs` | Validate finite caller-supplied bounds against later calibrated profiles | No unbounded sentinel, guessed defaults or self-tuning policy |
+| `src/outcome.rs` | Typed transport-level observations including `EXTERNAL_EFFECT_UNKNOWN`; bounded redaction | No claim that a tool/model result is verified, idempotent or durably committed |
+| `tests/host_session_laws.rs` | Deterministic state/error/replay/cancellation and fake-port law fixtures | No real process/network required to prove pure state laws |
+| `tests/local_ipc_boundary.rs` | Existing M01 CR1 differential/hostile-header tests through public `core-ipc` API | No replacing existing M01 tests or asserting host authentication from successful framing |
+| `tests/stdio_boundary.rs` | Future governed child-process, stdout/stderr, timeout and kill tests | Omit if stdio transport is not separately admitted |
+
+Candidate dependency direction: `core-contracts` for already accepted stable `RuntimeGeneration`, `CapabilityLease` and failure/identity dimensions; `core-ipc` **only** for admitted first-party frames; other existing shared primitives as individually justified. The M01 supervisor, CapabilityRegistry, M06 negotiated decision, M11 sandbox/authentication and M12 invocation authority should be **injected caller-owned ports/receipts**, never recreated or imported through an M01 `core-runtime` reverse dependency. No direct M04 dependency is selected until #111 resolves; optional stdio/MCP/remote SDK and Tokio feature changes require a separately reviewed dependency-admission delta. This table is a future file **map proposal only**, not a promise that every file/module will be necessary.
+
+### R3.3 — Proposed cross-platform transport and trust experiment
+
+Future test/evaluation execution must pin exact source/lock/dependency fingerprints and collect comparable Linux and Windows evidence. Prepare a fixture corpus whose authority is **synthetic** and whose content has no user secrets:
+
+1. **First-party local baseline:** exercise existing `core-ipc` CR1 round-trip and handshake at small, typical, near-cap and cap+1 frame sizes under the existing M01 public APIs. Record actual configured cap and test all known error codes and epoch/major/minor boundaries. Reuse existing M01 regression for invalid header rejection before body read; do not count those M01 tests as M05 implementation evidence.
+2. **Candidate session laws:** fake an authorized caller-supplied M01 epoch, binding generation and separately corroborated peer proof. Permute stale/changed generation, invalid peer proof, unavailable required feature and expired/revoked capability lease. Verify no session READY implies an invocation permit.
+3. **Proposed stdio/protocol bridge:** if later admitted, isolate a controlled fake subprocess under sandbox/policy with independent stdout control and stderr diagnostics. Inject oversized/fragmented frames, stdout noise, burst notifications, partial writes, suppressed output, buffer backpressure and bogus tool descriptions. Do not test by invoking real user tools or scanning the filesystem.
+4. **Cancellation/ambiguity:** deterministic in-memory barrier injects disconnect/crash/timeout before delivery, after delivery but before reply, and after reply but before caller receipt. Only provably-undelivered cases may state non-delivery. Unknown effect must never be auto-replayed and late prior-epoch responses must not publish success.
+5. **Cross-platform host security:** Unix socket filesystem permission/peer-credential fixture and Windows named-pipe remote rejection/ACL/impersonation fixtures are separate M11/M22-owned gates. Same bytes on both platforms do not prove same peer trust.
+6. **Zero-LLM/data boundary:** host handshake/framing, refusal, cancellation and closeout require no inference. Synthetic malicious server text, command suggestions and fake policy overrides must remain tainted and out of canonical authority.
+7. **Supply-chain/evidence:** exact-head formatting, Clippy, Windows/Ubuntu fixture tests, bounded fuzz for frame/session/adversarial transcripts, dependency/license/advisory/SBOM and typed owner self-audit `NOT INDEPENDENT` are future blockers for *implemented* M05. Historical M01/full-main CI is prerequisite context, not proof a future M05 build passes.
+
+### R3.4 — Measurement protocol before numeric limits
+
+A later calibration gate must capture toolchain/OS/CPU/RAM, reproducible fixture generation, exact command/profile, raw samples, selected and rejected candidate ceilings and reasoned comparison to **the same machine's** existing M01 IPC baseline. Separate startup/warm and steady-state regimes; use paired repetitions rather than comparing unrelated hosted runs. Record distribution including median and tails, peak resident memory, CPU, I/O/syscalls, bounded queue growth, buffer copies/allocation pressure, throughput, response latency, cancellation-to-quiescence, crash/restart behavior, redaction size and protocol overhead. Mark which measurements are platform-specific and which are synthetic-only.
+
+Candidate knobs requiring finite, validated production values **before** M05 final product admission: maximum frame/control bytes, body nesting, concurrent sessions/in-flight requests, queued notifications, aggregate buffered stdout/stderr, idle/read/write/deadline/cancellation/drain budgets, child-process restart count and quarantine cooldown, correlation table cardinality, artifact reference count/bytes and redacted telemetry retention. A smaller sampled corpus cannot establish safety at larger untested scales. Never treat P99 from a single run as a guarantee or invent a speedup from the existing docs-only 17-18 s CI observations, which have no bearing on M05 IPC performance.
+
+For each knob, later implementation must demonstrate `cap-1/cap/cap+1` behavior, bounded memory/time under malicious partial streams, atomic typed limit errors with no partial-authorized success, and selected/rejected candidates with reproducible justification. Failure to calibrate keeps that field **PENDING**, not a permissive unlimited default or extrapolated production setting.
+
+### R3.5 — Gate ownership, compatibility and next Round
+
+This appendix makes **no** change to M01, its accepted IPC wire protocol or single-account GEF rules. No M05 public request/receipt, crate, dependency, external command, network listener, HIVE client or numeric threshold is frozen. The ephemeral host-session proposal remains acyclic: M01 provides runtime/codec/registry, M05 observes mediated transport; M06 selects, M10/M11/M12 authorize and perform effects, M04 alone commits durable Run state, M18 reconciles unknown side effects, M22 sets security policy, M23 federates HIVE. The pending M04 external prior-V1 journal/binary/consumer inventory #111 and local HIVE/Docker/Codex issue #4 cannot be replaced by GitHub-only source proof.
+
+**Round 3 STOP CONDITION:** promote this source-grounded **planning** appendix plus separate evidence record only after exact-head docs-only CI, bounded logical owner self-audit NOT INDEPENDENT with zero unresolved HIGH/CRITICAL, protected squash merge and full real main-push validation. Round 4 may propose a candidate semantic contract/acceptance graph only if it does not freeze M04-bound DTOs or silently choose unadmitted transport/dependency/numeric limits. Final planning freeze and a separate Work Order execution admission are still prerequisites for M05 code.
