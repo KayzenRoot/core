@@ -21,6 +21,13 @@ class BootstrapBlocked(RuntimeError):
     """Static or machine-independent reason; no raw API data or local paths."""
 
 
+class RedactedArgumentParser(argparse.ArgumentParser):
+    def error(self, message: str) -> None:
+        # argparse normally echoes an unrecognized argument, which may be a
+        # private local path or token. Convert it to a static typed reason.
+        raise BootstrapBlocked("invalid_cli_arguments")
+
+
 def request(base_url: str, method: str, path: str, payload: dict[str, Any] | None = None) -> Any:
     data = None if payload is None else json.dumps(payload).encode("utf-8")
     req = urllib.request.Request(
@@ -69,7 +76,7 @@ def _required_sha(value: object) -> str:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Register and prepare CORE in HIVE v1.0.0")
+    parser = RedactedArgumentParser(description="Register and prepare CORE in HIVE v1.0.0")
     parser.add_argument("--base-url", default=os.getenv("HIVE_API_URL", "http://localhost:8000"))
     parser.add_argument("--name", default="CORE")
     parser.add_argument(
