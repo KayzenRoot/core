@@ -3,8 +3,9 @@ use core_workspace::git::{
 };
 use core_workspace::{M02Error, UntrackedPolicy, WorkspaceResourceBudget};
 use std::fs;
+use std::io::Read;
 use std::path::{Path, PathBuf};
-use std::process::Command;
+use std::process::{Command, Stdio};
 use std::time::{Duration, Instant};
 
 fn helper_path(root: &Path, name: &str) -> PathBuf {
@@ -59,6 +60,38 @@ fn make_sleep_helper(path: &Path) {
         String::from_utf8_lossy(&output.stderr)
     );
 }
+
+fn make_dual_output_helper(path: &Path) {
+    // A native executable works uniformly with the inspector's env_clear()
+    // on both platforms; a shell script in OS temp could fail before
+    // producing any bytes and be confused with "not a Git repository".
+    let source = path.with_extension("rs");
+    write_helper(
+        &source,
+        r#"fn main() {
+    use std::io::Write;
+    std::io::stdout().write_all(&[b'x'; 64]).expect("write stdout");
+    std::io::stderr().write_all(&[b'y'; 64]).expect("write stderr");
+}
+"#,
+    );
+    let rustc = std::env::var_os("RUSTC").unwrap_or_else(|| std::ffi::OsString::from("rustc"));
+    let output = Command::new(rustc)
+        .args([
+            "--edition=2021",
+            source.to_string_lossy().as_ref(),
+            "-o",
+            path.to_string_lossy().as_ref(),
+        ])
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "dual-output helper compilation failed: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+}
+
 fn make_fsmonitor_helper(path: &Path, canary: &Path) {
     let canary = canary.to_string_lossy();
     if cfg!(windows) {
@@ -199,32 +232,80 @@ fn hostile_fsmonitor_configuration_never_executes_a_canary() {
 
 #[test]
 fn hostile_dual_output_is_capped_without_deadlock() {
-    let root = std::env::temp_dir().join(format!("m02-git-dual-output-{}", std::process::id()));
+    // Use the checked-out workspace target tree instead of a potentially
+    // noexec OS temp directory. Preflight the same native binary under the
+    // empty environment used by the production Git inspector.
+    let root = std::env::current_dir()
+        .unwrap()
+        .join("target")
+        .join(format!("m02-git-dual-output-{}", std::process::id()));
     fs::create_dir_all(&root).unwrap();
-    let helper = helper_path(&root, "dual-output-helper");
-    let body = if cfg!(windows) {
-        "@echo off\r\necho xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\necho yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy 1>&2\r\n"
+    let helper = root.join(if cfg!(windows) {
+        "dual-output-helper.exe"
     } else {
-        "#!/bin/sh\nprintf 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'\nprintf 'yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy' >&2\n"
-    };
-    write_helper(&helper, body);
-    let budget = WorkspaceResourceBudget {
-        max_stdout_bytes: 16,
-        max_stderr_bytes: 16,
-        ..WorkspaceResourceBudget::default()
-    };
-    let started = Instant::now();
-    let error = SystemGitInspector {
-        git_program: helper.to_string_lossy().into_owned(),
+        "dual-output-helper"
+    });
+    make_dual_output_helper(&helper);
+
+    let mut probe = Command::new(&helper)
+        .current_dir(&root)
+        .env_clear()
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .expect("native dual-output helper must start");
+    let deadline = Instant::now() + Duration::from_secs(5);
+    let mut exited = false;
+    while Instant::now() < deadline {
+        if probe.try_wait().expect("probe helper status").is_some() {
+            exited = true;
+            break;
+        }
+        std::thread::sleep(Duration::from_millis(5));
     }
-    .inspect(&GitInspectRequest {
-        root: root.clone(),
-        untracked_policy: UntrackedPolicy::ExcludedByPolicy,
-        budget,
-    })
-    .expect_err("dual output must exceed an independent cap");
-    assert!(matches!(error, M02Error::ResourceBudgetExceeded(_)));
-    assert!(started.elapsed() < Duration::from_secs(5));
+    if !exited {
+        probe.kill().expect("terminate an unresponsive probe");
+    }
+    // Reap both the normal-exit and timeout paths, then inspect each stream.
+    let status = probe.wait().expect("reap the probe helper");
+    let mut stdout = Vec::new();
+    let mut stderr = Vec::new();
+    probe
+        .stdout
+        .take()
+        .unwrap()
+        .read_to_end(&mut stdout)
+        .unwrap();
+    probe
+        .stderr
+        .take()
+        .unwrap()
+        .read_to_end(&mut stderr)
+        .unwrap();
+    assert!(exited && status.success(), "native dual-output preflight failed");
+    assert_eq!(stdout, vec![b'x'; 64]);
+    assert_eq!(stderr, vec![b'y'; 64]);
+
+    // Prove each cap independently, then exercise both simultaneous caps.
+    for (stdout_cap, stderr_cap) in [(16, 1024), (1024, 16), (16, 16)] {
+        let budget = WorkspaceResourceBudget {
+            max_stdout_bytes: stdout_cap,
+            max_stderr_bytes: stderr_cap,
+            ..WorkspaceResourceBudget::default()
+        };
+        let started = Instant::now();
+        let error = SystemGitInspector {
+            git_program: helper.to_string_lossy().into_owned(),
+        }
+        .inspect(&GitInspectRequest {
+            root: root.clone(),
+            untracked_policy: UntrackedPolicy::ExcludedByPolicy,
+            budget,
+        })
+        .expect_err("native dual output must hit the independent cap");
+        assert!(matches!(error, M02Error::ResourceBudgetExceeded(_)));
+        assert!(started.elapsed() < Duration::from_secs(5));
+    }
     let _ = fs::remove_dir_all(root);
 }
 
