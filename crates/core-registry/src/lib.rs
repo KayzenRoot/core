@@ -390,7 +390,10 @@ impl CapabilityRegistry {
         // exclusive lock, rather than leaving a later capability leaseable.
         let mut found = false;
         for providers in state.providers.values_mut() {
-            for provider in providers.iter_mut().filter(|item| item.provider_id == provider_id) {
+            for provider in providers
+                .iter_mut()
+                .filter(|item| item.provider_id == provider_id)
+            {
                 provider.health = health;
                 provider.readiness = matches!(health, ProviderHealth::Healthy);
                 found = true;
@@ -413,7 +416,10 @@ impl CapabilityRegistry {
         // first capability encountered in the registry's sorted map.
         let mut found = false;
         for providers in state.providers.values_mut() {
-            for provider in providers.iter_mut().filter(|item| item.provider_id == provider_id) {
+            for provider in providers
+                .iter_mut()
+                .filter(|item| item.provider_id == provider_id)
+            {
                 provider.quarantined = quarantined;
                 found = true;
             }
@@ -1455,7 +1461,9 @@ mod tests {
                 snapshot
                     .providers
                     .iter()
-                    .filter(|item| item.provider_id == "shared" && item.health == health && !item.readiness)
+                    .filter(|item| item.provider_id == "shared"
+                        && item.health == health
+                        && !item.readiness)
                     .count(),
                 2
             );
