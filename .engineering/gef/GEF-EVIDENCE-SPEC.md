@@ -13,7 +13,9 @@ A governed evidence bundle should identify:
 - CI workflow/run identities when hosted evidence is required;
 - failures and corrections;
 - unresolved risks;
-- reviewer/audit verdict;
+- audit identity and mode (`KayzenRoot`, `OWNER_SELF_AUDIT`, `NOT INDEPENDENT`);
+- exact-base/exact-head audit verdict (`OWNER_SELF_AUDIT_APPROVED`, `CORRECTION REQUIRED`, or `BLOCKED_EVIDENCE`);
+- mandatory check results and unresolved HIGH/CRITICAL count;
 - proposed checkpoint delta.
 
 Historical green evidence is not automatically valid for a new head. Reuse requires unchanged relevant inputs/dependencies.

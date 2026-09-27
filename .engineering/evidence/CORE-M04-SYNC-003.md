@@ -1,6 +1,6 @@
 # CORE-M04-SYNC-003 — Post-Admission State Synchronization
 
-Status: `REVIEW_CANDIDATE`  
+Status: `APPROVED_PROMOTED`
 Type: governance/project-state synchronization only  
 Canonical base: `bb6f631284361fae29479c66f62ca88bebf3d79c`
 
@@ -21,7 +21,7 @@ Reconcile canonical and derived CORE state after promotion of CORE-M04-ADMIT-001
 
 ## Synchronized execution state
 
-This candidate:
+This promoted synchronization:
 - marks CORE-D-201 ACCEPTED and records CORE-D-202;
 - marks M04 admission promoted / implementation authorized;
 - activates CORE-WO-M04-001 and its exact Context Lock;
@@ -29,7 +29,18 @@ This candidate:
 - recompiles the lock against the post-admission canonical source blobs;
 - refreshes Work Order source bindings;
 - synchronizes Checkpoint, Master Module Map, module plan, handoff and Evidence Bundle;
-- sets the next legal action to preflight + Pack A from post-sync canonical main.
+- records Pack A preflight as the next action only after the separate CORE-M04-SYNC-004 closeout is independently approved and promoted.
+
+## Independent review and promotion
+
+- Review: M04-REVIEW-009 / Issue #97 — APPROVED.
+- PR: #96.
+- Exact reviewed head: `f9a5a7847e268000a5249ae8e69c81ed22b924ad`.
+- Workflow: `35994572596`; all 10 hosted jobs SUCCESS.
+- Promotion merge: `b79891f489d8c7117aee15e1dca47abb9e23dea3`.
+- Unresolved HIGH/CRITICAL: 0.
+
+CORE-M04-SYNC-003 is APPROVED_PROMOTED. The next action after the separate CORE-M04-SYNC-004 closeout is independently approved and promoted is the preflight for CORE-WO-M04-001 Pack A. Pack A has not started.
 
 ## Source/authority preservation
 
@@ -47,4 +58,4 @@ This synchronization does not:
 
 ## STOP CONDITION
 
-Independent exact-head hosted CI and governed review are required before promotion. Pack A remains forbidden while this synchronization exists only on the PR branch.
+Independent exact-head hosted CI and governed review completed before promotion. CORE-M04-SYNC-003 is promoted; Pack A remains stopped pending CORE-M04-SYNC-004 closeout and the separate Pack A preflight.

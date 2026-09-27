@@ -70,6 +70,15 @@ M02_FUZZ_PREFIX = "fuzz/fuzz_targets/m02_"
 M03_FUZZ_PREFIX = "fuzz/fuzz_targets/m03_"
 M04_FUZZ_PREFIX = "fuzz/fuzz_targets/m04_"
 
+# Canonical contract, lock and admission changes are not ordinary docs-only edits.
+# Preserve complete hosted assurance for frozen M04 source/governance amendments.
+CRITICAL_SOURCE_PREFIXES = (
+    "docs/project-brain/", "docs/modules/M04-",
+    ".engineering/context-locks/", ".engineering/work-orders/",
+    ".engineering/decisions/",
+)
+CRITICAL_SOURCE_FILES = {".engineering/CHECKPOINT.json", ".engineering/CHECKPOINT.md"}
+
 
 @dataclass(frozen=True)
 class Impact:
@@ -152,6 +161,8 @@ def classify(paths: Iterable[str], event_name: str = "pull_request") -> Impact:
     code_seen = False
 
     for path in changed:
+        if path in CRITICAL_SOURCE_FILES or _starts(path, CRITICAL_SOURCE_PREFIXES):
+            return _full(count, f"critical canonical source changed: {path}")
         if _is_doc_only(path):
             continue
 

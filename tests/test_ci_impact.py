@@ -4,6 +4,17 @@ from scripts.ci_impact import classify
 
 
 class CiImpactTests(unittest.TestCase):
+    def test_canonical_contract_and_context_lock_require_full_assurance(self):
+        for path in (
+            "docs/project-brain/04-ARCHITECTURE.md",
+            "docs/modules/M04-RUN-ATTEMPT-STEP-ENGINE.md",
+            ".engineering/context-locks/CORE-WO-M04-001.json",
+            ".engineering/work-orders/CORE-WO-M04-001.md",
+            ".engineering/CHECKPOINT.json",
+        ):
+            with self.subTest(path=path):
+                self.assertTrue(classify([path]).full)
+
     def test_docs_only_is_governance_only(self):
         result = classify(["docs/project-brain/13-CHECKPOINT.md", ".engineering/evidence/x.md"])
         self.assertEqual(result.mode, "governance-only")

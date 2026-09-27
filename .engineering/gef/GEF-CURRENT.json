@@ -4,12 +4,12 @@
   "promptMode": "GEF_V1_HIVE_FIRST",
   "reviewMode": "DELTA_EXACT_HEAD",
   "assuranceMode": "ELEVATED",
-  "productStage": "M04_EXECUTION_AUTHORIZED",
-  "nextLegalAction": "START_CORE_WO_M04_001_PACK_A_AFTER_PREFLIGHT",
+  "productStage": "M04_PACK_A_CANDIDATE_OPEN_OWNER_AUDIT_PENDING",
+  "nextLegalAction": "PROMOTE_CORE_D_203_POLICY_THEN_OWNER_SELF_AUDIT_CORE_PR_106_EXACT_HEAD",
   "productImplementationAuthorized": true,
   "canonicalCheckpoint": "docs/project-brain/13-CHECKPOINT.md",
   "lastCompletedWorkOrder": "CORE-WO-M03-001",
-  "lastPromotedMerge": "bb6f631284361fae29479c66f62ca88bebf3d79c",
+  "lastPromotedMerge": "251f15495b82df8270ebc12fa93807ffaa15fba4",
   "authorizedScope": "M04_RUN_ATTEMPT_STEP_ENGINE",
   "activeWorkOrder": "CORE-WO-M04-001",
   "authorizationEffectiveOnlyOnCanonicalMain": true,
@@ -20,6 +20,39 @@
   "admissionPullRequest": 94,
   "admissionReviewedHead": "f29dcb6b327c5fdceda31fe306e52d506c1eae72",
   "admissionWorkflowRun": 35992752646,
+  "postAdmissionSynchronization": {
+    "increment": "CORE-M04-SYNC-003",
+    "branch": "fix/m04-post-admission-state-sync",
+    "status": "APPROVED_PROMOTED",
+    "reviewIssue": 97,
+    "pullRequest": 96,
+    "reviewedHead": "f9a5a7847e268000a5249ae8e69c81ed22b924ad",
+    "workflowRun": 35994572596,
+    "promotionMerge": "b79891f489d8c7117aee15e1dca47abb9e23dea3"
+  },
+  "postReviewSynchronization": {
+    "increment": "CORE-M04-SYNC-004",
+    "branch": "fix/m04-post-sync-canonical-closeout",
+    "status": "APPROVED_PROMOTED",
+    "reviewIssue": 100,
+    "pullRequest": 99,
+    "reviewedHead": "19123d50bebe1a13257d8e2768fca7a1ca1d3393",
+    "workflowRun": 36013624792,
+    "promotionMerge": "b2ac8e0db72a2145948e7773295b1b252c5e4eab",
+    "unresolvedHighCritical": 0
+  },
+  "canonicalPromotionSynchronization": {
+    "increment": "CORE-M04-SYNC-005",
+    "branch": "fix/m04-post-review-promotion-state",
+    "status": "APPROVED_PROMOTED",
+    "reviewIssue": 102,
+    "pullRequest": 101,
+    "reviewedHead": "e8b0548c2ecd7c22edbeb3f02de8a238f9c49ffc",
+    "workflowRun": 36033275191,
+    "workflowJobsSuccessful": 10,
+    "promotionMerge": "251f15495b82df8270ebc12fa93807ffaa15fba4",
+    "unresolvedHighCritical": 0
+  },
   "m03Implementation": {
     "status": "APPROVED_PROMOTED",
     "pullRequest": 72,
@@ -29,5 +62,8 @@
     "promotionMerge": "c63df6ad581c44bac66a8b1dab9a86522ce7fe3b",
     "unresolvedHighCritical": 0
   },
-  "admissionPromotionMerge": "bb6f631284361fae29479c66f62ca88bebf3d79c"
+  "admissionPromotionMerge": "bb6f631284361fae29479c66f62ca88bebf3d79c",
+  "reviewIdentityPolicy": "SINGLE_ACCOUNT_OWNER_SELF_AUDIT",
+  "ownerAuditIdentity": "KayzenRoot",
+  "reviewAuditIndependence": false
 }

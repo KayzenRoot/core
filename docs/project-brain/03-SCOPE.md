@@ -219,7 +219,7 @@ To be classified during governed discovery. No future capability is admitted mer
 - verification/evidence/review verdict ownership;
 - telemetry transport/observability spine.
 
-M04 implementation remains unauthorized until final planning freeze and separate governed execution admission.
+At the end of M04 Rounds 1-3, implementation remained unauthorized pending the final planning freeze and separate governed execution admission. Those gates were subsequently approved and promoted; current authority is recorded in the Checkpoint, Work Order and active Context Lock.
 
 
 ## M04 Round 4 scope classification
@@ -266,7 +266,7 @@ M04 implementation remains unauthorized until final planning freeze and separate
 - preserve the exact `core-run-state` file/dependency map;
 - freeze AC-M04-001..023 one-to-one against EV-M04-001..023;
 - freeze the numeric/evidence-only Resource Calibration Delta;
-- freeze executor STOP states and independent review ownership;
+- freeze executor STOP states and the single-account owner self-audit stage defined by CORE-D-203;
 - record exact canonical source fingerprints for later admission staleness checks.
 
 ### OUT OF SCOPE

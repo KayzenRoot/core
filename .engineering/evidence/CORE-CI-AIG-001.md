@@ -80,3 +80,11 @@ Promote only after:
 - because this PR changes the workflow and classifier tooling, the classifier intentionally selects FULL assurance for its own validation;
 - all hosted jobs on the exact head succeed;
 - independent review finds zero unresolved HIGH/CRITICAL.
+
+## Reviewer-first Correction Delta (2026-09-27, SAME PR #98)
+
+The exact historical head `d15806f023c867aca1e6cc0c096862479f54b762` failed hosted workflow [#36001862823](https://github.com/KayzenRoot/core/actions/runs/36001862823) only in the M01 Ubuntu Advisory scan: raw job logs show bare `cargo-audit` printed Cargo subcommand usage and exited 2, even though the pinned `cargo-audit 0.22.2` installation succeeded and `cargo-deny check` passed. Replace the single incorrect bare binary invocation with `cargo audit` so Cargo dispatches the installed plugin with the required `audit` subcommand.
+
+Protect critical M04 source/lock/governance amendment paths by fail-closed FULL classification even when file extension is Markdown/JSON; retain normal low-risk docs-only fast path. Add deterministic tests for the critical canonical paths. No frozen M04 source or product code change.
+
+Re-sync non-force against latest protected main using a two-parent merge tree with only the FOUR originally scoped AIG paths over the exact main tree, preserving all unrelated main fixes. The earlier 10+ job failure is HISTORICAL; fresh exact merge-head CI, actual required job conclusions and owner self-audit `NOT INDEPENDENT` are PENDING and required before any PR #98 promotion. No performance claim is accepted until hosted evidence exists.

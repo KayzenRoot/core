@@ -168,7 +168,7 @@ jobs:
 
       - name: Advisory scan
         if: runner.os == 'Linux' && needs.impact.outputs.run_supply_chain == 'true'
-        run: cargo-audit
+        run: cargo audit
 
       - name: Core SBOM
         if: runner.os == 'Linux' && needs.impact.outputs.run_supply_chain == 'true'
