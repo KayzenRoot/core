@@ -537,8 +537,7 @@ impl CapabilityRegistry {
                 registered.iter().find(|provider| {
                     provider.provider_id == binding.provider.provider_id
                         && provider.fingerprint == binding.provider.fingerprint
-                        && provider.activation_generation
-                            == binding.provider.activation_generation
+                        && provider.activation_generation == binding.provider.activation_generation
                 })
             })
             .is_some_and(|provider| {
@@ -1312,7 +1311,8 @@ mod tests {
         };
         {
             let mut state = registry.inner.write().unwrap();
-            state.providers.get_mut("health").unwrap()[0].fingerprint = "foreign-fingerprint".into();
+            state.providers.get_mut("health").unwrap()[0].fingerprint =
+                "foreign-fingerprint".into();
         }
         assert!(matches!(
             registry.acquire_lease_with_generation("health", &generation, 60_000),
