@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import contextlib
-import copy
 import io
 import json
 import tempfile
@@ -60,7 +59,7 @@ class M04OfflineInventoryTests(unittest.TestCase):
                 self.assertEqual(
                     assess_inventory(item, today=TODAY)["status"], "V2_DISPOSITION_REQUIRED"
                 )
-                item["findings"][CATEGORIES[0]] = "UNKNOWN"
+                item["findings"][next(name for name in CATEGORIES if name != category)] = "UNKNOWN"
                 self.assertEqual(
                     assess_inventory(item, today=TODAY)["status"], "V2_DISPOSITION_REQUIRED"
                 )
