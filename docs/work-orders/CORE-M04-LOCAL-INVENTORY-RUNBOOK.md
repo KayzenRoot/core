@@ -31,3 +31,8 @@ The stdout is intentionally redacted to enumerated status and counts; neither ra
 ## Security and STOP
 
 Do not run broad automatic scans of personal disks or cloud accounts, gather secrets, attach raw private input to GitHub, assume an unanswered location is empty or replace frozen V1 bytes. The classifier never assigns all-NO on its own. Any unresolved external YES/UNKNOWN leaves the breaking-V1 branch blocked and routes the design choice to the separate governed V2 track.
+
+
+## Malformed local CLI arguments are redacted
+
+The CLI also fails closed **before reading any inventory file** when flags are unknown, mutually exclusive or missing a value. Its output is a constant `{"status":"INVALID","reason":"invalid_cli_arguments"}` and exit code **4**, rather than echoing a private JSON path or a mistakenly pasted credential via argparse. This is a terminal-output safeguard only: it does **not** scan devices, validate the truth of owner statements or change the gated status in issue #111. Preserve the private original inventory and submit only bounded, redacted owner evidence for separate review.

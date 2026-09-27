@@ -166,6 +166,27 @@ class M04OfflineInventoryTests(unittest.TestCase):
             self.assertNotIn(root, output)
             self.assertNotIn(str(path), output)
 
+    def test_invalid_cli_arguments_are_typed_and_do_not_echo_private_input(self) -> None:
+        canary = "C:/Users/owner/private/token.txt"
+        cases = (
+            ["--inventory", canary, "--unknown-private-argument", "SECRET_CANARY"],
+            ["--inventory", canary, "--template"],
+            ["--inventory"],
+            [canary],
+        )
+        for argv in cases:
+            with self.subTest(argv_shape=len(argv)):
+                stdout, stderr = io.StringIO(), io.StringIO()
+                with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
+                    code = main(argv)
+                self.assertEqual(code, 4)
+                self.assertEqual(json.loads(stdout.getvalue()), {
+                    "status": "INVALID", "reason": "invalid_cli_arguments",
+                })
+                self.assertEqual(stderr.getvalue(), "")
+                self.assertNotIn(canary, stdout.getvalue() + stderr.getvalue())
+                self.assertNotIn("SECRET_CANARY", stdout.getvalue() + stderr.getvalue())
+
     def test_cli_exit_codes_for_unknown_yes_and_all_no(self) -> None:
         for answer, expected_status, expected_exit in (
             ("UNKNOWN", "BLOCKED_INCOMPLETE", 2),

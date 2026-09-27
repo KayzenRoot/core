@@ -38,6 +38,13 @@ class InvalidInventory(ValueError):
     """Typed error with no user-supplied data or local path in its message."""
 
 
+class RedactedInventoryParser(argparse.ArgumentParser):
+    """Avoid argparse echoing a malformed secret or local owner filename."""
+
+    def error(self, message: str) -> None:
+        raise InvalidInventory("invalid_cli_arguments")
+
+
 def neutral_template(*, today: date | None = None) -> dict[str, Any]:
     """Unknown-by-default example, deliberately not an owner attestation."""
     return {
@@ -143,13 +150,17 @@ def read_inventory(path: Path) -> object:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(
+    parser = RedactedInventoryParser(
         description="Offline, redacted structural preflight; never approves an M04 V1 break"
     )
     choice = parser.add_mutually_exclusive_group(required=True)
     choice.add_argument("--template", action="store_true", help="Print UNKNOWN-only example")
     choice.add_argument("--inventory", type=Path, help="Local owner-prepared JSON to validate")
-    args = parser.parse_args(argv)
+    try:
+        args = parser.parse_args(argv)
+    except InvalidInventory:
+        print(json.dumps({"status": "INVALID", "reason": "invalid_cli_arguments"}))
+        return 4
     if args.template:
         print(json.dumps(neutral_template(), indent=2, sort_keys=True))
         return 0
