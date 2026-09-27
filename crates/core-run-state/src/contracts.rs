@@ -1066,6 +1066,7 @@ pub struct RunProjectionV1 {
     pub journal_root: JournalRoot,
     pub boundary: BoundaryRevalidationCapsuleV1,
     pub attempts: BTreeMap<AttemptId, AttemptProjectionV1>,
+    /// Wire keys are `<run-id>|<operation-domain>|<idempotency-key>`; identifiers reject `|`.
     #[serde(with = "idempotency_records_serde")]
     pub idempotency_records: BTreeMap<IdempotencyRecordKeyV1, IdempotencyRecordV1>,
 }
