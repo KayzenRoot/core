@@ -15,4 +15,4 @@ CORE V0.0 - Modular Construction
 3 - M03 Complete / M04 Execution Authorized
 
 ## NEXT STEP
-After all required checks pass on PR #106's exact current head, KayzenRoot performs the owner self-audit on the exact current base/head. Record `NOT INDEPENDENT`; verify source/lock bindings and zero unresolved HIGH/CRITICAL findings. Keep Pack B stopped until Pack A audit and acceptance evidence pass; no second account or native self-approval is required.
+After all required checks pass on PR #106's exact current head, KayzenRoot performs an owner self-audit of the exact current base/head and full diff. Record `NOT INDEPENDENT`, verify source/lock bindings and zero unresolved HIGH/CRITICAL findings, and use no second account or native self-approval. Keep Pack B stopped until Pack A audit and acceptance evidence pass; do not promote a checkpoint from an unaudited head.
