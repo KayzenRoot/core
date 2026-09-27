@@ -94,3 +94,33 @@ workspace/
 ```
 
 No project-local OpenAI credential or provider setting is committed.
+
+## Local read-only, redacted evidence collector
+
+After the existing `hive_bootstrap.py` command has registered and indexed the
+actual CORE checkout, run this helper from **that same local CORE checkout**:
+
+```powershell
+python scripts/hive_evidence.py --relative-path core
+```
+
+Use `--relative-path projects/core` if CORE is nested under
+`HIVE_PROJECTS_ROOT`, and optionally `--hive-repo <your HIVE checkout>` if
+the HIVE checkout is not adjacent or specified in `HIVE_REPO_PATH`.
+
+The collector makes **read-only** requests to a loopback-only HIVE API and
+verifies the local checkout is the exact HIVE `v1.0.0` release commit. It
+compares actual local CORE Git HEAD with HIVE's registered inspection and
+completed index, checks the corpus is CURRENT for the **same** index run,
+and outputs only safe release/Git SHA/status fields. It never emits raw
+health payloads, UUIDs, local absolute paths, environment, credentials or
+retrieved documents. `BLOCKED` means the local evidence is not complete,
+not that the repo's CI or GitHub API failed; rerun the ordinary
+`hive_bootstrap.py` preparation if local HIVE inspection/index is stale.
+
+Paste the redacted helper JSON into Issue #4. The helper intentionally prints
+`PENDING_REAL_CODEX_TOOL_INVOCATIONS` for the final MCP proof, which must
+come from actual bounded `checkpoint.read` and `context.search` tool calls
+made in the connected Codex client. Do not change that field manually or
+claim that a local check happened just because unit tests passed in CI.
+
