@@ -4,9 +4,9 @@
   "promptMode": "GEF_V1_HIVE_FIRST",
   "reviewMode": "DELTA_EXACT_HEAD",
   "assuranceMode": "ELEVATED",
-  "productStage": "M04_PACK_A_CANDIDATE_OPEN_OWNER_AUDIT_PENDING",
-  "nextLegalAction": "PROMOTE_CORE_D_203_POLICY_THEN_OWNER_SELF_AUDIT_CORE_PR_106_EXACT_HEAD",
-  "productImplementationAuthorized": true,
+  "productStage": "M04_CONTRACT_DELTA_SOURCE_CANDIDATE_PENDING_READMISSION",
+  "nextLegalAction": "REVIEW_PROMOTE_M04_CONTRACT_DELTA_001_THEN_SEPARATE_M04_RE_ADMISSION",
+  "productImplementationAuthorized": false,
   "canonicalCheckpoint": "docs/project-brain/13-CHECKPOINT.md",
   "lastCompletedWorkOrder": "CORE-WO-M03-001",
   "lastPromotedMerge": "251f15495b82df8270ebc12fa93807ffaa15fba4",
@@ -15,7 +15,7 @@
   "authorizationEffectiveOnlyOnCanonicalMain": true,
   "admissionCandidateBranch": "planning/m04-execution-admission",
   "frozenAuthorizedBase": "f6b422be5465d5a93d0b8fcf4c9507c205663072",
-  "admissionStatus": "APPROVED_PROMOTED",
+  "admissionStatus": "HISTORICAL_APPROVED_PROMOTED_SUPERSEDED_ON_DELTA_PROMOTION",
   "admissionReviewIssue": 95,
   "admissionPullRequest": 94,
   "admissionReviewedHead": "f29dcb6b327c5fdceda31fe306e52d506c1eae72",
@@ -65,5 +65,47 @@
   "admissionPromotionMerge": "bb6f631284361fae29479c66f62ca88bebf3d79c",
   "reviewIdentityPolicy": "SINGLE_ACCOUNT_OWNER_SELF_AUDIT",
   "ownerAuditIdentity": "KayzenRoot",
-  "reviewAuditIndependence": false
+  "reviewAuditIndependence": false,
+  "contractDeltaCandidate": {
+    "increment": "CORE-M04-CONTRACT-DELTA-001",
+    "status": "PROPOSED_PENDING_EXACT_HEAD_REVIEW_AND_PROMOTION",
+    "governingDecision": "CORE-D-204",
+    "designIssue": 111,
+    "contextLockActivation": "SUSPENDED_PENDING_RE_ADMISSION_ON_DELTA_PROMOTION",
+    "originalPR106Unmerged": true,
+    "packAandBAuditsHistorical": true,
+    "all23GlobalEVNodesPending": true,
+    "consumerInventory": "EXTERNAL_UNKNOWN_BLOCKING",
+    "runAdmissionFullBrcRequired": true,
+    "historicalPackAudits": {
+      "source": "PR106_BRANCH_ONLY_NOT_CANONICAL_MAIN",
+      "scope": "PR106_PACK_A_B_PARTIAL_AUDITS_NOT_INDEPENDENT",
+      "historicalReviewedBase": "15179cf07d703f074cf50f793a5b1968ba356fc0",
+      "authorizedFrozenBase": "f6b422be5465d5a93d0b8fcf4c9507c205663072",
+      "packA": {
+        "issue": 109,
+        "reviewedHead": "fecdb4c7069a815a63146c58192575e80c592334",
+        "workflowRun": 36311844093,
+        "successfulJobs": 10,
+        "verdict": "OWNER_SELF_AUDIT_APPROVED_PACK_A_ONLY_NOT_INDEPENDENT"
+      },
+      "packB": {
+        "issue": 110,
+        "reviewedHead": "98da5a13619ab82969602e4cf3738a099a15734a",
+        "workflowRun": 36316437914,
+        "successfulJobs": 10,
+        "verdict": "OWNER_SELF_AUDIT_APPROVED_PACK_B_ONLY_NOT_INDEPENDENT"
+      },
+      "postPackBDerivedSync": {
+        "issue": 110,
+        "reviewedHead": "0c0bde8afdd5645102bafd143d1752e5af6f6b29",
+        "workflowRun": 36318018621,
+        "successfulJobs": 10,
+        "verdict": "OWNER_SELF_AUDIT_APPROVED_DERIVED_SYNC_ONLY_NOT_INDEPENDENT"
+      },
+      "newAuthority": "NONE_UNTIL_CONTRACT_DELTA_PROMOTED_AND_SEPARATE_READMISSION",
+      "globalEvidence": "ALL_23_EV_M04_PENDING"
+    },
+    "pr106ImplementationStatus": "UNMERGED_BLOCKED_PENDING_CONTRACT_DELTA_AND_SEPARATE_READMISSION"
+  }
 }

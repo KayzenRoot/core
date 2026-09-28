@@ -1,24 +1,22 @@
 # CORE Checkpoint
 
 ## STATUS
-M01 COMPLETE / M02 COMPLETE / M03 COMPLETE / M04 PACK A CANDIDATE OPEN
+M01 COMPLETE / M02 COMPLETE / M03 COMPLETE / M04 PACK A/B HISTORICAL AUDITS COMPLETE / CONTRACT DELTA CANDIDATE PENDING RE-ADMISSION
 
 ## VERSION
 CORE V0.0 - Modular Construction
 
 ## PHASE
-3 - M03 Complete / M04 Execution Authorized
+3 - M04 replay Contract/Architecture source correction; execution resumes only after governed re-admission
 
 ## OBJECTIVE
 Continue building CORE as the headless NexLabs action plane that operates standalone and synchronizes deeply with HIVE without duplicating HIVE-owned intelligence.
 
 ## IN PROGRESS
-- M03 canonical closeout was promoted through PR #74 as merge `2fdf595cc6b450d1be0038eb67d0a5160035d9bd` after M03-REVIEW-010 / Issue #75.
-- M04 Rounds 1-5 planning and CORE-M04-ADMIT-001 are promoted. CORE-WO-M04-001 is authorized for M04-only implementation on canonical main. PR #106 contains the open Pack A candidate at exact head `2721b89598998dad08c19f581fe650be53d3c882`; its exact-head hosted workflow passed 10/10 jobs. The required owner self-audit is pending and will be explicitly `NOT INDEPENDENT`.
-- CORE-M04-SYNC-003 was APPROVED by M04-REVIEW-009 / Issue #97 at exact head `f9a5a7847e268000a5249ae8e69c81ed22b924ad`; PR #96, workflow `35994572596` (10/10 SUCCESS), promotion merge `b79891f489d8c7117aee15e1dca47abb9e23dea3`, unresolved HIGH/CRITICAL: 0.
-- CORE-M04-SYNC-004 was APPROVED by M04-REVIEW-010 / Issue #100 at exact head `19123d50bebe1a13257d8e2768fca7a1ca1d3393`; PR #99, workflow `36013624792` (10/10 SUCCESS), squash promotion merge `b2ac8e0db72a2145948e7773295b1b252c5e4eab`, unresolved HIGH/CRITICAL: 0.
-- CORE-M04-SYNC-005 was APPROVED by M04-REVIEW-011 / Issue #102 at exact head `e8b0548c2ecd7c22edbeb3f02de8a238f9c49ffc`; PR #101, workflow `36033275191` (10/10 SUCCESS), promotion merge `251f15495b82df8270ebc12fa93807ffaa15fba4`, unresolved HIGH/CRITICAL: 0.
-- M05-M24 remain discovery-only until their planning freezes.
+- M04 Pack A bounded owner audit Issue #109 APPROVED at head `fecdb4c7069a815a63146c58192575e80c592334` / workflow 36311844093 10/10; Pack B bounded owner audit Issue #110 APPROVED at head `98da5a13619ab82969602e4cf3738a099a15734a` / workflow 36316437914 10/10. Derived metadata synchronization head `0c0bde8afdd5645102bafd143d1752e5af6f6b29` passed workflow 36318018621 10/10; all owner audits NOT INDEPENDENT. PR #106 is still unmerged.
+- Review and promote the separately governed CORE-M04-CONTRACT-DELTA-001 candidate to correct complete genesis/continuation BRC and exact event-derived idempotency request identity; non-authoritative design proposal PR #113 was promoted `7046bf204896bbd1de7c746d346a53e183fa21c2`. This candidate freezes NO executable authority until a subsequent exact-source lock re-admission.
+- CI test-fixture maintenance PR #116 passed exact-head 10/10 at `e25fda31a9ec916b0ad6749d49515732d6c9dd7e` and was promoted as `6394eba95b7ae8db97a088f95a1662656fe80ba6`; corresponding M01/M02 flaky-test issues closed as mitigations with no false RCA.
+- M05-M24 remain discovery-only until their own freezes.
 
 ## COMPLETED
 - Repository/bootstrap foundation approved and promoted.
@@ -42,18 +40,17 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - CORE-GOV-002-C01 GitHub hardening independently reviewed (Review 001 / Issue #57) and promoted through PR #56; active ruleset `CORE main protection` id `23769853` protects `main` with no bypass actors and the seven-context strict CI gate.
 
 ## PENDING
-- After CORE-D-203 is canonical under normal protected-main checks, perform KayzenRoot's exact-base/exact-head owner self-audit of PR #106. Validate the ACTIVE Context Lock, all nine source fingerprints, the exact Work Order blob, frozen authorized-base ancestry, required CI/security evidence and zero unresolved HIGH/CRITICAL findings. Disclose `NOT INDEPENDENT`; do not require another account or native self-approval.
-- Deep-plan M04 through M24 in dependency order.
-- Freeze each module Requirements/Architecture/DoD/Work Order before implementation authorization.
-- Live local HIVE bootstrap evidence against current main.
+- Separate governed review/promotion of CORE-M04-CONTRACT-DELTA-001 and definitive no-legacy-V1 consumer inventory; STOP and versioned V2 delta if any prior durable consumer is known or unknown.
+- After source promotion, a **separate** exact-main M04 re-admission refreshes the pending lock to ACTIVE, Work Order/evidence/GEF state and the PR #106 implementation authority, then rebases/reconciles the implementation and repeats amended Pack A and affected Pack B checks before Pack C.
+- Full M04 Packs C-H and all 23 globally pending EV-M04 nodes; live local HIVE v1.0.0 evidence Issue #4 requires the user's Docker/local machine.
 
 ## BLOCKERS
-- No unresolved HIGH/CRITICAL finding is recorded in promoted M03 implementation or M04 planning/admission/synchronization reviews.
-- PR #106 is an unmerged Pack A candidate; exact-head CI passed 10/10, but the owner self-audit and AC-M04-023 remain pending. The separate-account identity gate is removed by CORE-D-203 after its policy PR is promoted. No Pack B or checkpoint promotion is authorized before the exact-head owner audit and required technical evidence pass.
-- M05-M24 implementation remains gated by their own planning freezes and admissions.
+- The **source-amendment candidate alone does not authorize implementation**. On promotion the historical M04 lock is SUSPENDED_PENDING_RE_ADMISSION; the previously approved Pack A/B code audit is historical only, and PR #106 may not merge or begin Pack C until new canonical hashes are admitted and applicable tests rerun.
+- A missing/uncertain inventory of previous-V1 durable consumers, stale/mismatched genesis or continuation BRC, absent original event request-fingerprint, source/lock drift, failed required CI or unresolved HIGH/CRITICAL blocks progression. No native self-approval or fabricated HIVE evidence.
+- M05-M24 implementation is separately gated by their planning freezes and admissions.
 
 ## NEXT STEP
-After CORE-D-203 / Issue #107 is canonical, perform KayzenRoot's exact-base/exact-head owner self-audit on the current CORE PR #106 head 2721b89598998dad08c19f581fe650be53d3c882. Record NOT INDEPENDENT, confirm required CI/security checks, source/lock bindings and zero unresolved HIGH/CRITICAL findings. Keep Pack B stopped until Pack A audit and acceptance evidence pass; do not promote a checkpoint from an unaudited head.
+Review CORE-M04-CONTRACT-DELTA-001 at the exact source-amendment PR head, prove no shipped legacy V1 durable consumer or STOP for governed V2, verify all 9 canonical Git blobs, Work Order and Context Lock/Evidence bindings, and require exact-head hosted 10/10 CI plus KayzenRoot owner self-audit NOT INDEPENDENT. Only after protected-main promotion, perform a separate M04 re-admission on updated source hashes and rerun affected Pack A/B before any Pack C product work.
 
 ## EVIDENCE
 - M04 execution admission Review 008 / Issue #95 — APPROVED; PR #94; exact head `f29dcb6b327c5fdceda31fe306e52d506c1eae72`; workflow `35992752646`; promotion merge `bb6f631284361fae29479c66f62ca88bebf3d79c`; 10/10 hosted jobs SUCCESS.

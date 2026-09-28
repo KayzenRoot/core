@@ -1,24 +1,24 @@
 {
   "schemaVersion": "core-context-lock-v1",
   "workOrder": "CORE-WO-M04-001",
-  "status": "ACTIVE",
+  "status": "PENDING_RE_ADMISSION",
   "repository": "KayzenRoot/core",
   "planningBase": "0f448c708aafd8f5b4cb6303effdabd7e028bc6f",
   "authorizedBase": "f6b422be5465d5a93d0b8fcf4c9507c205663072",
   "executionBranch": "feat/m04-run-state",
   "scopeClass": "M04_RUN_ATTEMPT_STEP_ENGINE",
   "assuranceMode": "ELEVATED",
-  "productImplementationAuthorized": true,
+  "productImplementationAuthorized": false,
   "canonicalSources": {
-    "docs/project-brain/13-CHECKPOINT.md": "8ef7eb7d0ace6b588c6a88c915eaca14bce991d8",
-    "docs/project-brain/16-DECISIONS-LEDGER.md": "857259e42855f09cd98a07b67c1912f11bf87d3b",
+    "docs/project-brain/13-CHECKPOINT.md": "44d58c6900d5ea416920f6c2012c99bb812c961a",
     "docs/project-brain/03-SCOPE.md": "6e6f66b7fe3f3e3780b14c7b68dca7c2af137c61",
-    "docs/project-brain/15-DEFINITION-OF-DONE.md": "fd31c15a2966d39abca464ad5f945a5b10103f16",
-    "docs/project-brain/04-ARCHITECTURE.md": "6c9054aeeb7fb72116f7246323251b6ec240d56c",
-    "docs/project-brain/02-REQUIREMENTS.md": "2840687ef61e8653ba9f2ad392ef288f93feb41c",
-    "docs/project-brain/10-SECURITY-GOVERNANCE.md": "2c5276f2be520f0e1d47f101c3c0a02041cff53e",
-    "docs/project-brain/11-TEST-PLAN.md": "59c641ba140c89233da323fe336aa74c9c098b0b",
-    "docs/modules/M04-RUN-ATTEMPT-STEP-ENGINE.md": "337db097ec5a7a856d4d7b34f108ebbc149ad04c"
+    "docs/project-brain/15-DEFINITION-OF-DONE.md": "037fe33a36e279d162719007dff692c2dfc6a04f",
+    "docs/project-brain/04-ARCHITECTURE.md": "2bd2b6760e62ed304a269d6d7316ca36df4fba1e",
+    "docs/project-brain/02-REQUIREMENTS.md": "3dc4417b30516761e81d50315c26dd3986a45510",
+    "docs/project-brain/10-SECURITY-GOVERNANCE.md": "1d1256ebbbd666a36eeee245bf2f03caa7b43b3b",
+    "docs/project-brain/11-TEST-PLAN.md": "7bd488db675292d013d97e8b66cf655a00d030b2",
+    "docs/modules/M04-RUN-ATTEMPT-STEP-ENGINE.md": "88340369b7b5fcae7aed9436311120e401a62844",
+    "docs/project-brain/16-DECISIONS-LEDGER.md": "e0555db4f497a727b585c3e574fea7a2a8ee6e62"
   },
   "upstream": {
     "gef": {
@@ -31,15 +31,15 @@
     }
   },
   "stalenessRule": "Any material change to the authorized base, one of the nine canonical source blobs, CORE-WO-M04-001, or the bound GEF review policy makes this active M04 lock STALE and blocks progression until governed re-admission/correction. Missing a second account never makes the lock stale.",
-  "promotionRule": "CORE-M04-ADMIT-001 and CORE-M04-SYNC-003 through CORE-M04-SYNC-005 are APPROVED_PROMOTED. The ACTIVE lock authorizes only M04_RUN_ATTEMPT_STEP_ENGINE. The current Pack A candidate is PR #106; after CORE-D-203 is promoted, KayzenRoot performs an exact-base/exact-head owner self-audit, explicitly NOT INDEPENDENT, with required checks green and zero unresolved HIGH/CRITICAL before any governed promotion.",
+  "promotionRule": "CORE-M04-CONTRACT-DELTA-001 is a proposal on this branch. If protected-main promotes the exact revised source set, old M04 product authorization is SUSPENDED. The separate post-delta Work Order re-admission must explicitly activate a new lock against exact source/Work Order Git blobs; the old PR #106 Pack A/B audits remain historical only. No Pack C code is authorized by this candidate.",
   "workOrderSource": {
     "path": ".engineering/work-orders/CORE-WO-M04-001.md",
-    "blobSha": "9b6b54f2cfa77c170773272e876493656946cc04"
+    "blobSha": "17779df8ed6ef6def36036523eb41d0d126b02db"
   },
   "authorizationEffectiveOnlyOnCanonicalMain": true,
   "canonicalMain": "origin/main",
-  "activationRule": "Execution authority is effective only when this exact ACTIVE lock, synchronized GEF state and authorized Work Order are present on canonical origin/main. A branch-local copy or stale fingerprint is non-authoritative.",
-  "executionStartRule": "The existing PR #106 candidate records CORE-M04-SYNC-006 preflight and Pack A work on the authorized M04 branch. After CORE-D-203 is canonical, audit the exact current PR #106 base/head, full diff, ACTIVE lock, all nine canonical source fingerprints, exact Work Order blob, authorizedBase ancestry, and required CI/security/evidence results. Record NOT INDEPENDENT. Do not require another account or submit native self-approval. Pack B remains stopped until Pack A audit and acceptance evidence pass.",
+  "activationRule": "This PENDING_RE_ADMISSION source-correction lock is NEVER execution authority, including on a candidate branch or on main after source promotion. A later separate governed M04 re-admission must replace it with a freshly audited ACTIVE lock and synchronized GEF/Evidence. Missing or stale generation/consumer inventory blocks.",
+  "executionStartRule": "STOP: do not begin Pack C or modify/rebase PR #106 product code against this candidate before protected-main delta promotion, confirmed absence of shipped previous-V1 durable consumers (otherwise separate V2 correction), refreshed exact-source ACTIVE lock and independent-stage KayzenRoot owner self-audit NOT INDEPENDENT.",
   "finalPlanningReview": {
     "status": "APPROVED_PROMOTED",
     "issue": 93,
@@ -50,7 +50,7 @@
     "promotionMerge": "f6b422be5465d5a93d0b8fcf4c9507c205663072"
   },
   "evidence": ".engineering/evidence/CORE-WO-M04-001.json",
-  "executionStatus": "ACTIVE_AUTHORIZED_PACK_A_CANDIDATE_OPEN_OWNER_AUDIT_PENDING",
+  "executionStatus": "SUSPENDED_CONTRACT_DELTA_SOURCE_REFREEZE_PENDING_RE_ADMISSION",
   "admissionIncrement": "CORE-M04-ADMIT-001",
   "admissionBranch": "planning/m04-execution-admission",
   "planningCandidate": {
@@ -104,5 +104,21 @@
   "reviewPolicy": {
     "path": ".engineering/gef/GEF-REVIEW-PROTOCOL.md",
     "blobSha": "4b28ffbbf1f42445906eb260c5618e0cbe320be7"
+  },
+  "contractDelta": {
+    "increment": "CORE-M04-CONTRACT-DELTA-001",
+    "governingDecision": "CORE-D-204",
+    "status": "SOURCE_AMENDMENT_CANDIDATE_PENDING_GOVERNED_REVIEW_AND_PROMOTION",
+    "designIssue": 111,
+    "proposalPR": 113,
+    "consumerInventory": "INTERNAL_REPO_ONLY_VERIFIED_EXTERNAL_UNKNOWN_BLOCKING",
+    "compatibilityDisposition": "PRE_RELEASE_BREAKING_V1_ONLY_IF_NO_LEGACY_DURABLE_CONSUMERS",
+    "requiredCapsules": "GENESIS_AND_EVERY_CONTINUATION",
+    "requiredEventIdentity": "OPERATION_DOMAIN_AND_ORIGINAL_REQUEST_FINGERPRINT",
+    "postPromotionStatus": "SUSPENDED_PENDING_SEPARATE_RE_ADMISSION",
+    "packAandBAudits": "HISTORICAL_ONLY_NOT_INDEPENDENT",
+    "all23GlobalEV": "PENDING",
+    "runAdmissionInput": "FULL_BRC_REQUIRED_NONDEFAULTABLE",
+    "internalInventory": "MAIN_6394eba9_ZERO_MERGED_CORE_RUN_STATE_FILES"
   }
 }
