@@ -183,7 +183,8 @@ fn validate_workspace(
     if required.iter().any(|v| !satisfied.contains(v)) {
         return Err(error(Category::AdmissionStaleness, Code::BasisIncompatible));
     }
-    if requirement.assurance_requirement == WorkspaceAssuranceRequirementV1::VerifiedAssociationRequired
+    if requirement.assurance_requirement
+        == WorkspaceAssuranceRequirementV1::VerifiedAssociationRequired
         && !evidence
             .satisfied_components
             .iter()
