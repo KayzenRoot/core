@@ -311,7 +311,7 @@ pub fn fixture() -> Fixture {
         budget: budget(),
         request,
         context: CompilationContextV1 {
-            compiler_contract_version: 1,
+            compiler_contract_version: 2,
             algorithm_version: "m03-woc-v1".into(),
             policy_generation: 1,
             security_generation: 1,
