@@ -4,9 +4,9 @@ Status: `PRODUCT_DISCOVERY_ACTIVE / M02_THREAT_MODEL_ACTIVE`
 
 ## Bootstrap security invariants
 - Secrets, credentials, tokens and private user data MUST NOT be committed.
-- HIVE accesses CORE through the configured `HIVE_PROJECTS_ROOT` read-only project boundary.
-- HIVE-derived memory/retrieval state is noncanonical and cannot overwrite Git truth.
-- Ambiguous HIVE project identity fails closed.
+- external context service accesses CORE through the configured `external context service_PROJECTS_ROOT` read-only project boundary.
+- external context service-derived memory/retrieval state is noncanonical and cannot overwrite Git truth.
+- Ambiguous external context service project identity fails closed.
 - Missing/stale/conflicting canonical authority does not become ALLOW or DONE.
 - Destructive Git/history operations require explicit governed authorization.
 - Public issues/PRs must not contain exploit-sensitive private information.
@@ -19,7 +19,7 @@ Product implementation cannot claim production security until the applicable mod
 
 ## M02 security and trust boundaries
 
-M02 treats workspace paths, Git metadata/config, repository topology, watcher events, cache entries and HIVE association data as untrusted or stale-able inputs.
+M02 treats workspace paths, Git metadata/config, repository topology, watcher events, cache entries and external context service association data as untrusted or stale-able inputs.
 
 Required controls:
 - lexical plus physical path validation; traversal/symlink/junction/reparse escape fails closed;
@@ -35,7 +35,7 @@ Required controls:
 - hashing is streaming, bounded and revalidates security-sensitive path chains;
 - repository/submodule/nested graph traversal is depth/node/resource bounded with cycle detection;
 - external Git object stores are deny-by-default unless explicitly admitted with provenance;
-- HIVE association cannot grant local path authority or overwrite contradictory local checkout evidence;
+- external context service association cannot grant local path authority or overwrite contradictory local checkout evidence;
 - concurrent workspace drift requires action-boundary freshness checks; stale handles are never silently revived.
 
 M02 threat model details and adversarial fixtures are maintained in `docs/modules/M02-PROJECT-WORKSPACE-ADAPTER.md`.
@@ -90,14 +90,14 @@ M02 threat model details and adversarial fixtures are maintained in `docs/module
 
 - Every public durable M03 contract is explicitly schema/version/kind bound; unsupported versions and downgrade/replay attempts fail typed.
 - The semantic fingerprint projection is field-explicit, sorted and secret-free. Diagnostics, timestamps, transport/rendering fields and raw source/context bodies cannot mutate a frozen revision or enter its fingerprint.
-- The core compiler/admission crate receives bounded typed evidence only. It has no hidden filesystem, cwd, clock/timer, Git, GitHub, HIVE, network, process, database, refresh, retry or persistence authority.
+- The core compiler/admission crate receives bounded typed evidence only. It has no hidden filesystem, cwd, clock/timer, Git, GitHub, external context service, network, process, database, refresh, retry or persistence authority.
 - Resolver/adaptor implementations are outside the pure core. M03 never calls them; their evidence includes schema/version, source/workspace/lock/governance identity, fingerprint, provenance, freshness and bounded status.
 - M02 snapshot mismatch, missing required basis components, stale generation, source substitution, Context Lock replay, governance proof replay, lineage CAS conflict or UNKNOWN state fails closed and cannot produce READY.
-- M03 verifies external governance proof compatibility but cannot mint approval. HIVE references are advisory-only and cannot substitute for canonical Git, M02 or GEF proof.
+- M03 verifies external governance proof compatibility but cannot mint approval. external context service references are advisory-only and cannot substitute for canonical Git, M02 or GEF proof.
 - Scope deny rules override allow rules, child packet scope is intersected with parent scope, dependency admission is independent, and ambiguous or authority-changing retries fail closed.
 - WorkOrderId allocation uses explicit caller identity or deterministic versioned logical keys; random values, clocks, branch names, cwd, host state and map iteration are excluded.
 - M03ResourceBudget values must be finite and positive after calibration. Parser depth, serialized size, graph cardinality and diagnostics are deterministically bounded inside the core; exhaustion returns typed failure without partial FROZEN/READY/handoff state. Wall-clock deadlines are enforced only by caller-owned orchestration, which must discard late results and emit typed timeout evidence.
-- Diagnostics expose only bounded safe codes, IDs/fingerprints and redaction classes. Raw prompts, source bodies, secrets, credentials, HIVE payloads and unbounded external/process error strings are forbidden.
+- Diagnostics expose only bounded safe codes, IDs/fingerprints and redaction classes. Raw prompts, source bodies, secrets, credentials, external context service payloads and unbounded external/process error strings are forbidden.
 - External lineage persistence uses LPC compare-and-set. M03 cannot write, auto-rebase, commit, push, update the checkpoint or turn stale evidence into current authority.
 
 
@@ -114,7 +114,7 @@ M02 threat model details and adversarial fixtures are maintained in `docs/module
 - Canonical fingerprint projections exclude diagnostics, timestamps, locale-dependent formatting, unordered map order and secret-bearing fields.
 - External outcomes/evidence enter M04 only as bounded versioned lineage-bound references; raw secret-bearing artifact bodies are not durable M04 state.
 - Production resource caps are finite and positive; cap+1 fails atomically and histories are never silently truncated.
-- The deterministic M04 core performs zero LLM inference and no hidden filesystem, repository, network, process, database, HIVE, GitHub or ambient clock I/O.
+- The deterministic M04 core performs zero LLM inference and no hidden filesystem, repository, network, process, database, external context service, GitHub or ambient clock I/O.
 - Snapshot acceleration cannot mint authority absent from the canonical journal.
 - Later M05-M24 policy/execution/verification modules cannot be imported into M04 core or create reverse authority dependencies.
 
@@ -143,4 +143,4 @@ M02 threat model details and adversarial fixtures are maintained in `docs/module
 - Pack H may alter only finite numeric resource defaults/thresholds and evidence explicitly authorized by the Calibration Delta.
 - A failed/missing/UNKNOWN AC or EV blocks `READY_FOR_OWNER_AUDIT`.
 - The executor cannot approve its own work. The separate owner-audit stage may be performed by KayzenRoot, records `OWNER_SELF_AUDIT_APPROVED` and `NOT INDEPENDENT`, and never submits a native GitHub self-approval. No second account is required.
-- Optional HIVE context is advisory only and absent/unresolved context cannot be promoted into fabricated authority.
+- Optional external context service context is advisory only and absent/unresolved context cannot be promoted into fabricated authority.
