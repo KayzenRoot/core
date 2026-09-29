@@ -570,7 +570,9 @@ pub(crate) fn compile(
     ensure_string_size(&context.algorithm_version, budget.max_string_bytes)?;
     let mut local_context_ids = BTreeSet::new();
     for local_context_ref in &context.local_context_refs {
-        if !local_context_ids.insert(&local_context_ref.context_id)\n            || !local_context_ref.advisory_only\n        {
+        if !local_context_ids.insert(&local_context_ref.context_id)
+            || !local_context_ref.advisory_only
+        {
             return Err(error(
                 Category::SourceProvenance,
                 Code::SourceAuthorityMismatch,
