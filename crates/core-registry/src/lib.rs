@@ -1163,17 +1163,38 @@ mod tests {
     #[test]
     fn local_provider_preferred_over_optional_generic_external_without_llm() {
         let registry = CapabilityRegistry::new();
-        registry.register_provider(provider(
-            "fallback", "local", "context", ProviderOrigin::CoreFallback, 99
-        )).unwrap();
-        registry.register_provider(provider(
-            "remote-unverified", "optional", "context", ProviderOrigin::OtherExternal, 100
-        )).unwrap();
-        registry.register_provider(provider(
-            "native", "core", "context", ProviderOrigin::CoreNative, 70
-        )).unwrap();
+        registry
+            .register_provider(provider(
+                "fallback",
+                "local",
+                "context",
+                ProviderOrigin::CoreFallback,
+                99,
+            ))
+            .unwrap();
+        registry
+            .register_provider(provider(
+                "remote-unverified",
+                "optional",
+                "context",
+                ProviderOrigin::OtherExternal,
+                100,
+            ))
+            .unwrap();
+        registry
+            .register_provider(provider(
+                "native",
+                "core",
+                "context",
+                ProviderOrigin::CoreNative,
+                70,
+            ))
+            .unwrap();
         let req = CapabilityRequirement::new("context", SemVer::new(1, 0, 0));
-        assert_eq!(registry.bind(&req, "local-first").unwrap().provider_id, "native");
+        assert_eq!(
+            registry.bind(&req, "local-first").unwrap().provider_id,
+            "native"
+        );
     }
 
     #[test]

@@ -1078,7 +1078,11 @@ impl Supervisor {
             .map_err(|error| RuntimeError::Denied(error.to_string()))?;
         let substituted = self
             .capabilities
-            .substitute_with_generation(&requirement, "soak-native-activate", &self.config.generation)
+            .substitute_with_generation(
+                &requirement,
+                "soak-native-activate",
+                &self.config.generation,
+            )
             .map_err(|error| RuntimeError::Denied(error.to_string()))?;
         self.capabilities
             .validate_lease(&lease, &self.config.generation)
