@@ -22,7 +22,7 @@ fn evidence(
 }
 
 #[test]
-fn contradictory_optional-association_evidence_is_explicit_conflict() {
+fn contradictory_optional_association_evidence_is_explicit_conflict() {
     let local = WorkspaceId::new("local");
     let remote = WorkspaceId::new("other");
     let result = reconcile(
