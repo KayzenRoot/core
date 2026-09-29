@@ -37,7 +37,7 @@ M04 does not own:
 - quota/cost policy (M19);
 - Git/GitHub/release actions (M20-M21);
 - security-policy engines (M22);
-- HIVE federation intelligence (M23);
+- local context evidence intelligence (M23);
 - telemetry transport/observability spine (M24).
 
 ## Round 1 frozen direction
@@ -53,7 +53,7 @@ M04 does not own:
 9. Replay from canonical M04 events must reconstruct the same semantic state or fail closed.
 10. Event ordering is explicit and deterministic; timestamps may be diagnostic metadata but never the sole semantic ordering authority.
 11. Partial writes cannot expose a valid advanced state. Transition + journal/checkpoint publication requires atomic semantic commit at the storage boundary.
-12. Core state-machine semantics remain zero-LLM and do not perform hidden filesystem/network/process/database/HIVE/GitHub I/O.
+12. Core state-machine semantics remain zero-LLM and do not perform hidden filesystem/network/process/database/external context service/GitHub I/O.
 13. Persistent backend selection is not frozen in Round 1. Contracts must remain backend-neutral.
 14. M04 consumes M03 contracts but M03 must never depend on M04.
 15. UNKNOWN freshness, lineage, transition or replay evidence broadens to BLOCKED/STALE, never optimistic continuation.
@@ -276,7 +276,7 @@ Terminal/block/skip/interruption records use versioned reason-code namespaces. V
 
 The canonical journal remains authoritative. A snapshot is a derived acceleration artifact binding RunId, source generation, last event sequence and journal root plus a canonical projection fingerprint.
 
-Loading a snapshot requires verification against the journal boundary. A snapshot cannot authorize state absent from the journal. Compaction may discard only independently reproducible derived/cache material; V1 does not permit destructive deletion of canonical events needed to prove the active bounded Run history. Archive/retention policy belongs outside M04.
+Loading a snapshot requires verification against the journal boundary. A snapshot cannot authorize state absent from the journal. Compaction may discard only independently reproducible derived/cache material; V1 does not permit destructive deletion of canonical events needed to prove the active bounded Run history. Arcexternal_context_service/retention policy belongs outside M04.
 
 ### External outcome/evidence references
 
@@ -290,7 +290,7 @@ Exact numeric defaults are not fabricated during planning. The eventual Work Ord
 
 ### Adapter seams and dependency direction
 
-M04 core depends only on admitted lower-level contracts required from M01/M03 and shared primitive utilities explicitly admitted at final freeze. M04 never calls M03 repository/HIVE/GitHub resolution itself; callers/adapters supply validated BRC inputs.
+M04 core depends only on admitted lower-level contracts required from M01/M03 and shared primitive utilities explicitly admitted at final freeze. M04 never calls M03 repository/external context service/GitHub resolution itself; callers/adapters supply validated BRC inputs.
 
 Storage is an external `M04StateStoreV1`-equivalent port implementing atomic ASF compare-and-set commit. No database/backend dependency is frozen here. External evidence/outcome integration is a reference-validation port, never a dependency from M14-M17 back into M04 core.
 
@@ -314,7 +314,7 @@ Blocking evidence nodes for final M04 acceptance:
 - EV-M04-013 resource cap and cap+1 atomic rejection;
 - EV-M04-014 snapshot verification/rebuild equivalence;
 - EV-M04-015 external-reference bounds/lineage validation;
-- EV-M04-016 no hidden filesystem/network/process/database/HIVE/GitHub I/O;
+- EV-M04-016 no hidden filesystem/network/process/database/external context service/GitHub I/O;
 - EV-M04-017 zero-LLM core proof;
 - EV-M04-018 fuzz campaigns for transition/event/replay/identity/cursor/reference surfaces;
 - EV-M04-019 finite calibration report;
@@ -372,7 +372,7 @@ Direct M04 crate dependencies are frozen to:
 - workspace `serde` for V1 contracts;
 - workspace `thiserror` for typed errors.
 
-`serde_json` is permitted only in tests/tooling unless a later exact API proof shows production necessity. No direct `tokio`, `core-runtime`, `core-workspace`, Git/process/network/database/HIVE/GitHub SDK, graph, cache or persistence dependency is admitted.
+`serde_json` is permitted only in tests/tooling unless a later exact API proof shows production necessity. No direct `tokio`, `core-runtime`, `core-workspace`, Git/process/network/database/external context service/GitHub SDK, graph, cache or persistence dependency is admitted.
 
 M01 cancellation/shutdown information crosses a bounded value DTO from caller-owned adapters. M04 does not import the async runtime merely to observe cancellation.
 
@@ -544,7 +544,7 @@ They are semantic mechanisms inside `core-run-state`, not separately deployable 
 
 Deferred:
 - persistent backend selection;
-- destructive journal compaction/archive;
+- destructive journal compaction/arcexternal_context_service;
 - distributed replication/consensus;
 - persistent snapshot cache;
 - runtime self-tuning.
@@ -604,7 +604,7 @@ The implementation acceptance graph is one-to-one and blocking:
 | AC-M04-013 | EV-M04-013 | Resource at-limit and cap+1 atomic rejection |
 | AC-M04-014 | EV-M04-014 | Snapshot verification/rebuild equivalence |
 | AC-M04-015 | EV-M04-015 | External-reference shape/lineage/bounds |
-| AC-M04-016 | EV-M04-016 | No hidden filesystem/network/process/database/HIVE/GitHub I/O |
+| AC-M04-016 | EV-M04-016 | No hidden filesystem/network/process/database/external context service/GitHub I/O |
 | AC-M04-017 | EV-M04-017 | Zero-LLM deterministic core proof |
 | AC-M04-018 | EV-M04-018 | Six frozen bounded fuzz campaigns |
 | AC-M04-019 | EV-M04-019 | Finite reproducible resource calibration report |
@@ -637,9 +637,9 @@ Even after Round 5 has passed its exact-head audit and been promoted, M04 implem
 4. passes the exact-head owner self-audit defined by CORE-D-203 and is promoted to canonical `origin/main`;
 5. leaves all frozen planning semantics unchanged.
 
-### HIVE planning observation
+### external context service planning observation
 
-No direct HIVE MCP/connector is available in this planning chat environment. No current HIVE project/checkpoint state is therefore claimed for CORE. Round 5 uses exact Git canonical sources in SOLO mode. The implementation executor must repeat the optional HIVE preflight and record only observed current results; HIVE remains advisory and cannot replace Git/source/lock authority.
+No direct external context service MCP/connector is available in this planning chat environment. No current external context service project/checkpoint state is therefore claimed for CORE. Round 5 uses exact Git canonical sources in SOLO mode. The implementation executor must repeat the optional external context service preflight and record only observed current results; external context service remains advisory and cannot replace Git/source/lock authority.
 
 ### Round 5 STOP CONDITION
 
