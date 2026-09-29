@@ -1,7 +1,7 @@
 {
   "schemaVersion": "gef-current-v1",
   "project": "KayzenRoot/core",
-  "promptMode": "GEF_V1_HIVE_FIRST",
+  "promptMode": "GEF_V1_external context service_FIRST",
   "reviewMode": "DELTA_EXACT_HEAD",
   "assuranceMode": "ELEVATED",
   "productStage": "M04_PACK_A_CANDIDATE_OPEN_OWNER_AUDIT_PENDING",
