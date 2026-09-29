@@ -1,14 +1,11 @@
-# CORE Deployment
+# CORE Local Deployment
 
-Status: `PRODUCT_DEPLOYMENT_PENDING_DISCOVERY`
+CORE runs as a standalone local application/runtime from its own repository and Cargo workspace. No project Docker stack, repository MCP service, project-registration daemon or external memory database is required.
 
-## Bootstrap state
-CORE currently has no product runtime to deploy. No VPS, container topology, cloud service or local daemon is selected by this bootstrap.
+## Local baseline
+- Rust toolchain and repository dependencies declared by the workspace;
+- local filesystem/Git access only where explicitly owned by the applicable adapter;
+- GitHub access only for delivery/CI workflows that explicitly require it;
+- no ambient network or external context authority inside deterministic core modules.
 
-## HIVE dependency boundary
-HIVE v1.0.0 is deployed separately using HIVE's supported Docker Compose distribution. CORE is exposed to HIVE only as a read-only project below the configured `HIVE_PROJECTS_ROOT`.
-
-## Product deployment
-Supported operating systems, packaging, local/cloud topology, persistence, upgrade/rollback and release channels will be selected only after CORE product architecture is frozen.
-
-No deployment readiness claim is made in Phase 0.
+Optional future external providers must be separately admitted through provider-neutral contracts and are never a startup dependency.
