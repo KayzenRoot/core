@@ -153,7 +153,10 @@ fn validate_workspace(
         return Err(error(Category::AdmissionStaleness, Code::WorkspaceMismatch));
     }
     if evidence.required_profile != requirement.required_profile {
-        return Err(error(\n            Category::AdmissionStaleness,\n            Code::BasisIncompatible,\n        ));
+        return Err(error(
+            Category::AdmissionStaleness,
+            Code::BasisIncompatible,
+        ));
     }
     crate::compiler::validate_basis_components(&evidence.satisfied_components)?;
     if evidence.freshness != EvidenceFreshnessV1::Current {
@@ -167,21 +170,33 @@ fn validate_workspace(
         || (evidence.compatibility == BasisCompatibilityV1::CompatibleRefresh
             && !requirement.allow_compatible_refresh)
     {
-        return Err(error(\n            Category::AdmissionStaleness,\n            Code::BasisIncompatible,\n        ));
+        return Err(error(
+            Category::AdmissionStaleness,
+            Code::BasisIncompatible,
+        ));
     }
     let mut required: BTreeSet<_> = requirement.required_basis_components.iter().collect();
     if required.len() != requirement.required_basis_components.len() {
-        return Err(error(\n            Category::AdmissionStaleness,\n            Code::BasisIncompatible,\n        ));
+        return Err(error(
+            Category::AdmissionStaleness,
+            Code::BasisIncompatible,
+        ));
     }
     let profile_components =
         crate::compiler::workspace_profile_components(requirement.required_profile);
     required.extend(profile_components.iter());
     let satisfied: BTreeSet<_> = evidence.satisfied_components.iter().collect();
     if satisfied.len() != evidence.satisfied_components.len() {
-        return Err(error(\n            Category::AdmissionStaleness,\n            Code::BasisIncompatible,\n        ));
+        return Err(error(
+            Category::AdmissionStaleness,
+            Code::BasisIncompatible,
+        ));
     }
     if required.iter().any(|v| !satisfied.contains(v)) {
-        return Err(error(\n            Category::AdmissionStaleness,\n            Code::BasisIncompatible,\n        ));
+        return Err(error(
+            Category::AdmissionStaleness,
+            Code::BasisIncompatible,
+        ));
     }
     if requirement.assurance_requirement == WorkspaceAssuranceRequirementV1::VerifiedAssociationRequired
         && !evidence
@@ -189,7 +204,10 @@ fn validate_workspace(
             .iter()
             .any(|component| component == "ProjectAssociation")
     {
-        return Err(error(\n            Category::AdmissionStaleness,\n            Code::BasisIncompatible,\n        ));
+        return Err(error(
+            Category::AdmissionStaleness,
+            Code::BasisIncompatible,
+        ));
     }
     let mut satisfied_components = evidence.satisfied_components.clone();
     satisfied_components.sort();
