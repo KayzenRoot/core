@@ -173,7 +173,9 @@ fn legacy_v1_hostile_payload_is_rejected_without_echo() {
     let hostile = br#"{"schema":"nexlabs.core.work-order","version":1,"kind":"request","payload":"canary_provider_payload_api_key_7f03"}"#;
     let error = parse_request(hostile, &fixture.budget).unwrap_err();
     assert_eq!(error.code, WorkOrderErrorCodeV1::UnsupportedVersion);
-    assert!(!error.to_string().contains("canary_provider_payload_api_key_7f03"));
+    assert!(!error
+        .to_string()
+        .contains("canary_provider_payload_api_key_7f03"));
     assert!(!serde_json::to_string(&error)
         .unwrap()
         .contains("canary_provider_payload_api_key_7f03"));
