@@ -3,7 +3,7 @@
 Status: `DERIVED_VIEW`
 Canonical source: `docs/project-brain/13-CHECKPOINT.md`
 
-This file is a GEF continuity view. It is not a second source of product truth. Shared fields are validated deterministically against the canonical HIVE-compatible checkpoint.
+This file is a GEF continuity view. It is not a second source of product truth. Shared fields are validated deterministically against the canonical external context service-compatible checkpoint.
 
 ## STATUS
 M01 COMPLETE / M02 COMPLETE / M03 COMPLETE / M04 PACK A CANDIDATE OPEN
