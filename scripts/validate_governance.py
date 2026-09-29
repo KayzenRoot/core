@@ -63,10 +63,12 @@ SHARED_CHECKPOINT_FIELDS = {
 
 
 def fail(message: str) -> None:
+    """Reject a violated governance invariant with an explicit blocking reason."""
     raise SystemExit(f"GOVERNANCE VALIDATION FAILED: {message}")
 
 
 def section(text: str, heading: str) -> str:
+    """Extract one nonempty checkpoint section for deterministic bridge comparison."""
     lines = text.splitlines()
     try:
         start = lines.index(heading) + 1
@@ -84,6 +86,7 @@ def section(text: str, heading: str) -> str:
 
 
 def git_blob_sha(relative: str) -> str:
+    """Calculate Git's canonical blob ID using repository clean filters."""
     # Let Git apply clean filters (especially CRLF normalization on Windows)
     # before calculating the canonical blob ID.
     result = subprocess.run(
