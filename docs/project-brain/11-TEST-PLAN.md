@@ -3,15 +3,15 @@
 Status: `PRODUCT_DISCOVERY_ACTIVE`
 
 ## Bootstrap proof ladder
-1. Python syntax compilation for governance/HIVE bootstrap tooling.
+1. Python syntax compilation for governance/external context service bootstrap tooling.
 2. Deterministic source/governance validation.
-3. Unit tests for HIVE project identity resolution and fail-closed collision handling.
+3. Unit tests for external context service project identity resolution and fail-closed collision handling.
 4. Hosted GitHub Actions evidence on the exact candidate head.
 5. Semantic exact-head audit against Work Order, Scope, Architecture, Requirements and DoD.
 
 ## Current required bootstrap commands
 ```text
-python -m py_compile scripts/validate_governance.py scripts/hive_bootstrap.py
+python -m py_compile scripts/validate_governance.py scripts/external_context_service_bootstrap.py
 python scripts/validate_governance.py
 python -m unittest discover -s tests -p "test_*.py" -v
 ```
@@ -93,7 +93,7 @@ Planning validation must cover:
 - stable packet identity/order semantics;
 - acceptance criterion to evidence requirement coverage;
 - Context Lock + M02 basis binding;
-- HIVE advisory boundary;
+- external context service advisory boundary;
 - zero-LLM compiler/validator direction;
 - compact context/token-economy semantics;
 - initial threat/failure taxonomy.
@@ -178,7 +178,7 @@ Later implementation evidence MUST include:
 - PCM packet reconstruction equivalence;
 - request/source/packet/criteria cardinality limit cases;
 - compile/validate/diff/admission deadline/resource failures;
-- no hidden network/Git/HIVE/process invocation from core-work-order;
+- no hidden network/Git/external context service/process invocation from core-work-order;
 - safe diagnostics secret canaries;
 - fuzz/property tests for canonicalizer, packet DAG, delta classifier, lineage/LPC and admission inputs;
 - benchmark scaling for sources/packets/edges/criteria/lineage/context/diffs.
