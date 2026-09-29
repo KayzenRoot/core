@@ -1043,20 +1043,12 @@ fn resolve_from_state(
     Ok(eligible.remove(0))
 }
 
-fn origin_rank(origin: ProviderOrigin, ownership: CapabilityOwnership) -> u8 {
-    match ownership {
-        CapabilityOwnership::CoreOwned => match origin {
-            ProviderOrigin::CoreNative => 4,
-            ProviderOrigin::CoreFallback => 3,
-            ProviderOrigin::HiveExternal => 2,
-            ProviderOrigin::OtherExternal => 1,
-        },
-        CapabilityOwnership::HiveOwnedIntelligence => match origin {
-            ProviderOrigin::HiveExternal => 4,
-            ProviderOrigin::CoreFallback => 3,
-            ProviderOrigin::CoreNative => 2,
-            ProviderOrigin::OtherExternal => 1,
-        },
+fn origin_rank(origin: ProviderOrigin, _ownership: CapabilityOwnership) -> u8 {
+    // CORE-owned operations never grant special priority to an external provider.
+    match origin {
+        ProviderOrigin::CoreNative => 3,
+        ProviderOrigin::CoreFallback => 2,
+        ProviderOrigin::OtherExternal => 1,
     }
 }
 
@@ -1169,32 +1161,39 @@ mod tests {
     }
 
     #[test]
-    fn hive_provider_wins_without_llm() {
+    fn local_provider_preferred_over_optional_generic_external_without_llm() {
         let registry = CapabilityRegistry::new();
         registry
             .register_provider(provider(
                 "fallback",
-                "fallback",
+                "local",
                 "context",
                 ProviderOrigin::CoreFallback,
+                99,
+            ))
+            .unwrap();
+        registry
+            .register_provider(provider(
+                "remote-unverified",
+                "optional",
+                "context",
+                ProviderOrigin::OtherExternal,
                 100,
             ))
             .unwrap();
         registry
             .register_provider(provider(
-                "hive",
-                "hive",
+                "native",
+                "core",
                 "context",
-                ProviderOrigin::HiveExternal,
-                80,
+                ProviderOrigin::CoreNative,
+                70,
             ))
             .unwrap();
-        let requirement = CapabilityRequirement::new("context", SemVer::new(1, 0, 0));
-        let mut requirement = requirement;
-        requirement.ownership = CapabilityOwnership::HiveOwnedIntelligence;
+        let req = CapabilityRequirement::new("context", SemVer::new(1, 0, 0));
         assert_eq!(
-            registry.bind(&requirement, "test").unwrap().provider_id,
-            "hive"
+            registry.bind(&req, "local-first").unwrap().provider_id,
+            "native"
         );
     }
 

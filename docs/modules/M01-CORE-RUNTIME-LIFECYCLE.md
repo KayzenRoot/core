@@ -1557,3 +1557,10 @@ The module can enter PLANNING_FREEZE after:
 
 ## Completion record
 M01 was implemented under `CORE-WO-M01-001`, passed the final governed Review 011 at exact head `aac0f143ea576a11013e4346076b8b3b4bd24282`, and was promoted by PR #17 as merge `d70b4296afbba93e8849ab6160e9b1caf5281e7d`. The final evidence bundle is `docs/evidence/M01-EXECUTION-REPORT.md`. M01 is now a frozen upstream contract for later modules unless changed through a governed ADR/correction process.
+
+
+## Owner-directed standalone architecture amendment (2026-09-28)
+
+**Work Order:** [#175](https://github.com/KayzenRoot/core/issues/175), parent [#172](https://github.com/KayzenRoot/core/issues/172). This explicit dated amendment supersedes older HIVE-specific expectations **for future CORE execution**; previous accepted evidence is preserved as historic source truth.
+
+CORE must bootstrap from local Git/GEF canonical sources without Docker, a project-specific MCP handshake or an external memory/index service. The deprecated `require_hive` file field, `CORE_REQUIRE_HIVE` environment key and CLI override are no longer accepted: a stale explicit `CORE_` environment key is rejected by the existing fail-closed safety configuration parser and should be removed from the machine's environment. The only admitted provider origin variants are `CoreNative`, `CoreFallback` and `OtherExternal`; CORE-owned capabilities prefer native and then explicit local fallback, with generic external providers only by separate contract/policy/quality/security admission. The bounded soak now verifies *local* native/fallback health transitions, unchanged generation and prior lease coherence, and no hidden inference calls. This amendment is not a V2 public protocol release, an M04 previous-V1 compatibility decision, M02/M03 serialized-contract migration, or a claim of real owner-local PC cleanup; those have distinct gates under #172.

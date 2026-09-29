@@ -284,7 +284,7 @@ mod tests {
             let coalescer = Arc::clone(&coalescer);
             let calls = Arc::clone(&calls);
             handles.push(thread::spawn(move || {
-                coalescer.get_or_probe("hive", || {
+                coalescer.get_or_probe("local-component", || {
                     calls.fetch_add(1, Ordering::SeqCst);
                     42
                 })
