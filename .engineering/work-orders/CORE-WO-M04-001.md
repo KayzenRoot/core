@@ -40,16 +40,16 @@ Round 4 promotion synchronization: M04-REVIEW-006 / Issue #91, PR #88, exact hea
 
 The separately reviewed CI reliability correction is canonical before this planning base: PR #89 / Issue #90, merge `b34252891d3e0cd72183205e13cf46a372d09ba3`.
 
-## HIVE PREFLIGHT
+## external context service PREFLIGHT
 
-No direct HIVE MCP/connector is available in this planning chat environment. This freeze therefore uses exact Git canonical sources in SOLO mode and makes no current claim about CORE registration/checkpoint state in HIVE.
+No direct external context service MCP/connector is available in this planning chat environment. This freeze therefore uses exact Git canonical sources in SOLO mode and makes no current claim about CORE registration/checkpoint state in external context service.
 
 Before future product-code changes, the executor MUST:
 1. resolve exact remote, canonical main, branch, HEAD and cleanliness;
-2. attempt the optional HIVE v1.0.0-compatible read-only preflight if available;
+2. attempt the optional external context service v1.0.0-compatible read-only preflight if available;
 3. record only observed project/context/checkpoint results;
-4. use HIVE only as advisory/context acceleration;
-5. continue safely in SOLO Git-canonical mode when HIVE is unavailable/unresolved, unless a later explicit frozen requirement changes that rule;
+4. use external context service only as advisory/context acceleration;
+5. continue safely in SOLO Git-canonical mode when external context service is unavailable/unresolved, unless a later explicit frozen requirement changes that rule;
 6. never treat another project, stale index or memory result as CORE authority.
 
 ## CANONICAL BASIS AND SOURCE HIERARCHY
@@ -70,7 +70,7 @@ Active canonical source Git blob IDs in the CORE-M04-SYNC-005 synchronization ca
 | docs/project-brain/11-TEST-PLAN.md | cc9e84fdbdea8a8d4e5a621756918ba361f5a031 |
 | docs/modules/M04-RUN-ATTEMPT-STEP-ENGINE.md | 51894d86ca39186eb5345881d457021ab90e34ed |
 
-Authority remains governed by `.engineering/SOURCE-HIERARCHY.md`: Git is repository truth; Checkpoint is project-state authority; Decisions/ADRs govern decisions; Scope governs scope; Requirements and Architecture govern product contracts; DoD governs completion; an admitted Work Order governs execution only after separate admission; Test Plan and exact-head evidence govern validation. GEF/HIVE bridges are derived.
+Authority remains governed by `.engineering/SOURCE-HIERARCHY.md`: Git is repository truth; Checkpoint is project-state authority; Decisions/ADRs govern decisions; Scope governs scope; Requirements and Architecture govern product contracts; DoD governs completion; an admitted Work Order governs execution only after separate admission; Test Plan and exact-head evidence govern validation. GEF/external context service bridges are derived.
 
 At implementation start, material change to the exact active lock, admitted base, this Work Order, any locked canonical source, governing policy or frozen module plan makes execution STALE and blocks affected progression until governed re-admission/correction.
 
@@ -121,12 +121,12 @@ Implement only CORE-WO-M04-001:
 
 Do not implement/add:
 - a concrete production database/persistence backend;
-- destructive canonical journal compaction/archive;
+- destructive canonical journal compaction/arcexternal_context_service;
 - distributed replication/consensus;
 - persistent snapshot cache;
 - runtime self-tuning;
 - direct Tokio/core-runtime/core-workspace dependency in core-run-state;
-- Git/HIVE/GitHub/network/process/database/filesystem/clock authority in the pure core;
+- Git/external context service/GitHub/network/process/database/filesystem/clock authority in the pure core;
 - M05+ policy/executor/verification logic;
 - random/time-derived semantic IDs;
 - hidden retry/recovery policy;
@@ -191,7 +191,7 @@ Fuzz-only:
 
 `serde_json` is test/tooling-only unless a later exact governed proof demonstrates production necessity.
 
-No direct production dependency is admitted on Tokio, core-runtime, core-workspace, Git libraries, HIVE/GitHub SDKs, network/process/filesystem/database/time APIs, graph/cache frameworks, Criterion, proptest or a new cryptography stack.
+No direct production dependency is admitted on Tokio, core-runtime, core-workspace, Git libraries, external context service/GitHub SDKs, network/process/filesystem/database/time APIs, graph/cache frameworks, Criterion, proptest or a new cryptography stack.
 
 ## REQUIREMENTS
 
@@ -342,7 +342,7 @@ Assurance: `ELEVATED`
 
 Authorization in this record is canonical-main gated. It becomes effective only after the exact CORE-M04-ADMIT-001 state is independently reviewed and promoted to canonical `origin/main`. A planning/admission PR branch carrying armed/active metadata is not execution authority.
 
-After admission promotion, the executor MUST create `feat/m04-run-state` from post-admission canonical `origin/main`, prove `f6b422be5465d5a93d0b8fcf4c9507c205663072` is an ancestor, prove intervening commits contain only governed admission/state-synchronization metadata, then repeat Git/HIVE/governance preflight and validate the exact active Context Lock, Work Order blob and nine canonical source fingerprints before Pack A.
+After admission promotion, the executor MUST create `feat/m04-run-state` from post-admission canonical `origin/main`, prove `f6b422be5465d5a93d0b8fcf4c9507c205663072` is an ancestor, prove intervening commits contain only governed admission/state-synchronization metadata, then repeat Git/external context service/governance preflight and validate the exact active Context Lock, Work Order blob and nine canonical source fingerprints before Pack A.
 
 This admission changes execution state only. All frozen architecture, scope, dependencies, public contracts, Packs A-H, AC-M04-001..023, EV-M04-001..023, Resource Calibration Gate, security invariants, file topology, M03/M04 ownership and STOP semantics remain unchanged.
 
