@@ -12,12 +12,12 @@
 - Executor environment: Windows PowerShell; Git 2.55.0.windows.3; Python 3.12.10 (`C:/Users/csn19/AppData/Local/Programs/Python/Python312/python.exe`); rustc 1.98.1 and Cargo 1.98.1 from the installed stable MSVC toolchain. Cargo is invoked by its installed absolute path because it is not on PATH; `RUSTC` is set to the matching installed rustc for Cargo-launched helper processes.
 - PR: #62, open against `main`, https://github.com/KayzenRoot/core/pull/62. The final source SHA and exact-head CI run/context IDs are recorded in the PR metadata/body/checks after the evidence update is pushed; no merge is authorized.
 
-## Preflight and HIVE result
+## Preflight and external context service result
 
 - `git fetch origin --prune` completed; fetched `origin/main` at the admitted base above.
 - In the original checkout, `git checkout main` confirmed the branch and `git pull --ff-only origin main` stopped because pre-existing user changes in `AGENTS.md` would be overwritten. The original `AGENTS.md` edit and untracked `.gitattributes` were preserved. No user change was discarded.
 - Created the required isolated branch/worktree from `origin/main`. At creation, branch and HEAD were exact and `git status --short` was empty. A repeat fetch confirmed `origin/main` still matched the admitted base.
-- HIVE MCP was reachable. `project.list` completed with 7 projects and `truncated=false`; CORE is not registered. The HIVE v1.0.0 project itself reported `READY` at pinned commit `a53b5b9fcf55c32a5696180fb1b1ef80ccd1edcf`. No CORE checkpoint was available to read through HIVE, so no HIVE checkpoint evidence is claimed. CORE's canonical Git sources were used under the work order's degraded-safe planning allowance.
+- external context service MCP was reachable. `project.list` completed with 7 projects and `truncated=false`; CORE is not registered. The external context service v1.0.0 project itself reported `READY` at pinned commit `a53b5b9fcf55c32a5696180fb1b1ef80ccd1edcf`. No CORE checkpoint was available to read through external context service, so no external context service checkpoint evidence is claimed. CORE's canonical Git sources were used under the work order's degraded-safe planning allowance.
 - Canonical sources read in order: `AGENTS.md`; `.engineering/SOURCE-HIERARCHY.md`; `docs/project-brain/13-CHECKPOINT.md`; `16-DECISIONS-LEDGER.md`; `03-SCOPE.md`; `15-DEFINITION-OF-DONE.md`; `04-ARCHITECTURE.md`; `02-REQUIREMENTS.md`; `10-SECURITY-GOVERNANCE.md`; `11-TEST-PLAN.md`; `docs/modules/M03-WORK-ORDER-ENGINE.md`; `docs/modules/00-MASTER-MODULE-MAP.md`; `docs/project-brain/14-BACKLOG.md`; `.engineering/gef/GEF-POLICY.md`; `.engineering/gef/GEF-REVIEW-PROTOCOL.md`. Cargo workspace manifests and the relevant M02/M01 public source surfaces were inspected to verify dependency reality.
 - No unresolved canonical conflict was found. Round 4 preserves accepted Rounds 1-3 and reviewer-first CORE-D-132. Scope remains documentation/planning only; there is no M03 implementation Work Order or Context Lock in this increment.
 
@@ -43,7 +43,7 @@ No product source, tests, Cargo manifest, lockfile, active protection rule, or g
 
 - Versioned `nexlabs.core.work-order` V1 contracts cover request, immutable frozen revision, compilation receipt, admission request/receipt, and immutable M04 handoff; IDs, revisions, fingerprints, source/evidence, scope, context, packet DAG, acceptance graph, lineage/LPC, diagnostics, and typed errors have explicit ownership.
 - Synchronous pure operations define compile, validation, semantic diff, correction classification, admission evaluation, handoff materialization, and canonical semantic bytes. I/O, refresh, retries, persistence, and external authority remain caller-owned.
-- External source, M02 workspace/basis, Context Lock, governance, lineage/CAS, and optional HIVE seams exchange bounded typed evidence with provenance, fingerprints, and freshness. M02 retains workspace truth; HIVE remains advisory.
+- External source, M02 workspace/basis, Context Lock, governance, lineage/CAS, and optional external context service seams exchange bounded typed evidence with provenance, fingerprints, and freshness. M02 retains workspace truth; external context service remains advisory.
 - The one-crate future file map includes library modules plus unit/integration/property/fuzz/benchmark targets. The direct dependency disposition is `core-identity` plus existing `serde`, `serde_json`, and `thiserror`; no direct M02 service, Tokio, Git/network/process, database, or cache authority is admitted. Cargo metadata showed 10 existing crates and no M03 crate; `core-workspace` currently enables Tokio filesystem/network/process features, while the inspected `core-identity` dependency closure has no such authority.
 - Property/adversarial laws and bounded fuzz targets cover schema/canonicalization, DAG/scope/AEG, correction, lineage/LPC, provenance, admission replay/staleness, reconstruction, resources, and diagnostics/redaction. Benchmark dimensions and repeat/warm-up procedure are frozen; no M03 measurements or unproven numeric defaults are claimed. Calibration remains evidence-gated.
 - Production DoD direction traces exact-head Windows/Ubuntu, deterministic serialization, no-hidden-I/O, security, property/fuzz, resource/performance, dependency/supply-chain, and independent-review evidence. Product implementation and its Work Order/Context Lock remain unauthorized and uncreated.
@@ -59,10 +59,10 @@ No product source, tests, Cargo manifest, lockfile, active protection rule, or g
 | Command / evidence | Result |
 | --- | --- |
 | `git diff --check` | PASS on the final pre-commit tree after correcting five trailing whitespace lines in the checkpoint. |
-| `python -m py_compile scripts/validate_governance.py scripts/hive_bootstrap.py` | PASS with system Python 3.12.10. |
+| `python -m py_compile scripts/validate_governance.py scripts/external_context_service_bootstrap.py` | PASS with system Python 3.12.10. |
 | `cargo metadata --format-version 1 --no-deps` | PASS; confirmed 10 workspace crates and no `core-work-order`; no manifest or lockfile was changed. |
 | `cargo tree --locked -e normal -p core-identity` | PASS; inspected dependency closure and confirmed no process/network/database dependency. |
-| `python scripts/validate_governance.py` | Initial run found a real stale derived checkpoint mirror after the canonical next-step change. Updated only the two exact GEF mirror fields; rerun PASS: GEF/HIVE pins and checkpoint/source bridges consistent; 27 required artifacts. |
+| `python scripts/validate_governance.py` | Initial run found a real stale derived checkpoint mirror after the canonical next-step change. Updated only the two exact GEF mirror fields; rerun PASS: GEF/external context service pins and checkpoint/source bridges consistent; 27 required artifacts. |
 | `python -m unittest discover -s tests -p "test_*.py" -v` | PASS; 6 tests. |
 | `cargo test --workspace --all-targets` | First attempt could not find `rustc` in PATH from an existing Git helper test. Reran the same gate with `RUSTC` set to the installed Rust 1.98.1 executable; PASS, 103 tests across the workspace. Existing M01/M02 harness-false benchmark executables ran; no M03 performance result is claimed. |
 | `cargo clippy --workspace --all-targets -- -D warnings` with installed `RUSTC` | PASS; finished with no warnings. |
@@ -95,7 +95,7 @@ No product source, tests, Cargo manifest, lockfile, active protection rule, or g
 
 ## Risks and proposed checkpoint delta
 
-- CORE has no HIVE project registration, so no HIVE checkpoint could be read. Planning relied on the exact canonical Git base under the work order's degraded-safe allowance.
+- CORE has no external context service project registration, so no external context service checkpoint could be read. Planning relied on the exact canonical Git base under the work order's degraded-safe allowance.
 - The original checkout's local `AGENTS.md` modification and untracked `.gitattributes` prevented its fast-forward pull; both were preserved by executing from a clean isolated worktree.
 - Cargo was unavailable by command name, but the installed stable MSVC Cargo/Rust toolchain supported the requested repository gates. The explicit `RUSTC` setting resolved the existing helper test's PATH assumption.
 - The independent exact-head reviewer, promotion gate, and exact-head hosted CI remain external gates. No source implementation or measured M03 runtime/performance evidence exists or is claimed.
