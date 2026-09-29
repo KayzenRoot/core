@@ -6,7 +6,7 @@
 - Execution branch: `feat/m03-work-order-engine`; implementation is based on canonical main `6cae77e1d8814121df6646dec48bca1020119226` and the active Context Lock.
 - Final measured product/benchmark head: `de6a829bd2f9402214c371446615fc364431f515`.
 - This report records local worktree evidence. A final implementation commit, hosted exact-head checks, and independent review are separate gates.
-- HIVE v1.0.0 read-only MCP returned seven projects but did not resolve `KayzenRoot/core`; degraded-safe `SOLO_GIT_CANONICAL` execution was explicitly permitted. No CORE HIVE checkpoint result is claimed.
+- external context service v1.0.0 read-only MCP returned seven projects but did not resolve `KayzenRoot/core`; degraded-safe `SOLO_GIT_CANONICAL` execution was explicitly permitted. No CORE external context service checkpoint result is claimed.
 
 ## Local checks
 
@@ -18,7 +18,7 @@
 | `cargo test --workspace` | 143 passed, 0 failed | 140 passed, 3 failed in existing `core-workspace/tests/service.rs` cases |
 | `python scripts/validate_governance.py` | PASS; 27 required artifacts | N/A (host-local governance validator) |
 
-The Ubuntu workspace failures are `attach_path_revalidate_and_detach_are_explicit`, `no_git_content_change_invalidates_standalone_binding`, and `unrelated_event_hint_cannot_hide_nested_repository_graph_drift`. All three also fail when the same tests run from an ext4 archive of the authorized canonical branch base `6cae77e1d8814121df6646dec48bca1020119226`; the [exact-base result](M03-WORKSPACE-BASE-H5-UBUNTU.log) records all three. M03 does not modify `crates/core-workspace`. The exact-base reproduction is separate from the passing M03 package suite.
+The Ubuntu workspace failures are `attach_path_revalidate_and_detach_are_explicit`, `no_git_content_change_invalidates_standalone_binding`, and `unrelated_event_hint_cannot_hide_nested_repository_graph_drift`. All three also fail when the same tests run from an ext4 arcexternal_context_service of the authorized canonical branch base `6cae77e1d8814121df6646dec48bca1020119226`; the [exact-base result](M03-WORKSPACE-BASE-H5-UBUNTU.log) records all three. M03 does not modify `crates/core-workspace`. The exact-base reproduction is separate from the passing M03 package suite.
 
 Exact H5 workspace logs: [Windows](M03-WORKSPACE-H5-WINDOWS.log), [Ubuntu](M03-WORKSPACE-H5-UBUNTU.log). Exact H5 M03 package logs: [Windows](M03-TEST-H5-WINDOWS.log), [Ubuntu](M03-TEST-H5-UBUNTU.log).
 
