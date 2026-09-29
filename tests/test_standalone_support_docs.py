@@ -58,7 +58,7 @@ class StandaloneSupportDocsTests(unittest.TestCase):
 
     def test_prefixed_retired_provider_name_is_rejected(self):
         """Reject HIVE_PROJECTS_ROOT rather than checking only the isolated vendor word."""
-        pattern = r"\\bhive"
+        pattern = r"\bhive"
         self.assertIsNotNone(re.search(pattern, "HIVE_PROJECTS_ROOT required", flags=re.IGNORECASE))
         self.assertIsNotNone(re.search(pattern, "HiveExternal must start", flags=re.IGNORECASE))
         self.assertIsNone(re.search(pattern, "archive contains old evidence", flags=re.IGNORECASE))
