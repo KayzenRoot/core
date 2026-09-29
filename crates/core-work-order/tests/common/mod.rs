@@ -210,7 +210,7 @@ pub fn fixture() -> Fixture {
             assurance_requirement: WorkspaceAssuranceRequirementV1::StandaloneRequired,
             dirty_untracked_policy: DirtyUntrackedPolicyV1::RequireClean,
             required_m02_schema: "nexlabs.core.workspace".into(),
-            required_m02_version: 1,
+            required_m02_version: 2,
         },
         context_lock: ContextLockRequirementV1 {
             required_schema: "nexlabs.core.context-lock".into(),
