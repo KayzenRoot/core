@@ -46,7 +46,7 @@ pub fn build_basis(
         schema_version: crate::M02_VERSION,
         project_binding_id: crate::project_binding_id(
             &workspace_id,
-            request.hive_project_reference.as_deref(),
+            request.association_reference.as_deref(),
         ),
         workspace_id,
         repository_id,
@@ -201,7 +201,7 @@ pub fn association_for_request(
     provider.resolve(&AssociationRequest {
         workspace_id,
         repository_id,
-        project_reference: request.hive_project_reference.clone(),
+        project_reference: request.association_reference.clone(),
         local_basis_fingerprint,
         generation: request.policy_generation,
     })

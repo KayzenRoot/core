@@ -35,7 +35,7 @@ fn receipt_cannot_mint_live_handle() {
                     association: core_workspace::AssociationStatus::Unavailable,
                     reason: "test".to_owned(),
                     local_fingerprint: "local".to_owned(),
-                    hive_fingerprint: None,
+                    association_fingerprint: None,
                 },
                 requires_use_time_revalidation: true,
             },
