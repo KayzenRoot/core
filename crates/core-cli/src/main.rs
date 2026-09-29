@@ -43,7 +43,7 @@ async fn run(cli: Cli) -> Result<(), String> {
             print_json(config.redacted_diagnostics())
         }
         Command::Doctor => print_json(
-            serde_json::json!({ "schema": SchemaVersion::CURRENT, "headless": true, "rust_runtime": "stable", "tokio": true, "hive_dependency": false, "llm_calls": 0 }),
+            serde_json::json!({ "schema": SchemaVersion::CURRENT, "headless": true, "rust_runtime": "stable", "tokio": true, "llm_calls": 0 }),
         ),
         Command::Exercise => {
             let config = CoreConfig::from_sources(None, None, [], &ConfigOverrides::default(), 1)
