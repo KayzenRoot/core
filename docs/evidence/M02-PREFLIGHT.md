@@ -37,23 +37,23 @@ All nine canonical source fingerprints in the lock matched both HEAD and `origin
 Commands:
 
 ```text
-python -m py_compile scripts/validate_governance.py scripts/hive_bootstrap.py scripts/hive_mcp.py
+python -m py_compile scripts/validate_governance.py scripts/external_context_service_bootstrap.py scripts/external_context_service_mcp.py
 python scripts/validate_governance.py
 ```
 
-Result: `PASS` — GEF `v1.0.0` at `866fe3af8cccc65c929aaf6a47a924401fa448b3`; HIVE compatibility target `v1.0.0` at `a53b5b9fcf55c32a5696180fb1b1ef80ccd1edcf`; bridges consistent; 27 required artifacts.
+Result: `PASS` — GEF `v1.0.0` at `866fe3af8cccc65c929aaf6a47a924401fa448b3`; external context service compatibility target `v1.0.0` at `a53b5b9fcf55c32a5696180fb1b1ef80ccd1edcf`; bridges consistent; 27 required artifacts.
 
-## HIVE truth
+## external context service truth
 
-The read-only HIVE MCP surface was available and returned actual responses:
+The read-only external context service MCP surface was available and returned actual responses:
 
 - `project.list`: CORE resolved as project `c65b7abc-533a-411a-bbbb-2b72b976d921`, state `READY`, registered relative path `core`.
-- `project.status`: HIVE reported branch `main`, HEAD `fdb4dbe165e74b009c43df3874b6043c9b94710b`, clean working tree.
+- `project.status`: external context service reported branch `main`, HEAD `fdb4dbe165e74b009c43df3874b6043c9b94710b`, clean working tree.
 - `context.search`: returned lexical fallback evidence; semantic state was `UNAVAILABLE` and reranking was disabled.
-- `checkpoint.read`: returned the typed HIVE error `source_not_current` / `project source is not current`.
+- `checkpoint.read`: returned the typed external context service error `source_not_current` / `project source is not current`.
 
-Therefore HIVE is **available but stale for this execution HEAD**. No HIVE checkpoint, index, retrieval result or project status was used as canonical Git evidence, and no HIVE health/currentness was fabricated. M02 proceeds with bounded deterministic local/Git evidence; HIVE association remains optional and explicitly degraded until a current source is observed.
+Therefore external context service is **available but stale for this execution HEAD**. No external context service checkpoint, index, retrieval result or project status was used as canonical Git evidence, and no external context service health/currentness was fabricated. M02 proceeds with bounded deterministic local/Git evidence; external context service association remains optional and explicitly degraded until a current source is observed.
 
 ## Preflight disposition
 
-`PREFLIGHT_PASS_WITH_HIVE_DEGRADED_CONTEXT`: the exact Context Lock, canonical basis, remote, branch and governance gates are valid. Product implementation may proceed in Pack A using the frozen Work Order. The HIVE limitation is recorded as an assurance/input-currentness condition, not as local path authority.
+`PREFLIGHT_PASS_WITH_external context service_DEGRADED_CONTEXT`: the exact Context Lock, canonical basis, remote, branch and governance gates are valid. Product implementation may proceed in Pack A using the frozen Work Order. The external context service limitation is recorded as an assurance/input-currentness condition, not as local path authority.
