@@ -32,8 +32,8 @@ pub struct M03ResourceBudgetV1 {
 
 impl M03ResourceBudgetV1 {
     pub const CALIBRATED_V1: Self = Self {
-        max_request_bytes: 78_333,
-        max_frozen_bytes: 78_898,
+        max_request_bytes: 100_000,
+        max_frozen_bytes: 100_000,
         max_string_bytes: 4_096,
         max_source_refs: 32,
         max_packets: 32,
