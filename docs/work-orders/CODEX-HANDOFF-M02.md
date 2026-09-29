@@ -32,7 +32,7 @@ If any of these are false, STOP and report STALE/NOT_AUTHORIZED.
 5. validate Context Lock fingerprints;
 6. read canonical sources in Work Order order;
 7. run governance validation;
-8. check HIVE truthfully and write `docs/evidence/M02-PREFLIGHT.md`;
+8. check external context service truthfully and write `docs/evidence/M02-PREFLIGHT.md`;
 9. only then execute Pack A through H.
 
 ## Execution behavior
@@ -55,7 +55,7 @@ Return in Brazilian Portuguese:
 - Context Lock validation;
 - commits Pack A-H;
 - files created/changed;
-- HIVE preflight truth;
+- external context service preflight truth;
 - acceptance criteria 1-41 mapped to evidence;
 - unit/integration/property/adversarial/fuzz results;
 - Windows/Ubuntu CI;
