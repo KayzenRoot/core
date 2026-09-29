@@ -53,8 +53,21 @@ class StandaloneSupportDocsTests(unittest.TestCase):
         for path in PRIOR:
             with self.subTest(path=path):
                 active, _ = archive_parts(path)
-                self.assertIsNone(re.search(r"\bhive\b", active, flags=re.IGNORECASE))
+                self.assertIsNone(re.search(r"\bhive", active, flags=re.IGNORECASE))
                 self.assertIn("CORE-D-207", active)
+
+    def test_prefixed_retired_provider_name_is_rejected(self):
+        """Reject HIVE_PROJECTS_ROOT rather than checking only the isolated vendor word."""
+        pattern = r"\\bhive"
+        self.assertIsNotNone(re.search(pattern, "HIVE_PROJECTS_ROOT required", flags=re.IGNORECASE))
+        self.assertIsNotNone(re.search(pattern, "HiveExternal must start", flags=re.IGNORECASE))
+        self.assertIsNone(re.search(pattern, "archive contains old evidence", flags=re.IGNORECASE))
+        for path in PRIOR:
+            with self.subTest(path=path):
+                effective, _ = archive_parts(path)
+                self.assertIsNone(re.search(pattern, effective, flags=re.IGNORECASE))
+        current_template = (ROOT / ".github/pull_request_template.md").read_text(encoding="utf-8")
+        self.assertIsNone(re.search(pattern, current_template, flags=re.IGNORECASE))
 
     def test_source_pack_and_local_deployment(self):
         """Assert canonical local hierarchy and honestly incomplete distribution."""
@@ -85,7 +98,7 @@ class StandaloneSupportDocsTests(unittest.TestCase):
         self.assertIn("## Standalone source preflight", template)
         self.assertIn("Separate ACTUAL new-main", template)
         self.assertIn("NOT INDEPENDENT", template)
-        self.assertIsNone(re.search(r"\bhive\b", template, flags=re.IGNORECASE))
+        self.assertIsNone(re.search(r"\bhive", template, flags=re.IGNORECASE))
 
     def test_decision_records_exact_prior_git_shas(self):
         """Ensure dated decision carries every original provenance identity."""
