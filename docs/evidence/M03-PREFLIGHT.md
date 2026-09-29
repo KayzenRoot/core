@@ -18,7 +18,7 @@
 | Worktree | clean; `origin/main...HEAD` = `0 0` |
 | Ancestor chain | authorized base `ac90b1f48c5551e65ecadace95c59f7f0647062f` -> admission merge `abe21ed4564978d24b2f41bca13b6f052daa3b17` -> synchronization merge / current main `6cae77e1d8814121df6646dec48bca1020119226` |
 | Intervening delta | exactly the two governed admission/state-synchronization commits; diff `abe21..6cae77` is seven governance/evidence/checkpoint/lock files, with no M03 product code, Cargo change, or fuzz target |
-| Prior v1 attempt | preserved without applying its stale-base evidence: local branch `archive/m03-work-order-engine-pre-v2` remains at `abe21...`; stash `74104122eddc4b0ea9918d694fdb39dc23cf7e78` retains the blocked preflight files |
+| Prior v1 attempt | preserved without applying its stale-base evidence: local branch `arcexternal_context_service/m03-work-order-engine-pre-v2` remains at `abe21...`; stash `74104122eddc4b0ea9918d694fdb39dc23cf7e78` retains the blocked preflight files |
 | Other checkout | `D:\Projects\core` remains on its existing `main` checkout with pre-existing `M AGENTS.md` and `?? .gitattributes`; both were left untouched |
 | Governance preflight | `python scripts/validate_governance.py` -> PASS at base HEAD `6cae77e1d8814121df6646dec48bca1020119226` after recording the preflight artifacts |
 
@@ -49,9 +49,9 @@ All nine values below were recomputed from `origin/main` and match the ACTIVE Co
 
 The observed Work Order blob matches `workOrderSource.blobSha`; the observed Context Lock blob matches both `.engineering/evidence/CORE-WO-M03-001.json` lock bindings. No semantic fingerprint conflict was found.
 
-## HIVE preflight
+## external context service preflight
 
-The read-only HIVE v1.0.0 MCP surface responded to `project.list` with seven registered projects. None resolved to `KayzenRoot/core`; therefore no CORE project ID was available for `project.status`, context retrieval, or `checkpoint.read`. No result from another project is attributed to CORE. The Work Order explicitly permits degraded-safe `SOLO_GIT_CANONICAL` execution when CORE is absent, so execution uses the exact Git sources and records HIVE context as unavailable/unresolved, not PASS.
+The read-only external context service v1.0.0 MCP surface responded to `project.list` with seven registered projects. None resolved to `KayzenRoot/core`; therefore no CORE project ID was available for `project.status`, context retrieval, or `checkpoint.read`. No result from another project is attributed to CORE. The Work Order explicitly permits degraded-safe `SOLO_GIT_CANONICAL` execution when CORE is absent, so execution uses the exact Git sources and records external context service context as unavailable/unresolved, not PASS.
 
 ## Acceptance checklist before Pack A
 
