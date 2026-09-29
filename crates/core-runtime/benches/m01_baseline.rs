@@ -12,7 +12,6 @@ fn main() {
         "configuration": "standalone-defaults",
         "module_graph": [],
         "capability_graph": [],
-        "hive": "disabled",
         "journal": "append-only-runtime-safety-v1",
     });
     let wnf = fingerprint(&workload).expect("workload fingerprint");
