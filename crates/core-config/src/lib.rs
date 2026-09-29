@@ -112,7 +112,6 @@ pub struct CoreConfig {
     pub startup_timeout_ms: u64,
     pub shutdown_timeout_ms: u64,
     pub quality_floor: u8,
-    pub require_hive: bool,
     pub secret_reference: Option<SecretReference>,
     pub generation: RuntimeGeneration,
     pub provenance: BTreeMap<String, ConfigProvenance>,
@@ -127,7 +126,6 @@ struct FileConfig {
     startup_timeout_ms: Option<u64>,
     shutdown_timeout_ms: Option<u64>,
     quality_floor: Option<u8>,
-    require_hive: Option<bool>,
     secret_reference: Option<String>,
 }
 
@@ -138,7 +136,6 @@ pub struct ConfigOverrides {
     pub startup_timeout_ms: Option<u64>,
     pub shutdown_timeout_ms: Option<u64>,
     pub quality_floor: Option<u8>,
-    pub require_hive: Option<bool>,
 }
 
 #[derive(Debug, Error)]
@@ -157,7 +154,6 @@ impl CoreConfig {
             startup_timeout_ms: 30_000,
             shutdown_timeout_ms: 30_000,
             quality_floor: 50,
-            require_hive: false,
             secret_reference: None,
             generation: RuntimeGeneration::new(boot_epoch),
             provenance: BTreeMap::new(),
@@ -198,7 +194,6 @@ impl CoreConfig {
             "startup_timeout_ms",
             "shutdown_timeout_ms",
             "quality_floor",
-            "require_hive",
         ] {
             self.provenance.insert(
                 field.to_owned(),
@@ -232,10 +227,6 @@ impl CoreConfig {
         if let Some(value) = file.quality_floor {
             self.quality_floor = value;
             self.mark_source("quality_floor", source);
-        }
-        if let Some(value) = file.require_hive {
-            self.require_hive = value;
-            self.mark_source("require_hive", source);
         }
         if let Some(value) = file.secret_reference {
             self.secret_reference = Some(SecretReference { name: value });
@@ -275,10 +266,6 @@ impl CoreConfig {
                 })?;
                 self.mark_source("quality_floor", source);
             }
-            "CORE_REQUIRE_HIVE" => {
-                self.require_hive = parse_bool(value)?;
-                self.mark_source("require_hive", source);
-            }
             "CORE_SECRET_REFERENCE" => {
                 self.secret_reference = Some(SecretReference {
                     name: value.to_owned(),
@@ -316,10 +303,6 @@ impl CoreConfig {
         if let Some(value) = cli.quality_floor {
             self.quality_floor = value;
             self.mark_source("quality_floor", source);
-        }
-        if let Some(value) = cli.require_hive {
-            self.require_hive = value;
-            self.mark_source("require_hive", source);
         }
     }
 
@@ -381,22 +364,11 @@ impl CoreConfig {
             "startup_timeout_ms": self.startup_timeout_ms,
             "shutdown_timeout_ms": self.shutdown_timeout_ms,
             "quality_floor": self.quality_floor,
-            "require_hive": self.require_hive,
             "secret_reference": self.secret_reference.as_ref().map(|_| "<reference-present>"),
             "generation": self.generation,
             "provenance": self.provenance,
             "workspace_budget": self.workspace_budget,
         })
-    }
-}
-
-fn parse_bool(value: &str) -> Result<bool, ConfigError> {
-    match value.to_ascii_lowercase().as_str() {
-        "1" | "true" | "yes" => Ok(true),
-        "0" | "false" | "no" => Ok(false),
-        _ => Err(ConfigError::Invalid(
-            "boolean configuration value is invalid".into(),
-        )),
     }
 }
 
@@ -420,6 +392,18 @@ mod tests {
         .unwrap();
         assert_eq!(config.quality_floor, 90);
         assert_eq!(config.provenance["quality_floor"].source, ConfigSource::Cli);
+    }
+
+    #[test]
+    fn retired_project_server_config_is_not_accepted() {
+        assert!(CoreConfig::from_sources(
+            Some("require_hive = true"), None, [], &ConfigOverrides::default(), 1
+        ).is_err());
+        let standalone = CoreConfig::from_sources(
+            None, None, [("CORE_REQUIRE_HIVE".into(), "true".into())],
+            &ConfigOverrides::default(), 1
+        ).unwrap();
+        assert_eq!(standalone.quality_floor, CoreConfig::defaults(1).quality_floor);
     }
 
     #[test]

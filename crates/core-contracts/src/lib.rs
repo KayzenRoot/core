@@ -296,7 +296,6 @@ impl CapabilityRequirement {
 pub enum ProviderOrigin {
     CoreNative,
     CoreFallback,
-    HiveExternal,
     OtherExternal,
 }
 
@@ -304,7 +303,6 @@ pub enum ProviderOrigin {
 pub enum CapabilityOwnership {
     #[default]
     CoreOwned,
-    HiveOwnedIntelligence,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
