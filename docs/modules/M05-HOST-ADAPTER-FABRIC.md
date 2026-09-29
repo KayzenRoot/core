@@ -1,3 +1,24 @@
+# M05 Host Adapter Fabric — operative standalone discovery entrypoint
+
+Status: `STANDALONE_DISCOVERY_ONLY / PUBLIC_API_UNFROZEN / PRODUCT_IMPLEMENTATION_FORBIDDEN`  
+Authority: CORE-D-205; CORE-D-206 effective on protected-main promotion of Work Order #182.  
+Source: canonical Git and `docs/modules/00-MASTER-MODULE-MAP.md`; the original R1–R4 text below is historical non-operative candidate research only.
+
+## Current scope and ownership
+
+M05 is an unimplemented, optional host transport/session candidate for already admitted caller requests. M01 owns runtime, worker lifecycle and first-party local IPC; M02 owns local workspace and Git authority; M03 owns Work Orders and execution scope. M04 alone may eventually own durable Run/Attempt/Step journal truth, but its old admission is STALE and all M04 product integration remains BLOCKED_RE_ADMISSION pending issue #111's real previous-V1 consumer/journal inventory and a NEW standalone exact-source admission. M06 may later evaluate external capability evidence; M10/M11/M12/M22 own policy, isolation, actual effects and security. M23 is a future local context/evidence registry, **not** a provider/server integration or implemented dependency.
+
+## Fail-closed host and protocol boundary
+
+CORE starts and operates with only its local Git-canonical M01–M03 V2 baseline and no external project-intelligence/memory/retrieval installation, Docker service, MCP server, credentials or network. Any future generic stdio/MCP/local IPC/remote adapter is separately admitted with versioned protocol, verified endpoint identity, redacted tainted diagnostics, bounded framing, timeouts and explicit caller-owned policy/lease authority. Discovery, transport availability, host text or a successful protocol response never authorizes process/network/filesystem effects or proves a durable M04 commit. Unknown external side effects require an explicit reconciliation path, not blind retry.
+
+## Current acceptance gate
+
+The following retained R1–R4 material is dated prior planning, including retired pinned-provider assertions and the superseded old M04 lock wording. It cannot establish a live external provider, mandatory provider preference, former #4 runtime proof or M23 federation. All listed historical EV-M05 discovery candidates are PENDING, not passed executable tests. No crate, public DTO, numeric budget, SDK dependency, executable Work Order, Context Lock or product authorization is created here.
+
+
+## Historical discovery archive (non-operative; exact prior Git blob follows)
+
 # M05 Host Adapter Fabric — Round 1 discovery candidate
 
 Status: R1_R3_DOCUMENTED / R4_NON_AUTHORITATIVE_DISCOVERY_CANDIDATE  
