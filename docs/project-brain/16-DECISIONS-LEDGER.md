@@ -1,5 +1,7 @@
 # CORE Decisions Ledger
 
+> **CURRENT AUTHORITY (2026-09-29; CORE-D-205, effective on protected-main promotion):** CORE is built, governed and run independently from canonical Git and CORE-owned local standalone M01/M02/M03 V2 contracts. No HIVE install, MCP, Docker, API, registry, retrieval or memory service is a prerequisite. Older contradictory Hive-specific sections are dated historical evidence. M04 old ACTIVE authorization is superseded: new source lock STALE, implementation forbidden, #111 external V1 consumers UNKNOWN. Old PRs #106/#118 remain unmerged.
+
 Status: `ACTIVE`
 
 ## CORE-D-001 - Product naming
@@ -853,3 +855,8 @@ Status: `ACTIVE`
 **Decision:** `KayzenRoot` is the sole operational GitHub identity for CORE. Executor and auditor remain separate logical lifecycle stages, but do not require separate accounts or reviewer sessions. For M04, an exact-base/exact-head owner self-audit may produce `OWNER_SELF_AUDIT_APPROVED` only after required CI/security checks pass, scope and source bindings are valid, and unresolved HIGH/CRITICAL findings are zero. The audit record must name the exact base/head, changed surface, checks, findings and severity, and state `NOT INDEPENDENT`. Never submit native GitHub self-approval from the author account. Missing a second identity alone is never a blocker; missing/failed technical evidence remains fail-closed. This decision does not auto-merge, promote checkpoints, or waive protected-main rules.
 **State:** ACCEPTED under the owner's 2026-09-27 single-account directive; effective on canonical main after the governed policy PR is promoted.
 
+
+
+## CORE-D-205 - Standalone canonical source and M04 execution-authority cutover (2026-09-29)
+**Decision:** CORE is independently built, governed and run from exact tracked Git and CORE-owned local M01/M02/M03 V2. HIVE installation, MCP, Docker, API, registry, retrieval, memory or bootstrap preflight is NOT a prerequisite. Optional independently verified generic association/context providers are advisory only and never grant local Git/path authority. Supersede the conflicting operative HIVE-dependent provisions of historical CORE-D-001/003/004/005/009/010/200/202 and the old M04 admission bound to the earlier nine-source architecture; retain accepted dated evidence, unrelated GEF/security decisions, and frozen M04 semantic requirements. CORE-D-204 remains a proposed/unadmitted replay amendment. The historical M04 lock becomes STALE with productImplementationAuthorized=false, blocked Work Order/evidence/GEF and new nine-source SHA bindings; current M04 code requires separately governed standalone source/version/archival correction and a NEW exact-source admission. #111 old exported V1 binary/API/journal consumers remain UNKNOWN/BLOCKING; PRs #106/#118 remain unmerged and non-authoritative.
+**State:** ACCEPTED only upon protected-main promotion of CORE-STANDALONE-CANONICAL-004 (#180). Supporting ADR: .engineering/decisions/CORE-D-205-STANDALONE-CANONICAL-CUTOVER.md.

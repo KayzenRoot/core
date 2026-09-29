@@ -1,5 +1,17 @@
 # CORE-WO-M04-001 — M04 Run / Attempt / Step Engine
 
+Status: BLOCKED_RE_ADMISSION / STALE_SOURCE_AUTHORITY
+Module: M04 — Run / Attempt / Step Engine
+Assurance: ELEVATED
+Product implementation authorization: FALSE (CORE-D-205)
+Context Lock: .engineering/context-locks/CORE-WO-M04-001.json — STALE
+Evidence: .engineering/evidence/CORE-WO-M04-001.json — BLOCKED_RE_ADMISSION
+Historical authorizedBase: f6b422be5465d5a93d0b8fcf4c9507c205663072 (NOT current authority)
+
+## CURRENT STOP / RE-ADMISSION GATE — 2026-09-29
+Do not execute this historical V1 Work Order or resume #106/#118. Prior nine-source identity and ACTIVE admission were superseded by standalone M02/M03 V2 and CORE-D-205. External previous-V1 consumer inventory is UNKNOWN/BLOCKING (#111). New standalone M04 source/version/archive disposition and a separate protected-main exact-source Work Order/lock admission are mandatory before any Pack A-H. Historic approvals/source SHA matrix and frozen semantics below are preserved as archival facts, not operative instructions.
+
+## Historical pre-cutover execution header (non-operative)
 Status: ACTIVE / IMPLEMENTATION_AUTHORIZED
 Increment: CORE-M04-FREEZE-001
 Module: M04 — Run / Attempt / Step Engine
@@ -40,7 +52,7 @@ Round 4 promotion synchronization: M04-REVIEW-006 / Issue #91, PR #88, exact hea
 
 The separately reviewed CI reliability correction is canonical before this planning base: PR #89 / Issue #90, merge `b34252891d3e0cd72183205e13cf46a372d09ba3`.
 
-## HIVE PREFLIGHT
+## Historical HIVE preflight (non-operative)
 
 No direct HIVE MCP/connector is available in this planning chat environment. This freeze therefore uses exact Git canonical sources in SOLO mode and makes no current claim about CORE registration/checkpoint state in HIVE.
 
@@ -56,7 +68,7 @@ Before future product-code changes, the executor MUST:
 
 Planning base: `0f448c708aafd8f5b4cb6303effdabd7e028bc6f`.
 
-Active canonical source Git blob IDs in the CORE-M04-SYNC-005 synchronization candidate:
+Historical source blob IDs from CORE-M04-SYNC-005 (NON-AUTHORITATIVE after CORE-D-205):
 
 | Canonical source | Candidate blob |
 | --- | --- |

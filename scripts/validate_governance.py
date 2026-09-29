@@ -63,10 +63,12 @@ SHARED_CHECKPOINT_FIELDS = {
 
 
 def fail(message: str) -> None:
+    """Reject a violated governance invariant with an explicit blocking reason."""
     raise SystemExit(f"GOVERNANCE VALIDATION FAILED: {message}")
 
 
 def section(text: str, heading: str) -> str:
+    """Extract one nonempty checkpoint section for deterministic bridge comparison."""
     lines = text.splitlines()
     try:
         start = lines.index(heading) + 1
@@ -84,6 +86,7 @@ def section(text: str, heading: str) -> str:
 
 
 def git_blob_sha(relative: str) -> str:
+    """Calculate Git's canonical blob ID using repository clean filters."""
     # Let Git apply clean filters (especially CRLF normalization on Windows)
     # before calculating the canonical blob ID.
     result = subprocess.run(
@@ -181,8 +184,8 @@ for relative in CANONICAL_PROJECT_SOURCES:
     if not (ROOT / relative).is_file():
         fail(f"local canonical source missing: {relative}")
 
-# The active M04 review gate is a transparent single-account owner self-audit.
-# Keep its policy, lock, evidence and canonical-source fingerprints mechanically aligned.
+# Fail-closed M04 STALE source identity and single-account owner-audit boundary.
+# Matching canonical Git fingerprints NEVER reauthorize superseded historical execution.
 review_policy_id = "SINGLE_ACCOUNT_OWNER_SELF_AUDIT"
 review_policy_path = ".engineering/gef/GEF-REVIEW-PROTOCOL.md"
 context_lock_path = ".engineering/context-locks/CORE-WO-M04-001.json"
@@ -194,6 +197,20 @@ evidence = json.loads((ROOT / evidence_path).read_text(encoding="utf-8"))
 gef_current = json.loads((ROOT / gef_current_path).read_text(encoding="utf-8"))
 review_protocol = (ROOT / review_policy_path).read_text(encoding="utf-8")
 
+if context_lock.get("status") != "STALE" or context_lock.get("productImplementationAuthorized") is not False:
+    fail("superseded M04 lock must be STALE and forbid product implementation")
+if context_lock.get("executionStatus") != "BLOCKED_RE_ADMISSION" or context_lock.get("cutoverDecision") != "CORE-D-205":
+    fail("M04 must block historical execution authority after cutover")
+if context_lock.get("externalV1ConsumersUnknownBlocking") is not True:
+    fail("M04 prior-V1 external consumer inventory must remain BLOCKING/UNKNOWN")
+if evidence.get("status") != "BLOCKED_RE_ADMISSION" or evidence.get("contextLock", {}).get("status") != "STALE":
+    fail("M04 Evidence Bundle must report BLOCKED_RE_ADMISSION and STALE lock")
+if evidence.get("contextLock", {}).get("productImplementationAuthorized") is not False:
+    fail("M04 Evidence Bundle still grants historical implementation authority")
+if gef_current.get("productImplementationAuthorized") is not False or gef_current.get("activeWorkOrder") is not None:
+    fail("GEF must not route execution to the stale historical M04 Work Order")
+if gef_current.get("currentExecutionGate") != "BLOCKED_RE_ADMISSION":
+    fail("GEF did not preserve the standalone re-admission gate")
 if context_lock.get("reviewIdentityPolicy") != review_policy_id:
     fail("active Context Lock review identity policy mismatch")
 if context_lock.get("ownerAuditIdentity") != "KayzenRoot":

@@ -1,19 +1,18 @@
 # CORE Scope
 
+> **CURRENT AUTHORITY (2026-09-29; CORE-D-205, effective on protected-main promotion):** CORE is built, governed and run independently from canonical Git and CORE-owned local standalone M01/M02/M03 V2 contracts. No HIVE install, MCP, Docker, API, registry, retrieval or memory service is a prerequisite. Older contradictory Hive-specific sections are dated historical evidence. M04 old ACTIVE authorization is superseded: new source lock STALE, implementation forbidden, #111 external V1 consumers UNKNOWN. Old PRs #106/#118 remain unmerged.
+
 Status: `PRODUCT_DISCOVERY_ACTIVE`
 
-## NECESSARY - bootstrap
-
-- Materialize GEF v1.0.0 new-project governance.
-- Materialize a HIVE v1.0.0 compatible Project Brain.
-- Provide deterministic governance validation.
-- Provide local scripts to register, inspect, index and retrieval-sync CORE in HIVE.
-- Provide GitHub PR, Work Order and evidence scaffolding.
-- Keep product planning separate from bootstrap installation.
+## Current necessary standalone foundation
+- Existing docs/project-brain source paths are CORE-owned local Git files; retaining those paths does not imply Hive service compatibility or a dependency.
+- GEF v1 governance, exact source fingerprints, bounded Work Orders and protected exact-head PR/CI remain.
+- M01/M02/M03 standalone V2 require no project context server, registry or MCP.
+- M04 remains BLOCKED_RE_ADMISSION until #111, separately governed source/compatibility review and new exact-source execution admission.
 
 ## IMPORTANT - planning phase
 
-- Define the operational responsibilities of CORE relative to HIVE.
+- Define CORE-owned operational responsibilities and optional separately verified generic advisory-provider seams.
 - Define executor/orchestrator, review, automation, policy and integration responsibilities.
 - Define interfaces with Codex/IDEs/GitHub and other NexLabs systems only after discovery.
 - Define observability, security, reliability and performance targets with evidence.
@@ -34,8 +33,8 @@ To be classified during governed discovery. No future capability is admitted mer
 ## ACCEPTED DISCOVERY CONSTRAINTS
 
 - CORE is a headless action/execution plane; dashboard/cockpit/web UI are OUT OF SCOPE.
-- CORE must remain usable without HIVE.
-- When compatible HIVE is available, CORE consumes HIVE-owned intelligence through contracts instead of duplicating HIVE subsystems.
+- CORE must build, govern and run without HIVE or project MCP.
+- Optional generic association/context providers need separate proof and never grant local path/source authority.
 - Default delivery granularity is one complete planned module per bounded Codex Work Order when safe.
 - Product planning must provide executor-ready file maps, contracts, invariants and tests before implementation.
 
@@ -278,3 +277,14 @@ At the end of M04 Rounds 1-3, implementation remained unauthorized pending the f
 - architecture/contract redesign disguised as calibration or admission.
 
 Round 5 promotion freezes planning truth only. Execution still requires a separate governed admission delta.
+
+
+## Historical superseded bootstrap scope
+## NECESSARY - bootstrap
+
+- Materialize GEF v1.0.0 new-project governance.
+- Materialize a HIVE v1.0.0 compatible Project Brain.
+- Provide deterministic governance validation.
+- Provide local scripts to register, inspect, index and retrieval-sync CORE in HIVE.
+- Provide GitHub PR, Work Order and evidence scaffolding.
+- Keep product planning separate from bootstrap installation.

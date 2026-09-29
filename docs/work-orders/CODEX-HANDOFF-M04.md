@@ -2,10 +2,13 @@
 
 Work Order: `CORE-WO-M04-001`  
 Increment: `CORE-M04-FREEZE-001`  
-Status: `EXECUTION_AUTHORIZED_NOT_STARTED / SYNC_005_PROMOTED_SYNC_006_REVIEW_PENDING`
+Status: `BLOCKED_RE_ADMISSION / STALE_LOCK / NO_EXECUTION`
 Future execution branch: `feat/m04-run-state`
 
-## STOP BEFORE EXECUTION
+## CURRENT STOP (CORE-D-205, 2026-09-29)
+This is an archival pre-cutover V1 handoff, not an executable instruction. No M04 Pack A-H, and no promotion/rebase of PRs #106/#118, until #111 prior-V1 consumer disposition, separately accepted standalone M04 source/version/archival decision and NEW exact-source Work Order/Context Lock admission. The historical ACTIVE preflight below cannot mint authority; HIVE preflight is no longer required.
+
+## Historical STOP BEFORE EXECUTION
 
 Do **not** modify product code, Cargo manifests/lockfiles, fuzz targets, benchmark code or runtime crates unless all of the following are true on canonical `origin/main`:
 

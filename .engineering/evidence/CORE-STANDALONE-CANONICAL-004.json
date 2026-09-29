@@ -1,0 +1,63 @@
+{
+  "schemaVersion": "core-standalone-cutover-evidence-v1",
+  "workOrder": {
+    "path": ".engineering/work-orders/CORE-WO-M04-001.md",
+    "blobSha": "b4db2843b08eef170ea980b849077249350e401f"
+  },
+  "issue": 180,
+  "baseCommit": "1e118f9763f90e9a1823786f9e399c55efcf3ef4",
+  "decision": "CORE-D-205",
+  "state": "CANDIDATE_PENDING_EXACT_HEAD_CI_AND_OWNER_AUDIT",
+  "nineCanonicalSourceBlobs": {
+    "docs/project-brain/13-CHECKPOINT.md": {
+      "oldSha": "8ef7eb7d0ace6b588c6a88c915eaca14bce991d8",
+      "newSha": "18943c69e054218e13d516851454c2711211d015"
+    },
+    "docs/project-brain/16-DECISIONS-LEDGER.md": {
+      "oldSha": "857259e42855f09cd98a07b67c1912f11bf87d3b",
+      "newSha": "300914170b769304b3374ac42deb5e5ac2a34dc7"
+    },
+    "docs/project-brain/03-SCOPE.md": {
+      "oldSha": "6e6f66b7fe3f3e3780b14c7b68dca7c2af137c61",
+      "newSha": "c4cfb0a375a911569ef02124048d35e51e0dffb3"
+    },
+    "docs/project-brain/15-DEFINITION-OF-DONE.md": {
+      "oldSha": "fd31c15a2966d39abca464ad5f945a5b10103f16",
+      "newSha": "7d4b41810dab00d9848a5df1eab8025b4ac8696b"
+    },
+    "docs/project-brain/04-ARCHITECTURE.md": {
+      "oldSha": "6c9054aeeb7fb72116f7246323251b6ec240d56c",
+      "newSha": "f475383e002958115de878434e1ebbb725210460"
+    },
+    "docs/project-brain/02-REQUIREMENTS.md": {
+      "oldSha": "2840687ef61e8653ba9f2ad392ef288f93feb41c",
+      "newSha": "bab69e4147e132ca672351acdaa4aba0f5bf8443"
+    },
+    "docs/project-brain/10-SECURITY-GOVERNANCE.md": {
+      "oldSha": "2c5276f2be520f0e1d47f101c3c0a02041cff53e",
+      "newSha": "f32078d23e3334e9fc7c05e0471da6f0fd9347ba"
+    },
+    "docs/project-brain/11-TEST-PLAN.md": {
+      "oldSha": "59c641ba140c89233da323fe336aa74c9c098b0b",
+      "newSha": "e448d23ea86179415866a5a5b777740af43a49d9"
+    },
+    "docs/modules/M04-RUN-ATTEMPT-STEP-ENGINE.md": {
+      "oldSha": "337db097ec5a7a856d4d7b34f108ebbc149ad04c",
+      "newSha": "e42c7e2a1c1b2741b63481d674378db7cf5e0c80"
+    }
+  },
+  "contextLock": {
+    "path": ".engineering/context-locks/CORE-WO-M04-001.json",
+    "blobSha": "01788b129facb22a2fd163a767914b64617d2c0b",
+    "status": "STALE",
+    "productImplementationAuthorized": false
+  },
+  "previousV1Consumers": "UNKNOWN_BLOCKING #111",
+  "oldPrs": [
+    106,
+    118
+  ],
+  "ownerReview": "PENDING NOT INDEPENDENT",
+  "exactHeadCI": "PENDING",
+  "independentMainPushCI": "PENDING"
+}

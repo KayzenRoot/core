@@ -1,26 +1,15 @@
 # CORE Test & Evidence Plan
 
+> **CURRENT AUTHORITY (2026-09-29; CORE-D-205, effective on protected-main promotion):** Standalone Git-canonical CORE uses independent M01/M02/M03 V2. HIVE install, MCP, Docker, API, project registry, retrieval or context are not required. Prior conflicting HIVE text below is historical, not operative. Superseded M04 Context Lock is STALE; no implementation admission while #111 external V1 consumers remain UNKNOWN, and PRs #106/#118 remain unmerged.
+
 Status: `PRODUCT_DISCOVERY_ACTIVE`
 
-## Bootstrap proof ladder
-1. Python syntax compilation for governance/HIVE bootstrap tooling.
-2. Deterministic source/governance validation.
-3. Unit tests for HIVE project identity resolution and fail-closed collision handling.
-4. Hosted GitHub Actions evidence on the exact candidate head.
-5. Semantic exact-head audit against Work Order, Scope, Architecture, Requirements and DoD.
-
-## Current required bootstrap commands
-```text
-python -m py_compile scripts/validate_governance.py scripts/hive_bootstrap.py
-python scripts/validate_governance.py
-python -m unittest discover -s tests -p "test_*.py" -v
-```
-
-## Product validation
-Product validation is frozen progressively by module and risk. M01 and M02 have promoted exact-head completion evidence; M03 Rounds 1-5 planning are promoted. CORE-M03-ADMIT-001 was approved and promoted as a bounded authorization-only change; it did not claim M03 product test, benchmark, calibration, or implementation results. M03 implementation has separate exact-head completion evidence. M04 planning and execution admission are promoted; M04 implementation validation obligations remain `PENDING_IMPLEMENTATION` until exact-head evidence is produced. M05+ obligations remain `PENDING_DISCOVERY` until their owning plans are accepted.
-
-Historical green evidence never automatically proves a changed head.
-
+## Current standalone proof ladder (CORE-D-205)
+1. Python governance validator and full Python unit tests; no retired Hive bootstrap scripts invoked.
+2. Rehash all nine current M04 canonical Git sources and verify Context Lock/Work Order/evidence binding. Negative stale, old nine-source, old-prior-V1 and old-authority cases must fail closed; M04 lock STALE and implementation false.
+3. Hosted Ubuntu/Windows Rust M01/M02/M03 V2 and unsupported-old-V1 rejection; bounded fuzz, advisory/supply-chain/SBOM, M01 PRB and soak in exact-head full 11/11 CI.
+4. Scoped owner audit with exact base/head and NOT INDEPENDENT disclosure, guarded protected squash and independent new-main FULL 11/11 before source checkpoint promotion.
+5. #111 external previous-V1 consumer inventory is UNKNOWN; old PR #106/#118 workflows do not validate new standalone admission.
 
 ## M02 Round 4 validation obligations
 
@@ -321,3 +310,24 @@ Each AC record must identify:
 Pack H must rerun every criterion affected by the selected numeric resource limits after the Calibration Delta. A pre-calibration green result cannot substitute for a required post-calibration exact-head result.
 
 The final implementation PR may report only `READY_FOR_OWNER_AUDIT` or `BLOCKED`. The executor may not approve its own work. AC-M04-023 is satisfied only after KayzenRoot completes a separate logical owner self-audit on the exact head, reports `NOT INDEPENDENT`, and finds zero unresolved HIGH/CRITICAL findings.
+
+
+## Historical superseded bootstrap test plan
+## Bootstrap proof ladder
+1. Python syntax compilation for governance/HIVE bootstrap tooling.
+2. Deterministic source/governance validation.
+3. Unit tests for HIVE project identity resolution and fail-closed collision handling.
+4. Hosted GitHub Actions evidence on the exact candidate head.
+5. Semantic exact-head audit against Work Order, Scope, Architecture, Requirements and DoD.
+
+## Current required bootstrap commands
+```text
+python -m py_compile scripts/validate_governance.py scripts/hive_bootstrap.py
+python scripts/validate_governance.py
+python -m unittest discover -s tests -p "test_*.py" -v
+```
+
+## Product validation
+Product validation is frozen progressively by module and risk. M01 and M02 have promoted exact-head completion evidence; M03 Rounds 1-5 planning are promoted. CORE-M03-ADMIT-001 was approved and promoted as a bounded authorization-only change; it did not claim M03 product test, benchmark, calibration, or implementation results. M03 implementation has separate exact-head completion evidence. M04 planning and execution admission are promoted; M04 implementation validation obligations remain `PENDING_IMPLEMENTATION` until exact-head evidence is produced. M05+ obligations remain `PENDING_DISCOVERY` until their owning plans are accepted.
+
+Historical green evidence never automatically proves a changed head.

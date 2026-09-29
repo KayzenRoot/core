@@ -1,46 +1,25 @@
 # CORE Architecture
 
+> **CURRENT AUTHORITY (2026-09-29; CORE-D-205, effective on protected-main promotion):** Standalone Git-canonical CORE uses independent M01/M02/M03 V2. HIVE install, MCP, Docker, API, project registry, retrieval or context are not required. Prior conflicting HIVE text below is historical, not operative. Superseded M04 Context Lock is STALE; no implementation admission while #111 external V1 consumers remain UNKNOWN, and PRs #106/#118 remain unmerged.
+
 Status: `PRODUCT_DISCOVERY_ACTIVE`
 
 This document contains the frozen foundation/runtime architecture plus accepted module-level product discovery architecture. Sections explicitly described as candidates remain unfrozen until their evidence gates are satisfied.
 
-## Foundation planes
+## Current standalone foundation architecture
 
-### HIVE intelligence plane
-External HIVE v1.0.0 supplies project registry, repository intelligence, retrieval, memory, checkpoint-first context, token optimization and read-only MCP context capabilities.
+- **Git and source authority:** exact tracked repository and verified local checkout are canonical. Existing local docs/project-brain paths belong to CORE, not an external project service.
+- **M01:** independent Rust lifecycle/safety runtime, no Hive provider required.
+- **M02:** deterministic local Git/filesystem/project identities; local association defaults to NoopAssociationProvider. Optional separately verified generic association is advisory and never grants filesystem/path authority. Standalone V2 rejects old V1 envelopes.
+- **M03:** pure Work Order compiler uses M02 V2 and LocalContextRefV1, locally anchored to canonical source. Unverified context never changes authority; no hidden I/O/MCP/network/LLM dependency inside core compilation. Old V1 envelopes reject strictly.
+- **M04:** remains planning-only. Old historical V1 Pack A/B evidence and previously admitted base are superseded. #111 external V1 consumer inventory UNKNOWN; no source/compatibility decision or new admission yet, no M04 code authorization.
+- **GEF:** local Git-first governance, Context Locks, PR/CI and evidence; no HIVE bootstrap or context server.
 
-### CORE product plane
-This repository will contain the future CORE operational product. Its runtime architecture is not yet selected.
+## Current construction flow
 
-### GEF governance plane
-GEF governs planning, Work Orders, context locks, preflight, evidence, exact-head review, checkpoints and release progression. GEF metadata is derived engineering state, not a replacement for Project Brain.
+Intent => exact local Git canonical docs => bounded GEF Work Order/source lock => standalone M01/M02/M03 V2 proof => exact-head hosted CI/security => owner self-audit NOT INDEPENDENT => protected squash => independent full new-main CI => canonical checkpoint.
 
-### Git/GitHub truth and transport plane
-Git is canonical source history. GitHub provides hosting, PRs, CI evidence and review acceleration. Product runtime correctness must not silently depend on GitHub unless future Scope explicitly admits that dependency.
-
-## Foundation flow
-
-```text
-Project intent
-  -> Project Brain canonical truth
-  -> HIVE context/retrieval
-  -> GEF bounded Work Order
-  -> executor
-  -> tests/evidence
-  -> exact-head audit
-  -> checkpoint promotion
-```
-
-## Non-duplication invariant
-
-CORE MUST consume stable HIVE capabilities instead of reimplementing HIVE context/memory/retrieval solely for local convenience.
-
-## Product architecture gate
-
-No runtime framework, database, queue, agent topology or deployment architecture is frozen by this bootstrap. Those decisions require discovery, requirements, threat/failure analysis and ADRs.
-
-
-## Discovery architecture direction
+## Historical pre-cutover discovery architecture direction (non-operative where conflicting)
 
 ```text
 HIVE = intelligence plane
@@ -764,3 +743,40 @@ KayzenRoot owner self-audit (NOT INDEPENDENT)
 No planning artifact, prepared commit, executor claim or branch-local `ACTIVE` marker grants authority by itself. The later admission delta may bind state only; it cannot mutate the frozen M04 architecture.
 
 The Work Order uses the Round 4 pure-core/host-store split unchanged. Packs A-F construct semantics, Pack G proves adversarial/security/fuzz/supply-chain obligations, and Pack H performs evidence-backed numeric calibration plus final exact-head validation. Any semantic change discovered during implementation requires the smallest governed Correction Delta rather than a widened Pack H.
+
+
+## Historical superseded foundation architecture
+## Foundation planes
+
+### HIVE intelligence plane
+External HIVE v1.0.0 supplies project registry, repository intelligence, retrieval, memory, checkpoint-first context, token optimization and read-only MCP context capabilities.
+
+### CORE product plane
+This repository will contain the future CORE operational product. Its runtime architecture is not yet selected.
+
+### GEF governance plane
+GEF governs planning, Work Orders, context locks, preflight, evidence, exact-head review, checkpoints and release progression. GEF metadata is derived engineering state, not a replacement for Project Brain.
+
+### Git/GitHub truth and transport plane
+Git is canonical source history. GitHub provides hosting, PRs, CI evidence and review acceleration. Product runtime correctness must not silently depend on GitHub unless future Scope explicitly admits that dependency.
+
+## Foundation flow
+
+```text
+Project intent
+  -> Project Brain canonical truth
+  -> HIVE context/retrieval
+  -> GEF bounded Work Order
+  -> executor
+  -> tests/evidence
+  -> exact-head audit
+  -> checkpoint promotion
+```
+
+## Non-duplication invariant
+
+CORE MUST consume stable HIVE capabilities instead of reimplementing HIVE context/memory/retrieval solely for local convenience.
+
+## Product architecture gate
+
+No runtime framework, database, queue, agent topology or deployment architecture is frozen by this bootstrap. Those decisions require discovery, requirements, threat/failure analysis and ADRs.
