@@ -356,7 +356,7 @@ pub fn ready_admission(
     let basis_fingerprint = EvidenceFingerprintV1::new("7".repeat(64)).unwrap();
     let mut workspace = WorkspaceAdmissionEvidenceV1 {
         m02_schema: "nexlabs.core.workspace".into(),
-        m02_version: 1,
+        m02_version: 2,
         project_binding_id: Some("project-binding-1".into()),
         workspace_id: "workspace-1".into(),
         runtime_epoch: 3,
