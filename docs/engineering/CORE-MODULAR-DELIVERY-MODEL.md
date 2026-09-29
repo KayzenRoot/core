@@ -1,3 +1,26 @@
+# CORE Modular Planning and Delivery Model: standalone operation
+
+Status: `CURRENT_STANDALONE_MODULAR_DELIVERY`  
+Authority: CORE-D-205, CORE-D-206 and CORE-D-207 upon protected-main promotion of #184.
+
+## Bounded engineering model
+
+Exact local Git/Project Brain, an admitted Work Order, current Context Lock and applicable source blobs define authority. A connected GitHub-capable assistant, Codex or an authorized human may implement the admitted scope. No particular external executor, context server, model, MCP preflight or provider is required. Deterministic source checks and a scoped fault-isolated harness precede expensive model inference.
+
+Prefer one coherent bounded module Work Order when its frozen contracts and full verification remain reviewable. Split by actual source or API incompatibility, security/migration gates, limited context or noncomparable benchmark basis. Freeze the module's mission, ownership, exact sources, dependency/file map, typed API, lifecycle and failure invariants, policy/secret boundary, real or honestly PENDING calibration, tests, evidence/DoD, review owner and STOP condition before product implementation.
+
+## Governed execution loop
+
+1. Resolve exact protected base, tree, current source hierarchy and required compatibility evidence. Reject stale admission or unsupported previous-V1 consumers.
+2. Build only the admitted files in the smallest sufficient isolated test harness. Record deterministic source identity and negative authority fixtures before relying on advisory external data.
+3. Verify focused positive/negative tests, full exact-head Linux/Windows, bounded fuzz, supply-chain/SBOM and bounded soak/PRB. Report `NO_COMPARABLE_BASELINE` rather than inventing a performance comparison.
+4. Review every changed path and substantive automated finding. Record scoped owner-account verdict **NOT INDEPENDENT**, not a fabricated second reviewer. Protected expected-head squash, followed by a **distinct actual full new-main push 11/11**, precedes issue closeout.
+
+Current accepted product baseline is M01–M03 V2. M04 remains BLOCKED pending #111 and new admission; M05/M06 remain planning, M23 unimplemented local context/evidence. Optional independently admitted generic providers never grant Git/path/execution authority. Original mandatory provider-first/Codex-only instructions are preserved below solely as historical evidence.
+
+
+## Historical discovery archive (non-operative; exact prior Git blob follows)
+
 # CORE Modular Planning and Delivery Model
 
 Status: `CANONICAL_DISCOVERY_RULE`

@@ -1,3 +1,19 @@
+# CORE Technology Candidates: standalone research disposition
+
+Status: `STANDALONE_RESEARCH_ONLY / FORMER_FEDERATION_NOT_PLANNED`  
+Authority: CORE-D-205, CORE-D-206 and CORE-D-207 upon protected-main promotion of #184.
+
+## Active research boundaries
+
+Technology abbreviations are candidate mechanisms, not proof of implementation, performance or novelty. Source-tested M01–M03 V2 contracts outrank any previous research hypothesis. ACS may investigate bounded deterministic substitution through accepted M01 policy/capability APIs with optional independently admitted generic providers. TSS may study LOCAL exact-Git/context/evidence generation coherence, never an assumed bidirectional service. EOF concerns proof-safe local evidence reuse; ENS and PCE are candidate typed events/proof-gated execution only where separately implemented and validated.
+
+The former named provider-specific NSP and bidirectional federation plan are `NOT_PLANNED` under the current standalone owner decision. Any future generic integration requires a separately governed Work Order and real version/provenance/trust evidence. M23 is a FUTURE Local Context & Evidence Registry, not a deployed memory/RAG/context server. M05/M06 are discovery only and M04 remains STALE/BLOCKED pending #111. No candidate name here authorizes an external SDK, network action, public DTO, release or measured optimization claim.
+
+The original research list, former provider split and protocol sketches are preserved byte-for-byte below as non-operative dated design history.
+
+
+## Historical discovery archive (non-operative; exact prior Git blob follows)
+
 # CORE Technology Candidates
 
 Status: `DISCOVERY_CANDIDATES_NOT_IMPLEMENTED`

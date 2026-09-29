@@ -229,6 +229,44 @@ for required in ("M01 Core Runtime & Lifecycle: COMPLETE", "M02 Project / Worksp
 if "M23 Local Context & Evidence Registry: FUTURE SCOPE only" not in backlog_active:
     fail("retired M23 federation incorrectly revived as implemented dependency")
 
+# Current standalone support surfaces and original raw archive fingerprints.
+support_source_blobs = {
+    "docs/project-brain/00-README-UPLOAD-ORDER.md": "b25433e68e5d209c3767f1e727e0bffe9c0a6fc9",
+    "docs/project-brain/12-LOCAL-DEPLOYMENT.md": "3988ac80814fba9b48569cfdb59f46218094ebf3",
+    "docs/engineering/CORE-MODULAR-DELIVERY-MODEL.md": "0265293a529f9850cc63c72e8aedbe617951cafd",
+    "docs/research/CORE-TECHNOLOGY-CANDIDATES.md": "7e6e33ecf635baf74990a361aa01b3072e13b34d",
+}
+if not (ROOT / ".engineering/decisions/CORE-D-207-STANDALONE-SUPPORT-SURFACES.md").is_file():
+    fail("standalone auxiliary decision CORE-D-207 missing")
+for relative, expected_sha in support_source_blobs.items():
+    raw = (ROOT / relative).read_bytes()
+    if raw.count(planning_archive_bytes) != 1:
+        fail(f"standalone support archive missing or ambiguous: {relative}")
+    current_raw, archive_raw = raw.split(planning_archive_bytes, 1)
+    try:
+        current = current_raw.decode("utf-8")
+    except UnicodeDecodeError:
+        fail(f"standalone support effective policy is not UTF-8: {relative}")
+    original_sha = subprocess.run(
+        ["git", "hash-object", "--stdin"],
+        input=archive_raw,
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+    ).stdout.decode("ascii").strip()
+    if original_sha != expected_sha:
+        fail(f"standalone support original raw Git archive changed: {relative}")
+    if re.search(r"\bhive\b", current, flags=re.IGNORECASE) or "CORE-D-207" not in current:
+        fail(f"obsolete provider contract or missing standalone decision: {relative}")
+new_template = (ROOT / ".github/pull_request_template.md").read_text(encoding="utf-8")
+if "## Standalone source preflight" not in new_template or "NOT INDEPENDENT" not in new_template:
+    fail("PR template must require standalone source evidence and disclose owner review")
+if re.search(r"\bhive\b", new_template, flags=re.IGNORECASE):
+    fail("PR template revived mandatory retired provider preflight")
+new_deployment = (ROOT / "docs/project-brain/12-LOCAL-DEPLOYMENT.md").read_bytes().split(planning_archive_bytes, 1)[0].decode("utf-8")
+if "STANDALONE_M01_M03_IMPLEMENTED" not in new_deployment or "PRODUCT_DISTRIBUTION_NOT_ADMITTED" not in new_deployment:
+    fail("standalone local deployment status drift")
+
 # Fail-closed M04 STALE source identity and single-account owner-audit boundary.
 # Matching canonical Git fingerprints NEVER reauthorize superseded historical execution.
 review_policy_id = "SINGLE_ACCOUNT_OWNER_SELF_AUDIT"

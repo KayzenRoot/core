@@ -1,3 +1,26 @@
+# CORE Project Brain: standalone source pack
+
+Status: `CURRENT_STANDALONE_GIT_CANONICAL`  
+Authority: CORE-D-205, CORE-D-206 and CORE-D-207 upon protected-main promotion of #184.
+
+## Executor source authority
+
+Bind exact local Git HEAD, tree and relevant source Git blob fingerprints before executing an admitted Work Order. Consult the current Project Brain in canonical order:
+
+1. `docs/project-brain/13-CHECKPOINT.md`: current promoted state.
+2. `docs/project-brain/16-DECISIONS-LEDGER.md`: effective dated decisions.
+3. `docs/project-brain/03-SCOPE.md`: current permitted scope.
+4. `docs/project-brain/15-DEFINITION-OF-DONE.md`: actual completion gates.
+5. `docs/project-brain/04-ARCHITECTURE.md`: current architecture.
+6. `docs/project-brain/02-REQUIREMENTS.md`: admitted requirements.
+
+Retain governed 01 overview, 10 security, 11 tests, 12 deployment and 14 backlog as domain-specific references under `.engineering/SOURCE-HIERARCHY.md`. CORE owns these exact local paths. No external memory index, project registry, Docker stack, MCP endpoint or mandatory network is needed for CORE source authority. M01–M03 standalone V2 are implemented; M04 is blocked pending #111; M05/M06 are discovery only and M23 is future local context/evidence work.
+
+The old upload-order and pinned-provider compatibility instructions are preserved below verbatim but are not operative.
+
+
+## Historical discovery archive (non-operative; exact prior Git blob follows)
+
 # CORE Project Brain
 
 ## Canonical authority order for executor startup
