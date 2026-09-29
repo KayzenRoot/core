@@ -11,7 +11,7 @@ CORE is planned by ChatGPT as architecture/orchestration work and implemented la
 ### ChatGPT / architecture orchestrator
 Owns:
 - source reconciliation;
-- HIVE/CORE responsibility boundaries;
+- external context service/CORE responsibility boundaries;
 - module decomposition and dependency order;
 - architecture decisions and ADR proposals;
 - file map and file-level construction instructions;
@@ -47,9 +47,9 @@ Tiny prompt chains are discouraged when one bounded module can be safely impleme
 
 For every module, freeze before implementation:
 1. mission and ownership;
-2. HIVE overlap/non-duplication disposition;
+2. external context service overlap/non-duplication disposition;
 3. SOLO mode behavior;
-4. HIVE-connected behavior;
+4. optional-provider behavior;
 5. public/internal contracts;
 6. file map;
 7. file responsibilities and key rules;
@@ -93,11 +93,11 @@ canonical module plan
   -> next module
 ```
 
-## HIVE-first execution
+## external context service-first execution
 
-When HIVE is available, executor prompts MUST use HIVE preflight and bounded HIVE context rather than re-ingesting the whole repository.
+When external context service is available, executor prompts MUST use external context service preflight and bounded external context service context rather than re-ingesting the whole repository.
 
-When HIVE is unavailable, CORE planning/evidence remains usable and the executor uses canonical Project Brain + Work Order sources directly.
+When external context service is unavailable, CORE planning/evidence remains usable and the executor uses canonical Project Brain + Work Order sources directly.
 
 ## Token/time optimization rules
 
@@ -106,6 +106,6 @@ When HIVE is unavailable, CORE planning/evidence remains usable and the executor
 - provide exact paths instead of asking Codex to invent structure;
 - include acceptance tests in the initial Work Order;
 - avoid repeated whole-repository scans;
-- use HIVE delta/context capabilities when available;
+- use external context service delta/context capabilities when available;
 - fail closed on stale planning basis;
 - one module, one coherent evidence bundle whenever safe.
