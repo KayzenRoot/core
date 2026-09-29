@@ -35,7 +35,7 @@ fn contradictory_optional-association_evidence_is_explicit_conflict() {
 }
 
 #[test]
-fn unavailable_optional-association_keeps_standalone_binding() {
+fn unavailable_optional_association_keeps_standalone_binding() {
     let local = WorkspaceId::new("local");
     let result = reconcile(
         &local,
