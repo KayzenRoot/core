@@ -184,6 +184,46 @@ for relative in CANONICAL_PROJECT_SOURCES:
     if not (ROOT / relative).is_file():
         fail(f"local canonical source missing: {relative}")
 
+# Current planning entrypoints must never revive an archived mandatory server contract.
+# Historical R1–R4 originals are preserved byte-for-byte and checked by exact old blob.
+planning_archive_marker = "\\n\\n## Historical discovery archive (non-operative; exact prior Git blob follows)\\n\\n"
+planning_prior_blobs = {
+    "docs/project-brain/01-PROJECT-OVERVIEW.md": "e9142649593ac93588fc99c40bb33f9fd928857f",
+    "docs/project-brain/14-BACKLOG.md": "3c9a5f0762dec085dd3fca9b053b524650bb66d4",
+    "docs/modules/M05-HOST-ADAPTER-FABRIC.md": "222dace08091637e0192eb0259ba13109e418ba7",
+    "docs/modules/M06-CAPABILITY-NEGOTIATION.md": "fc1caaaba959e4f5982d4707885269527f3a3af4",
+}
+if not (ROOT / ".engineering/decisions/CORE-D-206-STANDALONE-PLANNING-ENTRYPOINTS.md").is_file():
+    fail("standalone planning decision CORE-D-206 missing")
+for relative, prior_blob in planning_prior_blobs.items():
+    text_body = (ROOT / relative).read_text(encoding="utf-8")
+    if text_body.count(planning_archive_marker) != 1:
+        fail(f"planning entrypoint archive absent or ambiguous: {relative}")
+    active, history = text_body.split(planning_archive_marker, 1)
+    archived_sha = subprocess.run(
+        ["git", "hash-object", "--stdin"],
+        input=history,
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    if archived_sha != prior_blob:
+        fail(f"historical discovery Git blob changed: {relative}")
+    if "hive" in active.lower() or "BOOTSTRAP_BASELINE" in active or "ACTIVE M04 Context Lock" in active:
+        fail(f"retired provider or M04 admission revived in current entrypoint: {relative}")
+    if "CORE-D-206" not in active:
+        fail(f"current planning entrypoint missing dated standalone decision: {relative}")
+
+overview_active = (ROOT / "docs/project-brain/01-PROJECT-OVERVIEW.md").read_text(encoding="utf-8").split(planning_archive_marker, 1)[0]
+backlog_active = (ROOT / "docs/project-brain/14-BACKLOG.md").read_text(encoding="utf-8").split(planning_archive_marker, 1)[0]
+for required in ("M01 Core Runtime & Lifecycle: COMPLETE", "M02 Project / Workspace Adapter: COMPLETE V2",
+                 "M03 Work Order Engine: COMPLETE V2", "M04 Run / Attempt / Step Engine: BLOCKED_RE_ADMISSION"):
+    if required not in overview_active or required not in backlog_active:
+        fail(f"standalone implemented/blocked module status mismatch: {required}")
+if "M23 Local Context & Evidence Registry: FUTURE SCOPE only" not in backlog_active:
+    fail("retired M23 federation incorrectly revived as implemented dependency")
+
 # Fail-closed M04 STALE source identity and single-account owner-audit boundary.
 # Matching canonical Git fingerprints NEVER reauthorize superseded historical execution.
 review_policy_id = "SINGLE_ACCOUNT_OWNER_SELF_AUDIT"

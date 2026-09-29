@@ -1,3 +1,26 @@
+# M06 Capability Negotiation — operative standalone discovery entrypoint
+
+Status: `STANDALONE_DISCOVERY_ONLY / LIMITED_READ_ONLY_V0_CANDIDATE / NO_PUBLIC_API_OR_PRODUCT_CODE`  
+Authority: CORE-D-205; CORE-D-206 effective on protected-main promotion of Work Order #182.  
+Source: canonical Git and `docs/modules/00-MASTER-MODULE-MAP.md`; the original R1–R4 text below is historical non-operative candidate research only.
+
+## Current scope and ownership
+
+M06's limited-v0 proposal is a deterministic **pure read-only cross-capability feasibility diagnostic** reusing accepted M01 snapshot/resolver/impact rules, with caller-owned immutable policy and runtime input. It must not duplicate M01's eligible provider decisions, mint execution authorization, claim atomic group admission from sequential checks, choose a model/agent or drive host/tool/process effects. A true atomic batch group transaction would require a separately accepted M01 extension, not an implicit M06 helper. M05 is unimplemented host adapter planning only; M10/M11/M12/M22 retain action, isolation and security authority. M23 is a future local context/evidence registry, not a completed federation or runtime prerequisite.
+
+## Standalone and compatibility gates
+
+The M01–M03 V2 baseline is fully usable without external project memory/retrieval, Docker, MCP, vendor SDK, credentials, network or a live third-party provider. Future optional generic external providers need independently verified current identity, version, provenance and caller-required quality/trust/policy floors. Missing or unverifiable capabilities return typed denial and never silently downgrade or become trusted through self-attestation.
+
+M04 old execution authority is STALE and remains BLOCKED_RE_ADMISSION. Prior-V1 external binaries, APIs and journals are UNKNOWN/BLOCKING under issue #111; the former draft/implementation PRs #118/#106 supply no new public schema or execution permission. No actual host, atomicity, SDK, calibrated numeric budget, product crate, public DTO, accepted Work Order or active M06 lock exists in this increment.
+
+## Current acceptance gate
+
+The retained R1–R4 study contains former provider-specific origin preference, obsolete #4 live-proof and M23 federation proposals. Those are **historical only** and cannot amend the operative standalone constraints above. All original 28 EV-M06-D01..D28 proposals remain PENDING until a distinct governed, measured, executable Work Order and evidence exist.
+
+
+## Historical discovery archive (non-operative; exact prior Git blob follows)
+
 # M06 Capability Negotiation — Round 1 discovery candidate
 
 Status: R1_R3_DOCUMENTED / R4_NON_AUTHORITATIVE_LIMITED_V0_CANDIDATE  
