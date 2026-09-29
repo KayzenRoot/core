@@ -82,13 +82,13 @@ fn compilation_context_generation_changes_only_compilation_identity() {
 }
 
 #[test]
-fn hive_context_is_advisory_and_only_changes_compilation_provenance() {
+fn local_context_is_advisory_and_only_changes_compilation_provenance() {
     let plain = fixture();
     let plain_result = compiled(&plain);
     let mut advisory = fixture();
-    advisory.context.hive_context_refs.push(HiveContextRefV1 {
-        context_id: ContextRefId::new("hive-context-1").unwrap(),
-        hive_project_id: "non-authoritative-project-ref".into(),
+    advisory.context.local_context_refs.push(LocalContextRefV1 {
+        context_id: ContextRefId::new("local-context-1").unwrap(),
+        local_project_scope: "non-authoritative-project-ref".into(),
         content_fingerprint: EvidenceFingerprintV1::new("a".repeat(64)).unwrap(),
         snapshot_id: "snapshot-1".into(),
         freshness: EvidenceFreshnessV1::Unknown,
@@ -106,7 +106,7 @@ fn hive_context_is_advisory_and_only_changes_compilation_provenance() {
         advisory_result.frozen.compilation_id()
     );
 
-    advisory.context.hive_context_refs[0].advisory_only = false;
+    advisory.context.local_context_refs[0].advisory_only = false;
     let error = compile(&advisory.request, &advisory.context, &advisory.budget).unwrap_err();
     assert_eq!(error.code, WorkOrderErrorCodeV1::SourceAuthorityMismatch);
 }
