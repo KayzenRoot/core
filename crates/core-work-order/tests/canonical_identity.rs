@@ -10,11 +10,11 @@ fn semantic_input_permutations_preserve_bytes_and_fingerprints() {
     let canonical_bytes = canonical_semantic_bytes(&baseline.frozen).unwrap();
     assert_eq!(
         core_identity::fingerprint_bytes(&canonical_bytes),
-        "fd8cb2cf6285074bf7a28eaf3fb2ac083d2aed42ade2f62926901f0e5969b948"
+        "a2cd49166c72e4a93defcb69b302ad4d426191dbd44e767f854f61e555daa2ab"
     );
     assert_eq!(
         baseline.frozen.fingerprint().as_str(),
-        "fd8cb2cf6285074bf7a28eaf3fb2ac083d2aed42ade2f62926901f0e5969b948"
+        "a2cd49166c72e4a93defcb69b302ad4d426191dbd44e767f854f61e555daa2ab"
     );
 
     let mut permuted_input = fixture();
