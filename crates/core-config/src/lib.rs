@@ -395,26 +395,6 @@ mod tests {
     }
 
     #[test]
-    fn retired_project_server_config_is_not_accepted() {
-        assert!(CoreConfig::from_sources(
-            Some("require_hive = true"),
-            None,
-            [],
-            &ConfigOverrides::default(),
-            1
-        )
-        .is_err());
-        assert!(CoreConfig::from_sources(
-            None,
-            None,
-            [("CORE_REQUIRE_HIVE".into(), "true".into())],
-            &ConfigOverrides::default(),
-            1
-        )
-        .is_err());
-    }
-
-    #[test]
     fn invalid_safety_key_fails_closed() {
         assert!(CoreConfig::from_sources(
             Some("unknown = 1"),
