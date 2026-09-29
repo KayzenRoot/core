@@ -1,12 +1,14 @@
 # CORE Security & Governance
 
+> **CURRENT AUTHORITY (2026-09-29; CORE-D-205, effective on protected-main promotion):** Standalone Git-canonical CORE uses independent M01/M02/M03 V2. HIVE install, MCP, Docker, API, project registry, retrieval or context are not required. Prior conflicting HIVE text below is historical, not operative. Superseded M04 Context Lock is STALE; no implementation admission while #111 external V1 consumers remain UNKNOWN, and PRs #106/#118 remain unmerged.
+
 Status: `PRODUCT_DISCOVERY_ACTIVE / M02_THREAT_MODEL_ACTIVE`
 
 ## Bootstrap security invariants
 - Secrets, credentials, tokens and private user data MUST NOT be committed.
-- HIVE accesses CORE through the configured `HIVE_PROJECTS_ROOT` read-only project boundary.
-- HIVE-derived memory/retrieval state is noncanonical and cannot overwrite Git truth.
-- Ambiguous HIVE project identity fails closed.
+- CORE-owned exact local Git, canonical files and checkout evidence define the trust boundary. HIVE_PROJECTS_ROOT, project server and MCP are not required.
+- Optional separately verified generic provider data is untrusted advisory information and cannot overwrite Git/path authority.
+- Stale/unsupported prior-version evidence, ambiguous generic association and stale Context Locks fail closed.
 - Missing/stale/conflicting canonical authority does not become ALLOW or DONE.
 - Destructive Git/history operations require explicit governed authorization.
 - Public issues/PRs must not contain exploit-sensitive private information.
@@ -144,3 +146,7 @@ M02 threat model details and adversarial fixtures are maintained in `docs/module
 - A failed/missing/UNKNOWN AC or EV blocks `READY_FOR_OWNER_AUDIT`.
 - The executor cannot approve its own work. The separate owner-audit stage may be performed by KayzenRoot, records `OWNER_SELF_AUDIT_APPROVED` and `NOT INDEPENDENT`, and never submits a native GitHub self-approval. No second account is required.
 - Optional HIVE context is advisory only and absent/unresolved context cannot be promoted into fabricated authority.
+
+
+## Current standalone M04 re-admission security gate (CORE-D-205)
+Historic M04 ACTIVE status, authorizedBase, old nine-source SHA and old Pack A/B workflow must never mint execution authority. The current M04 lock MUST be STALE with productImplementationAuthorized=false; evidence and GEF remain BLOCKED_RE_ADMISSION until a new standalone M04 work-order admission with exact sources. #111 external-V1 binary/API/journal consumers are UNKNOWN; never presume no legacy consumers or merge old PRs #106/#118 from historical CI. Retain full fuzz/supply-chain/SBOM, Linux/Windows checks and owner-audit NOT INDEPENDENT.

@@ -1,34 +1,27 @@
 # CORE Requirements
 
+> **CURRENT AUTHORITY (2026-09-29; CORE-D-205, effective on protected-main promotion):** Standalone Git-canonical CORE uses independent M01/M02/M03 V2. HIVE install, MCP, Docker, API, project registry, retrieval or context are not required. Prior conflicting HIVE text below is historical, not operative. Superseded M04 Context Lock is STALE; no implementation admission while #111 external V1 consumers remain UNKNOWN, and PRs #106/#118 remain unmerged.
+
 Status: `PRODUCT_DISCOVERY_ACTIVE`
 
 This file contains the frozen foundation requirements plus accepted module-level product discovery requirements. Later-module requirements remain pending until governed discovery/freeze.
 
-## Foundation requirements
+## Current standalone foundation and product requirements (CORE-D-205)
 
-- **CORE-R-001 GEF governance:** CORE MUST use GEF v1 lifecycle semantics for planning, bounded execution, evidence, review and checkpoint promotion.
-- **CORE-R-002 HIVE canonical paths:** CORE MUST preserve the five exact HIVE v1.0.0 governance paths defined in `00-README-UPLOAD-ORDER.md`.
-- **CORE-R-003 HIVE-first execution:** implementation Work Orders MUST include HIVE preflight whenever HIVE can materially assist the work.
-- **CORE-R-004 Deterministic first:** Git, hashes, static inspection, AST/symbol data and tests MUST precede model inference when they can prove the fact.
-- **CORE-R-005 Exact-state evidence:** tests, audits and promotion evidence MUST identify the exact candidate/head they validate.
-- **CORE-R-006 No duplicate canonical truth:** derived GEF/HIVE metadata MUST NOT silently supersede Project Brain or Git.
-- **CORE-R-007 Safe degradation:** unavailable HIVE/provider capabilities MUST be reported truthfully and MUST NOT be represented as successful evidence.
-- **CORE-R-008 Public repository hygiene:** secrets, credentials, private tokens and private user data MUST NOT be committed.
-- **CORE-R-009 Product planning gate:** product implementation MUST NOT begin until Scope, Architecture, Requirements and DoD for the first implementation increment are explicitly frozen.
-- **CORE-R-010 External HIVE runtime:** HIVE runtime MUST remain independently deployable and MUST NOT be vendored into CORE merely for convenience.
-
-## Product requirements
-
-- **CORE-R-011 Headless:** no dashboard/cockpit/web UI.
-- **CORE-R-012 Standalone:** CORE remains safely usable without HIVE.
-- **CORE-R-013 HIVE substitution:** compatible HIVE capabilities replace bounded fallbacks through contracts.
-- **CORE-R-014 Complete-product commitment:** ACCEPTED_REQUIRED capabilities must be built; there is no MVP tier.
-- **CORE-R-015 LLM economics:** LLM-facing modules optimize tokens/retries/reusable evidence without lowering quality.
-- **CORE-R-016 Cache-first:** LLM-facing contracts preserve stable material, deterministic identity and explicit invalidation.
-- **CORE-R-017 Zero-LLM lifecycle:** M01 bootstrap/lifecycle/health/shutdown uses no inference.
-- **CORE-R-018 Cache evidence:** reuse exposes class, hit/miss/bypass reason, identity/provenance and invalidation basis where applicable.
-
-
+- CORE-R-001: preserve GEF v1 bounded planning, exact-head evidence, owner review and protected checkpoint progression.
+- CORE-R-002: retain local docs/project-brain paths as CORE Git-canonical documents, without a HIVE service.
+- CORE-R-003: perform exact Git/work-order preflight, never require Hive install, context retrieval or MCP registry.
+- CORE-R-004: use deterministic Git/hashes/static inspection/tests where provable.
+- CORE-R-005: exact-head and independent post-main assurance.
+- CORE-R-006: derived GEF and optional provider evidence never supersede canonical Git/local source.
+- CORE-R-007: provider unavailable/unverified => explicit UNKNOWN, not fabricated evidence.
+- CORE-R-008: keep secrets/credentials out of commits.
+- CORE-R-009: no product implementation absent frozen module Scope/Architecture/Requirements/DoD and admitted exact-source lock.
+- CORE-R-010: no external HIVE runtime, API, Docker or project-context service prerequisite.
+- CORE-R-011: CORE remains headless, no web cockpit.
+- CORE-R-012: standalone M01/M02/M03 V2 safe operation.
+- CORE-R-013: optional generic independently verified provider is advisory only, cannot grant Git/path authority.
+- CORE-R-014..018: preserve admitted complete-module, LLM-economy, cache-first, zero-LLM lifecycle and cache-provenance rules where consistent with CORE-D-205.
 
 ## M01 production requirements
 
@@ -353,7 +346,33 @@ This file contains the frozen foundation requirements plus accepted module-level
 - **CORE-R-280 Calibration Delta is numeric/evidence-only:** the Work Order MAY authorize one bounded post-implementation calibration delta that changes only finite numeric M04 resource defaults/thresholds plus their evidence. It MUST NOT alter contracts, transition laws, authority, dependency admission, persistence class, acceptance meaning or security boundaries.
 - **CORE-R-281 Executor has only two terminal handoff states:** the implementation executor MAY stop as `READY_FOR_OWNER_AUDIT` only when all frozen packs, ACs and implementation evidence gates are satisfied on one exact head, otherwise it MUST stop `BLOCKED` with the exact unresolved technical obligation. The executor MUST NOT approve its own work; the owner-audit stage is separate.
 - **CORE-R-282 Final owner-auditor owns the audit verdict:** KayzenRoot may perform a separate logical owner self-audit on the exact base/head and record `OWNER_SELF_AUDIT_APPROVED` only when every required check passes and unresolved HIGH/CRITICAL findings are zero. The record MUST say `NOT INDEPENDENT`; no native GitHub self-approval or second account is required or permitted.
-- **CORE-R-283 Canonical Git remains authority when HIVE context is absent:** optional HIVE planning/execution context may accelerate discovery only when actually reachable and proven current. Unavailable, unresolved or stale HIVE context MUST be recorded honestly and MUST NOT block the SOLO Git-canonical path already permitted by CORE governance unless an explicit frozen requirement says otherwise.
+- **CORE-R-283 Standalone source authority:** no HIVE preflight or project service is a construction/execution prerequisite. Optional separately verified generic context is advisory only; UNKNOWN never grants authority.
 - **CORE-R-284 M04 final freeze preserves deferred backend policy:** Round 5 MUST NOT select a production persistence backend, distributed replication mechanism, destructive archive/compaction policy, persistent snapshot cache or runtime self-tuning mechanism.
 
 - **CORE-R-285 Single-account review identity:** `KayzenRoot` is the only required operational account. Executor and owner-auditor are separate logical stages, not separate GitHub identities or sessions. Missing another account MUST NOT block a governed review; exact-head technical evidence, scope/source validity, required CI/security checks and zero unresolved HIGH/CRITICAL findings remain mandatory. Owner self-audit is never represented as independent review or native GitHub approval.
+
+
+## Historical superseded foundation requirements
+## Foundation requirements
+
+- **CORE-R-001 GEF governance:** CORE MUST use GEF v1 lifecycle semantics for planning, bounded execution, evidence, review and checkpoint promotion.
+- **CORE-R-002 HIVE canonical paths:** CORE MUST preserve the five exact HIVE v1.0.0 governance paths defined in `00-README-UPLOAD-ORDER.md`.
+- **CORE-R-003 HIVE-first execution:** implementation Work Orders MUST include HIVE preflight whenever HIVE can materially assist the work.
+- **CORE-R-004 Deterministic first:** Git, hashes, static inspection, AST/symbol data and tests MUST precede model inference when they can prove the fact.
+- **CORE-R-005 Exact-state evidence:** tests, audits and promotion evidence MUST identify the exact candidate/head they validate.
+- **CORE-R-006 No duplicate canonical truth:** derived GEF/HIVE metadata MUST NOT silently supersede Project Brain or Git.
+- **CORE-R-007 Safe degradation:** unavailable HIVE/provider capabilities MUST be reported truthfully and MUST NOT be represented as successful evidence.
+- **CORE-R-008 Public repository hygiene:** secrets, credentials, private tokens and private user data MUST NOT be committed.
+- **CORE-R-009 Product planning gate:** product implementation MUST NOT begin until Scope, Architecture, Requirements and DoD for the first implementation increment are explicitly frozen.
+- **CORE-R-010 External HIVE runtime:** HIVE runtime MUST remain independently deployable and MUST NOT be vendored into CORE merely for convenience.
+
+## Product requirements
+
+- **CORE-R-011 Headless:** no dashboard/cockpit/web UI.
+- **CORE-R-012 Standalone:** CORE remains safely usable without HIVE.
+- **CORE-R-013 HIVE substitution:** compatible HIVE capabilities replace bounded fallbacks through contracts.
+- **CORE-R-014 Complete-product commitment:** ACCEPTED_REQUIRED capabilities must be built; there is no MVP tier.
+- **CORE-R-015 LLM economics:** LLM-facing modules optimize tokens/retries/reusable evidence without lowering quality.
+- **CORE-R-016 Cache-first:** LLM-facing contracts preserve stable material, deterministic identity and explicit invalidation.
+- **CORE-R-017 Zero-LLM lifecycle:** M01 bootstrap/lifecycle/health/shutdown uses no inference.
+- **CORE-R-018 Cache evidence:** reuse exposes class, hit/miss/bypass reason, identity/provenance and invalidation basis where applicable.

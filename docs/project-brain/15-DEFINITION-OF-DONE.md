@@ -1,19 +1,12 @@
 # CORE Definition of Done
 
-Status: `M01_M02_COMPLETE_M03_IMPLEMENTATION_AUTHORIZATION_ARMED`
+> **CURRENT AUTHORITY (2026-09-29; CORE-D-205, effective on protected-main promotion):** CORE is built, governed and run independently from canonical Git and CORE-owned local standalone M01/M02/M03 V2 contracts. No HIVE install, MCP, Docker, API, registry, retrieval or memory service is a prerequisite. Older contradictory Hive-specific sections are dated historical evidence. M04 old ACTIVE authorization is superseded: new source lock STALE, implementation forbidden, #111 external V1 consumers UNKNOWN. Old PRs #106/#118 remain unmerged.
 
-## Bootstrap DoD
+Status: `M01_M02_M03_STANDALONE_V2_COMPLETE / M04_BLOCKED_RE_ADMISSION`
 
-Bootstrap is complete only when:
+## Current standalone bootstrap DoD
 
-- required Project Brain files exist at HIVE v1.0.0 compatible paths;
-- GEF v1.0.0 adoption/profile/policy/execution/review/evidence artifacts exist;
-- the source hierarchy names canonical versus derived authority clearly;
-- deterministic governance validation passes on the exact candidate head;
-- GitHub PR and Work Order scaffolding exists;
-- HIVE bootstrap tooling can health-check, register or resolve, inspect, index and retrieval-sync CORE without embedding secrets;
-- bootstrap PR receives governed review;
-- checkpoint is promoted only with accepted exact-head evidence.
+Requires CORE-owned local canonical Git files, GEF v1 source hierarchy/review/evidence, no required external project server/Hive helpers/MCP config, secret hygiene, deterministic governance/source-lock regression, exact-head hosted gates, protected PR and full independent post-main checks. M01/M02/M03 standalone V2 completion does not imply M04 or CORE V0.0 production readiness.
 
 ## Product DoD
 
@@ -38,11 +31,11 @@ M01 satisfied its module DoD after the final corrective cycle. Review 011 record
 M02 is complete only when the frozen M02 plan and Work Order prove all of the following on the exact candidate head:
 - explicit attach/revalidate/detach lifecycle with no ambient-CWD authority;
 - deterministic ProjectBinding/Workspace/Repository/Worktree identities;
-- versioned v1 contract envelopes and canonical fingerprints using core-identity;
+- standalone V2 contract envelopes, strict unsupported old-V1 rejection and canonical fingerprints using core-identity;
 - typed non-transitive authority roots and adversarial PAF/FSC path proof;
 - deterministic RepositoryGraphV1 across normal, bare, linked-worktree, nested-repo and submodule fixtures;
 - hardened system-Git GitInspector baseline with no shell, no network, no prompt, no repair/mutation, bounded output/deadline and secret redaction;
-- standalone plus HIVE project-association reconciliation without HIVE granting local authority;
+- local project association by default; any separately verified generic association remains advisory and never grants path authority;
 - WorkspaceBasis/BasisDiff generations, stale-handle invalidation and BVM action-boundary freshness;
 - EIS/CIG correctness with watcher disabled and with overflow/loss hints;
 - PEC L1 proof reuse that is disposable, observable and never mtime-only correctness;
@@ -214,3 +207,18 @@ Round 5 planning is complete only when, on one review candidate head:
 - hosted CI passes and KayzenRoot records an exact-head owner self-audit of the final-freeze candidate with zero unresolved HIGH/CRITICAL, explicitly not independent.
 
 Promotion of this DoD closes M04 planning only. It does not satisfy the M04 product implementation DoD.
+
+
+## Historical superseded bootstrap DoD
+## Bootstrap DoD
+
+Bootstrap is complete only when:
+
+- required Project Brain files exist at HIVE v1.0.0 compatible paths;
+- GEF v1.0.0 adoption/profile/policy/execution/review/evidence artifacts exist;
+- the source hierarchy names canonical versus derived authority clearly;
+- deterministic governance validation passes on the exact candidate head;
+- GitHub PR and Work Order scaffolding exists;
+- HIVE bootstrap tooling can health-check, register or resolve, inspect, index and retrieval-sync CORE without embedding secrets;
+- bootstrap PR receives governed review;
+- checkpoint is promoted only with accepted exact-head evidence.

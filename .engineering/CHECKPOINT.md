@@ -1,18 +1,17 @@
 # CORE GEF Checkpoint Bridge
 
-Status: `DERIVED_VIEW`
-Canonical source: `docs/project-brain/13-CHECKPOINT.md`
-
-This file is a GEF continuity view. It is not a second source of product truth. Shared fields are validated deterministically against the canonical HIVE-compatible checkpoint.
+Status: DERIVED_VIEW
+Canonical source: docs/project-brain/13-CHECKPOINT.md
+This deterministic bridge reflects CORE-owned local Git truth without any external context service.
 
 ## STATUS
-M01 COMPLETE / M02 COMPLETE / M03 COMPLETE / M04 PACK A CANDIDATE OPEN
+M01 COMPLETE / M02 COMPLETE V2 / M03 COMPLETE V2 / M04 BLOCKED_RE_ADMISSION
 
 ## VERSION
 CORE V0.0 - Modular Construction
 
 ## PHASE
-3 - M03 Complete / M04 Execution Authorized
+3 - STANDALONE M01-M03 PROMOTED / M04 SOURCE RE-ADMISSION BLOCKED
 
 ## NEXT STEP
-After CORE-D-203 / Issue #107 is canonical, perform KayzenRoot's exact-base/exact-head owner self-audit on the current CORE PR #106 head 2721b89598998dad08c19f581fe650be53d3c882. Record NOT INDEPENDENT, confirm required CI/security checks, source/lock bindings and zero unresolved HIGH/CRITICAL findings. Keep Pack B stopped until Pack A audit and acceptance evidence pass; do not promote a checkpoint from an unaudited head.
+After #180 is protected-main promoted and independent new-main 11/11 CI passes, separately resolve #111 previous-V1 consumer inventory; govern standalone M04 V2/archive source disposition and issue a NEW exact-source M04 Work Order/Context Lock. Never resume PR #106/#118 or Pack C from historical CI.

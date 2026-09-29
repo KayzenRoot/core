@@ -3,7 +3,7 @@
   "increment": "CORE-M04-FREEZE-001",
   "workOrder": "CORE-WO-M04-001",
   "repository": "KayzenRoot/core",
-  "status": "EXECUTION_AUTHORIZED_PACK_A_PR_106_OPEN_OWNER_SELF_AUDIT_PENDING",
+  "status": "BLOCKED_RE_ADMISSION",
   "planningCandidate": {
     "branch": "planning/m04-final-freeze-round5",
     "planningBase": "0f448c708aafd8f5b4cb6303effdabd7e028bc6f",
@@ -17,34 +17,26 @@
   "sourceCheck": {
     "candidateCanonicalSourceBlobShaKind": "git_blob_sha1",
     "candidateCanonicalSourceBlobShas": {
-      "docs/project-brain/13-CHECKPOINT.md": "8ef7eb7d0ace6b588c6a88c915eaca14bce991d8",
-      "docs/project-brain/16-DECISIONS-LEDGER.md": "857259e42855f09cd98a07b67c1912f11bf87d3b",
-      "docs/project-brain/03-SCOPE.md": "6e6f66b7fe3f3e3780b14c7b68dca7c2af137c61",
-      "docs/project-brain/15-DEFINITION-OF-DONE.md": "fd31c15a2966d39abca464ad5f945a5b10103f16",
-      "docs/project-brain/04-ARCHITECTURE.md": "6c9054aeeb7fb72116f7246323251b6ec240d56c",
-      "docs/project-brain/02-REQUIREMENTS.md": "2840687ef61e8653ba9f2ad392ef288f93feb41c",
-      "docs/project-brain/10-SECURITY-GOVERNANCE.md": "2c5276f2be520f0e1d47f101c3c0a02041cff53e",
-      "docs/project-brain/11-TEST-PLAN.md": "59c641ba140c89233da323fe336aa74c9c098b0b",
-      "docs/modules/M04-RUN-ATTEMPT-STEP-ENGINE.md": "337db097ec5a7a856d4d7b34f108ebbc149ad04c"
+      "docs/project-brain/13-CHECKPOINT.md": "18943c69e054218e13d516851454c2711211d015",
+      "docs/project-brain/16-DECISIONS-LEDGER.md": "300914170b769304b3374ac42deb5e5ac2a34dc7",
+      "docs/project-brain/03-SCOPE.md": "c4cfb0a375a911569ef02124048d35e51e0dffb3",
+      "docs/project-brain/15-DEFINITION-OF-DONE.md": "7d4b41810dab00d9848a5df1eab8025b4ac8696b",
+      "docs/project-brain/04-ARCHITECTURE.md": "f475383e002958115de878434e1ebbb725210460",
+      "docs/project-brain/02-REQUIREMENTS.md": "bab69e4147e132ca672351acdaa4aba0f5bf8443",
+      "docs/project-brain/10-SECURITY-GOVERNANCE.md": "f32078d23e3334e9fc7c05e0471da6f0fd9347ba",
+      "docs/project-brain/11-TEST-PLAN.md": "e448d23ea86179415866a5a5b777740af43a49d9",
+      "docs/modules/M04-RUN-ATTEMPT-STEP-ENGINE.md": "e42c7e2a1c1b2741b63481d674378db7cf5e0c80"
     },
-    "workOrderBlobSha": "9b6b54f2cfa77c170773272e876493656946cc04",
+    "workOrderBlobSha": "b4db2843b08eef170ea980b849077249350e401f",
     "reviewPolicyBlobSha": "4b28ffbbf1f42445906eb260c5618e0cbe320be7"
   },
   "contextLock": {
     "path": ".engineering/context-locks/CORE-WO-M04-001.json",
-    "status": "ACTIVE",
-    "blobSha": "7c62aad48f84040d68f7fc70958e851a42f0e1d0",
-    "authorizedBase": "f6b422be5465d5a93d0b8fcf4c9507c205663072",
-    "productImplementationAuthorized": true,
-    "executionStatus": "ACTIVE_AUTHORIZED_PACK_A_CANDIDATE_OPEN_OWNER_AUDIT_PENDING"
-  },
-  "planningHiveObservation": {
-    "directHiveConnectorAvailable": true,
-    "coreProjectResolved": "2a5fb7e6-209a-4cd7-ac3b-137ca3b312bc",
-    "coreCheckpointRead": "STALE_SOURCE_NOT_CURRENT",
-    "modeUsed": "SOLO_GIT_CANONICAL",
-    "implementationPreflightStatus": "OWNER_SELF_AUDIT_PENDING_ON_CORE_PR_106",
-    "note": "At this synchronization preflight, read-only HIVE v1.0.0 resolves CORE at D:/Projects/core, branch main, HEAD fdb4dbe165e74b009c43df3874b6043c9b94710b, dirty; checkpoint.read returned stale/source_not_current. Canonical Git origin/main at b2ac8e0db72a2145948e7773295b1b252c5e4eab is authority for this state update. Repeat HIVE and Git preflight after CORE-M04-SYNC-005 promotion and before Pack A."
+    "status": "STALE",
+    "blobSha": "01788b129facb22a2fd163a767914b64617d2c0b",
+    "authorizedBase": null,
+    "productImplementationAuthorized": false,
+    "executionStatus": "BLOCKED_RE_ADMISSION"
   },
   "constructionPackets": {
     "A": "contracts_identity_canonical",
@@ -351,16 +343,44 @@
   },
   "reviewIdentityPolicy": "SINGLE_ACCOUNT_OWNER_SELF_AUDIT",
   "ownerSelfAudit": {
-    "status": "PENDING",
+    "status": "BLOCKED_RE_ADMISSION",
     "required": true,
     "identity": "KayzenRoot",
     "mode": "OWNER_SELF_AUDIT",
     "independent": false,
     "nativeGithubApproval": "NOT_SUBMITTED",
-    "candidatePullRequest": 106,
-    "candidateHead": "2721b89598998dad08c19f581fe650be53d3c882",
-    "workflowRun": 36270689343,
+    "candidatePullRequest": null,
+    "candidateHead": null,
+    "workflowRun": null,
     "unresolvedHighCritical": null,
-    "verdict": null
-  }
+    "verdict": null,
+    "note": "Previous PR #106 self-audit and old M04 exact-head evidence do not authorize the new standalone contract. NEW source/compatibility admission and a distinct owner NOT INDEPENDENT exact-head audit are required."
+  },
+  "cutoverDecision": "CORE-D-205",
+  "cutoverWorkOrder": "CORE-STANDALONE-CANONICAL-004",
+  "historicalAuthorization": {
+    "authorizedBase": "f6b422be5465d5a93d0b8fcf4c9507c205663072",
+    "priorAcceptedReviews": [
+      93,
+      95,
+      97,
+      100,
+      102
+    ],
+    "notCurrentAuthority": true
+  },
+  "externalV1Consumers": {
+    "issue": 111,
+    "status": "UNKNOWN_BLOCKING",
+    "negativeAttestationAvailable": false
+  },
+  "historicalPlanningHiveObservation": {
+    "directHiveConnectorAvailable": true,
+    "coreProjectResolved": "2a5fb7e6-209a-4cd7-ac3b-137ca3b312bc",
+    "coreCheckpointRead": "STALE_SOURCE_NOT_CURRENT",
+    "modeUsed": "SOLO_GIT_CANONICAL",
+    "implementationPreflightStatus": "OWNER_SELF_AUDIT_PENDING_ON_CORE_PR_106",
+    "note": "At this synchronization preflight, read-only HIVE v1.0.0 resolves CORE at D:/Projects/core, branch main, HEAD fdb4dbe165e74b009c43df3874b6043c9b94710b, dirty; checkpoint.read returned stale/source_not_current. Canonical Git origin/main at b2ac8e0db72a2145948e7773295b1b252c5e4eab is authority for this state update. Repeat HIVE and Git preflight after CORE-M04-SYNC-005 promotion and before Pack A."
+  },
+  "historicalEvidenceDisclaimer": "Old CI, old nine-source sourceCheck and original admission recorded under earlier governance are historic facts; any embedded PASS/ACTIVE statement in archival validationResults was accurate only for the named historical candidate, not this exact standalone V2 source cutover."
 }

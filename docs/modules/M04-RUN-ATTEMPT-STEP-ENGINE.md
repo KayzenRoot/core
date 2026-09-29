@@ -1,8 +1,13 @@
 # M04 — Run / Attempt / Step Engine
 
-Status: `EXECUTION_AUTHORIZED_NOT_STARTED_AFTER_CORE_M04_SYNC_003_PROMOTION`
-Implementation: `AUTHORIZED_NOT_STARTED`
+> **CURRENT AUTHORITY (2026-09-29; CORE-D-205, effective on protected-main promotion):** Standalone Git-canonical CORE uses independent M01/M02/M03 V2. HIVE install, MCP, Docker, API, project registry, retrieval or context are not required. Prior conflicting HIVE text below is historical, not operative. Superseded M04 Context Lock is STALE; no implementation admission while #111 external V1 consumers remain UNKNOWN, and PRs #106/#118 remain unmerged.
+
+Status: `BLOCKED_RE_ADMISSION / HISTORICAL_V1_PLAN`
+Implementation: `NOT_AUTHORIZED`
 Assurance: `ELEVATED`
+
+## Current M04 hard stop (CORE-D-205)
+Old frozen V1 M04 planning and exact-head historical reviews below remain archived evidence, not standalone V2 authority. Prior ACTIVE lock is superseded; current Work Order BLOCKED_RE_ADMISSION, lock STALE, implementation forbidden. External prior-V1 consumers UNKNOWN (#111). Old PRs #106/#118 remain stale and unmerged. No M04 Pack A-H or compatibility assertion until separately governed standalone source/version/archive decision and NEW exact-source admitted Work Order/lock. No Hive or hidden I/O dependency is admitted.
 
 ## Mission
 
@@ -660,7 +665,7 @@ The final planning freeze is promoted. This admission candidate changes executio
 Execution authority is effective only after the exact admission candidate passes the exact-head owner self-audit defined by CORE-D-203 and is promoted to canonical `origin/main`. Presence on `planning/m04-execution-admission` is not authority.
 
 
-## Execution admission promotion
+## Historical execution admission promotion (superseded by CORE-D-205)
 
 CORE-M04-ADMIT-001 was independently approved by M04-REVIEW-008 / Issue #95 at exact head `f29dcb6b327c5fdceda31fe306e52d506c1eae72`, workflow `35992752646`, and promoted as merge `bb6f631284361fae29479c66f62ca88bebf3d79c`.
 
