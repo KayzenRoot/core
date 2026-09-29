@@ -3,23 +3,23 @@
 Status: `ACTIVE`
 
 ## CORE-D-001 - Product naming
-**Decision:** repository name is `core`; product family presentation is **HIVE CORE**. HIVE is the intelligence/context product and CORE is intended to become the operational nucleus.
+**Decision:** repository name is `core`; product family presentation is **external context service CORE**. external context service is the intelligence/context product and CORE is intended to become the operational nucleus.
 **State:** ACCEPTED
 
 ## CORE-D-002 - GEF baseline
 **Decision:** bootstrap CORE from the production-accepted GEF Bootstrap `v1.0.0`, upstream release commit `866fe3af8cccc65c929aaf6a47a924401fa448b3`.
 **State:** ACCEPTED
 
-## CORE-D-003 - HIVE baseline
-**Decision:** target HIVE `v1.0.0`, release commit `a53b5b9fcf55c32a5696180fb1b1ef80ccd1edcf`, as the initial stable integration contract.
+## CORE-D-003 - external context service baseline
+**Decision:** target external context service `v1.0.0`, release commit `a53b5b9fcf55c32a5696180fb1b1ef80ccd1edcf`, as the initial stable integration contract.
 **State:** ACCEPTED
 
 ## CORE-D-004 - Canonical source compatibility
-**Decision:** CORE canonical product/governance truth uses HIVE-compatible `docs/project-brain` paths. GEF operational artifacts reference those sources rather than creating competing product truth.
+**Decision:** CORE canonical product/governance truth uses external context service-compatible `docs/project-brain` paths. GEF operational artifacts reference those sources rather than creating competing product truth.
 **State:** ACCEPTED
 
-## CORE-D-005 - HIVE is external
-**Decision:** do not vendor the HIVE runtime into CORE. CORE integrates with the separately installed HIVE instance through its stable API/MCP surfaces.
+## CORE-D-005 - external context service is external
+**Decision:** do not vendor the external context service runtime into CORE. CORE integrates with the separately installed external context service instance through its stable API/MCP surfaces.
 **State:** ACCEPTED
 
 ## CORE-D-006 - No premature product architecture
@@ -32,15 +32,15 @@ Status: `ACTIVE`
 
 
 ## CORE-D-008 - Headless CORE
-**Decision:** CORE contains no dashboard, cockpit or web UI. A future visual NexLabs product may consume HIVE + CORE externally.
+**Decision:** CORE contains no dashboard, cockpit or web UI. A future visual NexLabs product may consume external context service + CORE externally.
 **State:** ACCEPTED
 
 ## CORE-D-009 - Intelligence/action ownership
-**Decision:** HIVE owns durable intelligence/context/memory/retrieval/knowledge; CORE owns execution/orchestration/verification/delivery. Shared needs use contracts, not duplicate canonical engines.
+**Decision:** external context service owns durable intelligence/context/memory/retrieval/knowledge; CORE owns execution/orchestration/verification/delivery. Shared needs use contracts, not duplicate canonical engines.
 **State:** ACCEPTED
 
-## CORE-D-010 - Standalone plus HIVE-enhanced operation
-**Decision:** CORE operates safely without HIVE. Compatible HIVE substitutes HIVE-owned intelligence providers; fallback capability stays bounded and must not evolve into a second HIVE.
+## CORE-D-010 - Standalone plus external context service-enhanced operation
+**Decision:** CORE operates safely without external context service. Compatible external context service substitutes external context service-owned intelligence providers; fallback capability stays bounded and must not evolve into a second external context service.
 **State:** ACCEPTED
 
 ## CORE-D-011 - Modular implementation cadence
@@ -108,7 +108,7 @@ Status: `ACTIVE`
 **State:** ACCEPTED
 
 ## CORE-D-026 - No silent low-quality fallback
-**Decision:** HIVE/provider loss may activate a standalone fallback only when that fallback satisfies the operation's declared quality/policy floor. Otherwise the affected operation is blocked/degraded explicitly.
+**Decision:** external context service/provider loss may activate a standalone fallback only when that fallback satisfies the operation's declared quality/policy floor. Otherwise the affected operation is blocked/degraded explicitly.
 **State:** ACCEPTED
 
 ## CORE-D-027 - Targeted invalidation on provider change
@@ -173,7 +173,7 @@ Status: `ACTIVE`
 
 
 ## CORE-D-041 - M02 is an adapter, not a second Project Registry
-**Decision:** M02 owns local action-plane workspace binding and reconciliation. HIVE retains canonical Project Registry intelligence.
+**Decision:** M02 owns local action-plane workspace binding and reconciliation. external context service retains canonical Project Registry intelligence.
 **State:** ACCEPTED
 
 ## CORE-D-042 - Workspace action requires explicit basis
@@ -184,8 +184,8 @@ Status: `ACTIVE`
 **Decision:** M02 models these as distinct typed identities linked by explicit relations rather than collapsing them into an absolute path.
 **State:** ACCEPTED
 
-## CORE-D-044 - Git/filesystem state and HIVE identity are different authorities
-**Decision:** HIVE may authoritatively identify the registered project; local Git/filesystem evidence authoritatively describes the concrete checkout. Conflict is explicit and blocks unsafe attachment rather than being silently merged.
+## CORE-D-044 - Git/filesystem state and external context service identity are different authorities
+**Decision:** external context service may authoritatively identify the registered project; local Git/filesystem evidence authoritatively describes the concrete checkout. Conflict is explicit and blocks unsafe attachment rather than being silently merged.
 **State:** ACCEPTED
 
 ## CORE-D-045 - M02 is read-only with respect to source and Git mutation
@@ -201,7 +201,7 @@ Status: `ACTIVE`
 **State:** ACCEPTED
 
 ## CORE-D-048 - M02 workspace discovery is zero-LLM
-**Decision:** identity, Git basis, path normalization, boundary resolution, HIVE/local reconciliation and drift detection are deterministic-first and require no inference.
+**Decision:** identity, Git basis, path normalization, boundary resolution, external context service/local reconciliation and drift detection are deterministic-first and require no inference.
 **State:** ACCEPTED
 
 
@@ -221,8 +221,8 @@ Status: `ACTIVE`
 **Decision:** repository identity uses local Git/common-dir and boundary evidence. Remote URLs are mutable association hints and never the sole repository identity.
 **State:** ACCEPTED
 
-## CORE-D-053 - HIVE availability does not churn local workspace identity
-**Decision:** temporary HIVE availability/provider changes do not rewrite WorkspaceId. Association evidence and assurance may change the binding generation or block HIVE-required operations.
+## CORE-D-053 - external context service availability does not churn local workspace identity
+**Decision:** temporary external context service availability/provider changes do not rewrite WorkspaceId. Association evidence and assurance may change the binding generation or block external context service-required operations.
 **State:** ACCEPTED
 
 ## CORE-D-054 - Compatible drift still invalidates the old handle
@@ -262,8 +262,8 @@ Status: `ACTIVE`
 **Decision:** a bare repository may satisfy metadata-only operation profiles but cannot satisfy a worktree/source operation.
 **State:** ACCEPTED
 
-## CORE-D-063 - HIVE association enters through a versioned capability
-**Decision:** M02 consumes project association through a provider/capability contract. HIVE remains external; M23 may later replace/deepen the provider without changing M02 ownership.
+## CORE-D-063 - external context service association enters through a versioned capability
+**Decision:** M02 consumes project association through a provider/capability contract. external context service remains external; M23 may later replace/deepen the provider without changing M02 ownership.
 **State:** ACCEPTED
 
 ## CORE-D-064 - GitInspector backend stays swappable until evidence
@@ -328,7 +328,7 @@ Status: `ACTIVE`
 **State:** ACCEPTED
 
 ## CORE-D-079 - Compact workspace evidence is the downstream default
-**Decision:** downstream HIVE/LLM-facing context should consume stable fingerprints, generations, component masks, deltas and evidence references instead of repeated raw path inventories/status output unless detail is explicitly required.
+**Decision:** downstream external context service/LLM-facing context should consume stable fingerprints, generations, component masks, deltas and evidence references instead of repeated raw path inventories/status output unless detail is explicitly required.
 **State:** ACCEPTED
 
 ## CORE-D-080 - Resource numbers require benchmark calibration
@@ -353,7 +353,7 @@ Status: `ACTIVE`
 **State:** ACCEPTED
 
 ## CORE-D-085 - BVM v1 profiles are frozen freshness masks
-**Decision:** READ_METADATA, READ_SOURCE, PLAN_WORK, EXECUTE_TOOL_READONLY, MUTATE_SOURCE and GIT_DELIVERY define required basis freshness; HIVE_RECONCILED is an assurance overlay. BVM never grants action authority.
+**Decision:** READ_METADATA, READ_SOURCE, PLAN_WORK, EXECUTE_TOOL_READONLY, MUTATE_SOURCE and GIT_DELIVERY define required basis freshness; external context service_RECONCILED is an assurance overlay. BVM never grants action authority.
 **State:** ACCEPTED
 
 ## CORE-D-086 - FSC is conservative and read-only
@@ -447,8 +447,8 @@ Status: `ACTIVE`
 **Decision:** SDF classifies revision deltas. Unapproved scope/dependency/architecture/security-policy change fails closed rather than masquerading as evidence/test/documentation-only work.
 **State:** ACCEPTED
 
-## CORE-D-108 - HIVE enriches context but cannot rewrite frozen Work Order semantics
-**Decision:** HIVE context references/provenance may be compiled into the manifest, but canonical source hierarchy and exact Git/filesystem evidence remain authoritative.
+## CORE-D-108 - external context service enriches context but cannot rewrite frozen Work Order semantics
+**Decision:** external context service context references/provenance may be compiled into the manifest, but canonical source hierarchy and exact Git/filesystem evidence remain authoritative.
 **State:** ACCEPTED
 
 ## CORE-D-109 - Context economy uses references plus packet deltas
@@ -557,7 +557,7 @@ Status: `ACTIVE`
 **State:** ACCEPTED
 
 ## CORE-D-134 - M03 core performs no hidden I/O
-**Decision:** repository/Git/HIVE/GitHub/network/persistence work belongs to external adapters/domains; compiler semantics operate on resolved typed inputs.
+**Decision:** repository/Git/external context service/GitHub/network/persistence work belongs to external adapters/domains; compiler semantics operate on resolved typed inputs.
 **State:** ACCEPTED
 
 ## CORE-D-135 - M03 does not generate opaque random WorkOrderIds
@@ -644,7 +644,7 @@ Status: `ACTIVE`
 **State:** ACCEPTED; Round 4 promoted by Review 004 / Issue #63 and PR #62; implementation remains unauthorized.
 
 ## CORE-D-155 - M03 V0.0 remains one crate with a minimal direct dependency set
-**Decision:** one core-work-order crate contains contracts, identity, canonicalization, source/evidence DTOs, pure services, budgets and errors. Direct dependencies are core-identity plus existing serde, serde_json and thiserror. core-workspace/core-config/core-contracts/sha2 are not direct M03 dependencies; the optional M02 adapter is outside the crate. No direct Tokio, process/network, Git/HIVE/GitHub, database, cache, graph or regex dependency is admitted.
+**Decision:** one core-work-order crate contains contracts, identity, canonicalization, source/evidence DTOs, pure services, budgets and errors. Direct dependencies are core-identity plus existing serde, serde_json and thiserror. core-workspace/core-config/core-contracts/sha2 are not direct M03 dependencies; the optional M02 adapter is outside the crate. No direct Tokio, process/network, Git/external context service/GitHub, database, cache, graph or regex dependency is admitted.
 **State:** ACCEPTED; Round 4 promoted by Review 004 / Issue #63 and PR #62; implementation remains unauthorized.
 
 ## CORE-D-156 - M03 errors are typed and retries remain caller-owned
@@ -717,7 +717,7 @@ Status: `ACTIVE`
 **State:** ACCEPTED; Round 1 promoted by M04-REVIEW-001 / Issue #77 and PR #76; implementation remains unauthorized.
 
 ## CORE-D-172 - M04 core is backend-neutral, zero-LLM and hidden-I/O-free
-**Decision:** Round 1 freezes no persistence backend. Core state-machine semantics consume explicit values/evidence and perform no hidden filesystem, process, network, database, HIVE/GitHub or LLM operation.
+**Decision:** Round 1 freezes no persistence backend. Core state-machine semantics consume explicit values/evidence and perform no hidden filesystem, process, network, database, external context service/GitHub or LLM operation.
 **State:** ACCEPTED; Round 1 promoted by M04-REVIEW-001 / Issue #77 and PR #76; implementation remains unauthorized.
 
 
@@ -759,7 +759,7 @@ Status: `ACTIVE`
 **State:** ACCEPTED; Round 3 promoted by M04-REVIEW-003 / Issue #83 and PR #80; implementation remains unauthorized.
 
 ## CORE-D-182 - Snapshots accelerate projection but never replace journal authority
-**Decision:** snapshots bind an exact journal boundary and are verified derived artifacts. Active canonical Run events required for proof are not destructively compacted by M04; archive/retention policy is external.
+**Decision:** snapshots bind an exact journal boundary and are verified derived artifacts. Active canonical Run events required for proof are not destructively compacted by M04; arcexternal_context_service/retention policy is external.
 **State:** ACCEPTED; Round 3 promoted by M04-REVIEW-003 / Issue #83 and PR #80; implementation remains unauthorized.
 
 ## CORE-D-183 - External execution/verification data enters M04 only as bounded references
@@ -781,7 +781,7 @@ Status: `ACTIVE`
 **State:** ACCEPTED; Round 4 promoted by M04-REVIEW-005 / Issue #87 and PR #86; implementation remains unauthorized.
 
 ## CORE-D-187 - M04 direct dependencies are minimal and synchronous
-**Decision:** direct production dependencies are `core-work-order`, `core-identity`, `serde` and `thiserror`. No Tokio/core-runtime/core-workspace, database, process/network, Git/HIVE/GitHub, graph, cache or persistence dependency is admitted. Runtime cancellation crosses a value-only caller seam.
+**Decision:** direct production dependencies are `core-work-order`, `core-identity`, `serde` and `thiserror`. No Tokio/core-runtime/core-workspace, database, process/network, Git/external context service/GitHub, graph, cache or persistence dependency is admitted. Runtime cancellation crosses a value-only caller seam.
 **State:** ACCEPTED; Round 4 promoted by M04-REVIEW-005 / Issue #87 and PR #86; implementation remains unauthorized.
 
 ## CORE-D-188 - M04 reuses core-identity digest through versioned domain framing
@@ -834,8 +834,8 @@ Status: `ACTIVE`
 **Decision:** after implementation measurements exist, the Work Order may authorize one bounded calibration delta limited to finite numeric resource defaults/thresholds and the calibration report. The delta cannot alter semantics, contracts, dependencies, authority, persistence class, security boundaries or acceptance meaning.
 **State:** ACCEPTED; Round 5 final planning freeze promoted by M04-REVIEW-007 / Issue #93 and PR #92; implementation remains unauthorized pending separate admission.
 
-## CORE-D-200 - Round 5 records unavailable HIVE context without inventing evidence
-**Decision:** this planning session has no direct HIVE MCP/connector available, so Round 5 uses exact canonical Git sources in SOLO mode and makes no claim about current HIVE registration/checkpoint state. The future executor must repeat the optional HIVE preflight and record only observed results; canonical Git remains authoritative.
+## CORE-D-200 - Round 5 records unavailable external context service context without inventing evidence
+**Decision:** this planning session has no direct external context service MCP/connector available, so Round 5 uses exact canonical Git sources in SOLO mode and makes no claim about current external context service registration/checkpoint state. The future executor must repeat the optional external context service preflight and record only observed results; canonical Git remains authoritative.
 **State:** ACCEPTED; Round 5 final planning freeze promoted by M04-REVIEW-007 / Issue #93 and PR #92; implementation remains unauthorized pending separate admission.
 
 
@@ -853,3 +853,7 @@ Status: `ACTIVE`
 **Decision:** `KayzenRoot` is the sole operational GitHub identity for CORE. Executor and auditor remain separate logical lifecycle stages, but do not require separate accounts or reviewer sessions. For M04, an exact-base/exact-head owner self-audit may produce `OWNER_SELF_AUDIT_APPROVED` only after required CI/security checks pass, scope and source bindings are valid, and unresolved HIGH/CRITICAL findings are zero. The audit record must name the exact base/head, changed surface, checks, findings and severity, and state `NOT INDEPENDENT`. Never submit native GitHub self-approval from the author account. Missing a second identity alone is never a blocker; missing/failed technical evidence remains fail-closed. This decision does not auto-merge, promote checkpoints, or waive protected-main rules.
 **State:** ACCEPTED under the owner's 2026-09-27 single-account directive; effective on canonical main after the governed policy PR is promoted.
 
+
+
+## CORE-D-205 - Standalone cutover supersedes project-service integration
+**Decision:** effective 2026-09-28, CORE development, tests, review, runtime startup and release MUST NOT depend on a separately installed project context/memory service, project Docker stack or repository-required MCP server. Canonical authority is tracked Git plus admitted GEF Work Orders/Context Locks. Older project-service decisions remain historical context only and are superseded where they conflict with this decision. Provider-neutral external integrations may be admitted later only as optional capabilities.
