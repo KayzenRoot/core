@@ -17,14 +17,25 @@
     "docs/project-brain/02-REQUIREMENTS.md"
   ],
   "capabilities": {
-    "hiveFirst": true,
     "exactHeadEvidence": true,
     "workOrders": true,
     "contextLocks": true,
     "deltaReview": true,
     "checkpointPromotion": true,
-    "proofCarryForwardAuthority": false
+    "proofCarryForwardAuthority": false,
+    "standaloneRequired": true
   },
-  "taskClasses": ["T0", "T1", "T2", "T3"],
-  "contextRadii": ["C0", "C1", "C2", "C3", "C4"]
+  "taskClasses": [
+    "T0",
+    "T1",
+    "T2",
+    "T3"
+  ],
+  "contextRadii": [
+    "C0",
+    "C1",
+    "C2",
+    "C3",
+    "C4"
+  ]
 }
