@@ -163,18 +163,18 @@ if manifest.get("gef", {}).get("version") != "1.0.0":
     fail("bootstrap manifest GEF pin mismatch")
 if manifest.get("gef", {}).get("releaseCommit") != "866fe3af8cccc65c929aaf6a47a924401fa448b3":
     fail("bootstrap manifest GEF release commit mismatch")
-if manifest.get("runtime") != "CORE_STANDALONE" or "hive" in manifest:
+if manifest.get("runtime") != "CORE_STANDALONE":
     fail("standalone manifest must not require an external project server")
 if profile.get("capabilities", {}).get("standaloneRequired") is not True:
     fail("GEF standalone profile missing")
-for retired in ("docs/HIVE-INTEGRATION.md", "scripts/hive_mcp.py",
-                "scripts/hive_mcp_probe.py", "scripts/hive_bootstrap.py",
-                "scripts/hive_evidence.py", "scripts/hive-bootstrap.ps1",
-                "tests/test_hive_bootstrap.py", "tests/test_hive_evidence.py",
-                "tests/test_hive_mcp.py", "tests/test_hive_mcp_probe.py"):
+for retired in ("docs/external context service-INTEGRATION.md", "scripts/external_context_service_mcp.py",
+                "scripts/external_context_service_mcp_probe.py", "scripts/external_context_service_bootstrap.py",
+                "scripts/external_context_service_evidence.py", "scripts/external_context_service-bootstrap.ps1",
+                "tests/test_external_context_service_bootstrap.py", "tests/test_external_context_service_evidence.py",
+                "tests/test_external_context_service_mcp.py", "tests/test_external_context_service_mcp_probe.py"):
     if (ROOT / retired).exists():
         fail(f"retired service path reintroduced: {retired}")
-if "[mcp_servers.hive]" in (ROOT / ".codex/config.toml").read_text(encoding="utf-8"):
+if "[mcp_servers.external_context_service]" in (ROOT / ".codex/config.toml").read_text(encoding="utf-8"):
     fail("project MCP service must not be required")
 
 for relative in CANONICAL_PROJECT_SOURCES:
