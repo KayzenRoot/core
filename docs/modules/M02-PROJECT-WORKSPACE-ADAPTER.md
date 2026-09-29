@@ -1688,6 +1688,8 @@ Exact numeric resource defaults remain benchmark-calibrated under CORE-D-080 and
 
 ### M02 v1 contract envelope
 
+**Historical V1 freeze, superseded for current execution:** the 2026-09-28 standalone contract revision at the end of this document defines the active **V2** envelope and rejects older V1 payloads. Preserve the V1 details below as dated design provenance only.
+
 Every durable/external M02 contract uses an explicit envelope:
 
 ```text
@@ -1728,6 +1730,8 @@ All deterministic hashes reuse `core_identity::fingerprint`; M02 does not introd
 - external-object policy;
 - resource-budget profile id;
 - optional HIVE association expectation.
+
+**Historical V1-only field:** for current execution, use the optional provider-neutral `association_reference` and the standalone/default `NoopAssociationProvider` defined in the 2026-09-28 revision below. No HIVE connection is required.
 
 Ambient current working directory is never implicit authority.
 
