@@ -23,7 +23,7 @@ If any gate is absent, ambiguous, stale, conflicting, or unknown, STOP and repor
 2. Confirm final planning review/promotion and the separate admission delta on canonical main. Verify authorizedBase is an ancestor of the execution head and intervening commits contain governance/admission metadata only.
 3. Validate the ACTIVE Context Lock, its Work Order blob SHA, and the exact nine canonical source fingerprints; stop on any mismatch.
 4. Create feat/m03-work-order-engine from post-admission canonical main. Do not reuse this planning branch as the product execution branch.
-5. Repeat the truthful HIVE v1.0.0 project/checkpoint preflight. Use the SOLO fallback only as permitted by the Work Order, record unresolved CORE context honestly, and never fabricate HIVE evidence.
+5. Repeat the truthful external context service v1.0.0 project/checkpoint preflight. Use the SOLO fallback only as permitted by the Work Order, record unresolved CORE context honestly, and never fabricate external context service evidence.
 6. Read canonical sources in Work Order order and run the repository governance validator before Pack A. Save the actual preflight record to docs/evidence/M03-PREFLIGHT.md.
 7. Execute Packs A through H in order and stop at each packet gate. Do not enter CALIBRATION_ONLY until Pack G is complete.
 
@@ -39,6 +39,6 @@ If any gate is absent, ambiguous, stale, conflicting, or unknown, STOP and repor
 
 ## Final return
 
-Return in Brazilian Portuguese with exact authorized base/final head, lock and source fingerprints, Work Order and branch, files, Pack A–H results, all 23 AC-to-EV mappings, truthful HIVE result, tests/property/adversarial/fuzz/security/supply-chain/SBOM, calibration report and selected/rejected candidates, Windows/Ubuntu results, seven required hosted status contexts, failures/corrections, risks, proposed Checkpoint Delta, PR, and READY_FOR_REVIEW or BLOCKED.
+Return in Brazilian Portuguese with exact authorized base/final head, lock and source fingerprints, Work Order and branch, files, Pack A–H results, all 23 AC-to-EV mappings, truthful external context service result, tests/property/adversarial/fuzz/security/supply-chain/SBOM, calibration report and selected/rejected candidates, Windows/Ubuntu results, seven required hosted status contexts, failures/corrections, risks, proposed Checkpoint Delta, PR, and READY_FOR_REVIEW or BLOCKED.
 
 Never return APPROVED. That verdict belongs to the independent governed reviewer. This handoff is armed but does not authorize work until the exact CORE-M03-ADMIT-001 state is present on canonical origin/main and the hard gate above is satisfied.
