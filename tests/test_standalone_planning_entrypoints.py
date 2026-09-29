@@ -17,7 +17,7 @@ PRIOR = {
 def git_blob_from_text(text: str) -> str:
     """Recreate the exact unfiltered Git blob identity for an immutable archive."""
     contents = text.encode("utf-8")
-    return hashlib.sha1(b"blob " + str(len(contents)).encode("ascii") + b"\\0" + contents).hexdigest()
+    return hashlib.sha1(b"blob " + str(len(contents)).encode("ascii") + b"\0" + contents).hexdigest()
 
 
 def effective_and_archive(path: str) -> tuple[str, str]:

@@ -186,7 +186,7 @@ for relative in CANONICAL_PROJECT_SOURCES:
 
 # Current planning entrypoints must never revive an archived mandatory server contract.
 # Historical R1–R4 originals are preserved byte-for-byte and checked by exact old blob.
-planning_archive_marker = "\\n\\n## Historical discovery archive (non-operative; exact prior Git blob follows)\\n\\n"
+planning_archive_marker = "\n\n## Historical discovery archive (non-operative; exact prior Git blob follows)\n\n"
 planning_prior_blobs = {
     "docs/project-brain/01-PROJECT-OVERVIEW.md": "e9142649593ac93588fc99c40bb33f9fd928857f",
     "docs/project-brain/14-BACKLOG.md": "3c9a5f0762dec085dd3fca9b053b524650bb66d4",
