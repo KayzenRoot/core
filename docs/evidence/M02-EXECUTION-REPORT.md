@@ -37,7 +37,7 @@ The six HIGH findings from M02-REVIEW-007 were corrected in `09269ec65f230bae513
 
 Exact-head hosted run `35532968666` completed successfully. Governance job `106136806055`, M01 Ubuntu `106136806132`, M01 Windows `106136806021`, M01 fuzz `106136806023`, M02 bounded fuzz `106136806002`, M02 Ubuntu `106136806057` and M02 Windows `106136805858` all concluded `success`.
 
-Local gates also pass: format, locked clippy with `-D warnings`, the full locked workspace test suite, governance/M02 static validators, six Python HIVE/MCP tests, and seven bounded WSL fuzz campaigns with 1,000 executions each. The direct Windows sanitizer fuzz linker remains an environment limitation; the hosted Windows fuzz job is green.
+Local gates also pass: format, locked clippy with `-D warnings`, the full locked workspace test suite, governance/M02 static validators, six Python external context service/MCP tests, and seven bounded WSL fuzz campaigns with 1,000 executions each. The direct Windows sanitizer fuzz linker remains an environment limitation; the hosted Windows fuzz job is green.
 
 ## Review 008 correction closeout
 
@@ -49,13 +49,13 @@ The three residual Review 008 blockers were corrected in `098de069b77aa843248b5a
 
 Exact-head hosted run `35539174568` at implementation head `098de069b77aa843248b5a66dd0ca8af4107e879` completed successfully. Governance `106153571798`, M01 Ubuntu `106153571638`, M01 Windows `106153571743`, M01 fuzz `106153571815`, M02 bounded fuzz `106153571761`, M02 Ubuntu `106153571894` and M02 Windows `106153571783` all concluded `success`.
 
-Local Review 008 evidence is green: focused M02 coverage (16 unit and 31 integration/adversarial tests), full locked workspace tests, format, Clippy, governance/M02 validators, Python HIVE/MCP tests, fuzz-bin compilation and the seven-scenario calibration benchmark. No calibration delta was required because selected budgets and dependency inputs were unchanged.
+Local Review 008 evidence is green: focused M02 coverage (16 unit and 31 integration/adversarial tests), full locked workspace tests, format, Clippy, governance/M02 validators, Python external context service/MCP tests, fuzz-bin compilation and the seven-scenario calibration benchmark. No calibration delta was required because selected budgets and dependency inputs were unchanged.
 
 The subsequent evidence-only head `fa1d4afa8ecabc8bbac56206071692c247facd6d` triggered run `35540264458`. Governance, M01 Windows, both fuzz jobs, and both M02 jobs were green (`106156524287`, `106156524171`, `106156524246`, `106156524242`, `106156524225`, `106156524259`); M01 Ubuntu `106156524282` failed in the aggregate test step with exit code 101, with no public hosted log available. This head changed only the evidence/report files, and the exact implementation-head qualification run `35539174568` remained fully green; the M01 failure is therefore recorded as an unrelated legacy gate and not attributed to Review 008.
 
-## HIVE truth
+## external context service truth
 
-HIVE MCP was available and resolved CORE as project `c65b7abc-533a-411a-bbbb-2b72b976d921`, but reported stale indexed HEAD `fdb4dbe165e74b009c43df3874b6043c9b94710b`. `checkpoint.read` returned typed `source_not_current`; context search was lexical fallback with semantic/rerank unavailable. HIVE was used only as advisory context and never as local path authority or canonical Git truth.
+external context service MCP was available and resolved CORE as project `c65b7abc-533a-411a-bbbb-2b72b976d921`, but reported stale indexed HEAD `fdb4dbe165e74b009c43df3874b6043c9b94710b`. `checkpoint.read` returned typed `source_not_current`; context search was lexical fallback with semantic/rerank unavailable. external context service was used only as advisory context and never as local path authority or canonical Git truth.
 
 ## Validation inventory
 
@@ -99,7 +99,7 @@ HIVE MCP was available and resolved CORE as project `c65b7abc-533a-411a-bbbb-2b7
 14. Hardened system Git — `git/system.rs`, local inspection tests.
 15. Hostile Git config canary — `tests/adversarial.rs`.
 16. Redacted remote/config evidence — `redacted_remote_for_test`, Git tests.
-17. HIVE association cannot grant path authority — `reconcile.rs`, reconciliation/adversarial tests.
+17. external context service association cannot grant path authority — `reconcile.rs`, reconciliation/adversarial tests.
 18. SOLO mode — `NoopAssociationProvider`, standalone service test.
 19. Basis/diff determinism — `basis.rs`, `tests/drift.rs`.
 20. Drift generation/invalidation — `service.rs`, service/drift tests.
@@ -127,4 +127,4 @@ HIVE MCP was available and resolved CORE as project `c65b7abc-533a-411a-bbbb-2b7
 
 ## Proposed Checkpoint Delta
 
-Request independent governed Review 009 before promotion; retain HIVE degraded-currentness as an explicit assurance note. The executor does not self-promote the checkpoint or merge the implementation PR.
+Request independent governed Review 009 before promotion; retain external context service degraded-currentness as an explicit assurance note. The executor does not self-promote the checkpoint or merge the implementation PR.
