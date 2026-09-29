@@ -6,6 +6,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 ARCHIVE = "\n\n## Historical discovery archive (non-operative; exact prior Git blob follows)\n\n"
+ARCHIVE_BYTES = ARCHIVE.encode("utf-8")
 PRIOR = {
     "docs/project-brain/01-PROJECT-OVERVIEW.md": "e9142649593ac93588fc99c40bb33f9fd928857f",
     "docs/project-brain/14-BACKLOG.md": "3c9a5f0762dec085dd3fca9b053b524650bb66d4",
@@ -14,18 +15,18 @@ PRIOR = {
 }
 
 
-def git_blob_from_text(text: str) -> str:
-    """Recreate the exact unfiltered Git blob identity for an immutable archive."""
-    contents = text.encode("utf-8")
+def git_blob_from_bytes(contents: bytes) -> str:
+    """Hash exact raw archive bytes using the Git blob header, without newline conversion."""
     return hashlib.sha1(b"blob " + str(len(contents)).encode("ascii") + b"\0" + contents).hexdigest()
 
 
-def effective_and_archive(path: str) -> tuple[str, str]:
-    """Separate current policy from the verbatim dated original document."""
-    content = (ROOT / path).read_text(encoding="utf-8")
-    if content.count(ARCHIVE) != 1:
+def effective_and_archive(path: str) -> tuple[str, bytes]:
+    """Split raw source bytes first; decode active policy only after locating the archive."""
+    content = (ROOT / path).read_bytes()
+    if content.count(ARCHIVE_BYTES) != 1:
         raise AssertionError(f"missing/ambiguous archive divider: {path}")
-    return tuple(content.split(ARCHIVE, 1))
+    active, archive = content.split(ARCHIVE_BYTES, 1)
+    return active.decode("utf-8"), archive
 
 
 class StandalonePlanningEntryPointsTests(unittest.TestCase):
@@ -37,7 +38,16 @@ class StandalonePlanningEntryPointsTests(unittest.TestCase):
             with self.subTest(path=path):
                 active, archived = effective_and_archive(path)
                 self.assertTrue(active.startswith("# "))
-                self.assertEqual(git_blob_from_text(archived), sha)
+                self.assertEqual(git_blob_from_bytes(archived), sha)
+
+    def test_archive_line_ending_mutations_change_git_identity(self):
+        """Catch raw LF-to-CRLF drift that text decoding would silently normalize."""
+        for path, old_sha in PRIOR.items():
+            with self.subTest(path=path):
+                _, archive = effective_and_archive(path)
+                self.assertIn(b"\n", archive)
+                mutated = archive.replace(b"\n", b"\r\n", 1)
+                self.assertNotEqual(git_blob_from_bytes(mutated), old_sha)
 
     def test_effective_text_has_no_retired_service_authority(self):
         """Prevent former runtime/version/server assumptions leaking before the archive."""
@@ -87,7 +97,7 @@ class StandalonePlanningEntryPointsTests(unittest.TestCase):
                 self.assertIn("issue #111", active)
                 self.assertIn("M23 is a future local context/evidence registry", active)
                 self.assertIn("non-operative", active.lower())
-                self.assertIn("## Round 4", archived)
+                self.assertIn(b"## Round 4", archived)
                 self.assertNotIn("product code is approved", active.lower())
 
 

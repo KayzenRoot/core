@@ -188,6 +188,7 @@ for relative in CANONICAL_PROJECT_SOURCES:
 # Current planning entrypoints must never revive an archived mandatory server contract.
 # Historical R1–R4 originals are preserved byte-for-byte and checked by exact old blob.
 planning_archive_marker = "\n\n## Historical discovery archive (non-operative; exact prior Git blob follows)\n\n"
+planning_archive_bytes = planning_archive_marker.encode("utf-8")
 planning_prior_blobs = {
     "docs/project-brain/01-PROJECT-OVERVIEW.md": "e9142649593ac93588fc99c40bb33f9fd928857f",
     "docs/project-brain/14-BACKLOG.md": "3c9a5f0762dec085dd3fca9b053b524650bb66d4",
@@ -197,18 +198,21 @@ planning_prior_blobs = {
 if not (ROOT / ".engineering/decisions/CORE-D-206-STANDALONE-PLANNING-ENTRYPOINTS.md").is_file():
     fail("standalone planning decision CORE-D-206 missing")
 for relative, prior_blob in planning_prior_blobs.items():
-    text_body = (ROOT / relative).read_text(encoding="utf-8")
-    if text_body.count(planning_archive_marker) != 1:
+    raw_body = (ROOT / relative).read_bytes()
+    if raw_body.count(planning_archive_bytes) != 1:
         fail(f"planning entrypoint archive absent or ambiguous: {relative}")
-    active, history = text_body.split(planning_archive_marker, 1)
+    active_raw, history_raw = raw_body.split(planning_archive_bytes, 1)
+    try:
+        active = active_raw.decode("utf-8")
+    except UnicodeDecodeError:
+        fail(f"planning entrypoint active policy is not UTF-8: {relative}")
     archived_sha = subprocess.run(
         ["git", "hash-object", "--stdin"],
-        input=history,
+        input=history_raw,
         cwd=ROOT,
         check=True,
         capture_output=True,
-        text=True,
-    ).stdout.strip()
+    ).stdout.decode("ascii").strip()
     if archived_sha != prior_blob:
         fail(f"historical discovery Git blob changed: {relative}")
     if re.search(r"\bhive\b", active, flags=re.IGNORECASE) or "BOOTSTRAP_BASELINE" in active or "ACTIVE M04 Context Lock" in active:
@@ -216,8 +220,8 @@ for relative, prior_blob in planning_prior_blobs.items():
     if "CORE-D-206" not in active:
         fail(f"current planning entrypoint missing dated standalone decision: {relative}")
 
-overview_active = (ROOT / "docs/project-brain/01-PROJECT-OVERVIEW.md").read_text(encoding="utf-8").split(planning_archive_marker, 1)[0]
-backlog_active = (ROOT / "docs/project-brain/14-BACKLOG.md").read_text(encoding="utf-8").split(planning_archive_marker, 1)[0]
+overview_active = (ROOT / "docs/project-brain/01-PROJECT-OVERVIEW.md").read_bytes().split(planning_archive_bytes, 1)[0].decode("utf-8")
+backlog_active = (ROOT / "docs/project-brain/14-BACKLOG.md").read_bytes().split(planning_archive_bytes, 1)[0].decode("utf-8")
 for required in ("M01 Core Runtime & Lifecycle: COMPLETE", "M02 Project / Workspace Adapter: COMPLETE V2",
                  "M03 Work Order Engine: COMPLETE V2", "M04 Run / Attempt / Step Engine: BLOCKED_RE_ADMISSION"):
     if required not in overview_active or required not in backlog_active:
