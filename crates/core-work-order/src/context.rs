@@ -19,7 +19,7 @@ pub(crate) fn validate_context_budget(
         budget.max_expanded_source_bytes,
         budget.max_packet_inline_bytes,
         budget.max_packet_expanded_bytes,
-        budget.max_hive_refs,
+        budget.max_local_context_refs,
         budget.max_prior_evidence_refs,
     ];
     if dimensions

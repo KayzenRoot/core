@@ -22,7 +22,7 @@ use serde::Serialize;
 use std::collections::BTreeSet;
 
 const M02_SCHEMA: &str = "nexlabs.core.workspace";
-const M02_VERSION: u16 = 1;
+const M02_VERSION: u16 = 2;
 
 pub(crate) fn workspace_profile_components(
     profile: WorkspaceFreshnessProfileV1,
@@ -103,7 +103,7 @@ pub(crate) fn workspace_profile_components(
         ]
         .into_iter()
         .collect(),
-        Profile::HiveReconciledOperation => ["ProjectAssociation"].into_iter().collect(),
+        Profile::VerifiedAssociationOperation => ["ProjectAssociation"].into_iter().collect(),
     };
     if profile == Profile::MutateSource {
         components.extend(["Authority", "FilesystemSemantics"]);
@@ -200,9 +200,9 @@ fn validate_request_structure(
     }
     validate_basis_components(&request.workspace.required_basis_components)?;
     if request.workspace.assurance_requirement
-        == WorkspaceAssuranceRequirementV1::HiveReconciledRequired
+        == WorkspaceAssuranceRequirementV1::VerifiedAssociationRequired
         && (request.workspace.required_profile
-            != WorkspaceFreshnessProfileV1::HiveReconciledOperation
+            != WorkspaceFreshnessProfileV1::VerifiedAssociationOperation
             || !request
                 .workspace
                 .required_basis_components
@@ -558,7 +558,7 @@ pub(crate) fn compile(
     budget: &M03ResourceBudgetV1,
 ) -> Result<WorkOrderCompilationV1, WorkOrderErrorV1> {
     validate_request(request, budget)?;
-    ensure_count(context.hive_context_refs.len(), budget.max_context_refs)?;
+    ensure_count(context.local_context_refs.len(), budget.max_context_refs)?;
     if context.compiler_contract_version != M03_VERSION
         || context.algorithm_version.is_empty()
         || context.policy_generation == 0
@@ -568,9 +568,9 @@ pub(crate) fn compile(
         return Err(error(Category::SchemaVersion, Code::UnsupportedVersion));
     }
     ensure_string_size(&context.algorithm_version, budget.max_string_bytes)?;
-    let mut hive_ids = BTreeSet::new();
-    for hive_ref in &context.hive_context_refs {
-        if !hive_ids.insert(&hive_ref.context_id) || !hive_ref.advisory_only {
+    let mut local_context_ids = BTreeSet::new();
+    for local_context_ref in &context.local_context_refs {
+        if !local_context_ids.insert(&local_context_ref.context_id) || !local_context_ref.advisory_only {
             return Err(error(
                 Category::SourceProvenance,
                 Code::SourceAuthorityMismatch,
@@ -797,9 +797,9 @@ fn validate_workspace_requirement(
     if requirement.required_m02_schema != M02_SCHEMA
         || requirement.required_m02_version != M02_VERSION
         || (requirement.assurance_requirement
-            == WorkspaceAssuranceRequirementV1::HiveReconciledRequired
+            == WorkspaceAssuranceRequirementV1::VerifiedAssociationRequired
             && (requirement.required_profile
-                != WorkspaceFreshnessProfileV1::HiveReconciledOperation
+                != WorkspaceFreshnessProfileV1::VerifiedAssociationOperation
                 || !requirement
                     .required_basis_components
                     .iter()

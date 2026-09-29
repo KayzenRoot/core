@@ -137,7 +137,7 @@ fn validate_workspace(
     if evidence.m02_schema != requirement.required_m02_schema
         || evidence.m02_schema != "nexlabs.core.workspace"
         || evidence.m02_version != requirement.required_m02_version
-        || evidence.m02_version != 1
+        || evidence.m02_version != 2
         || evidence.workspace_id.is_empty()
         || evidence.runtime_epoch == 0
         || evidence.generation == 0
@@ -183,7 +183,7 @@ fn validate_workspace(
     if required.iter().any(|v| !satisfied.contains(v)) {
         return Err(error(Category::AdmissionStaleness, Code::BasisIncompatible));
     }
-    if requirement.assurance_requirement == WorkspaceAssuranceRequirementV1::HiveReconciledRequired
+    if requirement.assurance_requirement == WorkspaceAssuranceRequirementV1::VerifiedAssociationRequired
         && !evidence
             .satisfied_components
             .iter()

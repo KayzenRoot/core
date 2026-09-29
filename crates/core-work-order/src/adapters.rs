@@ -34,12 +34,12 @@ pub trait GovernanceProofResolverV1 {
     ) -> Result<VerifiedGovernanceProofV1, AdapterFailureV1>;
 }
 
-pub trait HiveContextResolverV1 {
+pub trait LocalContextResolverV1 {
     fn resolve(
         &self,
-        request: &HiveContextRequestV1,
+        request: &LocalContextRequestV1,
         budget: &AdapterBudgetV1,
-    ) -> Result<Vec<HiveContextRefV1>, AdapterFailureV1>;
+    ) -> Result<Vec<LocalContextRefV1>, AdapterFailureV1>;
 }
 
 pub trait ExternalLineageStoreV1 {

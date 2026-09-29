@@ -55,7 +55,7 @@ fn context_budget(mandatory: Vec<SourceRefId>) -> ContextBudgetEnvelopeV1 {
         max_expanded_source_bytes: 64_000,
         max_packet_inline_bytes: 16_000,
         max_packet_expanded_bytes: 32_000,
-        max_hive_refs: 8,
+        max_local_context_refs: 8,
         max_prior_evidence_refs: 8,
         mandatory_source_ids: mandatory,
         expansion_policy: SourceExpansionPolicyV1::PacketOnDemand,
@@ -328,7 +328,7 @@ pub fn fixture() -> Fixture {
                 snapshot_fingerprint,
                 provenance_fingerprint,
             },
-            hive_context_refs: vec![],
+            local_context_refs: vec![],
         },
     }
 }
