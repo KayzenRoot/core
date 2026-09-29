@@ -67,11 +67,11 @@ jobs:
         uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: "3.12"
-      - name: Compile bootstrap and CI tooling
-        run: python -m py_compile scripts/validate_governance.py scripts/hive_bootstrap.py scripts/hive_mcp.py scripts/ci_impact.py
+      - name: Compile standalone governance and CI tooling
+        run: python -m py_compile scripts/validate_governance.py scripts/ci_impact.py
       - name: Validate CORE governance
         run: python scripts/validate_governance.py
-      - name: Test HIVE bootstrap, MCP bridge and CI classifier
+      - name: Test standalone CORE governance and CI
         run: python -m unittest discover -s tests -p "test_*.py" -v
 
   m01:

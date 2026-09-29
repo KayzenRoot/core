@@ -1,29 +1,7 @@
 # CORE Project Overview
 
-Status: `BRIDGE_VIEW`
+Status: `DERIVED_STANDALONE_CUTOVER_VIEW`
 
-## Project
-**HIVE CORE**
+CORE is an independent GEF-governed headless Rust engineering runtime. M01–M03 are implemented; M04 prior-V1 external consumer compatibility remains gated; M05/M06 are discovery only. Owner [cutover #172](https://github.com/KayzenRoot/core/issues/172) retires the former project context server without falsifying dated older audit records.
 
-## Mission
-Become the operational nucleus that works with HIVE's project intelligence while remaining governed by GEF.
-
-## Current boundary
-CORE is a new project in bootstrap/discovery. GEF governance and HIVE integration are installed; product-functional architecture and implementation are not yet authorized.
-
-## Canonical sources
-This overview is a convenience bridge for GEF tooling and executors. Product truth lives in the mapped `docs/project-brain/` sources declared by `.engineering/SOURCE-HIERARCHY.md` and `.engineering/gef/GEF-SOURCE-BRIDGE.json`.
-
-## Foundation relationship
-
-```text
-HIVE intelligence/context
-        |
-        v
-CORE governed operational work
-        |
-        v
-GEF execution/evidence/review
-```
-
-No runtime behavior is claimed by this overview.
+Canonical project truth is in `docs/project-brain/` and exact Git, with reviewed Work Orders/Context Locks and `.engineering/SOURCE-HIERARCHY.md`. This overview is a derived bridge, not an independent source of authority.

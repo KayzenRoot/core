@@ -1,6 +1,6 @@
 {
   "schemaVersion": "core-gef-source-bridge-v1",
-  "profile": "HIVE_NATIVE",
+  "profile": "CORE_STANDALONE",
   "canonicalCheckpoint": "docs/project-brain/13-CHECKPOINT.md",
   "domains": {
     "PROJECT_STATE": "docs/project-brain/13-CHECKPOINT.md",

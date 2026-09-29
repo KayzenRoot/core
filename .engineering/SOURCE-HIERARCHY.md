@@ -2,7 +2,7 @@
 
 Status: `FROZEN_BOOTSTRAP`
 
-Authority is domain-specific. Derived summaries, HIVE indexes, memories and GEF metadata accelerate work but do not silently replace canonical source truth.
+Authority is domain-specific. Derived summaries and GEF metadata help navigate work but never replace exact canonical tracked Git source truth.
 
 ## Domains
 
@@ -30,6 +30,6 @@ This order is a context-loading rule, not permission for one domain to overwrite
 
 If applicable authoritative sources conflict or a required source is stale/missing, stop the affected progression with a truthful conflict/block state. Never turn UNKNOWN into ALLOW or DONE.
 
-## HIVE rule
+## Standalone source rule
 
-HIVE retrieval, cache, memory, fingerprints and context capsules are derived. They may accelerate source resolution but cannot supersede tracked canonical Git content.
+Use exact canonical Git commits, local tracked source and approved evidence. No installed project context service is needed for source authority.

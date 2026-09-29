@@ -15,9 +15,9 @@
 11. Reviews follow reviewer-first correction: safe bounded findings are corrected directly by the auditor when current tools can implement and validate them; delegation to Codex/another executor is reserved for corrections that genuinely require broader execution capabilities or governance.
 12. CORE has one operational GitHub identity, `KayzenRoot`. The owner self-audit is a separate logical stage, is explicitly `NOT INDEPENDENT`, and never requires a second account or a native self-approval.
 
-## HIVE
+## Local source and context
 
-HIVE is the preferred intelligence layer, not canonical-write authority. If HIVE is unavailable, execution reports the degraded state and follows the Work Order's degradation policy.
+Canonical local Git and checked-in Project Brain remain source truth. No external context server is a dependency or prerequisite. Missing required evidence still blocks affected changes under the active Work Order.
 
 
 ## Reviewer-first correction

@@ -32,13 +32,11 @@ REQUIRED = (
     "docs/project-brain/14-BACKLOG.md",
     "docs/project-brain/15-DEFINITION-OF-DONE.md",
     "docs/project-brain/16-DECISIONS-LEDGER.md",
-    "docs/HIVE-INTEGRATION.md",
-    "scripts/hive_mcp.py",
     ".engineering/context-locks/CORE-WO-M04-001.json",
     ".engineering/evidence/CORE-WO-M04-001.json",
 )
 
-HIVE_GOVERNANCE = (
+CANONICAL_PROJECT_SOURCES = (
     "docs/project-brain/13-CHECKPOINT.md",
     "docs/project-brain/03-SCOPE.md",
     "docs/project-brain/15-DEFINITION-OF-DONE.md",
@@ -103,7 +101,7 @@ for relative in REQUIRED:
     if not path.is_file():
         fail(f"missing required file: {relative}")
 
-checkpoint = (ROOT / HIVE_GOVERNANCE[0]).read_text(encoding="utf-8")
+checkpoint = (ROOT / CANONICAL_PROJECT_SOURCES[0]).read_text(encoding="utf-8")
 for heading in CHECKPOINT_HEADINGS:
     section(checkpoint, heading)
 
@@ -111,8 +109,8 @@ bridge_checkpoint = (ROOT / ".engineering/CHECKPOINT.md").read_text(encoding="ut
 machine_checkpoint = json.loads(
     (ROOT / ".engineering/CHECKPOINT.json").read_text(encoding="utf-8")
 )
-if machine_checkpoint.get("canonicalCheckpoint") != HIVE_GOVERNANCE[0]:
-    fail("machine checkpoint does not point to canonical HIVE checkpoint")
+if machine_checkpoint.get("canonicalCheckpoint") != CANONICAL_PROJECT_SOURCES[0]:
+    fail("machine checkpoint does not point to canonical local Git checkpoint")
 for field, heading in SHARED_CHECKPOINT_FIELDS.items():
     canonical_value = section(checkpoint, heading)
     bridge_value = section(bridge_checkpoint, heading)
@@ -141,7 +139,7 @@ if tuple(profile.get("sourceHierarchy", ())[:6]) != expected_hierarchy:
 source_bridge = json.loads(
     (ROOT / ".engineering/gef/GEF-SOURCE-BRIDGE.json").read_text(encoding="utf-8")
 )
-if source_bridge.get("canonicalCheckpoint") != HIVE_GOVERNANCE[0]:
+if source_bridge.get("canonicalCheckpoint") != CANONICAL_PROJECT_SOURCES[0]:
     fail("GEF source bridge checkpoint mismatch")
 bridge_sources = source_bridge.get("domains", {})
 for domain, relative in {
@@ -165,14 +163,23 @@ if manifest.get("gef", {}).get("version") != "1.0.0":
     fail("bootstrap manifest GEF pin mismatch")
 if manifest.get("gef", {}).get("releaseCommit") != "866fe3af8cccc65c929aaf6a47a924401fa448b3":
     fail("bootstrap manifest GEF release commit mismatch")
-if manifest.get("hive", {}).get("version") != "1.0.0":
-    fail("bootstrap manifest HIVE pin mismatch")
-if manifest.get("hive", {}).get("releaseCommit") != "a53b5b9fcf55c32a5696180fb1b1ef80ccd1edcf":
-    fail("bootstrap manifest HIVE release commit mismatch")
+if manifest.get("runtime") != "CORE_STANDALONE" or "hive" in manifest:
+    fail("standalone manifest must not require an external project server")
+if profile.get("capabilities", {}).get("standaloneRequired") is not True:
+    fail("GEF standalone profile missing")
+for retired in ("docs/HIVE-INTEGRATION.md", "scripts/hive_mcp.py",
+                "scripts/hive_mcp_probe.py", "scripts/hive_bootstrap.py",
+                "scripts/hive_evidence.py", "scripts/hive-bootstrap.ps1",
+                "tests/test_hive_bootstrap.py", "tests/test_hive_evidence.py",
+                "tests/test_hive_mcp.py", "tests/test_hive_mcp_probe.py"):
+    if (ROOT / retired).exists():
+        fail(f"retired service path reintroduced: {retired}")
+if "[mcp_servers.hive]" in (ROOT / ".codex/config.toml").read_text(encoding="utf-8"):
+    fail("project MCP service must not be required")
 
-for relative in HIVE_GOVERNANCE:
+for relative in CANONICAL_PROJECT_SOURCES:
     if not (ROOT / relative).is_file():
-        fail(f"HIVE governance path missing: {relative}")
+        fail(f"local canonical source missing: {relative}")
 
 # The active M04 review gate is a transparent single-account owner self-audit.
 # Keep its policy, lock, evidence and canonical-source fingerprints mechanically aligned.
@@ -253,6 +260,6 @@ if ev023.get("owner") != "SOLO_OWNER_AUDITOR":
 
 print("CORE governance validation: PASS")
 print("GEF: v1.0.0 @ 866fe3af8cccc65c929aaf6a47a924401fa448b3")
-print("HIVE compatibility: v1.0.0 @ a53b5b9fcf55c32a5696180fb1b1ef80ccd1edcf")
+print("CORE runtime: STANDALONE / no project server")
 print("GEF checkpoint/source bridges: CONSISTENT")
 print(f"Required artifacts: {len(REQUIRED)}")
