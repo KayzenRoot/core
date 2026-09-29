@@ -51,7 +51,7 @@ The central goal is to eliminate ambiguous execution prompts.
 - recovery/resume runtime behavior, which belongs to M18;
 - Git/GitHub delivery, which belongs to M20;
 - CI/release execution, which belongs to M21;
-- HIVE durable memory/RAG/repository intelligence.
+- external context service durable memory/RAG/repository intelligence.
 
 ## Core invariant
 
@@ -70,16 +70,16 @@ M03 compiles against deterministic local/canonical inputs:
 - local GEF governance artifacts;
 - typed configuration/policy inputs.
 
-Standalone mode must remain complete without HIVE.
+Standalone mode must remain complete without external context service.
 
-### HIVE-enhanced mode
+### optional-provider mode
 
-When compatible HIVE is available:
-- HIVE may provide compact context references, retrieval results and project knowledge;
-- HIVE context remains advisory input unless the canonical source hierarchy explicitly names it as source authority;
-- HIVE cannot silently rewrite frozen Work Order semantics;
-- HIVE context identity/provenance is recorded in the compiled source/context manifest;
-- stale HIVE context may reduce assurance or trigger refresh but cannot override newer Git/filesystem truth.
+When compatible external context service is available:
+- external context service may provide compact context references, retrieval results and project knowledge;
+- external context service context remains advisory input unless the canonical source hierarchy explicitly names it as source authority;
+- external context service cannot silently rewrite frozen Work Order semantics;
+- external context service context identity/provenance is recorded in the compiled source/context manifest;
+- stale external context service context may reduce assurance or trigger refresh but cannot override newer Git/filesystem truth.
 
 ## Round 1 state model candidate
 
@@ -204,7 +204,7 @@ Candidate source classes:
 - MODULE_PLAN;
 - WORKSPACE_BASIS;
 - CONTEXT_LOCK;
-- HIVE_CONTEXT_REFERENCE;
+- external context service_CONTEXT_REFERENCE;
 - GOVERNANCE_POLICY;
 - PRIOR_EVIDENCE_REFERENCE.
 
@@ -774,11 +774,11 @@ Canonical source classes initially freeze as:
 - GOVERNANCE_POLICY;
 - WORKSPACE_BASIS;
 - CONTEXT_LOCK;
-- HIVE_CONTEXT_REFERENCE;
+- external context service_CONTEXT_REFERENCE;
 - PRIOR_EVIDENCE_REFERENCE;
 - OTHER_VERSIONED_CAPABILITY.
 
-HIVE_CONTEXT_REFERENCE is never canonical Git authority merely by class.
+external context service_CONTEXT_REFERENCE is never canonical Git authority merely by class.
 
 ### Source expansion policy
 
@@ -798,7 +798,7 @@ Instead, `WorkspaceRequirementV1` declares:
 - expected WorkspaceId / optional ProjectBindingId constraints;
 - required BVM profile per Work Order and optionally packet;
 - required repository/worktree identities when semantically necessary;
-- allowed standalone/HIVE assurance mode;
+- allowed standalone/external context service assurance mode;
 - required workspace policy/security generation constraints;
 - whether dirty/untracked state is permitted;
 - basis compatibility policy.
@@ -870,7 +870,7 @@ Contains references to:
 - current Context Lock proof;
 - GovernanceAdmissionProofV1;
 - current compiler/policy/security/config generations;
-- optional current HIVE context provenance;
+- optional current external context service context provenance;
 - requested target admission mode.
 
 ### WorkOrderAdmissionReceiptV1
@@ -1051,7 +1051,7 @@ A Work Order without explicit terminal semantics cannot become READY.
 - max_expanded_source_bytes;
 - max_packet_inline_bytes;
 - max_packet_expanded_bytes;
-- max_hive_refs;
+- max_external_context_service_refs;
 - max_prior_evidence_refs;
 - expansion_deadline;
 - allowed_expansion_reasons[];
@@ -1139,7 +1139,7 @@ The core Work Order engine:
 - does not own Git persistence;
 - does not allocate mutable Run state;
 - does not maintain a hidden canonical Work Order registry;
-- does not fetch HIVE context on its own;
+- does not fetch external context service context on its own;
 - does not scan the repository tree;
 - does not perform network I/O.
 
@@ -1166,7 +1166,7 @@ compile(
 - current lineage snapshot;
 - project/module namespace;
 - applicable scope/security policy;
-- optional HIVE context refs already resolved by an external context provider.
+- optional external context service context refs already resolved by an external context provider.
 
 Output:
 - FrozenWorkOrderV1;
@@ -1243,7 +1243,7 @@ Fails if receipt identity does not bind exactly to the frozen revision.
 
 ## No hidden I/O rule
 
-The compiler/service core does not open arbitrary repository paths, run Git, call HIVE, query GitHub or write Work Order files.
+The compiler/service core does not open arbitrary repository paths, run Git, call external context service, query GitHub or write Work Order files.
 
 External adapters resolve those concerns and provide typed evidence.
 
@@ -1251,7 +1251,7 @@ This:
 - improves determinism;
 - minimizes dependency/supply-chain surface;
 - makes property/fuzz testing easier;
-- avoids duplicated M02/HIVE/Git responsibilities;
+- avoids duplicated M02/external context service/Git responsibilities;
 - permits future CLI/API/daemon adapters without changing compiler semantics.
 
 ## Work Order logical ID allocation
@@ -1368,7 +1368,7 @@ CBE compilation produces a compact `PacketContextPlanV1` for each packet:
 
 This plan does not contain executor prompt text.
 
-M04/M08/HIVE-aware context adapters later materialize actual context from these refs.
+M04/M08/external context service-aware context adapters later materialize actual context from these refs.
 
 ### Token-economy invariant
 
@@ -1599,7 +1599,7 @@ Candidate workspace third-party dependencies:
 
 No Tokio is required by the core compiler/service baseline.
 
-No database, async runtime, Git library, watcher framework, graph framework, regex engine, LLM SDK or HIVE runtime dependency is currently justified.
+No database, async runtime, Git library, watcher framework, graph framework, regex engine, LLM SDK or external context service runtime dependency is currently justified.
 
 New dependency admission later requires explicit evidence.
 
@@ -1703,7 +1703,7 @@ Status: PROMOTED PLANNING BASELINE. Rounds 1-4 are accepted. This section does n
 
 ### Round 4 preservation rules
 
-Round 4 preserves the compiler/admission boundary, immutable revisions, zero-LLM semantics, M02 ownership, no hidden I/O, external lineage/LPC, HIVE's advisory role, the bounded packet DAG, complete AEG, non-evergreen admission and CORE-D-132 reviewer-first correction policy. It freezes the public and validation surfaces only. There is no source code, dependency, lockfile, runtime, registry or persistence change in this planning round.
+Round 4 preserves the compiler/admission boundary, immutable revisions, zero-LLM semantics, M02 ownership, no hidden I/O, external lineage/LPC, external context service's advisory role, the bounded packet DAG, complete AEG, non-evergreen admission and CORE-D-132 reviewer-first correction policy. It freezes the public and validation surfaces only. There is no source code, dependency, lockfile, runtime, registry or persistence change in this planning round.
 
 The exact names and field ownership below are normative for the later M03 V0.0 implementation Work Order. The types are contracts, not a claim that those Rust files or functions already exist.
 
@@ -1804,7 +1804,7 @@ pub struct CompilationContextV1 {
     pub config_generation: u64,
     pub sources: SourceResolutionBatchV1,
     pub lineage: LineageSnapshotV1,
-    pub hive_context_refs: Vec<HiveContextRefV1>,
+    pub external_context_service_context_refs: Vec<ExternalContextServiceContextRefV1>,
 }
 
 pub struct SourceResolutionBatchV1 {
@@ -1885,9 +1885,9 @@ pub enum WorkOrderAdmissionStatusV1 {
     Superseded,
 }
 
-pub struct HiveContextRefV1 {
+pub struct ExternalContextServiceContextRefV1 {
     pub context_id: ContextRefId,
-    pub hive_project_id: String,
+    pub external_context_service_project_id: String,
     pub content_fingerprint: EvidenceFingerprintV1,
     pub snapshot_id: String,
     pub freshness: EvidenceFreshnessV1,
@@ -2006,7 +2006,7 @@ The remaining durable V1 contracts have these exact public fields and meanings:
 - WorkOrderSemanticV1: objective, explicit scope, packet DAG, acceptance/evidence graph, context budget, correction policy, stop condition and risk/assurance profile.
 - CanonicalSourceRefV1: source_id, source_class, authority_domain, locator_kind, explicit locator, expected semantic fingerprint, required_for_compile, required_for_admission, required_packet_ids, freshness_policy, provenance_class, secret_classification and expansion_policy.
 - SourceResolutionEvidenceV1: source_id, requested_fingerprint, observed_fingerprint, authority_domain, source_revision, resolver_schema/version, freshness_state, provenance_fingerprint and evidence_fingerprint. It carries references and fingerprints only; raw source bytes and credentials are not durable payloads.
-- WorkspaceRequirementV1: expected workspace/project-binding identity constraints, required M02 BVM profile, required basis components, compatibility policy, standalone/HIVE assurance requirement, dirty/untracked policy and required M02 schema/version.
+- WorkspaceRequirementV1: expected workspace/project-binding identity constraints, required M02 BVM profile, required basis components, compatibility policy, standalone/external context service assurance requirement, dirty/untracked policy and required M02 schema/version.
 - ContextLockRequirementV1: required lock schema/version, work-order binding, authorized base constraint, canonical source-set fingerprint, implementation-authorized requirement and staleness policy.
 - GovernanceRequirementV1: required external verdict class, exact work-order/base/head/scope binding, policy generation and freshness requirement. It cannot encode self-approval.
 - ScopeEnvelopeV1: allow and deny sets for modules, crates/packages, path prefixes and artifact classes; source/documentation/evidence/generated-artifact policies; dependency policy; correction classes; maximum scope class. Deny wins, ambiguity blocks, and each packet receives only the intersection with this envelope.
@@ -2082,7 +2082,7 @@ pub fn canonical_semantic_bytes(
 ) -> Result<Vec<u8>, WorkOrderErrorV1>;
 ~~~
 
-CompilationContextV1 contains compiler_contract_version, algorithm_version, policy_generation, security_generation, config_generation, SourceResolutionBatchV1, authoritative LineageSnapshotV1 and optional HiveContextRefV1 values already resolved by a caller. It does not contain resolver objects or filesystem/network handles. evaluate_admission consumes already-resolved proof snapshots. materialize_handoff accepts only the exact matching READY immutable receipt. No service performs path reads, Git, HIVE, GitHub, network, process execution, refresh, retry, storage, commit, push or checkpoint update.
+CompilationContextV1 contains compiler_contract_version, algorithm_version, policy_generation, security_generation, config_generation, SourceResolutionBatchV1, authoritative LineageSnapshotV1 and optional ExternalContextServiceContextRefV1 values already resolved by a caller. It does not contain resolver objects or filesystem/network handles. evaluate_admission consumes already-resolved proof snapshots. materialize_handoff accepts only the exact matching READY immutable receipt. No service performs path reads, Git, external context service, GitHub, network, process execution, refresh, retry, storage, commit, push or checkpoint update.
 
 ### External resolver and evidence adapter seams
 
@@ -2122,12 +2122,12 @@ pub trait GovernanceProofResolverV1 {
     ) -> Result<VerifiedGovernanceProofV1, AdapterFailureV1>;
 }
 
-pub trait HiveContextResolverV1 {
+pub trait ExternalContextServiceContextResolverV1 {
     fn resolve(
         &self,
-        request: &HiveContextRequestV1,
+        request: &ExternalContextServiceContextRequestV1,
         budget: &AdapterBudgetV1,
-    ) -> Result<Vec<HiveContextRefV1>, AdapterFailureV1>;
+    ) -> Result<Vec<ExternalContextServiceContextRefV1>, AdapterFailureV1>;
 }
 
 pub trait ExternalLineageStoreV1 {
@@ -2147,7 +2147,7 @@ WorkspaceAdmissionEvidenceV1 is a narrow value snapshot, not a second workspace 
 
 ContextLockEvidenceV1 carries lock schema/version/fingerprint, WorkOrderId/revision/fingerprint binding, authorized base/source-set fingerprints, implementation_authorized, status/freshness, verifier provenance and proof fingerprint. VerifiedGovernanceProofV1 carries project/repository identity, WorkOrderId/revision/fingerprint, exact base/head, external verdict, authorized scope fingerprint, policy generation, status/freshness, proof fingerprint and external verifier provenance. Only the external governance adapter verifies authority; M03 checks compatibility and cannot mint approval.
 
-HiveContextRefV1 carries only HIVE project/context identity, content fingerprint, retrieval snapshot/provenance reference, freshness and an explicit advisory-only marker. It has no canonical authority and cannot override Git or M02 evidence. If optional HIVE lookup is unavailable, the adapter reports that state; it cannot fabricate a reference or change Work Order semantics.
+ExternalContextServiceContextRefV1 carries only external context service project/context identity, content fingerprint, retrieval snapshot/provenance reference, freshness and an explicit advisory-only marker. It has no canonical authority and cannot override Git or M02 evidence. If optional external context service lookup is unavailable, the adapter reports that state; it cannot fabricate a reference or change Work Order semantics.
 
 Adapter errors use bounded codes and safe evidence references only. Adapter traits accept explicit identities/requirements and finite AdapterBudgetV1; ambient cwd, global clients, credentials and raw secret payloads are not part of M03 contracts.
 
@@ -2214,7 +2214,7 @@ The frozen direct dependency set is therefore:
 - Internal: core-identity only, for canonical_bytes/fingerprint and the already accepted SHA-256 identity stack. M02 evidence is adapted outside M03 into the bounded versioned DTOs above; core-workspace and core-config are not direct dependencies.
 - Existing workspace third-party dependencies: serde with derive, serde_json for bounded JSON parsing/serialization, and thiserror for typed errors. sha2 is not direct because core-identity owns the fingerprint implementation.
 - Fuzz-only: existing libfuzzer-sys in fuzz/Cargo.toml; no new fuzz engine.
-- No proptest, Criterion, Tokio, Git library, graph library, regex engine, HIVE/GitHub SDK, network/process/filesystem crate, database, cache store or cryptography crate is admitted.
+- No proptest, Criterion, Tokio, Git library, graph library, regex engine, external context service/GitHub SDK, network/process/filesystem crate, database, cache store or cryptography crate is admitted.
 
 The transitive core-identity closure observed at this base is core-contracts, serde, serde_json, sha2 and thiserror; it has no process/network/database dependency. If an implementation proposal needs a different dependency or direct M02 type, it requires separate dependency/architecture admission with a new exact-head review. This narrows the Round 3 candidate list without changing its accepted ownership or evidence semantics.
 
@@ -2239,7 +2239,7 @@ Every law is an implementation acceptance obligation. The planning round does no
 | Admission | Identical frozen revision and evidence yield identical semantic receipt; changed or unknown required evidence yields non-READY; old receipts are immutable and non-evergreen. |
 | Diagnostics/secrets | Secret canaries, raw prompt/source bodies and raw adapter/process errors never appear in durable contracts or diagnostics; diagnostic differences never alter semantic identity. |
 | Resource/atomicity | All core budgets are finite and positive; exact-bound inputs are handled according to policy; over-limit core cases produce typed errors and no partial FROZEN, READY or handoff object. Caller-owned wall-clock timeout discards any late result and records typed timeout evidence without changing pure-core determinism. |
-| No hidden I/O | Public services can be replayed from value inputs alone and do not read files, invoke Git/HIVE/GitHub/process/network, access cwd/global clients or persist lineage. |
+| No hidden I/O | Public services can be replayed from value inputs alone and do not read files, invoke Git/external context service/GitHub/process/network, access cwd/global clients or persist lineage. |
 
 ### Fuzz target matrix
 
@@ -2274,7 +2274,7 @@ The deterministic synthetic benchmark matrix varies:
 
 Cold/warm/cache-hit/cache-miss cases apply only if a separately justified disposable L1 compile memo is later admitted. The baseline has no cache and no cache benchmark obligation. Cache and no-cache output must remain semantically identical if introduced.
 
-Use deterministic local fixtures, no network, no HIVE calls and no LLM. Warm once, record at least five measured iterations per scenario, and report median/min/max alongside exact command, toolchain, OS, CPU, fixture generator/version, candidate SHA and semantic assertion results. Run the same relevant matrix on Windows and Ubuntu. Resource selection must be reproducible, finite, safe for supported inputs, reject unsupported scales rather than extrapolate, and include selected/rejected candidate rationale. Any hard thresholds/defaults enter only through the implementation Work Order's bounded Calibration Gate and committed report; a timeout/overflow or missing scenario blocks production acceptance and never yields partial success.
+Use deterministic local fixtures, no network, no external context service calls and no LLM. Warm once, record at least five measured iterations per scenario, and report median/min/max alongside exact command, toolchain, OS, CPU, fixture generator/version, candidate SHA and semantic assertion results. Run the same relevant matrix on Windows and Ubuntu. Resource selection must be reproducible, finite, safe for supported inputs, reject unsupported scales rather than extrapolate, and include selected/rejected candidate rationale. Any hard thresholds/defaults enter only through the implementation Work Order's bounded Calibration Gate and committed report; a timeout/overflow or missing scenario blocks production acceptance and never yields partial success.
 
 ### Production DoD direction and stop state
 
