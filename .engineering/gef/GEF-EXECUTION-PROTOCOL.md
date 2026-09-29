@@ -3,7 +3,7 @@
 Every implementation Work Order must contain:
 
 - OBJECTIVE
-- HIVE PREFLIGHT
+- external context service PREFLIGHT
 - CANONICAL BASIS
 - CONTEXT BUDGET
 - RISK / ASSURANCE
@@ -22,4 +22,4 @@ Every implementation Work Order must contain:
 
 ## Execution rules
 
-Resolve Git state first. Use HIVE progressively. Execute only admitted scope. Record context expansion reasons. Preserve successful independent evidence. Repair causal failures at the smallest invalidated surface. Do not advance beyond the Work Order stop condition.
+Resolve Git state first. Use external context service progressively. Execute only admitted scope. Record context expansion reasons. Preserve successful independent evidence. Repair causal failures at the smallest invalidated surface. Do not advance beyond the Work Order stop condition.
