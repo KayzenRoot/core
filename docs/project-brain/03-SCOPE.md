@@ -5,15 +5,15 @@ Status: `PRODUCT_DISCOVERY_ACTIVE`
 ## NECESSARY - bootstrap
 
 - Materialize GEF v1.0.0 new-project governance.
-- Materialize a HIVE v1.0.0 compatible Project Brain.
+- Materialize a external context service v1.0.0 compatible Project Brain.
 - Provide deterministic governance validation.
-- Provide local scripts to register, inspect, index and retrieval-sync CORE in HIVE.
+- Provide local scripts to register, inspect, index and retrieval-sync CORE in external context service.
 - Provide GitHub PR, Work Order and evidence scaffolding.
 - Keep product planning separate from bootstrap installation.
 
 ## IMPORTANT - planning phase
 
-- Define the operational responsibilities of CORE relative to HIVE.
+- Define the operational responsibilities of CORE relative to external context service.
 - Define executor/orchestrator, review, automation, policy and integration responsibilities.
 - Define interfaces with Codex/IDEs/GitHub and other NexLabs systems only after discovery.
 - Define observability, security, reliability and performance targets with evidence.
@@ -25,7 +25,7 @@ To be classified during governed discovery. No future capability is admitted mer
 ## OUT OF SCOPE - bootstrap
 
 - Product runtime implementation.
-- Duplicating HIVE context, memory or retrieval runtime.
+- Duplicating external context service context, memory or retrieval runtime.
 - Replacing Git as canonical source history.
 - Claiming autonomous production behavior before architecture and verification are frozen.
 - Selecting a final application stack before product architecture requires it.
@@ -34,8 +34,8 @@ To be classified during governed discovery. No future capability is admitted mer
 ## ACCEPTED DISCOVERY CONSTRAINTS
 
 - CORE is a headless action/execution plane; dashboard/cockpit/web UI are OUT OF SCOPE.
-- CORE must remain usable without HIVE.
-- When compatible HIVE is available, CORE consumes HIVE-owned intelligence through contracts instead of duplicating HIVE subsystems.
+- CORE must remain usable without external context service.
+- When compatible external context service is available, CORE consumes external context service-owned intelligence through contracts instead of duplicating external context service subsystems.
 - Default delivery granularity is one complete planned module per bounded Codex Work Order when safe.
 - Product planning must provide executor-ready file maps, contracts, invariants and tests before implementation.
 
@@ -49,7 +49,7 @@ To be classified during governed discovery. No future capability is admitted mer
 - typed SOURCE/GIT_METADATA/EXTERNAL_OBJECT/TEMP authority roots;
 - path containment/escape proof before later action modules;
 - workspace drift detection and action-boundary freshness validation;
-- standalone operation with explicit HIVE reconciliation when available;
+- standalone operation with explicit external context service reconciliation when available;
 - canonical WorkspaceBasis fingerprints/diffs and compact binding receipts;
 - bounded zero-LLM evidence, hashing and revalidation;
 - deterministic invalidation and proof-cache semantics.
@@ -59,7 +59,7 @@ To be classified during governed discovery. No future capability is admitted mer
 - L1 proof reuse/coalescing;
 - differential GitInspector provider evaluation;
 - WMF/DWS acceleration where equivalence is proven;
-- compact evidence surfaces that reduce HIVE/LLM downstream context.
+- compact evidence surfaces that reduce external context service/LLM downstream context.
 
 ### FUTURE / CONDITIONAL
 - persistent L2 proof cache after recovery/corruption/secret-safety design;
@@ -71,7 +71,7 @@ To be classified during governed discovery. No future capability is admitted mer
 - Git checkout/reset/branch/commit/merge/push/fetch;
 - repository repair;
 - network access to Git remotes;
-- HIVE RAG/memory/repository-intelligence duplication;
+- external context service RAG/memory/repository-intelligence duplication;
 - runtime sandbox enforcement owned by M11;
 - Git/GitHub delivery owned by M20/M21;
 - semantic AST/repository analysis;
@@ -173,7 +173,7 @@ To be classified during governed discovery. No future capability is admitted mer
 ### OUT OF SCOPE
 - hidden repository scans;
 - Git commits/pushes;
-- HIVE/network calls inside core compiler;
+- external context service/network calls inside core compiler;
 - Run scheduler/state;
 - tool/source execution;
 - final evidence/review engines.
@@ -202,7 +202,7 @@ To be classified during governed discovery. No future capability is admitted mer
 
 ### FUTURE / CONDITIONAL
 - persistent storage backend selection/optimization;
-- archive/retention/compaction policy beyond active proof history;
+- arcexternal_context_service/retention/compaction policy beyond active proof history;
 - distributed multi-writer state stores or replication;
 - performance accelerators that preserve ASF/RJR equivalence.
 
@@ -215,7 +215,7 @@ To be classified during governed discovery. No future capability is admitted mer
 - quota/cost policy;
 - Git/GitHub delivery/release actions;
 - security-policy engines;
-- HIVE federation intelligence;
+- external context service federation intelligence;
 - verification/evidence/review verdict ownership;
 - telemetry transport/observability spine.
 
@@ -245,7 +245,7 @@ At the end of M04 Rounds 1-3, implementation remained unauthorized pending the f
 
 ### FUTURE / CONDITIONAL
 - concrete persistent backend;
-- event archive/retention service;
+- event arcexternal_context_service/retention service;
 - distributed store replication/consensus;
 - persistent snapshot/projection cache;
 - runtime adaptive tuning.
