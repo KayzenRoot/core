@@ -6,9 +6,9 @@ Status: `DISCOVERY_IN_PROGRESS`
 
 M02 binds the CORE action plane to a concrete local project/workspace safely and deterministically.
 
-It converts ambiguous human notions such as "this project", "this checkout" or "this repository" into typed, versioned, machine-verifiable workspace handles that later CORE modules can execute against without guessing paths, repository identity, Git basis, worktree state or HIVE project association.
+It converts ambiguous human notions such as "this project", "this checkout" or "this repository" into typed, versioned, machine-verifiable workspace handles that later CORE modules can execute against without guessing paths, repository identity, Git basis, worktree state or external context service project association.
 
-M02 is an adapter and authority boundary. It is not a second HIVE Project Registry, not a repository-intelligence engine and not a mutation/delivery engine.
+M02 is an adapter and authority boundary. It is not a second external context service Project Registry, not a repository-intelligence engine and not a mutation/delivery engine.
 
 ## Ownership boundary
 
@@ -21,15 +21,15 @@ M02 is an adapter and authority boundary. It is not a second HIVE Project Regist
 - read-only Git/worktree inspection needed to establish execution basis;
 - workspace generation/fingerprint calculation;
 - detection of relevant workspace drift after a basis was established;
-- standalone project binding when HIVE is unavailable;
-- HIVE project-binding reconciliation when HIVE is available;
+- standalone project binding when external context service is unavailable;
+- external context service project-binding reconciliation when external context service is available;
 - machine-readable workspace readiness/degradation receipts;
 - workspace handles consumed by later execution modules;
 - deterministic workspace metadata needed for cache/evidence invalidation.
 
 ### M02 does NOT own
 
-- HIVE Project Registry canonical project truth;
+- external context service Project Registry canonical project truth;
 - semantic repository intelligence, AST/symbol indexing, RAG or retrieval;
 - durable organizational memory;
 - arbitrary filesystem sandboxing or capability enforcement, which belongs to M11;
@@ -58,15 +58,15 @@ M02 derives the local project/workspace binding from deterministic local evidenc
 - canonical configuration;
 - stable path identity.
 
-Standalone mode must remain useful without HIVE and must not synthesize HIVE identifiers.
+Standalone mode must remain useful without external context service and must not synthesize external context service identifiers.
 
-### HIVE-enhanced mode
+### optional-provider mode
 
-When HIVE is compatible and available:
-- M02 resolves or receives the HIVE project identity through the existing external HIVE contract;
+When external context service is compatible and available:
+- M02 resolves or receives the external context service project identity through the existing external external context service contract;
 - local workspace evidence is reconciled against that project association;
-- HIVE project identity may enrich the binding;
-- HIVE remains canonical for its Project Registry identity;
+- external context service project identity may enrich the binding;
+- external context service remains canonical for its Project Registry identity;
 - Git/filesystem state remains canonical for the actual local checkout;
 - disagreement is explicit and cannot be silently merged.
 
@@ -100,7 +100,7 @@ M02 must distinguish these identities rather than collapse them:
 
 1. `ProjectBindingId`
    - CORE action-plane binding identity.
-   - May reference a HIVE project ID but is not itself HIVE's canonical registry.
+   - May reference a external context service project ID but is not itself external context service's canonical registry.
 
 2. `WorkspaceId`
    - stable identity for the attached local workspace authority root.
@@ -124,7 +124,7 @@ Physical absolute paths are attributes, not the only identity.
 A workspace basis may include:
 - schema version;
 - ProjectBindingId;
-- optional HIVE project reference + provenance;
+- optional external context service project reference + provenance;
 - workspace root canonical path identity;
 - repository set and boundary graph;
 - primary repository/worktree identity;
@@ -183,7 +183,7 @@ A workspace basis may include:
 
 ### BRL - Basis Reconciliation Layer
 
-**Problem:** HIVE project identity, explicit config, Git roots and current checkout can disagree.
+**Problem:** external context service project identity, explicit config, Git roots and current checkout can disagree.
 
 **Mechanism:** deterministic evidence precedence and reconciliation receipts with explicit MATCH / PARTIAL / CONFLICT / UNKNOWN states.
 
@@ -235,7 +235,7 @@ A workspace basis may include:
 
 **Mechanism:** stable basis + deterministic delta set for changed repository/workspace facts.
 
-**Expected benefit:** lower I/O, faster revalidation, cache-friendly HIVE/CORE context and less repeated evidence.
+**Expected benefit:** lower I/O, faster revalidation, cache-friendly external context service/CORE context and less repeated evidence.
 
 **Primary risk:** missed invalidation.
 
@@ -265,7 +265,7 @@ Design priorities:
 2. Stable canonical identity with volatile diagnostics excluded.
 3. Content/delta handles rather than embedding large file lists.
 4. Incremental/delta basis recomputation where correctness allows.
-5. No semantic repository analysis that belongs to HIVE.
+5. No semantic repository analysis that belongs to external context service.
 6. Machine-readable reasons for cache hit/miss/bypass/invalidation.
 7. Cross-platform normalization without converting every path to expensive content reads.
 8. Reuse M01 DCS/DIF/generation primitives instead of inventing a second fingerprint stack.
@@ -278,7 +278,7 @@ Design priorities:
 - REPOSITORY_NOT_FOUND
 - REPOSITORY_BOUNDARY_CONFLICT
 - GIT_METADATA_INVALID
-- HIVE_PROJECT_BINDING_CONFLICT
+- external context service_PROJECT_BINDING_CONFLICT
 - WORKSPACE_BASIS_STALE
 - WORKSPACE_DRIFT_DETECTED
 - PATH_NORMALIZATION_FAILED
@@ -318,11 +318,11 @@ Errors must remain typed, stable and redacted.
 - reserved/device path rejection where applicable;
 - race-aware revalidation at use boundary.
 
-### HIVE reconciliation
-- HIVE unavailable -> bounded standalone binding;
-- HIVE matches local evidence -> enriched binding;
-- HIVE project conflicts with local repo evidence -> explicit conflict;
-- stale HIVE project/workspace association -> no silent success.
+### external context service reconciliation
+- external context service unavailable -> bounded standalone binding;
+- external context service matches local evidence -> enriched binding;
+- external context service project conflicts with local repo evidence -> explicit conflict;
+- stale external context service project/workspace association -> no silent success.
 
 ### Drift
 - HEAD changed;
@@ -352,8 +352,8 @@ First implementation establishes compatible hardware/platform baselines. Do not 
 ## M02 planning STOP CONDITION
 
 M02 planning is not frozen until all of the following are explicit:
-- final ownership vs HIVE/M11/M13/M20;
-- standalone and HIVE-enhanced behavior;
+- final ownership vs external context service/M11/M13/M20;
+- standalone and optional-provider behavior;
 - exact state model;
 - identity and canonical basis contracts;
 - path-authority semantics;
@@ -418,7 +418,7 @@ Rules:
 - only BOUND may issue a current WorkspaceHandle;
 - DRIFTED immediately makes the prior handle stale for correctness-relevant action;
 - REVALIDATING never silently revives an old handle; success emits a new generation/handle;
-- DETACHING revokes the local attachment view but does not mutate repositories or HIVE.
+- DETACHING revokes the local attachment view but does not mutate repositories or external context service.
 
 ### Handle versus durable receipt
 
@@ -444,7 +444,7 @@ Required fields:
 - explicit workspace locator/root;
 - optional expected ProjectBindingId;
 - optional expected repository/worktree selector;
-- optional expected HIVE project reference;
+- optional expected external context service project reference;
 - authority policy;
 - repository discovery policy;
 - untracked-file policy;
@@ -453,7 +453,7 @@ Required fields:
 - configuration generation.
 
 #### ProjectBindingId
-CORE-local action-plane binding identity. It remains stable across temporary HIVE availability changes for the same local workspace binding. A different HIVE association changes binding generation/reconciliation evidence but does not rewrite WorkspaceId.
+CORE-local action-plane binding identity. It remains stable across temporary external context service availability changes for the same local workspace binding. A different external context service association changes binding generation/reconciliation evidence but does not rewrite WorkspaceId.
 
 #### WorkspaceId
 Identity of the local workspace authority root after platform-aware canonicalization. Harmless aliases resolving to the same governed root must converge; distinct governed roots must not.
@@ -504,7 +504,7 @@ Typed old/new delta:
 #### ProjectAssociationEvidence
 External project-association statement with:
 - provider origin;
-- HIVE project reference when present;
+- external context service project reference when present;
 - provider/contract version;
 - evidence freshness/generation;
 - asserted repository/workspace hints;
@@ -512,7 +512,7 @@ External project-association statement with:
 - no local authority grant.
 
 #### ReconciliationReceipt
-Result of comparing user/config intent, local filesystem/Git evidence and optional HIVE evidence.
+Result of comparing user/config intent, local filesystem/Git evidence and optional external context service evidence.
 
 Candidate statuses:
 - CONSISTENT;
@@ -521,7 +521,7 @@ Candidate statuses:
 - CONFLICT;
 - INSUFFICIENT.
 
-HIVE association has an orthogonal status:
+external context service association has an orthogonal status:
 - MATCH;
 - STALE;
 - CONFLICT;
@@ -614,10 +614,10 @@ Examples:
 Effect: old handle stale; revalidation emits new generation if still bindable.
 
 #### ASSOCIATION_DRIFT
-HIVE/external project association changed, became stale or conflicts.
+external context service/external project association changed, became stale or conflicts.
 
 Effect:
-- HIVE-required assurance -> block/revalidate;
+- external context service-required assurance -> block/revalidate;
 - standalone-safe operation -> local binding may remain valid but association assurance degrades explicitly.
 
 #### DIAGNOSTIC_DRIFT
@@ -640,11 +640,11 @@ M02 does not use one global "source priority" list.
 Instead:
 - explicit user/config input expresses intended target;
 - filesystem/Git evidence proves the concrete local checkout;
-- HIVE proves its own registered project association;
+- external context service proves its own registered project association;
 - security policy decides minimum assurance.
 
-A local checkout cannot be transformed into another checkout because HIVE says so.
-A HIVE project association cannot be fabricated because local paths look similar.
+A local checkout cannot be transformed into another checkout because external context service says so.
+A external context service project association cannot be fabricated because local paths look similar.
 A user-supplied path cannot override a physical authority escape.
 
 ### Path authority algorithm
@@ -764,9 +764,9 @@ Promotion criterion:
 - raw index stat-only churn does not change semantic index fingerprint;
 - staged-content change does change index fingerprint;
 - untracked content change invalidates CONTENT_HASHED basis;
-- HIVE outage does not fabricate/change WorkspaceId;
-- HIVE conflict blocks HIVE-required assurance;
-- standalone binding stays explicit when HIVE unavailable;
+- external context service outage does not fabricate/change WorkspaceId;
+- external context service conflict blocks external context service-required assurance;
+- standalone binding stays explicit when external context service unavailable;
 - lexical path escape rejected;
 - physical symlink/junction escape rejected;
 - non-existing target requires use-time revalidation;
@@ -785,7 +785,7 @@ Still to freeze:
 - large/untracked-file hashing resource budgets;
 - file watcher/event optimization versus on-demand revalidation;
 - exact BVM operation classes;
-- HIVE association adapter contract placement relative to M23;
+- external context service association adapter contract placement relative to M23;
 - final threat model/fuzz corpus;
 - benchmark seed policy and M02 DoD.
 
@@ -903,9 +903,9 @@ A bare repository may be bound for operations whose Basis Validity Matrix does n
 
 It cannot satisfy a source-worktree operation merely because Git metadata exists.
 
-### HIVE project association capability seam
+### external context service project association capability seam
 
-M02 consumes project association through a versioned capability rather than importing HIVE code.
+M02 consumes project association through a versioned capability rather than importing external context service code.
 
 Candidate capability identity:
 `nexlabs.project-association@1`
@@ -913,13 +913,13 @@ Candidate capability identity:
 Request fields:
 - local WorkspaceId;
 - repository/worktree evidence summary;
-- optional configured HIVE project reference;
+- optional configured external context service project reference;
 - local basis/provenance fingerprint;
 - required freshness/assurance.
 
 Response fields:
 - provider origin/version;
-- HIVE project reference when available;
+- external context service project reference when available;
 - asserted repository/workspace hints;
 - association generation/fingerprint;
 - freshness metadata;
@@ -930,19 +930,19 @@ Rules:
 - provider unavailable -> explicit UNAVAILABLE;
 - response cannot grant local path authority;
 - response cannot mutate local WorkspaceId;
-- conflicting HIVE/local evidence produces reconciliation conflict under policy;
+- conflicting external context service/local evidence produces reconciliation conflict under policy;
 - M23 may later provide a deeper federation implementation without changing the M02 consumer contract.
 
-### HIVE disconnect/reconnect semantics
+### external context service disconnect/reconnect semantics
 
-Temporary HIVE provider loss does not change WorkspaceId or RepositoryId.
+Temporary external context service provider loss does not change WorkspaceId or RepositoryId.
 
 If the current handle only requires standalone assurance:
 - local binding may remain BOUND;
 - project association health becomes UNAVAILABLE/STALE;
 - the binding receipt/health view reflects degradation.
 
-If an operation requires HIVE_RECONCILED assurance:
+If an operation requires external context service_RECONCILED assurance:
 - existing local handle may remain structurally valid;
 - operation admission is blocked until fresh association evidence returns.
 
@@ -1041,14 +1041,14 @@ Control:
 - detect repository alternates where possible;
 - explicit EXTERNAL_OBJECT_AUTHORITY policy/provenance.
 
-#### T10 HIVE stale/conflicting association
+#### T10 external context service stale/conflicting association
 Attack/failure:
-- stale HIVE record points at another project/repository.
+- stale external context service record points at another project/repository.
 
 Control:
 - BRL reconciliation;
 - freshness generation;
-- no HIVE overwrite of local facts.
+- no external context service overwrite of local facts.
 
 #### T11 Concurrent workspace drift
 Attack/failure:
@@ -1170,7 +1170,7 @@ Discovery-only initial classes:
 - EXECUTE_TOOL_READONLY;
 - MUTATE_SOURCE;
 - GIT_DELIVERY;
-- HIVE_RECONCILED_OPERATION.
+- external context service_RECONCILED_OPERATION.
 
 M02 does not own these actions. BVM only defines which basis components later modules must prove fresh before those actions.
 
@@ -1179,7 +1179,7 @@ Example direction:
 - READ_SOURCE requires source/path/security basis;
 - MUTATE_SOURCE requires authority + Git/source basis + use-time path revalidation;
 - GIT_DELIVERY additionally requires HEAD/index/worktree/ref basis;
-- HIVE_RECONCILED_OPERATION additionally requires fresh project association evidence.
+- external context service_RECONCILED_OPERATION additionally requires fresh project association evidence.
 
 Masks remain discovery candidates until downstream M03/M11/M13/M20 contract review.
 
@@ -1211,11 +1211,11 @@ Fixtures:
 - repo config with fsmonitor/external diff canaries;
 - huge command output / path-count cap;
 - case-collision fixtures on supported platforms;
-- HIVE association reconnect same/different/conflict.
+- external context service association reconnect same/different/conflict.
 
 Properties:
 - source authority never expands from metadata authority;
-- HIVE evidence never grants path authority;
+- external context service evidence never grants path authority;
 - no Git backend command has network/mutation classification;
 - bounded parser rejects over-policy output without partial success;
 - WMF/DWS root equals full canonical basis semantics;
@@ -1271,7 +1271,7 @@ deterministic revalidation
       +--> GitInspector
       +--> Path/FSC proof
       +--> bounded content hashing
-      +--> optional HIVE association refresh
+      +--> optional external context service association refresh
       |
       v
 CWB / WorkspaceBasisDiff
@@ -1335,7 +1335,7 @@ Example edges:
 - authority-root hint -> AUTHORITY_ROOTS + FILESYSTEM_SEMANTICS + security hard invalidation;
 - configuration generation -> CONFIG_GENERATION;
 - security policy generation -> SECURITY_POLICY;
-- HIVE provider generation -> PROJECT_ASSOCIATION.
+- external context service provider generation -> PROJECT_ASSOCIATION.
 
 CIG output is a component mask plus reason/provenance. It never produces ALLOW directly.
 
@@ -1569,7 +1569,7 @@ Downstream context should prefer:
 
 Large path inventories, Git status payloads and raw watcher streams stay out of normal model context unless explicitly requested.
 
-This creates a stable cacheable prefix for later HIVE/CORE planning and lets downstream systems request only changed evidence.
+This creates a stable cacheable prefix for later external context service/CORE planning and lets downstream systems request only changed evidence.
 
 ### ResourceBudget contract
 
@@ -1709,7 +1709,7 @@ Rules:
 
 ### Frozen identity contracts
 
-- `ProjectBindingId`: CORE action-plane binding identity; never a HIVE ID alias.
+- `ProjectBindingId`: CORE action-plane binding identity; never a external context service ID alias.
 - `WorkspaceId`: admitted local source authority + physical root identity.
 - `RepositoryId`: local repository boundary/common-dir/object-format identity; remotes excluded.
 - `WorktreeId`: concrete checkout identity, distinct from RepositoryId.
@@ -1727,7 +1727,7 @@ All deterministic hashes reuse `core_identity::fingerprint`; M02 does not introd
 - nested-repository policy;
 - external-object policy;
 - resource-budget profile id;
-- optional HIVE association expectation.
+- optional external context service association expectation.
 
 Ambient current working directory is never implicit authority.
 
@@ -1820,7 +1820,7 @@ PLAN_WORK + fresh AUTHORITY/FILESYSTEM_SEMANTICS + fresh TRACKED/UNTRACKED basis
 GIT_DELIVERY:
 IDENTITY + AUTHORITY + REPOSITORY_GRAPH + HEAD_STATE + INDEX_STATE + TRACKED_WORKTREE_STATE + UNTRACKED_WORKTREE_STATE + CONFIG_GENERATION + SECURITY_POLICY.
 
-HIVE_RECONCILED is an assurance overlay requiring PROJECT_ASSOCIATION. BVM expresses freshness only, never permission.
+external context service_RECONCILED is an assurance overlay requiring PROJECT_ASSOCIATION. BVM expresses freshness only, never permission.
 
 ### FSC v1 probing freeze
 
@@ -1946,7 +1946,7 @@ core-identity     core-config
        later modules
 ```
 
-`core-workspace` MUST NOT depend on core-runtime, core-cli, core-health, M03+ crates or HIVE code. Runtime epoch/generation data crosses through core-contracts.
+`core-workspace` MUST NOT depend on core-runtime, core-cli, core-health, M03+ crates or external context service code. Runtime epoch/generation data crosses through core-contracts.
 
 ### Round 5 unresolved items at Round 5 close
 
@@ -2220,7 +2220,7 @@ Frozen execution artifacts:
 The Work Order contains:
 - one-module implementation authority boundary;
 - eight ordered construction packets A-H;
-- HIVE preflight and SOLO degradation behavior;
+- external context service preflight and SOLO degradation behavior;
 - exact initial file/dependency map;
 - 41 acceptance criteria;
 - mandatory adversarial/property/fuzz/security/supply-chain/Windows/Ubuntu evidence;
