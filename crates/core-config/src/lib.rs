@@ -399,11 +399,10 @@ mod tests {
         assert!(CoreConfig::from_sources(
             Some("require_hive = true"), None, [], &ConfigOverrides::default(), 1
         ).is_err());
-        let standalone = CoreConfig::from_sources(
+        assert!(CoreConfig::from_sources(
             None, None, [("CORE_REQUIRE_HIVE".into(), "true".into())],
             &ConfigOverrides::default(), 1
-        ).unwrap();
-        assert_eq!(standalone.quality_floor, CoreConfig::defaults(1).quality_floor);
+        ).is_err());
     }
 
     #[test]
