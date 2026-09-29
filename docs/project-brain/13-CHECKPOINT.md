@@ -10,7 +10,7 @@ CORE V0.0 - Modular Construction
 3 - M03 Complete / M04 Execution Authorized
 
 ## OBJECTIVE
-Continue building CORE as the headless NexLabs action plane that operates standalone and synchronizes deeply with HIVE without duplicating HIVE-owned intelligence.
+Continue building CORE as the headless NexLabs action plane that operates standalone and synchronizes deeply with external context service without duplicating external context service-owned intelligence.
 
 ## IN PROGRESS
 - M03 canonical closeout was promoted through PR #74 as merge `2fdf595cc6b450d1be0038eb67d0a5160035d9bd` after M03-REVIEW-010 / Issue #75.
@@ -22,10 +22,10 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 
 ## COMPLETED
 - Repository/bootstrap foundation approved and promoted.
-- GEF v1.0.0 and HIVE v1.0.0 integration baseline installed.
-- HIVE intelligence plane / CORE action plane boundary accepted.
+- GEF v1.0.0 and external context service v1.0.0 integration baseline installed.
+- external context service intelligence plane / CORE action plane boundary accepted.
 - Headless-only CORE constraint accepted.
-- Standalone + HIVE-enhanced operating model accepted.
+- Standalone + external context service-enhanced operating model accepted.
 - 24-module discovery baseline recorded.
 - Modular delivery rule accepted: architecture/orchestration here, heavy implementation in Codex.
 - M01 Core Runtime & Lifecycle implemented, corrected, exact-head reviewed and promoted.
@@ -45,7 +45,7 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - After CORE-D-203 is canonical under normal protected-main checks, perform KayzenRoot's exact-base/exact-head owner self-audit of PR #106. Validate the ACTIVE Context Lock, all nine source fingerprints, the exact Work Order blob, frozen authorized-base ancestry, required CI/security evidence and zero unresolved HIGH/CRITICAL findings. Disclose `NOT INDEPENDENT`; do not require another account or native self-approval.
 - Deep-plan M04 through M24 in dependency order.
 - Freeze each module Requirements/Architecture/DoD/Work Order before implementation authorization.
-- Live local HIVE bootstrap evidence against current main.
+- Live local external context service bootstrap evidence against current main.
 
 ## BLOCKERS
 - No unresolved HIGH/CRITICAL finding is recorded in promoted M03 implementation or M04 planning/admission/synchronization reviews.
@@ -159,10 +159,10 @@ Promotion merge: `2556f1d380efe59f0b14cb1392c4aa9fb19efa2d`
 Result: Rounds 1–3 accepted as the M02 discovery baseline. M02 implementation remains unauthorized.
 
 ## Current M02 discovery delta
-Round 1 established M02 as the deterministic Project / Workspace Adapter between local Git/filesystem state and optional HIVE Project Registry identity.
+Round 1 established M02 as the deterministic Project / Workspace Adapter between local Git/filesystem state and optional external context service Project Registry identity.
 
 Accepted direction:
-- no duplicate HIVE Project Registry;
+- no duplicate external context service Project Registry;
 - explicit ProjectBinding / Workspace / Repository / Worktree identities;
 - no ambient current-directory execution;
 - read-only Git/filesystem inspection only;
@@ -187,7 +187,7 @@ M02 remains discovery-only. No crate/file implementation or Work Order is author
 
 
 ## M02 Round 3 discovery delta
-Round 3 added explicit repository/worktree/submodule/nested-repo graph semantics, separated SOURCE versus GIT_METADATA authority, defined a versioned HIVE project-association capability seam, and established the hostile-repository threat model.
+Round 3 added explicit repository/worktree/submodule/nested-repo graph semantics, separated SOURCE versus GIT_METADATA authority, defined a versioned external context service project-association capability seam, and established the hostile-repository threat model.
 
 New technology candidate:
 - WMF Workspace Merkle Forest.
@@ -210,7 +210,7 @@ Accepted direction:
 - repository graph serialization is canonical and order-stable;
 - system Git is the semantic reference oracle for differential provider tests, not an automatic production-backend selection;
 - SPO gates Rust-native/system/hybrid provider promotion on semantic/security/resource evidence;
-- compact fingerprints/deltas/evidence refs are preferred over raw repository inventories for downstream HIVE/LLM token economy;
+- compact fingerprints/deltas/evidence refs are preferred over raw repository inventories for downstream external context service/LLM token economy;
 - exact numeric resource defaults remain benchmark-calibrated rather than fabricated.
 
 New required design mechanisms:
@@ -320,7 +320,7 @@ Round 1 freezes the discovery baseline for:
 - Acceptance Evidence Graph;
 - correction delta classification + fail-closed scope firewall;
 - compact context budget/manifests for token economy;
-- HIVE advisory/context boundary;
+- external context service advisory/context boundary;
 - zero-LLM compiler/validator baseline;
 - initial threat/failure/resource model;
 - candidate mechanisms WOC, SDF, AEG, CBE, WLG, WSF and WPC.
@@ -401,7 +401,7 @@ Status: PROMOTED DISCOVERY BASELINE / IMPLEMENTATION UNAUTHORIZED
 Round 3 freezes:
 - stateless-by-default compiler/admission core;
 - explicit compile/validate/diff/correction/admission/handoff operations;
-- no hidden repository/Git/HIVE/GitHub/network/persistence I/O;
+- no hidden repository/Git/external context service/GitHub/network/persistence I/O;
 - deterministic WorkOrderId allocation direction;
 - external LineageSnapshot + LPC compare-and-set semantics;
 - external Git/GEF persistence boundary;
@@ -479,7 +479,7 @@ Evidence skeleton: .engineering/evidence/CORE-WO-M03-001.json
 Executor handoff: docs/work-orders/CODEX-HANDOFF-M03.md — refuses execution until a separate admission delta activates the lock on canonical main.
 Acceptance graph: 23 blocking criteria, each mapped to future Evidence Requirement IDs.
 Construction packets: A–H, including a rule-only Resource Calibration Gate with no invented production values.
-HIVE planning preflight: read-only HIVE v1.0.0 MCP was reachable, but KayzenRoot/core and its checkpoint did not resolve; canonical Git sources were used in SOLO mode. The future executor must repeat preflight.
+external context service planning preflight: read-only external context service v1.0.0 MCP was reachable, but KayzenRoot/core and its checkpoint did not resolve; canonical Git sources were used in SOLO mode. The future executor must repeat preflight.
 Candidate review: PENDING. No M03 implementation, promotion, merge, release, or completion is authorized.
 
 
