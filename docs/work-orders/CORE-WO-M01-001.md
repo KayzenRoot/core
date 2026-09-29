@@ -7,7 +7,7 @@ Execution model: one Work Order, eight internal construction packets
 Product implementation authorization: CLOSED — WORK ORDER COMPLETED
 
 ## Mission
-Implement the production-grade Rust/Tokio CORE runtime substrate exactly from the frozen M01 planning basis. Do not redesign settled architecture. Preserve HIVE/CORE ownership boundaries and zero-LLM lifecycle.
+Implement the production-grade Rust/Tokio CORE runtime substrate exactly from the frozen M01 planning basis. Do not redesign settled architecture. Preserve external context service/CORE ownership boundaries and zero-LLM lifecycle.
 
 ## Canonical inputs
 1. docs/project-brain/13-CHECKPOINT.md
@@ -39,7 +39,7 @@ Packet STOP conditions are defined in the M01 module spec and are mandatory.
 - Safe Rust by default.
 - Headless, no UI/TUI.
 - Zero LLM calls for M01 bootstrap/lifecycle/health/shutdown.
-- No HIVE source/runtime/database dependency.
+- No external context service source/runtime/database dependency.
 - No LLM provider SDK.
 - No arbitrary dynamic-library plugins.
 - No microservices/cluster requirement.
@@ -80,7 +80,7 @@ First valid implementation establishes baseline on recorded hardware classes. Do
 At minimum: commit SHA; Rust/toolchain; dependency lock fingerprint; platform/hardware metadata; test/property/fuzz summaries; failure-injection summary; benchmark/PRB/WNF results; supply-chain/advisory/license/SBOM evidence; unsafe inventory; zero-LLM proof; known residual risks; exact file/change summary.
 
 ## Executor permissions
-Codex may implement, test and make local corrective changes necessary to satisfy this frozen WO. It may not expand product scope, move HIVE-owned intelligence into CORE, weaken quality/security gates, silently change contracts, or proceed past an architectural blocker by inventing a replacement design.
+Codex may implement, test and make local corrective changes necessary to satisfy this frozen WO. It may not expand product scope, move external context service-owned intelligence into CORE, weaken quality/security gates, silently change contracts, or proceed past an architectural blocker by inventing a replacement design.
 
 ## Blocker protocol
 If a frozen decision is technically impossible or creates a demonstrable correctness/security defect:
