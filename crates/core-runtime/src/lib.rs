@@ -788,7 +788,7 @@ impl Supervisor {
         self.transition_with_live_context(
             TransitionKind::Synchronize,
             RuntimeState::Synchronizing,
-            "optional HIVE synchronization seam",
+            "synchronize local runtime and registries",
             self.config.startup_timeout_ms,
             false,
         )?;
@@ -798,11 +798,6 @@ impl Supervisor {
             verdict = BootstrapVerdict::Blocked;
             self.blocked_reasons
                 .push("critical resource pressure closes admission".into());
-        }
-        if self.config.require_hive {
-            verdict = BootstrapVerdict::Blocked;
-            self.blocked_reasons
-                .push("required HIVE provider is not attached to the standalone runtime".into());
         }
         let config_fingerprint = fingerprint(&self.config.redacted_diagnostics())
             .map_err(|e| RuntimeError::Identity(e.to_string()))?;
@@ -856,7 +851,7 @@ impl Supervisor {
             self.transition_with_live_context(
                 TransitionKind::Block,
                 RuntimeState::Blocked,
-                "required HIVE capability unavailable",
+                "runtime admission preflight blocked",
                 self.config.startup_timeout_ms,
                 false,
             )?;
@@ -1057,20 +1052,19 @@ impl Supervisor {
                 80,
             ))
             .map_err(|error| RuntimeError::Denied(error.to_string()))?;
-        let mut hive = provider(
-            "hive-context",
-            "hive",
+        let mut native = provider(
+            "native-context",
+            "core",
             "context",
-            ProviderOrigin::HiveExternal,
+            ProviderOrigin::CoreNative,
             90,
         );
-        hive.health = ProviderHealth::Unavailable;
-        hive.readiness = false;
+        native.health = ProviderHealth::Unavailable;
+        native.readiness = false;
         self.capabilities
-            .register_provider(hive)
+            .register_provider(native)
             .map_err(|error| RuntimeError::Denied(error.to_string()))?;
-        let mut requirement = CapabilityRequirement::new("context", SemVer::new(1, 0, 0));
-        requirement.ownership = core_contracts::CapabilityOwnership::HiveOwnedIntelligence;
+        let requirement = CapabilityRequirement::new("context", SemVer::new(1, 0, 0));
         let initial = self
             .capabilities
             .bind_with_generation(&requirement, "soak-fallback", &self.config.generation)
@@ -1080,11 +1074,11 @@ impl Supervisor {
             .acquire_lease_with_generation("context", &self.config.generation, 30_000)
             .map_err(|error| RuntimeError::Denied(error.to_string()))?;
         self.capabilities
-            .set_provider_health("hive-context", ProviderHealth::Healthy)
+            .set_provider_health("native-context", ProviderHealth::Healthy)
             .map_err(|error| RuntimeError::Denied(error.to_string()))?;
         let substituted = self
             .capabilities
-            .substitute_with_generation(&requirement, "soak-hive-connect", &self.config.generation)
+            .substitute_with_generation(&requirement, "soak-native-activate", &self.config.generation)
             .map_err(|error| RuntimeError::Denied(error.to_string()))?;
         self.capabilities
             .validate_lease(&lease, &self.config.generation)
@@ -1104,18 +1098,18 @@ impl Supervisor {
             .release_lease(&lease)
             .map_err(|error| RuntimeError::Denied(error.to_string()))?;
         self.capabilities
-            .set_provider_health("hive-context", ProviderHealth::Unavailable)
+            .set_provider_health("native-context", ProviderHealth::Unavailable)
             .map_err(|error| RuntimeError::Denied(error.to_string()))?;
         let flap_recovered_with_fallback = self
             .capabilities
             .substitute_with_generation(
                 &requirement,
-                "soak-hive-disconnect",
+                "soak-native-degrade",
                 &self.config.generation,
             )
             .is_ok();
         self.capabilities
-            .set_provider_health("hive-context", ProviderHealth::Healthy)
+            .set_provider_health("native-context", ProviderHealth::Healthy)
             .map_err(|error| RuntimeError::Denied(error.to_string()))?;
         let reloaded = self
             .config
@@ -1133,7 +1127,7 @@ impl Supervisor {
         self.set_resource_pressure(ResourcePressure::Normal)?;
         let crash_first = self.observe_crash(&("soak-worker", "same-failure"))?;
         let crash_second = self.observe_crash(&("soak-worker", "same-failure"))?;
-        let probe_key = "hive-context-health";
+        let probe_key = "local-context-health";
         let first_probe = self.probe_coalescer.get_or_probe_fresh(
             probe_key,
             self.health.now_ms(),
@@ -1141,12 +1135,12 @@ impl Supervisor {
             || HealthSignal {
                 dimension: HealthDimension::ExternalDependency,
                 state: HealthState::Healthy,
-                reason_code: "hive-probe-ok".into(),
+                reason_code: "local-probe-ok".into(),
                 generation: self.config.generation.boot_epoch,
                 impact: "none".into(),
                 observed_at_monotonic_ms: 0,
                 freshness_window_ms: self.config.startup_timeout_ms,
-                evidence_fingerprint: "hive-probe-ok".into(),
+                evidence_fingerprint: "local-probe-ok".into(),
             },
         );
         let second_probe = self.probe_coalescer.get_or_probe_fresh(
@@ -1156,12 +1150,12 @@ impl Supervisor {
             || HealthSignal {
                 dimension: HealthDimension::ExternalDependency,
                 state: HealthState::Healthy,
-                reason_code: "hive-probe-refreshed".into(),
+                reason_code: "local-probe-refreshed".into(),
                 generation: self.config.generation.boot_epoch,
                 impact: "none".into(),
                 observed_at_monotonic_ms: 0,
                 freshness_window_ms: self.config.startup_timeout_ms,
-                evidence_fingerprint: "hive-probe-refreshed".into(),
+                evidence_fingerprint: "local-probe-refreshed".into(),
             },
         );
         self.health.set(first_probe.clone());
@@ -1686,16 +1680,12 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn required_hive_blocks_without_false_success() {
-        let mut config = config("blocked");
-        config.require_hive = true;
-        let mut supervisor = Supervisor::new(config).unwrap();
-        assert!(matches!(
-            supervisor.bootstrap().await,
-            Err(RuntimeError::Blocked(_))
-        ));
-        assert_eq!(supervisor.status().state, RuntimeState::Blocked);
-        assert!(supervisor.receipt().is_none());
+    async fn standalone_boot_does_not_require_a_project_server() {
+        let mut supervisor = Supervisor::new(config("standalone")).unwrap();
+        let receipt = supervisor.bootstrap().await.unwrap();
+        assert_eq!(receipt.verdict, BootstrapVerdict::ReadyEligible);
+        assert_eq!(supervisor.zero_llm_calls(), 0);
+        supervisor.shutdown().await.unwrap();
     }
 
     #[tokio::test]

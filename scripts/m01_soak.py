@@ -108,7 +108,7 @@ def main() -> int:
         item["returncode"] == 0
         and item["verdict"] == "ReadyEligible"
         and item["exercise_returncode"] == 0
-        and item["exercise"].get("provider_substituted") == "hive-context"
+        and item["exercise"].get("provider_substituted") == "native-context"
         and item["exercise"].get("provider_flap_recovered_with_fallback") is True
         and item["exercise"].get("generation_coherent") is True
         and item["exercise"].get("probe_coalesced") is True
