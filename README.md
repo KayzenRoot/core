@@ -2,7 +2,7 @@
 
 CORE is a standalone, headless Rust engineering runtime with GEF-governed Work Orders, local Git source authority, capability safety, review and delivery.
 
-**No HIVE, Docker project service, required repository MCP connector or external memory database is needed to start or develop CORE.** Owner-directed cutover is tracked in [Work Order #172](https://github.com/KayzenRoot/core/issues/172). Historic HIVE evidence is preserved only as dated provenance, not as an executable prerequisite.
+**No external context service, Docker project service, required repository MCP connector or external memory database is needed to start or develop CORE.** Owner-directed cutover is tracked in [Work Order #172](https://github.com/KayzenRoot/core/issues/172). Historic external context service evidence is preserved only as dated provenance, not as an executable prerequisite.
 
 ## Current state
 
