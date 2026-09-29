@@ -5,9 +5,9 @@ A governed evidence bundle should identify:
 - Work Order id;
 - authorized base SHA;
 - candidate/head SHA;
-- HIVE availability/project resolution;
+- external context service availability/project resolution;
 - canonical sources used;
-- context fingerprint or equivalent HIVE evidence when available;
+- context fingerprint or equivalent external context service evidence when available;
 - files changed;
 - tests/static/build/validation commands and outcomes;
 - CI workflow/run identities when hosted evidence is required;
