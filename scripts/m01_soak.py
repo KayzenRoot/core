@@ -50,8 +50,9 @@ def resource_snapshot() -> dict[str, int]:
 def binary_path() -> Path:
     suffix = ".exe" if os.name == "nt" else ""
     binary = ROOT / "target" / "debug" / f"core{suffix}"
-    if not binary.exists():
-        subprocess.run(["cargo", "build", "-p", "core-cli", "--locked"], cwd=ROOT, check=True)
+    # The soak may run after a test step leaves an older executable in target/debug.
+    # Build from the exact checked-out source every time; never measure a stale binary.
+    subprocess.run(["cargo", "build", "-p", "core-cli", "--locked"], cwd=ROOT, check=True)
     return binary
 
 
@@ -64,6 +65,18 @@ def main() -> int:
         raise SystemExit("iterations must be between 1 and 10000")
 
     binary = binary_path()
+    # Warm up Python subprocess/Win32 support before recording the parent process
+    # handle baseline. Those one-time imports are not a child-runtime leak.
+    warmup = subprocess.run(
+        [str(binary), "version"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+    if warmup.returncode != 0:
+        raise SystemExit("CORE binary warmup failed")
     before = resource_snapshot()
     records = []
     for iteration in range(args.iterations):
