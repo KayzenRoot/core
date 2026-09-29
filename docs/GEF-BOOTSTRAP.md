@@ -13,7 +13,7 @@ GEF v1.0.0 is distributed as a source workspace, not a published global npm CLI.
 - execution, review and evidence protocols;
 - deterministic governance validator;
 - GitHub PR/issue/workflow scaffolding;
-- HIVE-first integration.
+- standalone Git source/Work Order integration.
 
 ## Upstream validation
 

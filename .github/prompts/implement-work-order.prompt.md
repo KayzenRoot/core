@@ -7,7 +7,7 @@ Implement only the supplied CORE Work Order.
 Before editing:
 1. resolve Git root/branch/HEAD/cleanliness;
 2. read AGENTS.md and .engineering/SOURCE-HIERARCHY.md;
-3. verify HIVE and resolve CORE when HIVE is available;
+3. read canonical Git source and exact checkpoint directly; no external context service;
 4. read the exact canonical sources required by the WO;
 5. confirm the Context Lock is current;
 6. use deterministic/static evidence before model inference.
