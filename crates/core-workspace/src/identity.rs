@@ -15,11 +15,11 @@ fn derive<T: Serialize>(namespace: &str, value: &T) -> String {
 
 pub fn project_binding_id(
     workspace: &WorkspaceId,
-    expected_hive_reference: Option<&str>,
+    expected_association_reference: Option<&str>,
 ) -> ProjectBindingId {
     ProjectBindingId::new(derive(
         "project-binding-v1",
-        &(workspace, expected_hive_reference),
+        &(workspace, expected_association_reference),
     ))
 }
 

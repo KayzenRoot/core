@@ -55,7 +55,7 @@ fn context_budget(mandatory: Vec<SourceRefId>) -> ContextBudgetEnvelopeV1 {
         max_expanded_source_bytes: 64_000,
         max_packet_inline_bytes: 16_000,
         max_packet_expanded_bytes: 32_000,
-        max_hive_refs: 8,
+        max_local_context_refs: 8,
         max_prior_evidence_refs: 8,
         mandatory_source_ids: mandatory,
         expansion_policy: SourceExpansionPolicyV1::PacketOnDemand,
@@ -210,7 +210,7 @@ pub fn fixture() -> Fixture {
             assurance_requirement: WorkspaceAssuranceRequirementV1::StandaloneRequired,
             dirty_untracked_policy: DirtyUntrackedPolicyV1::RequireClean,
             required_m02_schema: "nexlabs.core.workspace".into(),
-            required_m02_version: 1,
+            required_m02_version: 2,
         },
         context_lock: ContextLockRequirementV1 {
             required_schema: "nexlabs.core.context-lock".into(),
@@ -311,7 +311,7 @@ pub fn fixture() -> Fixture {
         budget: budget(),
         request,
         context: CompilationContextV1 {
-            compiler_contract_version: 1,
+            compiler_contract_version: 2,
             algorithm_version: "m03-woc-v1".into(),
             policy_generation: 1,
             security_generation: 1,
@@ -328,7 +328,7 @@ pub fn fixture() -> Fixture {
                 snapshot_fingerprint,
                 provenance_fingerprint,
             },
-            hive_context_refs: vec![],
+            local_context_refs: vec![],
         },
     }
 }
@@ -356,7 +356,7 @@ pub fn ready_admission(
     let basis_fingerprint = EvidenceFingerprintV1::new("7".repeat(64)).unwrap();
     let mut workspace = WorkspaceAdmissionEvidenceV1 {
         m02_schema: "nexlabs.core.workspace".into(),
-        m02_version: 1,
+        m02_version: 2,
         project_binding_id: Some("project-binding-1".into()),
         workspace_id: "workspace-1".into(),
         runtime_epoch: 3,

@@ -196,7 +196,7 @@ pub(crate) fn compilation_context_fingerprint(
         .entries
         .sort_by(|a, b| a.source_id.cmp(&b.source_id));
     normalized
-        .hive_context_refs
+        .local_context_refs
         .sort_by(|a, b| a.context_id.cmp(&b.context_id));
     normalized
         .lineage

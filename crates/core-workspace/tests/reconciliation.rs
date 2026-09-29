@@ -9,20 +9,20 @@ fn evidence(
     status: AssociationStatus,
 ) -> ProjectAssociationEvidence {
     ProjectAssociationEvidence {
-        provider_origin: "hive".into(),
+        provider_origin: "optional-association".into(),
         provider_version: "1".into(),
         project_reference: Some("core".into()),
         asserted_workspace: Some(workspace),
         asserted_repository: repository,
         generation: 1,
-        fingerprint: "hive-proof".into(),
+        fingerprint: "association-proof".into(),
         status,
         provenance: "mcp-read-only".into(),
     }
 }
 
 #[test]
-fn contradictory_hive_evidence_is_explicit_conflict() {
+fn contradictory_optional_association_evidence_is_explicit_conflict() {
     let local = WorkspaceId::new("local");
     let remote = WorkspaceId::new("other");
     let result = reconcile(
@@ -35,7 +35,7 @@ fn contradictory_hive_evidence_is_explicit_conflict() {
 }
 
 #[test]
-fn unavailable_hive_keeps_standalone_binding() {
+fn unavailable_optional_association_keeps_standalone_binding() {
     let local = WorkspaceId::new("local");
     let result = reconcile(
         &local,

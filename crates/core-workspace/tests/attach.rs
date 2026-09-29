@@ -5,15 +5,27 @@ use core_workspace::{
 
 #[test]
 fn unsupported_envelope_version_fails_closed() {
-    let envelope = M02Envelope {
-        schema: "nexlabs.core.workspace".to_owned(),
-        version: 99,
-        kind: "test".to_owned(),
-        payload: 1_u8,
-    };
+    for unsupported_version in [1, 99] {
+        let envelope = M02Envelope {
+            schema: "nexlabs.core.workspace".to_owned(),
+            version: unsupported_version,
+            kind: "test".to_owned(),
+            payload: 1_u8,
+        };
+        assert!(matches!(
+            envelope.validate(),
+            Err(M02Error::UnsupportedVersion { version, .. }) if version == unsupported_version
+        ));
+    }
+}
+
+#[test]
+fn legacy_attach_request_version_fails_closed() {
+    let mut request = WorkspaceAttachRequestV1::new(".", 1);
+    request.schema_version = 1;
     assert!(matches!(
-        envelope.validate(),
-        Err(M02Error::UnsupportedVersion { version: 99, .. })
+        request.validate(),
+        Err(M02Error::UnsupportedVersion { version: 1, .. })
     ));
 }
 
@@ -35,7 +47,7 @@ fn receipt_cannot_mint_live_handle() {
                     association: core_workspace::AssociationStatus::Unavailable,
                     reason: "test".to_owned(),
                     local_fingerprint: "local".to_owned(),
-                    hive_fingerprint: None,
+                    association_fingerprint: None,
                 },
                 requires_use_time_revalidation: true,
             },

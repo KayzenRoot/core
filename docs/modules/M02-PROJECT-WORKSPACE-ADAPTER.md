@@ -1688,6 +1688,8 @@ Exact numeric resource defaults remain benchmark-calibrated under CORE-D-080 and
 
 ### M02 v1 contract envelope
 
+**Historical V1 freeze, superseded for current execution:** the 2026-09-28 standalone contract revision at the end of this document defines the active **V2** envelope and rejects older V1 payloads. Preserve the V1 details below as dated design provenance only.
+
 Every durable/external M02 contract uses an explicit envelope:
 
 ```text
@@ -1728,6 +1730,8 @@ All deterministic hashes reuse `core_identity::fingerprint`; M02 does not introd
 - external-object policy;
 - resource-budget profile id;
 - optional HIVE association expectation.
+
+**Historical V1-only field:** for current execution, use the optional provider-neutral `association_reference` and the standalone/default `NoopAssociationProvider` defined in the 2026-09-28 revision below. No HIVE connection is required.
 
 Ambient current working directory is never implicit authority.
 
@@ -2258,3 +2262,10 @@ Exact-head workflow: run #109 `35541164008` — all required jobs SUCCESS after 
 Promotion merge: `5c56eb58ed26f42f196e8045d93f2ff52bd7d87e`
 
 All Review 007/008 HIGH findings are closed. Criteria 1–41 are satisfied. No unresolved HIGH/CRITICAL finding remains. M02 implementation authorization is closed; future changes require a new governed Work Order/correction path.
+
+
+## Owner-directed standalone contract revision (2026-09-28)
+
+**Governed change:** [Work Order #178](https://github.com/KayzenRoot/core/issues/178), parent [#172](https://github.com/KayzenRoot/core/issues/172). This dated revision supersedes the preceding references to the retired external project service for all **new** execution. Prior source and Git/CI evidence remain historical, not active dependency or accepted current runtime evidence.
+
+M02's current local project association is optional and provider-neutral. The default source is the canonical local Git workspace and a `NoopAssociationProvider`; an optional generic association may contribute separately admitted independent proof without changing local filesystem/Git authority. The versioned M02 workspace envelope is **version 2** because `association_reference`, `association_fingerprint`, `VerifiedAssociation` and `VerifiedAssociationOperation` replace obsolete provider-specific serialized terms. V1 payloads are rejected with the existing typed unsupported-version rule, not silently interpreted as V2. Preserve existing WorkspaceId/RepositoryId provenance and safety constraints, no installed service and no network/daemon calls inside the M02 read-only core. Public V2 migration/consumer compatibility is separately version-governed before any external adoption.

@@ -57,7 +57,7 @@ pub(crate) fn validate_manifest(
                 Code::SourceEvidenceUnknown,
             ));
         }
-        if source.authority_domain == AuthorityDomainV1::HiveAdvisory
+        if source.authority_domain == AuthorityDomainV1::LocalAdvisory
             && source.freshness_policy != SourceFreshnessPolicyV1::AdvisoryOnly
         {
             return Err(error(
@@ -171,7 +171,7 @@ pub(crate) fn validate_source_batch(
                 freshness_code(entry.freshness_state),
             ));
         }
-        if reference.authority_domain == AuthorityDomainV1::HiveAdvisory
+        if reference.authority_domain == AuthorityDomainV1::LocalAdvisory
             && entry.freshness_state == EvidenceFreshnessV1::Substituted
         {
             return Err(error(Category::SourceProvenance, Code::SourceSubstituted));

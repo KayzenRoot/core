@@ -28,7 +28,7 @@ pub enum M02Error {
     StaleHandle(String),
     #[error("a durable receipt cannot mint a live handle without fresh validation")]
     ReceiptCannotMintHandle,
-    #[error("HIVE association conflict: {0}")]
+    #[error("project association conflict: {0}")]
     AssociationConflict(String),
     #[error("operation was cancelled")]
     Cancelled,
@@ -163,7 +163,7 @@ pub enum BindingState {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum AssuranceRequirement {
     Standalone,
-    HiveReconciled,
+    VerifiedAssociation,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -194,7 +194,7 @@ pub enum BvmProfile {
     ExecuteToolReadonly,
     MutateSource,
     GitDelivery,
-    HiveReconciledOperation,
+    VerifiedAssociationOperation,
 }
 
 impl BvmProfile {
@@ -243,7 +243,7 @@ impl BvmProfile {
                 C::ConfigGeneration,
                 C::SecurityPolicy,
             ]),
-            Self::HiveReconciledOperation => ComponentMask::only(C::ProjectAssociation),
+            Self::VerifiedAssociationOperation => ComponentMask::only(C::ProjectAssociation),
         }
     }
 }
@@ -263,7 +263,7 @@ pub struct WorkspaceAttachRequestV1 {
     pub policy_generation: u64,
     pub security_generation: u64,
     pub runtime_epoch: u64,
-    pub hive_project_reference: Option<String>,
+    pub association_reference: Option<String>,
 }
 
 impl WorkspaceAttachRequestV1 {
@@ -282,7 +282,7 @@ impl WorkspaceAttachRequestV1 {
             policy_generation: 1,
             security_generation: 1,
             runtime_epoch,
-            hive_project_reference: None,
+            association_reference: None,
         }
     }
 
@@ -470,7 +470,7 @@ pub struct ReconciliationReceiptV1 {
     pub association: AssociationStatus,
     pub reason: String,
     pub local_fingerprint: String,
-    pub hive_fingerprint: Option<String>,
+    pub association_fingerprint: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

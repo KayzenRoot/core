@@ -1,4 +1,4 @@
-//! HIVE association capability seam and deterministic reconciliation.
+//! project association capability seam and deterministic reconciliation.
 
 use crate::{
     AssociationStatus, M02Error, ProjectAssociationEvidence, ProjectBindingId,
@@ -40,7 +40,7 @@ impl ProjectAssociationProvider for NoopAssociationProvider {
             generation: request.generation,
             fingerprint,
             status: AssociationStatus::Unavailable,
-            provenance: "no-hive-provider".into(),
+            provenance: "no-association-provider".into(),
         })
     }
 }
@@ -90,12 +90,12 @@ pub fn reconcile(
         status,
         association: association.status,
         reason: if conflict {
-            "local-and-HIVE-evidence-conflict".into()
+            "local-and-association-evidence-conflict".into()
         } else {
             "authority-domains-reconciled-without-overwrite".into()
         },
         local_fingerprint: local_basis_fingerprint.into(),
-        hive_fingerprint: Some(association.fingerprint.clone()),
+        association_fingerprint: Some(association.fingerprint.clone()),
     }
 }
 

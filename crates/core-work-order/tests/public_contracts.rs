@@ -12,7 +12,7 @@ fn request_envelope_round_trips_and_services_are_public() {
     let parsed = parse_request(&encoded, &fixture.budget).unwrap();
 
     assert_eq!(M03_SCHEMA, "nexlabs.core.work-order");
-    assert_eq!(M03_VERSION, 1);
+    assert_eq!(M03_VERSION, 2);
     assert_eq!(parsed, envelope);
 
     let compilation = compiled(&fixture);
@@ -34,7 +34,8 @@ fn parser_rejects_unknown_schema_version_kind_and_enum() {
 
     for (field, value) in [
         ("schema", serde_json::Value::String("unknown.schema".into())),
-        ("version", serde_json::Value::from(2)),
+        ("version", serde_json::Value::from(1)),
+        ("version", serde_json::Value::from(M03_VERSION + 1)),
         ("kind", serde_json::Value::String("future_kind".into())),
     ] {
         let mut candidate = encoded.clone();

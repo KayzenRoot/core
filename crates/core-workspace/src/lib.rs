@@ -1,7 +1,7 @@
 //! M02 deterministic Project / Workspace Adapter.
 //!
 //! This crate is intentionally read-oriented: it establishes proof-carrying
-//! workspace state, but it never mutates source, Git history, remotes or HIVE.
+//! workspace state, but it never mutates source, Git history, remotes or optional external context.
 
 mod authority;
 mod basis;
@@ -31,4 +31,4 @@ pub use service::*;
 pub use state::*;
 
 pub const M02_SCHEMA: &str = "nexlabs.core.workspace";
-pub const M02_VERSION: u16 = 1;
+pub const M02_VERSION: u16 = 2;

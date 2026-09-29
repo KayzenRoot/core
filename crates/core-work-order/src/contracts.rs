@@ -7,7 +7,7 @@ use crate::identity::{
 use serde::{Deserialize, Serialize};
 
 pub const M03_SCHEMA: &str = "nexlabs.core.work-order";
-pub const M03_VERSION: u16 = 1;
+pub const M03_VERSION: u16 = 2;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
@@ -58,7 +58,7 @@ pub enum SourceClassV1 {
     GovernancePolicy,
     WorkspaceBasis,
     ContextLock,
-    HiveContextReference,
+    LocalContextReference,
     PriorEvidenceReference,
     OtherVersionedCapability,
 }
@@ -70,7 +70,7 @@ pub enum AuthorityDomainV1 {
     Gef,
     WorkspaceEvidence,
     ExternalGovernance,
-    HiveAdvisory,
+    LocalAdvisory,
     CallerProvided,
     Derived,
 }
@@ -82,7 +82,7 @@ pub enum LocatorKindV1 {
     GitBlob,
     EvidenceReference,
     CapabilityReference,
-    HiveReference,
+    LocalContextReference,
     OpaqueVersionedReference,
 }
 
@@ -101,7 +101,7 @@ pub enum ProvenanceClassV1 {
     GefEvidence,
     M02Evidence,
     ExternalVerifier,
-    HiveReference,
+    LocalContextReference,
     CallerEvidence,
     Derived,
 }
@@ -184,15 +184,15 @@ pub enum WorkspaceFreshnessProfileV1 {
     ExecuteToolReadonly,
     MutateSource,
     GitDelivery,
-    HiveReconciledOperation,
+    VerifiedAssociationOperation,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum WorkspaceAssuranceRequirementV1 {
     StandaloneRequired,
-    StandaloneOrHive,
-    HiveReconciledRequired,
+    StandaloneOrVerifiedAssociation,
+    VerifiedAssociationRequired,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
@@ -324,9 +324,9 @@ pub struct VerifiedGovernanceProofV1 {
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct HiveContextRefV1 {
+pub struct LocalContextRefV1 {
     pub context_id: ContextRefId,
-    pub hive_project_id: String,
+    pub local_project_scope: String,
     pub content_fingerprint: EvidenceFingerprintV1,
     pub snapshot_id: String,
     pub freshness: EvidenceFreshnessV1,
@@ -495,7 +495,7 @@ pub struct ContextBudgetEnvelopeV1 {
     pub max_expanded_source_bytes: u64,
     pub max_packet_inline_bytes: u64,
     pub max_packet_expanded_bytes: u64,
-    pub max_hive_refs: u64,
+    pub max_local_context_refs: u64,
     pub max_prior_evidence_refs: u64,
     pub mandatory_source_ids: Vec<SourceRefId>,
     pub expansion_policy: SourceExpansionPolicyV1,
@@ -645,7 +645,7 @@ pub struct CompilationContextV1 {
     pub config_generation: u64,
     pub sources: SourceResolutionBatchV1,
     pub lineage: LineageSnapshotV1,
-    pub hive_context_refs: Vec<HiveContextRefV1>,
+    pub local_context_refs: Vec<LocalContextRefV1>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -1119,7 +1119,7 @@ pub struct GovernanceProofRequestV1 {
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct HiveContextRequestV1 {
+pub struct LocalContextRequestV1 {
     pub work_order_id: WorkOrderId,
     pub packet_ids: Vec<WorkPacketId>,
 }

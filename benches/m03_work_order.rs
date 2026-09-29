@@ -294,6 +294,11 @@ fn measure_boundaries() {
         request_candidate.request.clone(),
     );
     let encoded = serde_json::to_vec(&envelope).unwrap();
+    assert_eq!(
+        encoded.len() as u64,
+        M03ResourceBudgetV1::CALIBRATED_V1.max_request_bytes,
+        "V2 request calibration drift requires a reviewed numeric delta"
+    );
     let mut budget = request_candidate.budget.clone();
     budget.max_request_bytes = encoded.len() as u64;
     assert_eq!(parse_request(&encoded, &budget).unwrap(), envelope);
@@ -320,6 +325,11 @@ fn measure_boundaries() {
     )
     .unwrap();
     let frozen_bytes = serde_json::to_vec(&frozen_candidate.frozen).unwrap().len() as u64;
+    assert_eq!(
+        frozen_bytes,
+        M03ResourceBudgetV1::CALIBRATED_V1.max_frozen_bytes,
+        "V2 frozen calibration drift requires a reviewed numeric delta"
+    );
     let mut exact_frozen = request_candidate.budget.clone();
     exact_frozen.max_frozen_bytes = frozen_bytes;
     compile(

@@ -45,7 +45,7 @@ fn basis(head: &str) -> WorkspaceBasisV1 {
             association: AssociationStatus::Unavailable,
             reason: "test".into(),
             local_fingerprint: "local".into(),
-            hive_fingerprint: None,
+            association_fingerprint: None,
         },
         untracked_policy: UntrackedPolicy::ContentHashed,
         config_generation: 1,
