@@ -1,25 +1,18 @@
 # CORE Project Overview
 
-Status: `BOOTSTRAP_BASELINE`
-
-## Project
-**HIVE CORE**
-
-## Owner ecosystem
-NexLabs Technology.
+## Product
+**CORE**
 
 ## Mission
-CORE will become the operational nucleus that turns HIVE project intelligence into governed engineering execution, verification and delivery.
+CORE is a standalone, headless engineering runtime for governed execution, verification, recovery and delivery. Canonical project state comes from tracked Git sources and explicit GEF Work Orders/Context Locks.
 
-## Current stage
-- Repository bootstrap: installed candidate
+## Current foundation
+- M01 Runtime & Lifecycle: promoted
+- M02 Project / Workspace Adapter: promoted, standalone V2 migration in progress
+- M03 Work Order Engine: promoted, standalone V2 migration in progress
+- M04: external previous-version compatibility decision remains gated
+- M05/M06: planning only
 - GEF v1.0.0 governance: installed
-- HIVE v1.0.0 structural integration: installed
-- Product discovery: next
-- Product implementation: not authorized
 
-## Foundation boundary
-HIVE remains the external intelligence/context/memory/retrieval layer. CORE will own only operational responsibilities admitted during discovery. GEF governs planning, bounded execution, evidence, review and checkpoint progression.
-
-## Success condition for this stage
-A planning-ready repository with explicit authority, no competing source truth, deterministic bootstrap validation and a tested HIVE registration/index/retrieval preparation path.
+## Boundary
+No local Docker project service, repository MCP server, external memory database or project-registration daemon is required to develop, test, review or boot CORE. Optional future external providers must use explicit provider-neutral contracts and cannot supersede canonical Git truth.
