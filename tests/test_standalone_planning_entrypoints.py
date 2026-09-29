@@ -44,7 +44,7 @@ class StandalonePlanningEntryPointsTests(unittest.TestCase):
         for path in PRIOR:
             with self.subTest(path=path):
                 active, _ = effective_and_archive(path)
-                self.assertNotIn("hive", active.lower())
+                self.assertNotRegex(active, r"(?i)\bhive\b")
                 self.assertNotIn("BOOTSTRAP_BASELINE", active)
                 self.assertNotIn("ACTIVE M04 Context Lock", active)
                 self.assertNotIn("M23 HIVE Sync", active)

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 from pathlib import Path
 
@@ -210,7 +211,7 @@ for relative, prior_blob in planning_prior_blobs.items():
     ).stdout.strip()
     if archived_sha != prior_blob:
         fail(f"historical discovery Git blob changed: {relative}")
-    if "hive" in active.lower() or "BOOTSTRAP_BASELINE" in active or "ACTIVE M04 Context Lock" in active:
+    if re.search(r"\bhive\b", active, flags=re.IGNORECASE) or "BOOTSTRAP_BASELINE" in active or "ACTIVE M04 Context Lock" in active:
         fail(f"retired provider or M04 admission revived in current entrypoint: {relative}")
     if "CORE-D-206" not in active:
         fail(f"current planning entrypoint missing dated standalone decision: {relative}")
