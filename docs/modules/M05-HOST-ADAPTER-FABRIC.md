@@ -17,7 +17,7 @@ CORE starts and operates with only its local Git-canonical M01–M03 V2 baseline
 The following retained R1–R4 material is dated prior planning, including retired pinned-provider assertions and the superseded old M04 lock wording. It cannot establish a live external provider, mandatory provider preference, former #4 runtime proof or M23 federation. All listed historical EV-M05 discovery candidates are PENDING, not passed executable tests. No crate, public DTO, numeric budget, SDK dependency, executable Work Order, Context Lock or product authorization is created here.
 
 
-## Historical discovery archive (non-operative; exact prior Git blob follows)
+## Sanitized historical archive (non-operative; original provenance retained in Git history)
 
 # M05 Host Adapter Fabric — Round 1 discovery candidate
 
