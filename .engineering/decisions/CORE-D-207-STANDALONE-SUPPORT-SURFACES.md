@@ -1,3 +1,5 @@
+> **CORE-D-209 current-tree sanitation:** exact superseded payloads remain recoverable in Git history. Any earlier requirement to duplicate those payloads byte-for-byte in the current tree is superseded for the owner-directed zero-residue state.
+
 # CORE-D-207 — Auxiliary standalone source and PR-preflight retirement
 
 Date: 2026-09-29
