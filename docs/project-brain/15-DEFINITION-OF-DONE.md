@@ -189,7 +189,7 @@ Additional Round 4 completion obligations:
 - all seven RAS/TLG/CER/RJR/BRC/ICF/ASF capabilities are implemented as required V0.0 semantics;
 - all six frozen fuzz targets and the deterministic calibration harness execute under the final Work Order;
 - the final numeric resource budget is evidence-derived and any Calibration Delta is numeric/evidence-only;
-- no persistence backend, arclegacy_provider/retention, distributed consensus, persistent cache or runtime self-tuning is smuggled into V0.0;
+- no persistence backend, archive/retention, distributed consensus, persistent cache or runtime self-tuning is smuggled into V0.0;
 - Round 5 final freeze and separate execution admission occur before implementation starts.
 
 Round 4 itself remains planning-only and does not satisfy the production DoD.
