@@ -45,15 +45,15 @@
     "productImplementationAuthorized": true,
     "executionStatus": "READY_FOR_EXECUTION_ON_SYNC_PROMOTION"
   },
-  "planningHiveObservation": {
-    "hiveVersion": "1.0.0",
+  "planningLegacyProviderObservation": {
+    "legacy_providerVersion": "1.0.0",
     "readOnlyMcpAvailable": true,
     "projectListReturnedCount": 7,
     "coreProjectResolved": false,
     "coreCheckpointRead": false,
     "modeUsed": "SOLO_GIT_CANONICAL",
     "implementationPreflightStatus": "MUST_REPEAT_AFTER_ADMISSION",
-    "note": "No CORE HIVE project/checkpoint proof was available for this planning candidate; no other project status is attributed to CORE."
+    "note": "No CORE LEGACY_PROVIDER project/checkpoint proof was available for this planning candidate; no other project status is attributed to CORE."
   },
   "implementation": {
     "status": "APPROVED_PROMOTED",
@@ -126,8 +126,8 @@
         "Ubuntu H5 de6a829bd2f9402214c371446615fc364431f515: 40 M03 tests passed; full workspace 140 passed and 3 failed only in existing core-workspace/tests/service.rs cases; same failures were reproduced on authorized base 6cae77e1d8814121df6646dec48bca1020119226.",
         "Clippy with -D warnings and targeted M03 formatting checks passed on Windows and Ubuntu.",
         "Seven bounded fuzz targets passed 1,000 executions each on Ubuntu; details and exact logs are recorded under docs/evidence/fuzz/.",
-        "Governance validator: PASS for 27 required artifacts, with GEF/HIVE source bridges consistent.",
-        "Exact-base reproduction: cargo test -p core-workspace --test service from an ext4 archive of 6cae77e1d8814121df6646dec48bca1020119226 reproduced the same three named failures; see docs/evidence/M03-WORKSPACE-BASE-H5-UBUNTU.log."
+        "Governance validator: PASS for 27 required artifacts, with GEF/LEGACY_PROVIDER source bridges consistent.",
+        "Exact-base reproduction: cargo test -p core-workspace --test service from an ext4 arclegacy_provider of 6cae77e1d8814121df6646dec48bca1020119226 reproduced the same three named failures; see docs/evidence/M03-WORKSPACE-BASE-H5-UBUNTU.log."
       ]
     },
     "propertyAdversarialFuzz": {
@@ -486,7 +486,7 @@
       "status": "KNOWN_BOUNDED_RISKS_PENDING_EXTERNAL_GATES",
       "items": [
         "Ubuntu full workspace has three pre-existing M02 core-workspace service failures; the same named failures were reproduced on the authorized canonical base. M03 package tests pass.",
-        "HIVE v1.0.0 did not resolve KayzenRoot/core; execution used the Work-Order-authorized SOLO_GIT_CANONICAL degraded mode and claims no CORE HIVE evidence.",
+        "LEGACY_PROVIDER v1.0.0 did not resolve KayzenRoot/core; execution used the Work-Order-authorized SOLO_GIT_CANONICAL degraded mode and claims no CORE LEGACY_PROVIDER evidence.",
         "Hosted exact-head checks and the independent EV-025 review have not yet completed.",
         "Synthetic benchmark timing varied across repeats; the report preserves both runs and makes no production latency or throughput claim."
       ]
@@ -690,7 +690,7 @@
       {
         "criterionId": "AC-018",
         "blocking": true,
-        "statement": "Static evidence proves the admitted acyclic dependency set and absence of filesystem/cwd/Git/HIVE/GitHub/network/process/database authority in the pure core.",
+        "statement": "Static evidence proves the admitted acyclic dependency set and absence of filesystem/cwd/Git/LEGACY_PROVIDER/GitHub/network/process/database authority in the pure core.",
         "requiredEvidenceIds": [
           "EV-018"
         ],
