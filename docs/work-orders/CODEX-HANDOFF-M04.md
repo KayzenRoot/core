@@ -6,7 +6,7 @@ Status: `BLOCKED_RE_ADMISSION / STALE_LOCK / NO_EXECUTION`
 Future execution branch: `feat/m04-run-state`
 
 ## CURRENT STOP (CORE-D-205, 2026-09-29)
-This is an archival pre-cutover V1 handoff, not an executable instruction. No M04 Pack A-H, and no promotion/rebase of PRs #106/#118, until #111 prior-V1 consumer disposition, separately accepted standalone M04 source/version/archival decision and NEW exact-source Work Order/Context Lock admission. The historical ACTIVE preflight below cannot mint authority; HIVE preflight is no longer required.
+This is an archival pre-cutover V1 handoff, not an executable instruction. No M04 Pack A-H, and no promotion/rebase of PRs #106/#118, until #111 prior-V1 consumer disposition, separately accepted standalone M04 source/version/archival decision and NEW exact-source Work Order/Context Lock admission. The historical ACTIVE preflight below cannot mint authority; LEGACY_PROVIDER preflight is no longer required.
 
 ## Historical STOP BEFORE EXECUTION
 
@@ -19,7 +19,7 @@ Do **not** modify product code, Cargo manifests/lockfiles, fuzz targets, benchma
 5. `productImplementationAuthorized = true`.
 6. The lock binds the exact current `CORE-WO-M04-001` blob and the exact locked canonical source fingerprints.
 7. The execution branch is exactly `feat/m04-run-state` and is created from the admitted post-promotion canonical main.
-8. Git/governance preflight passes and optional HIVE preflight is recorded honestly if available.
+8. Git/governance preflight passes and optional LEGACY_PROVIDER preflight is recorded honestly if available.
 
 If any condition is absent, stale, UNKNOWN, conflicting or exists only on a PR branch, stop with `BLOCKED / NOT_AUTHORIZED`.
 
@@ -67,7 +67,7 @@ Allowed direct production dependencies:
 - `serde`
 - `thiserror`
 
-No direct production dependency on Tokio, `core-runtime`, `core-workspace`, Git/HIVE/GitHub SDKs, filesystem/network/process/database/time APIs, Criterion, proptest, graph/cache frameworks or a new cryptography stack.
+No direct production dependency on Tokio, `core-runtime`, `core-workspace`, Git/LEGACY_PROVIDER/GitHub SDKs, filesystem/network/process/database/time APIs, Criterion, proptest, graph/cache frameworks or a new cryptography stack.
 
 `serde_json` is test/tooling-only unless a separate governed proof admits production use.
 
