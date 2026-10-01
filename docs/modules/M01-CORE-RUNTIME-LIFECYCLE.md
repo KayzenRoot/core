@@ -1,3 +1,17 @@
+> **CURRENT STANDALONE AUTHORITY (2026-10-01; CORE-D-208):**
+>
+> Work Order: #187; parent #172. The preserved record below contains the promoted standalone revision **Owner-directed standalone architecture amendment (2026-09-28)**; that revision is authoritative for new CORE execution wherever older provider-specific text conflicts with it.
+>
+> Provider-neutral safety, determinism, ownership and module invariants in the prior accepted record remain part of the module contract unless explicitly superseded by a later governed decision.
+>
+> Retired-provider-specific identities, preferences, services, context fields, preflights and runtime assumptions in the prior accepted record are **non-operative for new execution** unless a later standalone decision explicitly re-admits them through provider-neutral contracts.
+>
+> Current executable authority remains the already-promoted M01 implementation and its standalone amendment.
+>
+> Exact prior Git blob preserved below: `46851bb0dfd2f00ee36f790a64e3b6ba8971d2a9`.
+
+## Prior accepted module record (exact prior Git blob follows)
+
 # M01 - Core Runtime & Lifecycle
 
 Status: `COMPLETED_APPROVED`
