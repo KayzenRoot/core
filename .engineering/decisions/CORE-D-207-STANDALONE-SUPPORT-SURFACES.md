@@ -3,8 +3,10 @@
 Date: 2026-09-29
 Status: ADOPTED_ON_PROTECTED_MAIN_PROMOTION_ONLY
 Work Order: #184; parent #172; predecessor #182.
-Exact protected-main base: `f27e3a3f1be64d2dfedc762dea30dd1dce7cab17`.
-Prior independent main-push FULL #36595275630: 11/11 SUCCESS.
+Original authorized protected-main base: `f27e3a3f1be64d2dfedc762dea30dd1dce7cab17`.
+Reconciled protected-main base after GEF v1.1.1 adoption: `7593644c04725ad6a75fcda5cf2e59fad04c1a81`.
+GEF adoption PR #186 changed generated `.gef` adoption metadata only; it did not reauthorize M04 or rewrite the canonical M04 source lock.
+Prior independent main-push FULL #36595275630: 11/11 SUCCESS on the original predecessor base.
 
 ## Decision
 
