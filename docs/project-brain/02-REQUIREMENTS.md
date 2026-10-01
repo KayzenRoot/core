@@ -1,6 +1,6 @@
 # CORE Requirements
 
-> **CURRENT AUTHORITY (2026-09-29; CORE-D-205, effective on protected-main promotion):** Standalone Git-canonical CORE uses independent M01/M02/M03 V2. HIVE install, MCP, Docker, API, project registry, retrieval or context are not required. Prior conflicting HIVE text below is historical, not operative. Superseded M04 Context Lock is STALE; no implementation admission while #111 external V1 consumers remain UNKNOWN, and PRs #106/#118 remain unmerged.
+> **CURRENT AUTHORITY (2026-09-29; CORE-D-205, effective on protected-main promotion):** Standalone Git-canonical CORE uses independent M01/M02/M03 V2. LEGACY_PROVIDER install, MCP, Docker, API, project registry, retrieval or context are not required. Prior conflicting LEGACY_PROVIDER text below is historical, not operative. Superseded M04 Context Lock is STALE; no implementation admission while #111 external V1 consumers remain UNKNOWN, and PRs #106/#118 remain unmerged.
 
 Status: `PRODUCT_DISCOVERY_ACTIVE`
 
@@ -9,15 +9,15 @@ This file contains the frozen foundation requirements plus accepted module-level
 ## Current standalone foundation and product requirements (CORE-D-205)
 
 - CORE-R-001: preserve GEF v1 bounded planning, exact-head evidence, owner review and protected checkpoint progression.
-- CORE-R-002: retain local docs/project-brain paths as CORE Git-canonical documents, without a HIVE service.
-- CORE-R-003: perform exact Git/work-order preflight, never require Hive install, context retrieval or MCP registry.
+- CORE-R-002: retain local docs/project-brain paths as CORE Git-canonical documents, without a LEGACY_PROVIDER service.
+- CORE-R-003: perform exact Git/work-order preflight, never require LegacyProvider install, context retrieval or MCP registry.
 - CORE-R-004: use deterministic Git/hashes/static inspection/tests where provable.
 - CORE-R-005: exact-head and independent post-main assurance.
 - CORE-R-006: derived GEF and optional provider evidence never supersede canonical Git/local source.
 - CORE-R-007: provider unavailable/unverified => explicit UNKNOWN, not fabricated evidence.
 - CORE-R-008: keep secrets/credentials out of commits.
 - CORE-R-009: no product implementation absent frozen module Scope/Architecture/Requirements/DoD and admitted exact-source lock.
-- CORE-R-010: no external HIVE runtime, API, Docker or project-context service prerequisite.
+- CORE-R-010: no external LEGACY_PROVIDER runtime, API, Docker or project-context service prerequisite.
 - CORE-R-011: CORE remains headless, no web cockpit.
 - CORE-R-012: standalone M01/M02/M03 V2 safe operation.
 - CORE-R-013: optional generic independently verified provider is advisory only, cannot grant Git/path authority.
@@ -44,9 +44,9 @@ This file contains the frozen foundation requirements plus accepted module-level
 
 - **CORE-R-031 Explicit workspace basis:** execution-capable modules MUST NOT act without a validated WorkspaceHandle and WorkspaceBasisFingerprint.
 - **CORE-R-032 Identity separation:** project binding, workspace, repository and worktree identities MUST remain distinct typed identities.
-- **CORE-R-033 Git/local truth:** local filesystem/Git state is canonical for the attached checkout; HIVE project identity MUST NOT overwrite contradictory local checkout evidence.
-- **CORE-R-034 HIVE reconciliation:** HIVE association MUST be represented with provenance and explicit match/conflict/unknown state; no fabricated HIVE identity is allowed.
-- **CORE-R-035 Standalone binding:** M02 MUST support bounded deterministic workspace binding without HIVE.
+- **CORE-R-033 Git/local truth:** local filesystem/Git state is canonical for the attached checkout; LEGACY_PROVIDER project identity MUST NOT overwrite contradictory local checkout evidence.
+- **CORE-R-034 LEGACY_PROVIDER reconciliation:** LEGACY_PROVIDER association MUST be represented with provenance and explicit match/conflict/unknown state; no fabricated LEGACY_PROVIDER identity is allowed.
+- **CORE-R-035 Standalone binding:** M02 MUST support bounded deterministic workspace binding without LEGACY_PROVIDER.
 - **CORE-R-036 Path authority:** every path exposed for later execution MUST be validated against declared workspace authority roots.
 - **CORE-R-037 Escape resistance:** traversal, symlink/junction/reparse escape and ambiguous normalization MUST fail closed when security-relevant.
 - **CORE-R-038 Read-only M02:** M02 MUST NOT own source mutation, Git commit/branch/PR mutation or delivery behavior.
@@ -65,7 +65,7 @@ This file contains the frozen foundation requirements plus accepted module-level
 - **CORE-R-047 Semantic Git basis:** raw Git metadata bytes/stat-cache churn MUST NOT alter workspace correctness identity unless repository semantics changed.
 - **CORE-R-048 Untracked policy is explicit:** untracked-file treatment MUST be recorded in the basis; narrower policies MUST NOT be silently selected for performance.
 - **CORE-R-049 Revalidation emits new generation:** correctness-relevant compatible drift MUST produce a new WorkspaceGeneration/handle rather than reviving the stale handle.
-- **CORE-R-050 No global evidence override:** user intent, local checkout facts and HIVE project association are separate authority domains and MUST be reconciled rather than ranked into one overwrite hierarchy.
+- **CORE-R-050 No global evidence override:** user intent, local checkout facts and LEGACY_PROVIDER project association are separate authority domains and MUST be reconciled rather than ranked into one overwrite hierarchy.
 - **CORE-R-051 Path validation is not sandbox authority:** M02 receipts MUST state when use-time revalidation is required and MUST NOT claim M11-level enforcement.
 - **CORE-R-052 Non-existing path safety:** validation for non-existing targets MUST bind the nearest existing physical ancestor and require use-time revalidation before later mutation.
 - **CORE-R-053 Git inspection is bounded/read-only:** M02 Git inspection MUST use explicit non-shell commands/APIs, bounded output/deadlines, no interactive credentials and no network side effects.
@@ -80,12 +80,12 @@ This file contains the frozen foundation requirements plus accepted module-level
 - **CORE-R-058 No automatic submodule/network mutation:** M02 MUST NOT init/update/fetch/clone submodules or contact remotes during workspace binding.
 - **CORE-R-059 Repository graph bounds:** nested/submodule/worktree discovery MUST have explicit depth/node/resource bounds and cycle detection.
 - **CORE-R-060 Bare repository semantics:** a bare repository MUST NOT satisfy an operation that requires source-worktree authority.
-- **CORE-R-061 HIVE association capability:** HIVE project association MUST enter M02 through a versioned external capability/provenance contract, not a HIVE source-code dependency.
+- **CORE-R-061 LEGACY_PROVIDER association capability:** LEGACY_PROVIDER project association MUST enter M02 through a versioned external capability/provenance contract, not a LEGACY_PROVIDER source-code dependency.
 - **CORE-R-062 External object stores:** Git alternates/shared object roots outside admitted metadata authority MUST be blocked or explicitly policy-admitted with provenance.
 - **CORE-R-063 Git inspection hardening:** every GitInspector backend MUST be read-only, no-network, non-interactive, bounded and cancellation-aware.
 - **CORE-R-064 Filesystem semantics honesty:** case/alias/path semantics MUST expose UNKNOWN where not reliably provable; M02 MUST NOT guess security-sensitive normalization.
 - **CORE-R-065 Streaming resource safety:** attacker-controlled path/content/output cardinality MUST NOT cause unbounded memory allocation.
-- **CORE-R-066 Association disconnect semantics:** temporary HIVE loss MUST NOT rewrite local workspace/repository identity; assurance degradation MUST be explicit.
+- **CORE-R-066 Association disconnect semantics:** temporary LEGACY_PROVIDER loss MUST NOT rewrite local workspace/repository identity; assurance degradation MUST be explicit.
 - **CORE-R-067 Submodule declaration separation:** declared and materialized submodules MUST be represented separately.
 - **CORE-R-068 Nested repository explicitness:** nested independent repositories MUST be explicitly admitted/ignored/conflicted by policy rather than silently merged.
 - **CORE-R-069 No repository repair:** M02 MUST report malformed/unsupported Git state rather than repairing, resetting or normalizing the repository.
@@ -168,7 +168,7 @@ This file contains the frozen foundation requirements plus accepted module-level
 - **CORE-R-129 Event/source staleness safety:** uncertain upstream source/workspace/policy change MUST broaden stale classification rather than preserve READY.
 - **CORE-R-130 Compact context manifests:** downstream execution context SHOULD use stable source IDs/fingerprints/packet deltas rather than duplicate complete project documents by default.
 - **CORE-R-131 Context budget completeness:** token/context budgets MAY reduce payload size but MUST NOT omit sources marked mandatory by scope/risk/policy.
-- **CORE-R-132 HIVE advisory boundary:** HIVE may enrich context and provenance but MUST NOT silently rewrite a frozen Work Order or override newer canonical Git/filesystem evidence.
+- **CORE-R-132 LEGACY_PROVIDER advisory boundary:** LEGACY_PROVIDER may enrich context and provenance but MUST NOT silently rewrite a frozen Work Order or override newer canonical Git/filesystem evidence.
 - **CORE-R-133 Zero-LLM compiler baseline:** canonical parsing, validation, fingerprinting, diff classification and admission checks MUST require zero LLM inference.
 - **CORE-R-134 Bounded Work Order resources:** Work Order cardinality/serialized size/packet graph/context refs MUST operate under explicit finite resource budgets before production acceptance.
 - **CORE-R-135 Canonical collection ordering:** unordered Work Order collections MUST be explicitly sorted before fingerprinting.
@@ -221,7 +221,7 @@ This file contains the frozen foundation requirements plus accepted module-level
 ## M03 Round 3 requirements
 
 - **CORE-R-174 Stateless compiler core:** M03 V0.0 core compilation/admission semantics MUST be stateless-by-default and MUST NOT require an internal database.
-- **CORE-R-175 No hidden I/O:** core compiler/service operations MUST NOT scan repositories, invoke Git, call HIVE/GitHub/network services or persist Work Orders implicitly.
+- **CORE-R-175 No hidden I/O:** core compiler/service operations MUST NOT scan repositories, invoke Git, call LEGACY_PROVIDER/GitHub/network services or persist Work Orders implicitly.
 - **CORE-R-176 Explicit compile operation:** M03 MUST expose deterministic compile semantics from WorkOrderRequestV1 + explicit CompilationContextV1 to FrozenWorkOrderV1 + compilation proof.
 - **CORE-R-177 Frozen validation operation:** M03 MUST support deterministic validation of an already frozen revision without mutating it.
 - **CORE-R-178 Revision diff operation:** M03 MUST produce deterministic semantic WorkOrderRevisionDiffV1 results.
@@ -274,9 +274,9 @@ This file contains the frozen foundation requirements plus accepted module-level
 - **CORE-R-221 Bounded fuzz surfaces:** implementation MUST provide bounded fuzz targets for envelope/parser/canonicalization, packet DAG, scope/delta, lineage/LPC, source provenance, admission/replay and diagnostic redaction.
 - **CORE-R-222 Honest benchmark policy:** benchmark scenarios MUST scale sources, packets/edges, criteria/evidence, context refs, revision diffs and admission evidence; report reproducible platform/toolchain/fixture/command/results; cache cases apply only if a cache is separately admitted; planning MUST NOT claim measurements that do not exist.
 - **CORE-R-223 Production evidence traceability:** M03 V0.0 production DoD MUST trace requirements to contracts, tests, security/property/fuzz/performance evidence, Windows/Ubuntu exact-head CI, supply-chain evidence and final acceptance.
-- **CORE-R-224 No hidden authority dependency:** the pure core MUST NOT directly depend on filesystem, Git, HIVE, GitHub, network, process, database or host/runtime I/O APIs; external resolvers/adapters own those boundaries.
+- **CORE-R-224 No hidden authority dependency:** the pure core MUST NOT directly depend on filesystem, Git, LEGACY_PROVIDER, GitHub, network, process, database or host/runtime I/O APIs; external resolvers/adapters own those boundaries.
 - **CORE-R-225 Durable secret safety:** raw credentials, prompt/source bodies, secret-bearing provider payloads and unbounded external diagnostics MUST NOT enter durable contracts or diagnostics; redaction must be proven with secret canaries.
-- **CORE-R-226 HIVE remains advisory:** optional HIVE context MUST be represented only by bounded versioned references and provenance; unavailable or stale HIVE context MUST NOT fabricate proof, change canonical source authority or silently alter frozen semantics.
+- **CORE-R-226 LEGACY_PROVIDER remains advisory:** optional LEGACY_PROVIDER context MUST be represented only by bounded versioned references and provenance; unavailable or stale LEGACY_PROVIDER context MUST NOT fabricate proof, change canonical source authority or silently alter frozen semantics.
 - **CORE-R-227 Acyclic minimal crate map:** the M03 V0.0 file/dependency map MUST remain one focused crate with explicit test/property/fuzz/benchmark targets and no M02 reverse dependency, M04+ dependency or unadmitted external authority.
 - **CORE-R-228 Review candidate is not promotion:** Round 4 canonical state MUST identify planning as a review candidate/in progress, keep implementation unauthorized, and prohibit checkpoint promotion until the exact-head owner self-audit defined by the single-account policy and applicable governance gates pass.
 
@@ -300,13 +300,13 @@ This file contains the frozen foundation requirements plus accepted module-level
 - **CORE-R-243 Finite M04 resource limits:** attempts/run, steps/attempt, events/run, canonical event bytes, diagnostics, cursor bytes, external references and replay depth MUST be finite positive production limits; cap+1 MUST fail typed with no partial advancement.
 - **CORE-R-244 Durable journal authority:** lifecycle events, generations, identities/ordinals, idempotency records, fingerprints, roots, BRC/ICF and reason codes are durable authority; summaries/current state/latest-child views are derived and rebuildable.
 - **CORE-R-245 Versioned public contracts:** M04 MUST expose explicit versioned request/receipt/result contracts for admission, attempt creation, step declaration, transition, cancellation, continuation, replay and bounded reference attachment.
-- **CORE-R-246 No ambient authority in core API:** M04 core requests MUST NOT receive ambient filesystem, repository, network, process, database, HIVE, GitHub or clock authority; required evidence enters through explicit validated inputs/adapters.
+- **CORE-R-246 No ambient authority in core API:** M04 core requests MUST NOT receive ambient filesystem, repository, network, process, database, LEGACY_PROVIDER, GitHub or clock authority; required evidence enters through explicit validated inputs/adapters.
 - **CORE-R-247 Closed event and reason registries:** V1 durable event kinds and machine reason/error classes MUST be closed/versioned registries; unknown kind/version MUST fail typed without silent downgrade.
 - **CORE-R-248 Deterministic canonicalization:** semantic fingerprints MUST use schema-bound canonical bytes with explicit field order/lengths, deterministic enum forms, domain separation and cross-platform golden vectors; unordered iteration, locale, diagnostics, timestamps and secrets MUST NOT influence semantic identity.
 - **CORE-R-249 Snapshot non-authority:** snapshots MAY accelerate projection only when bound to a verified journal boundary; they MUST NOT authorize state absent from the canonical journal or destructively replace active proof history.
 - **CORE-R-250 Bounded external references:** M04 MAY persist only versioned bounded lineage-bound references/attachment facts for later-module outcomes/evidence; it MUST NOT import external artifact bodies or later verification-policy truth.
 - **CORE-R-251 Acyclic adapter direction:** M04 MAY consume admitted M01/M03/shared primitive contracts and external storage/reference ports, but MUST NOT depend on M05+ execution/policy/verification implementations or create reverse dependencies into M03.
-- **CORE-R-252 Zero-LLM and hidden-I/O-free state core:** deterministic lifecycle/projection/replay semantics MUST require zero inference and perform no hidden filesystem/network/process/database/HIVE/GitHub I/O.
+- **CORE-R-252 Zero-LLM and hidden-I/O-free state core:** deterministic lifecycle/projection/replay semantics MUST require zero inference and perform no hidden filesystem/network/process/database/LEGACY_PROVIDER/GitHub I/O.
 - **CORE-R-253 Blocking M04 Evidence Graph:** final M04 acceptance MUST satisfy EV-M04-001 through EV-M04-023, including contracts, transitions, concurrency/CAS, idempotency, cancellation, replay integrity, BRC/ICF, identity substitution, canonical vectors, resources, snapshots, references, no-hidden-I/O, zero-LLM, fuzz, calibration, supply chain, Windows/Ubuntu exact-head CI and KayzenRoot's exact-head owner self-audit with zero unresolved HIGH/CRITICAL, explicitly recorded as not independent.
 - **CORE-R-254 Evidence-derived calibration:** exact production M04 numeric resource defaults MUST come from reproducible bounded implementation calibration; an authorized calibration delta MAY change numeric limits only and MUST NOT mutate semantics, contracts, authority or dependencies.
 - **CORE-R-255 Review candidate is not execution authority:** M04 discovery/planning candidates MUST keep product implementation unauthorized until final planning freeze and a separate governed execution-admission delta pass the exact-head single-account owner self-audit and are promoted.
@@ -318,7 +318,7 @@ This file contains the frozen foundation requirements plus accepted module-level
 - **CORE-R-257 Minimal direct dependencies:** `core-run-state` MUST directly depend only on `core-work-order`, `core-identity`, workspace `serde` and workspace `thiserror`; any additional production dependency requires governed admission.
 - **CORE-R-258 No async/runtime coupling:** M04 pure state semantics MUST NOT directly depend on Tokio or `core-runtime`; M01 cancellation/shutdown evidence crosses a bounded value-only caller adapter.
 - **CORE-R-259 Existing digest reuse with M04 framing:** M04 MUST reuse `core_identity::fingerprint_bytes` after applying versioned M04 domain framing with explicit field tags, fixed-width integers and length prefixes for variable-width values.
-- **CORE-R-260 Pure prepared-commit services:** mutating M04 preparation functions MUST return deterministic `PreparedCommitV1<R>` values carrying the exact operation-specific Round 3 receipt type as a pending result; they MUST NOT perform persistence, network, process, repository, HIVE/GitHub or clock operations.
+- **CORE-R-260 Pure prepared-commit services:** mutating M04 preparation functions MUST return deterministic `PreparedCommitV1<R>` values carrying the exact operation-specific Round 3 receipt type as a pending result; they MUST NOT perform persistence, network, process, repository, LEGACY_PROVIDER/GitHub or clock operations.
 - **CORE-R-261 Atomic store port:** host persistence MUST implement an `M04StateStoreV1` equivalent that atomically compares RunId/generation/prior-root/idempotency state and commits the prepared projection/event/root/generation result or returns conflict with no partial append.
 - **CORE-R-262 Store is not semantic authority:** storage adapters MUST persist already-prepared semantics and MUST NOT recalculate transitions, retry policy, cancellation precedence, identity or evidence truth.
 - **CORE-R-263 Explicit reference-evidence seam:** caller-owned reference adapters MAY resolve external artifacts, but M04 core MUST accept only bounded `ExternalReferenceEvidenceV1` values and MUST NOT fetch external artifact bodies or call M14-M17.
@@ -330,7 +330,7 @@ This file contains the frozen foundation requirements plus accepted module-level
 - **CORE-R-269 Reproducible M04 benchmark harness:** `m04_run_state` MUST scale all frozen cardinality/size/replay/concurrency dimensions using deterministic synthetic fixtures and report reproducible measurements without fabricated extrapolation.
 - **CORE-R-270 Calibration-only numeric delta:** the future M04 Work Order MAY authorize a bounded Calibration Delta limited to numeric resource defaults/thresholds and calibration evidence; it MUST NOT alter semantics, contracts, authority, dependency admission or backend class.
 - **CORE-R-271 Required semantic mechanisms:** RAS, TLG, CER, RJR, BRC, ICF and ASF are REQUIRED V0.0 semantic mechanisms inside `core-run-state`, not separate services.
-- **CORE-R-272 Deferred persistence choices:** persistent backend selection, destructive journal compaction/archive, distributed replication/consensus, persistent snapshot cache and runtime self-tuning are OUT OF SCOPE for M04 V0.0 planning freeze.
+- **CORE-R-272 Deferred persistence choices:** persistent backend selection, destructive journal compaction/arclegacy_provider, distributed replication/consensus, persistent snapshot cache and runtime self-tuning are OUT OF SCOPE for M04 V0.0 planning freeze.
 - **CORE-R-273 Separate Round 5 final freeze:** Round 4 MUST NOT create execution authority. A separate Round 5 MUST freeze the Work Order, pending Context Lock, Evidence Bundle, construction packets, exact acceptance mapping, Calibration Gate and executor handoff before a later separate execution-admission delta.
 
 - **CORE-R-274 Prepared receipts are non-authoritative until finalized:** an operation receipt embedded in `PreparedCommitV1<R>` MUST be treated as pending only. It becomes committed authority only after `finalize_commit` verifies the exact durable store receipt against RunId, operation fingerprint, generation, event sequence and resulting journal root.
@@ -346,8 +346,8 @@ This file contains the frozen foundation requirements plus accepted module-level
 - **CORE-R-280 Calibration Delta is numeric/evidence-only:** the Work Order MAY authorize one bounded post-implementation calibration delta that changes only finite numeric M04 resource defaults/thresholds plus their evidence. It MUST NOT alter contracts, transition laws, authority, dependency admission, persistence class, acceptance meaning or security boundaries.
 - **CORE-R-281 Executor has only two terminal handoff states:** the implementation executor MAY stop as `READY_FOR_OWNER_AUDIT` only when all frozen packs, ACs and implementation evidence gates are satisfied on one exact head, otherwise it MUST stop `BLOCKED` with the exact unresolved technical obligation. The executor MUST NOT approve its own work; the owner-audit stage is separate.
 - **CORE-R-282 Final owner-auditor owns the audit verdict:** KayzenRoot may perform a separate logical owner self-audit on the exact base/head and record `OWNER_SELF_AUDIT_APPROVED` only when every required check passes and unresolved HIGH/CRITICAL findings are zero. The record MUST say `NOT INDEPENDENT`; no native GitHub self-approval or second account is required or permitted.
-- **CORE-R-283 Standalone source authority:** no HIVE preflight or project service is a construction/execution prerequisite. Optional separately verified generic context is advisory only; UNKNOWN never grants authority.
-- **CORE-R-284 M04 final freeze preserves deferred backend policy:** Round 5 MUST NOT select a production persistence backend, distributed replication mechanism, destructive archive/compaction policy, persistent snapshot cache or runtime self-tuning mechanism.
+- **CORE-R-283 Standalone source authority:** no LEGACY_PROVIDER preflight or project service is a construction/execution prerequisite. Optional separately verified generic context is advisory only; UNKNOWN never grants authority.
+- **CORE-R-284 M04 final freeze preserves deferred backend policy:** Round 5 MUST NOT select a production persistence backend, distributed replication mechanism, destructive arclegacy_provider/compaction policy, persistent snapshot cache or runtime self-tuning mechanism.
 
 - **CORE-R-285 Single-account review identity:** `KayzenRoot` is the only required operational account. Executor and owner-auditor are separate logical stages, not separate GitHub identities or sessions. Missing another account MUST NOT block a governed review; exact-head technical evidence, scope/source validity, required CI/security checks and zero unresolved HIGH/CRITICAL findings remain mandatory. Owner self-audit is never represented as independent review or native GitHub approval.
 
@@ -356,21 +356,21 @@ This file contains the frozen foundation requirements plus accepted module-level
 ## Foundation requirements
 
 - **CORE-R-001 GEF governance:** CORE MUST use GEF v1 lifecycle semantics for planning, bounded execution, evidence, review and checkpoint promotion.
-- **CORE-R-002 HIVE canonical paths:** CORE MUST preserve the five exact HIVE v1.0.0 governance paths defined in `00-README-UPLOAD-ORDER.md`.
-- **CORE-R-003 HIVE-first execution:** implementation Work Orders MUST include HIVE preflight whenever HIVE can materially assist the work.
+- **CORE-R-002 LEGACY_PROVIDER canonical paths:** CORE MUST preserve the five exact LEGACY_PROVIDER v1.0.0 governance paths defined in `00-README-UPLOAD-ORDER.md`.
+- **CORE-R-003 LEGACY_PROVIDER-first execution:** implementation Work Orders MUST include LEGACY_PROVIDER preflight whenever LEGACY_PROVIDER can materially assist the work.
 - **CORE-R-004 Deterministic first:** Git, hashes, static inspection, AST/symbol data and tests MUST precede model inference when they can prove the fact.
 - **CORE-R-005 Exact-state evidence:** tests, audits and promotion evidence MUST identify the exact candidate/head they validate.
-- **CORE-R-006 No duplicate canonical truth:** derived GEF/HIVE metadata MUST NOT silently supersede Project Brain or Git.
-- **CORE-R-007 Safe degradation:** unavailable HIVE/provider capabilities MUST be reported truthfully and MUST NOT be represented as successful evidence.
+- **CORE-R-006 No duplicate canonical truth:** derived GEF/LEGACY_PROVIDER metadata MUST NOT silently supersede Project Brain or Git.
+- **CORE-R-007 Safe degradation:** unavailable LEGACY_PROVIDER/provider capabilities MUST be reported truthfully and MUST NOT be represented as successful evidence.
 - **CORE-R-008 Public repository hygiene:** secrets, credentials, private tokens and private user data MUST NOT be committed.
 - **CORE-R-009 Product planning gate:** product implementation MUST NOT begin until Scope, Architecture, Requirements and DoD for the first implementation increment are explicitly frozen.
-- **CORE-R-010 External HIVE runtime:** HIVE runtime MUST remain independently deployable and MUST NOT be vendored into CORE merely for convenience.
+- **CORE-R-010 External LEGACY_PROVIDER runtime:** LEGACY_PROVIDER runtime MUST remain independently deployable and MUST NOT be vendored into CORE merely for convenience.
 
 ## Product requirements
 
 - **CORE-R-011 Headless:** no dashboard/cockpit/web UI.
-- **CORE-R-012 Standalone:** CORE remains safely usable without HIVE.
-- **CORE-R-013 HIVE substitution:** compatible HIVE capabilities replace bounded fallbacks through contracts.
+- **CORE-R-012 Standalone:** CORE remains safely usable without LEGACY_PROVIDER.
+- **CORE-R-013 LEGACY_PROVIDER substitution:** compatible LEGACY_PROVIDER capabilities replace bounded fallbacks through contracts.
 - **CORE-R-014 Complete-product commitment:** ACCEPTED_REQUIRED capabilities must be built; there is no MVP tier.
 - **CORE-R-015 LLM economics:** LLM-facing modules optimize tokens/retries/reusable evidence without lowering quality.
 - **CORE-R-016 Cache-first:** LLM-facing contracts preserve stable material, deterministic identity and explicit invalidation.
