@@ -21,7 +21,7 @@
       "release": "v1.1.1"
     }
   },
-  "stalenessRule": "The canonicalSources fingerprints are the authorized predecessor/input baselines at authorizedBase. Work-Order-authorized mutations limited to authorizedMutationPaths do not stale this lock. Any protected-base drift, predecessor/source substitution before execution, or out-of-scope authority/source change makes the lock STALE and requires recompilation/rebase.",
+  "stalenessRule": "Any drift in authorizedBase or the four recorded input baselines before their authorized executor mutation makes this increment STALE. Changes limited to authorizedMutationPaths are expected outputs of #187 and do not self-stale the lock; any other source/governance drift requires recompilation/rebase.",
   "promotionRule": "Authority overlay and CORE-D-208 become canonical only after exact-head audit, protected expected-head squash and separate new-main FULL success.",
   "nonModification": {
     "m04ContextLock": ".engineering/context-locks/CORE-WO-M04-001.json",
@@ -34,7 +34,6 @@
     "docs/modules/M02-PROJECT-WORKSPACE-ADAPTER.md",
     "docs/modules/M03-WORK-ORDER-ENGINE.md",
     ".engineering/decisions/CORE-D-208-STANDALONE-MODULE-DOC-DISPOSITION.md",
-    "tests/test_standalone_module_docs_disposition.py",
-    ".engineering/context-locks/CORE-STANDALONE-MODULE-DOCS-007.json"
+    "tests/test_standalone_module_docs_disposition.py"
   ]
 }
