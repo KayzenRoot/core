@@ -397,7 +397,7 @@ mod tests {
     #[test]
     fn retired_project_server_config_is_not_accepted() {
         assert!(CoreConfig::from_sources(
-            Some("require_hive = true"),
+            Some("require_legacy_provider = true"),
             None,
             [],
             &ConfigOverrides::default(),
@@ -407,7 +407,7 @@ mod tests {
         assert!(CoreConfig::from_sources(
             None,
             None,
-            [("CORE_REQUIRE_HIVE".into(), "true".into())],
+            [("CORE_REQUIRE_LEGACY_PROVIDER".into(), "true".into())],
             &ConfigOverrides::default(),
             1
         )
