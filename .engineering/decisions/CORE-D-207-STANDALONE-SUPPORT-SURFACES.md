@@ -14,7 +14,7 @@ Current Project Brain upload order and deployment, modular delivery process, tec
 
 ## Original byte-exact source provenance
 
-All four original documents are preserved verbatim after `## Historical discovery archive (non-operative; exact prior Git blob follows)` and tested against these *original* exact Git blobs:
+All four original documents are preserved verbatim after `## Historical discovery arclegacy_provider (non-operative; exact prior Git blob follows)` and tested against these *original* exact Git blobs:
 
 - `docs/project-brain/00-README-UPLOAD-ORDER.md` = `b25433e68e5d209c3767f1e727e0bffe9c0a6fc9`
 - `docs/project-brain/12-LOCAL-DEPLOYMENT.md` = `3988ac80814fba9b48569cfdb59f46218094ebf3`
@@ -27,4 +27,4 @@ The active PR template must not preserve obsolete mandatory preflight instructio
 
 Only four auxiliary documents, PR template, this dated decision, narrow validator and no-network regressions may change. Keep all nine current M04 canonical blobs/Work Order/Context Lock/Evidence/GEF untouched; no Rust, Cargo, CI/ruleset or old PR #106/#118 changes. Historical M01/M02/M03 module documentation requires a separate bounded disposition before parent #172 may close.
 
-Require raw-byte archive fingerprints and negative CRLF tests, new exact-head real FULL 11/11 Linux/Windows M01–M03 with bounded fuzz, 16/16 M01 soak on both OS, honest PRB, cargo deny/audit and SBOM, scoped owner self-audit NOT INDEPENDENT and no unresolved HIGH/CRITICAL/threads, strict protected expected-head squash, then a **separate ACTUAL new-main full 11/11 push** before #184 closes. #111 previous-V1 external consumers UNKNOWN/BLOCKING.
+Require raw-byte arclegacy_provider fingerprints and negative CRLF tests, new exact-head real FULL 11/11 Linux/Windows M01–M03 with bounded fuzz, 16/16 M01 soak on both OS, honest PRB, cargo deny/audit and SBOM, scoped owner self-audit NOT INDEPENDENT and no unresolved HIGH/CRITICAL/threads, strict protected expected-head squash, then a **separate ACTUAL new-main full 11/11 push** before #184 closes. #111 previous-V1 external consumers UNKNOWN/BLOCKING.
