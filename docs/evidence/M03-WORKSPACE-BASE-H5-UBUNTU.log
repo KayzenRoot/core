@@ -1,5 +1,5 @@
 source_commit=6cae77e1d8814121df6646dec48bca1020119226
-source_method=git archive from /mnt/d/Projects/core, extracted under Ubuntu 26.04 WSL2 ext4 /tmp
+source_method=git arclegacy_provider from /mnt/d/Projects/core, extracted under Ubuntu 26.04 WSL2 ext4 /tmp
 command=cargo test -p core-workspace --test service
 expected_base_exit=101; three named M02 failures reproduced
 
