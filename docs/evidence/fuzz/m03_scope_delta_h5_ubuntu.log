@@ -28,7 +28,7 @@ INFO: seed corpus: files: 1 min: 10412b max: 10412b total: 10412b rss: 35Mb
 "\376\377\377\377" # Uses: 3
 "\373\377\377\377" # Uses: 3
 "\000\000" # Uses: 0
-"max_hive_refs" # Uses: 0
+"max_legacy_provider_refs" # Uses: 0
 "\001\000\000\000\000\000\000\013" # Uses: 1
 "\025\000\000\000\000\000\000\000" # Uses: 1
 ###### End of recommended dictionary. ######
