@@ -1,7 +1,7 @@
 """Offline, fail-closed structural preflight for an owner-supplied M04 V1 inventory.
 
 A passing preflight is NEVER evidence that an external V1 consumer is absent.
-No filesystem scanning, network, repository mutation, HIVE use or raw input output.
+No filesystem scanning, network, repository mutation, LEGACY_PROVIDER use or raw input output.
 """
 
 from __future__ import annotations
