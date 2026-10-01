@@ -1,5 +1,6 @@
 """Raw Git archive integrity and no-network standalone auxiliary source gates."""
 
+import ast
 import hashlib
 import re
 import unittest
@@ -13,6 +14,21 @@ PRIOR = {
     "docs/engineering/CORE-MODULAR-DELIVERY-MODEL.md": "0265293a529f9850cc63c72e8aedbe617951cafd",
     "docs/research/CORE-TECHNOLOGY-CANDIDATES.md": "7e6e33ecf635baf74990a361aa01b3072e13b34d",
 }
+
+
+def retired_provider_pattern() -> str:
+    """Read the one validator-owned retired-provider identifier pattern without importing its executable checks."""
+    tree = ast.parse((ROOT / "scripts/validate_governance.py").read_text(encoding="utf-8"))
+    for node in tree.body:
+        if not isinstance(node, ast.Assign):
+            continue
+        if not any(isinstance(target, ast.Name) and target.id == "RETIRED_PROVIDER_IDENTIFIER_PATTERN" for target in node.targets):
+            continue
+        value = ast.literal_eval(node.value)
+        if not isinstance(value, str):
+            raise AssertionError("retired-provider identifier pattern is not a string")
+        return value
+    raise AssertionError("retired-provider identifier pattern constant missing")
 
 
 def archive_parts(path: str) -> tuple[str, bytes]:
@@ -53,12 +69,12 @@ class StandaloneSupportDocsTests(unittest.TestCase):
         for path in PRIOR:
             with self.subTest(path=path):
                 active, _ = archive_parts(path)
-                self.assertIsNone(re.search(r"\bhive(?:\b|_|external\b)", active, flags=re.IGNORECASE))
+                self.assertIsNone(re.search(retired_provider_pattern(), active, flags=re.IGNORECASE))
                 self.assertIn("CORE-D-207", active)
 
     def test_prefixed_retired_provider_name_is_rejected(self):
         """Reject HIVE_PROJECTS_ROOT rather than checking only the isolated vendor word."""
-        pattern = r"\bhive(?:\b|_|external\b)"
+        pattern = retired_provider_pattern()
         self.assertIsNotNone(re.search(pattern, "HIVE_PROJECTS_ROOT required", flags=re.IGNORECASE))
         self.assertIsNotNone(re.search(pattern, "HiveExternal must start", flags=re.IGNORECASE))
         self.assertIsNone(re.search(pattern, "archive contains old evidence", flags=re.IGNORECASE))
@@ -100,7 +116,7 @@ class StandaloneSupportDocsTests(unittest.TestCase):
         self.assertIn("## Standalone source preflight", template)
         self.assertIn("Separate ACTUAL new-main", template)
         self.assertIn("NOT INDEPENDENT", template)
-        self.assertIsNone(re.search(r"\bhive(?:\b|_|external\b)", template, flags=re.IGNORECASE))
+        self.assertIsNone(re.search(retired_provider_pattern(), template, flags=re.IGNORECASE))
 
     def test_decision_records_exact_prior_git_shas(self):
         """Ensure dated decision carries every original provenance identity."""
