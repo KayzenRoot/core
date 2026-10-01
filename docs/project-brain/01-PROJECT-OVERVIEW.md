@@ -24,7 +24,7 @@ The accepted M01–M03 product baseline and separate protected-main exact-head p
 The former local-project-server validation task #4 is closed NOT_PLANNED, not successfully verified; no claim is made about the owner's machine. Neither historical M04 CI nor this planning document reauthorizes M04. No product release or full 24-module implementation is claimed.
 
 
-## Historical discovery arclegacy_provider (non-operative; exact prior Git blob follows)
+## Historical discovery archive (non-operative; exact prior Git blob follows)
 
 # CORE Project Overview
 
