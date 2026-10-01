@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "core-context-lock-v1",
+  "workOrder": "CORE-STANDALONE-MODULE-DOCS-007",
+  "issue": 187,
+  "status": "ACTIVE",
+  "repository": "KayzenRoot/core",
+  "authorizedBase": "5c2952223395747522576fa46e11063c493ca3a3",
+  "executionBranch": "governance/core-standalone-module-docs-007",
+  "scopeClass": "STANDALONE_MODULE_DOCUMENT_AUTHORITY",
+  "assuranceMode": "ELEVATED",
+  "productImplementationAuthorized": false,
+  "canonicalSources": {
+    "docs/modules/M01-CORE-RUNTIME-LIFECYCLE.md": "46851bb0dfd2f00ee36f790a64e3b6ba8971d2a9",
+    "docs/modules/M02-PROJECT-WORKSPACE-ADAPTER.md": "3690e81e50f6fed1a28dea56bd22e0c83383b33d",
+    "docs/modules/M03-WORK-ORDER-ENGINE.md": "8e73e5fb7f80f7b695f957bbf0d0c12fa25974ed",
+    "docs/modules/00-MASTER-MODULE-MAP.md": "32d65c726ee657ae75ccb4a23581e15d6844dce7"
+  },
+  "upstream": {
+    "gef": {
+      "version": "1.1.1",
+      "release": "v1.1.1"
+    }
+  },
+  "stalenessRule": "Any change to authorizedBase or the four inventoried source blobs before promotion makes this increment STALE and requires recompilation/rebase before further execution.",
+  "promotionRule": "Authority overlay and CORE-D-208 become canonical only after exact-head audit, protected expected-head squash and separate new-main FULL success.",
+  "nonModification": {
+    "m04ContextLock": ".engineering/context-locks/CORE-WO-M04-001.json",
+    "m04ExecutionStatus": "BLOCKED_RE_ADMISSION",
+    "externalV1ConsumersIssue": 111
+  }
+}
