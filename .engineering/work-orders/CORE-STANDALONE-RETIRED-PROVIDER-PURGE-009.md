@@ -44,3 +44,21 @@ Repository-wide sanitation of current tracked text/path residue, including docs,
 ## STOP
 
 No merge until zero-residue proof, exact-head FULL success, zero unresolved HIGH/CRITICAL, zero unresolved threads and owner self-audit. Separate actual protected-main FULL is required before issue close.
+
+
+## RED evidence
+
+- RED HEAD: `5842ffdf37ce139fa4c97f0049fb93ac1d088e24`
+- GitHub Actions: `36939339062`
+- Governance: expected FAILURE.
+- Python: 58 tests, exactly 2 intended zero-residue failures.
+- Baseline: 2 tracked path-name offenders and 108 UTF-8 tracked-content offenders.
+- All pre-existing tests passed during RED.
+
+## GREEN scope
+
+- Provider-specific current-tree text/path content is being sanitized to provider-neutral terminology.
+- Exact superseded payloads remain recoverable from Git history.
+- M04 remains `STALE / BLOCKED_RE_ADMISSION`; implementation authorization remains false.
+- #111 remains `UNKNOWN/BLOCKING`.
+- Exact-head FULL evidence remains pending.
