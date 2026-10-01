@@ -98,6 +98,7 @@ class StandaloneModuleDocsDispositionTests(unittest.TestCase):
             "docs/modules/M02-PROJECT-WORKSPACE-ADAPTER.md",
             "docs/modules/M03-WORK-ORDER-ENGINE.md",
             ".engineering/decisions/CORE-D-208-STANDALONE-MODULE-DOC-DISPOSITION.md",
+            ".engineering/context-locks/CORE-STANDALONE-MODULE-DOCS-007.json",
             "tests/test_standalone_module_docs_disposition.py",
         ):
             with self.subTest(authorized_mutation=path):
