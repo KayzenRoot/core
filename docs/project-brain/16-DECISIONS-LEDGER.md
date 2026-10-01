@@ -761,7 +761,7 @@ Status: `ACTIVE`
 **State:** ACCEPTED; Round 3 promoted by M04-REVIEW-003 / Issue #83 and PR #80; implementation remains unauthorized.
 
 ## CORE-D-182 - Snapshots accelerate projection but never replace journal authority
-**Decision:** snapshots bind an exact journal boundary and are verified derived artifacts. Active canonical Run events required for proof are not destructively compacted by M04; arclegacy_provider/retention policy is external.
+**Decision:** snapshots bind an exact journal boundary and are verified derived artifacts. Active canonical Run events required for proof are not destructively compacted by M04; archive/retention policy is external.
 **State:** ACCEPTED; Round 3 promoted by M04-REVIEW-003 / Issue #83 and PR #80; implementation remains unauthorized.
 
 ## CORE-D-183 - External execution/verification data enters M04 only as bounded references
