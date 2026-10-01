@@ -21,9 +21,9 @@ coverage/
 .mypy_cache/
 .ruff_cache/
 
-# HIVE local state must never enter CORE
-.hive-data/
-.hive-projects/
+# LEGACY_PROVIDER local state must never enter CORE
+.legacy_provider-data/
+.legacy_provider-projects/
 tmp/
 # Local build/runtime artifacts
 /target/
