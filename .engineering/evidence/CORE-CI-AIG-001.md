@@ -15,7 +15,7 @@ This record supersedes the original candidate-status header and historical pendi
 - **Four-file scope:** workflow `.github/workflows/governance.yml`, classifier `scripts/ci_impact.py`, deterministic tests `tests/test_ci_impact.py`, this evidence file. CORE M04 canonical source, Work Order, product code and active Context Lock were unchanged (lock blob `7c62aad48f84040d68f7fc70958e851a42f0e1d0`).
 - **Safety corrections captured:** correct Cargo audit invocation; fail-closed canonical and derived M04 authority paths; noncritical docs-only fixture; eliminate untrusted PR filename interpolation into a GitHub Actions shell command.
 - **Measured outcomes:** functionality and required check behavior are evidenced above, but no numerical CI runtime-speed improvement has yet been established by repeated comparable hosted samples. Do not assert a percentage or guaranteed latency reduction.
-- **Separate gates unaffected:** local HIVE proof [#4](https://github.com/KayzenRoot/core/issues/4) and external M04 legacy-V1 compatibility [#111](https://github.com/KayzenRoot/core/issues/111) remain OPEN; this evidence correction grants no M04 source or product promotion.
+- **Separate gates unaffected:** local LEGACY_PROVIDER proof [#4](https://github.com/KayzenRoot/core/issues/4) and external M04 legacy-V1 compatibility [#111](https://github.com/KayzenRoot/core/issues/111) remain OPEN; this evidence correction grants no M04 source or product promotion.
 
 ## Problem
 
@@ -103,7 +103,7 @@ Re-sync non-force against latest protected main using a two-parent merge tree wi
 
 ## CI correction delta #2: stale test-fixture expectation
 
-New exact head `7ed992b0cc0766985d8986a0b4921d36e634d32c` [workflow #36330552740](https://github.com/KayzenRoot/core/actions/runs/36330552740) Governance executed 34 unit tests and identified one reviewer-introduced stale test expectation: original `test_docs_only_is_governance_only` still used canonical `docs/project-brain/13-CHECKPOINT.md` after the intended fail-closed critical-source rule. Update that fixture to an actually noncritical `docs/HIVE-INTEGRATION.md` and retain separate explicit canonical FULL assertions. Zero product/contract/scope changes; run evidence at this previous head is historical and new CI is required. No merge until the fresh exact head is all green and audited.
+New exact head `7ed992b0cc0766985d8986a0b4921d36e634d32c` [workflow #36330552740](https://github.com/KayzenRoot/core/actions/runs/36330552740) Governance executed 34 unit tests and identified one reviewer-introduced stale test expectation: original `test_docs_only_is_governance_only` still used canonical `docs/project-brain/13-CHECKPOINT.md` after the intended fail-closed critical-source rule. Update that fixture to an actually noncritical `docs/LEGACY_PROVIDER-INTEGRATION.md` and retain separate explicit canonical FULL assertions. Zero product/contract/scope changes; run evidence at this previous head is historical and new CI is required. No merge until the fresh exact head is all green and audited.
 
 ## C03 audit hardening: derived M04 authority surfaces
 
