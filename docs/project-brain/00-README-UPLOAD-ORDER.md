@@ -19,7 +19,7 @@ Retain governed 01 overview, 10 security, 11 tests, 12 deployment and 14 backlog
 The old upload-order and pinned-provider compatibility instructions are preserved below verbatim but are not operative.
 
 
-## Historical discovery archive (non-operative; exact prior Git blob follows)
+## Historical discovery arclegacy_provider (non-operative; exact prior Git blob follows)
 
 # CORE Project Brain
 
@@ -49,9 +49,9 @@ This startup order does not replace domain-specific authority rules in `.enginee
 - `15-DEFINITION-OF-DONE.md` — completion semantics
 - `16-DECISIONS-LEDGER.md` — governed decisions
 
-## HIVE v1.0.0 compatibility
+## LEGACY_PROVIDER v1.0.0 compatibility
 
-The following exact paths are mandatory because HIVE v1.0.0 Context Manager loads them as governance sources:
+The following exact paths are mandatory because LEGACY_PROVIDER v1.0.0 Context Manager loads them as governance sources:
 
 - `docs/project-brain/13-CHECKPOINT.md`
 - `docs/project-brain/03-SCOPE.md`
@@ -59,4 +59,4 @@ The following exact paths are mandatory because HIVE v1.0.0 Context Manager load
 - `docs/project-brain/04-ARCHITECTURE.md`
 - `docs/project-brain/16-DECISIONS-LEDGER.md`
 
-Do not rename or relocate these files without a governed HIVE compatibility migration.
+Do not rename or relocate these files without a governed LEGACY_PROVIDER compatibility migration.
