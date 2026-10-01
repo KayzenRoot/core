@@ -22,7 +22,7 @@ Correction branch: `fix/m04-post-sync-canonical-closeout`
 - `origin/main` was fetched and independently matched with `git ls-remote` at `b79891f489d8c7117aee15e1dca47abb9e23dea3`.
 - The frozen authorized base `f6b422be5465d5a93d0b8fcf4c9507c205663072` is an ancestor of the canonical base.
 - Work was isolated in a clean worktree created from the exact canonical base. The user's existing checkout at `D:/Projects/core` was left untouched; it remains on `fdb4dbe165e74b009c43df3874b6043c9b94710b` with pre-existing dirty state.
-- Read-only HIVE v1.0.0 resolved project `2a5fb7e6-209a-4cd7-ac3b-137ca3b312bc`, but its project status pointed to the stale, dirty checkout above and `checkpoint.read` returned `stale/source_not_current`. No HIVE checkpoint content is used as canonical evidence; Git `origin/main` is the source of truth. Repeat HIVE/Git preflight after closeout promotion and before Pack A.
+- Read-only LEGACY_PROVIDER v1.0.0 resolved project `2a5fb7e6-209a-4cd7-ac3b-137ca3b312bc`, but its project status pointed to the stale, dirty checkout above and `checkpoint.read` returned `stale/source_not_current`. No LEGACY_PROVIDER checkpoint content is used as canonical evidence; Git `origin/main` is the source of truth. Repeat LEGACY_PROVIDER/Git preflight after closeout promotion and before Pack A.
 - Predecessor proof: CORE-M04-SYNC-003 was independently approved at PR #96 / Issue #97, exact reviewed head `f9a5a7847e268000a5249ae8e69c81ed22b924ad`, workflow `35994572596` (10/10 jobs successful), and promoted as the canonical base above. That review recorded zero unresolved HIGH/CRITICAL findings.
 
 ## Corrections in this closeout
@@ -56,7 +56,7 @@ The three stale values present in the promoted Work Order table at the canonical
 
 ## Validation and hosted review
 
-- `py -3.12 scripts/validate_governance.py` — PASS; GEF v1.0.0 and HIVE compatibility v1.0.0 recognized; checkpoint/source bridges consistent; 27 required artifacts.
+- `py -3.12 scripts/validate_governance.py` — PASS; GEF v1.0.0 and LEGACY_PROVIDER compatibility v1.0.0 recognized; checkpoint/source bridges consistent; 27 required artifacts.
 - JSON parsing of Context Lock, Evidence Bundle, GEF-current and Checkpoint bridge — PASS.
 - Work Order table, Context Lock and Evidence Bundle match all nine canonical source blobs; Work Order, Context Lock and handoff blobs match their bound hashes — PASS.
 - Active lock authority fields and exact `authorizedBase`, Checkpoint bridge parity, GEF next-action state and frozen-base ancestry — PASS.
@@ -69,4 +69,4 @@ At the time this candidate report was first published, independent review was pe
 
 ## Proposed Checkpoint Delta
 
-After CORE-M04-SYNC-005 is independently approved and promoted, run fresh Git/HIVE/governance preflight for CORE-WO-M04-001 on canonical `origin/main`; verify the ACTIVE Context Lock, all nine source fingerprints, exact Work Order blob, frozen authorized-base ancestry and governance-only intervening changes. Only if every check passes, create `feat/m04-run-state` from that exact canonical main and begin Pack A within the frozen `M04_RUN_ATTEMPT_STEP_ENGINE` scope. No M04 product implementation has started.
+After CORE-M04-SYNC-005 is independently approved and promoted, run fresh Git/LEGACY_PROVIDER/governance preflight for CORE-WO-M04-001 on canonical `origin/main`; verify the ACTIVE Context Lock, all nine source fingerprints, exact Work Order blob, frozen authorized-base ancestry and governance-only intervening changes. Only if every check passes, create `feat/m04-run-state` from that exact canonical main and begin Pack A within the frozen `M04_RUN_ATTEMPT_STEP_ENGINE` scope. No M04 product implementation has started.

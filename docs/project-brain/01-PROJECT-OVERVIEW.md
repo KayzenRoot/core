@@ -31,23 +31,23 @@ The former local-project-server validation task #4 is closed NOT_PLANNED, not su
 Status: `BOOTSTRAP_BASELINE`
 
 ## Project
-**HIVE CORE**
+**LEGACY_PROVIDER CORE**
 
 ## Owner ecosystem
 NexLabs Technology.
 
 ## Mission
-CORE will become the operational nucleus that turns HIVE project intelligence into governed engineering execution, verification and delivery.
+CORE will become the operational nucleus that turns LEGACY_PROVIDER project intelligence into governed engineering execution, verification and delivery.
 
 ## Current stage
 - Repository bootstrap: installed candidate
 - GEF v1.0.0 governance: installed
-- HIVE v1.0.0 structural integration: installed
+- LEGACY_PROVIDER v1.0.0 structural integration: installed
 - Product discovery: next
 - Product implementation: not authorized
 
 ## Foundation boundary
-HIVE remains the external intelligence/context/memory/retrieval layer. CORE will own only operational responsibilities admitted during discovery. GEF governs planning, bounded execution, evidence, review and checkpoint progression.
+LEGACY_PROVIDER remains the external intelligence/context/memory/retrieval layer. CORE will own only operational responsibilities admitted during discovery. GEF governs planning, bounded execution, evidence, review and checkpoint progression.
 
 ## Success condition for this stage
-A planning-ready repository with explicit authority, no competing source truth, deterministic bootstrap validation and a tested HIVE registration/index/retrieval preparation path.
+A planning-ready repository with explicit authority, no competing source truth, deterministic bootstrap validation and a tested LEGACY_PROVIDER registration/index/retrieval preparation path.

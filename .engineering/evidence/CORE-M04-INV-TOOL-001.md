@@ -12,7 +12,7 @@ Prepare a fail-closed local owner questionnaire, strict bounded JSON preflight, 
 ## Negative security/authority controls
 
 - Neutral template contains UNKNOWN for every finding and every coverage category, FALSE owner attestation and FALSE evidence flags.
-- No network, disk scan, HIVE access, mutation of inventory data, raw file/path output or asserted external negative facts.
+- No network, disk scan, LEGACY_PROVIDER access, mutation of inventory data, raw file/path output or asserted external negative facts.
 - JSON parser rejects duplicate keys, unexpected/missing schema fields, invalid types/enums, invalid/future dates and inputs over 32 KiB.
 - YES routes toward governed V2; UNKNOWN/incomplete inventory remains blocked; structurally all-NO is only an owner/source-review candidate with fixed external_absence_proven=false and breaking_v1_approved=false.
 - Unit tests exercise neutral defaults, each category YES/UNKNOWN, every scope/evidence gate, strict parsing, date cases, redaction and exit codes.

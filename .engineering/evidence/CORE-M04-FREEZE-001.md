@@ -44,9 +44,9 @@ The pending Context Lock has:
 
 Therefore this candidate does not authorize product implementation. A later separate admission delta is mandatory even if this final freeze is promoted.
 
-## HIVE observation
+## LEGACY_PROVIDER observation
 
-No direct HIVE MCP/connector is available in this planning chat environment. No current CORE HIVE project/checkpoint claim is made. Exact Git sources were used in SOLO canonical mode. The future executor must repeat optional HIVE preflight if available and record only observed evidence.
+No direct LEGACY_PROVIDER MCP/connector is available in this planning chat environment. No current CORE LEGACY_PROVIDER project/checkpoint claim is made. Exact Git sources were used in SOLO canonical mode. The future executor must repeat optional LEGACY_PROVIDER preflight if available and record only observed evidence.
 
 ## Resource honesty
 

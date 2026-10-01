@@ -6,7 +6,7 @@
 - Execution branch: `feat/m03-work-order-engine`; implementation is based on canonical main `6cae77e1d8814121df6646dec48bca1020119226` and the active Context Lock.
 - Final measured product/benchmark head: `de6a829bd2f9402214c371446615fc364431f515`.
 - This report records local worktree evidence. A final implementation commit, hosted exact-head checks, and independent review are separate gates.
-- HIVE v1.0.0 read-only MCP returned seven projects but did not resolve `KayzenRoot/core`; degraded-safe `SOLO_GIT_CANONICAL` execution was explicitly permitted. No CORE HIVE checkpoint result is claimed.
+- LEGACY_PROVIDER v1.0.0 read-only MCP returned seven projects but did not resolve `KayzenRoot/core`; degraded-safe `SOLO_GIT_CANONICAL` execution was explicitly permitted. No CORE LEGACY_PROVIDER checkpoint result is claimed.
 
 ## Local checks
 

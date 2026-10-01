@@ -37,9 +37,9 @@ The Rust and test files listed by the preceding Prompt 008/009 corrections remai
 - `cargo test --workspace --all-targets --locked`: PASS; 56 tests, 0 failed; `core-registry` 15/15 and `core-runtime` 20/20, including the new 16-cycle in-drain integration proof.
 - `cargo clippy --workspace --all-targets --locked -- -D warnings`: PASS.
 - `cargo check --manifest-path fuzz/Cargo.toml --locked`: PASS.
-- `python scripts/validate_governance.py`: PASS; GEF `v1.0.0`, HIVE compatibility `v1.0.0`, bridges consistent and 27 governed artifacts.
+- `python scripts/validate_governance.py`: PASS; GEF `v1.0.0`, LEGACY_PROVIDER compatibility `v1.0.0`, bridges consistent and 27 governed artifacts.
 - Python compilation for all six scripts: PASS.
-- HIVE bootstrap/MCP unit tests: PASS; 6/6.
+- LEGACY_PROVIDER bootstrap/MCP unit tests: PASS; 6/6.
 - New in-drain integration proof: PASS; `in_drain_clone_acquire_is_rejected_during_repeated_shutdowns`, 16 repetitions, bounded gate observation, typed `AdmissionClosed` rejection, unchanged active-lease count, clean `StopCommit` and all QVM items satisfied.
 - M01 soak, 16 iterations: PASS; every cycle reached `ReadyEligible`, process handles `150 -> 153` (`+3`, policy `<=4`), record fingerprint `615d338c2f4d28a093a0c0c77400b23801c3ae36cf88063130eeb1ef94e1db09`.
 - PRB/WNF: PASS; compatible baseline p50 `110.8193 ms`, current median p50 `127.0076 ms`, regression `14.607834555894145%`, allowed `20%`.
@@ -48,9 +48,9 @@ The Rust and test files listed by the preceding Prompt 008/009 corrections remai
 - Local `cargo-deny` and `cargo-audit` executables were unavailable; hosted Ubuntu/Windows supply-chain and advisory steps passed.
 - Local artifacts: `artifacts/m01-soak-prompt009.json`, `artifacts/m01-prb-prompt009.json`, `artifacts/m01-sbom-prompt009.cdx.json` and the prior prompt artifacts.
 
-## HIVE and Git basis
+## LEGACY_PROVIDER and Git basis
 
-Read-only HIVE preflight resolved the registered CORE project as `c65b7abc-533a-411a-bbbb-2b72b976d921` on `main` at `fdb4dbe165e74b009c43df3874b6043c9b94710b`, READY and clean in HIVE. The correction checkout is the exact PDF branch and is not HIVE-registered; checkpoint read returned `source_not_current`. Git is therefore canonical for this target branch and no target-branch HIVE evidence is claimed.
+Read-only LEGACY_PROVIDER preflight resolved the registered CORE project as `c65b7abc-533a-411a-bbbb-2b72b976d921` on `main` at `fdb4dbe165e74b009c43df3874b6043c9b94710b`, READY and clean in LEGACY_PROVIDER. The correction checkout is the exact PDF branch and is not LEGACY_PROVIDER-registered; checkpoint read returned `source_not_current`. Git is therefore canonical for this target branch and no target-branch LEGACY_PROVIDER evidence is claimed.
 
 The branch was created from the remote PDF base `8f0820188130613caa6890c82d43225d9a317947`. The implementation commits are:
 

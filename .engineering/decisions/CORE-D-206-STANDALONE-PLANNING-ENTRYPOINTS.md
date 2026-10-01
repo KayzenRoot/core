@@ -1,3 +1,5 @@
+> **CORE-D-209 current-tree sanitation:** exact superseded payloads remain recoverable in Git history. Any earlier requirement to duplicate those payloads byte-for-byte in the current tree is superseded for the owner-directed zero-residue state.
+
 # CORE-D-206 — Standalone planning entrypoints and exact historical provenance
 
 Date: 2026-09-29
@@ -18,7 +20,7 @@ Each current entrypoint embeds its **entire** original source content verbatim a
 - `docs/modules/M05-HOST-ADAPTER-FABRIC.md`: prior Git blob `222dace08091637e0192eb0259ba13109e418ba7`.
 - `docs/modules/M06-CAPABILITY-NEGOTIATION.md`: prior Git blob `fc1caaaba959e4f5982d4707885269527f3a3af4`.
 
-Archive delimiter: `## Historical discovery archive (non-operative; exact prior Git blob follows)`.
+archive delimiter: `## Historical discovery archive (non-operative; exact prior Git blob follows)`.
 Current effective text is only **before** that delimiter. Earlier original titles/status and all candidate EV names in the archived suffix are prior dated context, not current rules, approval or passing tests.
 
 ## Non-modification/STOP

@@ -49,9 +49,9 @@ All nine values below were recomputed from `origin/main` and match the ACTIVE Co
 
 The observed Work Order blob matches `workOrderSource.blobSha`; the observed Context Lock blob matches both `.engineering/evidence/CORE-WO-M03-001.json` lock bindings. No semantic fingerprint conflict was found.
 
-## HIVE preflight
+## LEGACY_PROVIDER preflight
 
-The read-only HIVE v1.0.0 MCP surface responded to `project.list` with seven registered projects. None resolved to `KayzenRoot/core`; therefore no CORE project ID was available for `project.status`, context retrieval, or `checkpoint.read`. No result from another project is attributed to CORE. The Work Order explicitly permits degraded-safe `SOLO_GIT_CANONICAL` execution when CORE is absent, so execution uses the exact Git sources and records HIVE context as unavailable/unresolved, not PASS.
+The read-only LEGACY_PROVIDER v1.0.0 MCP surface responded to `project.list` with seven registered projects. None resolved to `KayzenRoot/core`; therefore no CORE project ID was available for `project.status`, context retrieval, or `checkpoint.read`. No result from another project is attributed to CORE. The Work Order explicitly permits degraded-safe `SOLO_GIT_CANONICAL` execution when CORE is absent, so execution uses the exact Git sources and records LEGACY_PROVIDER context as unavailable/unresolved, not PASS.
 
 ## Acceptance checklist before Pack A
 

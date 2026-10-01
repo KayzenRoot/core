@@ -1,12 +1,12 @@
 # CORE Definition of Done
 
-> **CURRENT AUTHORITY (2026-09-29; CORE-D-205, effective on protected-main promotion):** CORE is built, governed and run independently from canonical Git and CORE-owned local standalone M01/M02/M03 V2 contracts. No HIVE install, MCP, Docker, API, registry, retrieval or memory service is a prerequisite. Older contradictory Hive-specific sections are dated historical evidence. M04 old ACTIVE authorization is superseded: new source lock STALE, implementation forbidden, #111 external V1 consumers UNKNOWN. Old PRs #106/#118 remain unmerged.
+> **CURRENT AUTHORITY (2026-09-29; CORE-D-205, effective on protected-main promotion):** CORE is built, governed and run independently from canonical Git and CORE-owned local standalone M01/M02/M03 V2 contracts. No LEGACY_PROVIDER install, MCP, Docker, API, registry, retrieval or memory service is a prerequisite. Older contradictory LegacyProvider-specific sections are dated historical evidence. M04 old ACTIVE authorization is superseded: new source lock STALE, implementation forbidden, #111 external V1 consumers UNKNOWN. Old PRs #106/#118 remain unmerged.
 
 Status: `M01_M02_M03_STANDALONE_V2_COMPLETE / M04_BLOCKED_RE_ADMISSION`
 
 ## Current standalone bootstrap DoD
 
-Requires CORE-owned local canonical Git files, GEF v1 source hierarchy/review/evidence, no required external project server/Hive helpers/MCP config, secret hygiene, deterministic governance/source-lock regression, exact-head hosted gates, protected PR and full independent post-main checks. M01/M02/M03 standalone V2 completion does not imply M04 or CORE V0.0 production readiness.
+Requires CORE-owned local canonical Git files, GEF v1 source hierarchy/review/evidence, no required external project server/LegacyProvider helpers/MCP config, secret hygiene, deterministic governance/source-lock regression, exact-head hosted gates, protected PR and full independent post-main checks. M01/M02/M03 standalone V2 completion does not imply M04 or CORE V0.0 production readiness.
 
 ## Product DoD
 
@@ -79,7 +79,7 @@ The eventual M03 DoD must prove, on one governed exact head:
 - explicit stop conditions;
 - Context Lock/governance proof admission;
 - compact context budget manifests without mandatory-source omission;
-- HIVE advisory/context enrichment without authority escalation;
+- LEGACY_PROVIDER advisory/context enrichment without authority escalation;
 - bounded resource/cardinality behavior;
 - zero-LLM parser/compiler/admission path;
 - property/adversarial/fuzz/Windows/Ubuntu/security/performance evidence;
@@ -131,13 +131,13 @@ Round 3 does not authorize implementation.
 The future M03 V0.0 implementation is complete only when all of the following are proven together on one exact candidate head:
 
 - all public V1 contracts, IDs, revision/fingerprint ownership, service inputs/outputs/errors and the frozen file/dependency map are implemented without scope drift;
-- source, M02 workspace/basis, Context Lock, external governance and optional HIVE references follow the Round 4 adapter boundary and freshness/replay rules;
+- source, M02 workspace/basis, Context Lock, external governance and optional LEGACY_PROVIDER references follow the Round 4 adapter boundary and freshness/replay rules;
 - canonical semantic projection, explicit collection sorting, stable serialization/fingerprint vectors and diagnostic exclusion pass deterministic permutation/replay tests;
 - packet DAG, deny-overrides-allow scope intersection, AEG completeness, PCM reconstruction, correction classification and immutable revision behavior pass property and adversarial tests;
 - external LineageSnapshot/LPC compare-and-set prevents stale or competing canonical revisions; M03 performs no persistence, hidden refresh, rebase, commit or promotion;
 - parser, compile, validate, diff, correction, admission and handoff errors are typed and bounded; core resource failures return no partial FROZEN, READY or handoff output, and caller-owned wall-clock timeout discards any late result without ambient clock reads inside core-work-order;
 - secret canaries and hostile adapter diagnostics prove durable contracts and errors are redacted and bounded;
-- static/dependency evidence proves the compiler has no hidden filesystem, cwd, Git, HIVE, GitHub, network, process or database I/O and the dependency graph is acyclic and admitted;
+- static/dependency evidence proves the compiler has no hidden filesystem, cwd, Git, LEGACY_PROVIDER, GitHub, network, process or database I/O and the dependency graph is acyclic and admitted;
 - all finite positive resource defaults are supported by the mandatory committed M03 calibration report, with selected/rejected candidates, supported scales and no extrapolated or fabricated measurements;
 - required unit, integration, deterministic property, adversarial, fuzz and benchmark/resource evidence passes on Windows and Ubuntu exact-head CI;
 - advisory/license/supply-chain/SBOM evidence passes, the AEG covers every blocking DoD obligation, and an independent governed exact-head review finds no unresolved HIGH/CRITICAL defect.
@@ -168,7 +168,7 @@ M04 completion requires:
 - bounded lineage-valid external outcome/evidence references without later-module policy ownership;
 - finite positive production resource limits derived from committed calibration evidence, with cap+1 atomic failure and no silent truncation;
 - backend-neutral, acyclic adapter boundaries with no M05+ reverse dependency;
-- static/runtime proof of zero-LLM lifecycle semantics and no hidden filesystem/network/process/database/HIVE/GitHub I/O;
+- static/runtime proof of zero-LLM lifecycle semantics and no hidden filesystem/network/process/database/LEGACY_PROVIDER/GitHub I/O;
 - unit/integration/property/adversarial/fuzz coverage plus Windows/Ubuntu exact-head CI;
 - advisory/license/supply-chain/SBOM evidence;
 - complete AEG-to-artifact traceability and KayzenRoot exact-head owner self-audit with no unresolved HIGH/CRITICAL defect, explicitly recorded as not independent.
@@ -214,11 +214,11 @@ Promotion of this DoD closes M04 planning only. It does not satisfy the M04 prod
 
 Bootstrap is complete only when:
 
-- required Project Brain files exist at HIVE v1.0.0 compatible paths;
+- required Project Brain files exist at LEGACY_PROVIDER v1.0.0 compatible paths;
 - GEF v1.0.0 adoption/profile/policy/execution/review/evidence artifacts exist;
 - the source hierarchy names canonical versus derived authority clearly;
 - deterministic governance validation passes on the exact candidate head;
 - GitHub PR and Work Order scaffolding exists;
-- HIVE bootstrap tooling can health-check, register or resolve, inspect, index and retrieval-sync CORE without embedding secrets;
+- LEGACY_PROVIDER bootstrap tooling can health-check, register or resolve, inspect, index and retrieval-sync CORE without embedding secrets;
 - bootstrap PR receives governed review;
 - checkpoint is promoted only with accepted exact-head evidence.

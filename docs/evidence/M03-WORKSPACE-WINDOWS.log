@@ -70,7 +70,7 @@ test tests::failed_registration_rolls_back_only_inserted_module ... ok
 test tests::dependency_cycle_fails_closed ... ok
 test tests::cloned_registries_cannot_acquire_after_admission_closes ... ok
 test tests::generation_coherence_reports_each_dimension_without_scalar_comparison ... ok
-test tests::hive_provider_wins_without_llm ... ok
+test tests::legacy_provider_provider_wins_without_llm ... ok
 test tests::acs_applies_policy_authority_and_deterministic_tie_breaks ... ok
 test tests::lease_expiration_is_monotonic_and_enforced ... ok
 test tests::lease_change_notifications_cover_lifecycle_and_boundaries ... ok
@@ -96,7 +96,7 @@ test tests::rlc_returns_typed_allow_deny_and_defer_without_mutation ... ok
 test tests::crash_loop_quarantines_and_explicit_reset_reenters_worker ... ok
 test tests::forced_shutdown_records_residuals ... ok
 test tests::multiple_workers_report_completion_without_lost_notifications ... ok
-test tests::required_hive_blocks_without_false_success ... ok
+test tests::required_legacy_provider_blocks_without_false_success ... ok
 test tests::qvm_detects_active_lease_without_caller_claim ... ok
 test tests::registry_clone_cannot_admit_after_qds_closes_capability_admission ... ok
 test tests::shutdown_completion_records_follow_proof ... ok
@@ -153,7 +153,7 @@ running 5 tests
 test diagnostic_changes_are_outside_frozen_semantic_identity ... ok
 test semantic_input_permutations_preserve_bytes_and_fingerprints ... ok
 test compilation_context_generation_changes_only_compilation_identity ... ok
-test hive_context_is_advisory_and_only_changes_compilation_provenance ... ok
+test legacy_provider_context_is_advisory_and_only_changes_compilation_provenance ... ok
 test semantic_change_alters_work_order_fingerprint_and_is_revision_scoped ... ok
 
 test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
@@ -310,8 +310,8 @@ test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
      Running tests\reconciliation.rs (target\debug\deps\reconciliation-02cbfb22c20d14a4.exe)
 
 running 2 tests
-test contradictory_hive_evidence_is_explicit_conflict ... ok
-test unavailable_hive_keeps_standalone_binding ... ok
+test contradictory_legacy_provider_evidence_is_explicit_conflict ... ok
+test unavailable_legacy_provider_keeps_standalone_binding ... ok
 
 test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 

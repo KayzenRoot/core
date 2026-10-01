@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "core-context-lock-v1",
+  "workOrder": "CORE-STANDALONE-RETIRED-PROVIDER-PURGE-009",
+  "issue": 191,
+  "status": "ACTIVE",
+  "repository": "KayzenRoot/core",
+  "authorizedBase": "9d03bba3bf35b242bf0468f5fa7737980364c8e5",
+  "executionBranch": "governance/core-retired-provider-purge-009",
+  "scopeClass": "CURRENT_TREE_PROVIDER_SANITATION",
+  "assuranceMode": "ELEVATED",
+  "productImplementationAuthorized": false,
+  "canonicalInputBaselines": {
+    "docs/project-brain/13-CHECKPOINT.md": "18943c69e054218e13d516851454c2711211d015",
+    "docs/project-brain/16-DECISIONS-LEDGER.md": "300914170b769304b3374ac42deb5e5ac2a34dc7",
+    "docs/project-brain/03-SCOPE.md": "c4cfb0a375a911569ef02124048d35e51e0dffb3",
+    "docs/project-brain/15-DEFINITION-OF-DONE.md": "7d4b41810dab00d9848a5df1eab8025b4ac8696b",
+    "docs/project-brain/04-ARCHITECTURE.md": "f475383e002958115de878434e1ebbb725210460",
+    "docs/project-brain/02-REQUIREMENTS.md": "bab69e4147e132ca672351acdaa4aba0f5bf8443"
+  },
+  "sourceFingerprintRole": "AUTHORIZED_INPUT_BASELINES",
+  "stalenessRule": "Any protected-main drift from authorizedBase before this bounded sanitation is reconciled makes the increment stale.",
+  "nonModification": {
+    "m04ExecutionStatus": "BLOCKED_RE_ADMISSION",
+    "m04ProductImplementationAuthorized": false,
+    "externalV1ConsumersIssue": 111,
+    "externalV1ConsumersStatus": "UNKNOWN_BLOCKING"
+  },
+  "promotionRule": "Zero current-tree residue, exact-head FULL, zero unresolved HIGH/CRITICAL and review threads, owner NOT INDEPENDENT audit, protected expected-head squash, then separate new-main FULL."
+}

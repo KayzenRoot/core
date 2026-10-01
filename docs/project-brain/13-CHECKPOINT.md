@@ -1,6 +1,6 @@
 # CORE Checkpoint
 
-> **CURRENT AUTHORITY (2026-09-29; CORE-D-205, effective on protected-main promotion):** CORE is built, governed and run independently from canonical Git and CORE-owned local standalone M01/M02/M03 V2 contracts. No HIVE install, MCP, Docker, API, registry, retrieval or memory service is a prerequisite. Older contradictory Hive-specific sections are dated historical evidence. M04 old ACTIVE authorization is superseded: new source lock STALE, implementation forbidden, #111 external V1 consumers UNKNOWN. Old PRs #106/#118 remain unmerged.
+> **CURRENT AUTHORITY (2026-09-29; CORE-D-205, effective on protected-main promotion):** CORE is built, governed and run independently from canonical Git and CORE-owned local standalone M01/M02/M03 V2 contracts. No LEGACY_PROVIDER install, MCP, Docker, API, registry, retrieval or memory service is a prerequisite. Older contradictory LegacyProvider-specific sections are dated historical evidence. M04 old ACTIVE authorization is superseded: new source lock STALE, implementation forbidden, #111 external V1 consumers UNKNOWN. Old PRs #106/#118 remain unmerged.
 
 ## STATUS
 M01 COMPLETE / M02 COMPLETE V2 / M03 COMPLETE V2 / M04 BLOCKED_RE_ADMISSION
@@ -12,18 +12,18 @@ CORE V0.0 - Modular Construction
 3 - STANDALONE M01-M03 PROMOTED / M04 SOURCE RE-ADMISSION BLOCKED
 
 ## OBJECTIVE
-Continue the independent headless CORE action plane with Git-canonical local M01/M02/M03 V2 and no HIVE development/runtime/context prerequisite. M04 requires fresh standalone source/compatibility review and separate execution admission.
+Continue the independent headless CORE action plane with Git-canonical local M01/M02/M03 V2 and no LEGACY_PROVIDER development/runtime/context prerequisite. M04 requires fresh standalone source/compatibility review and separate execution admission.
 
 ## IN PROGRESS
-- Standalone cutover #172: PR #173 removed Hive bootstrap/MCP/CI helpers, PR #176 removed M01 Hive provider coupling, PR #179 promoted M02/M03 standalone V2. Protected main 1e118f9763f90e9a1823786f9e399c55efcf3ef4 passed independent new-main full 11/11 #36585621992, including Ubuntu/Windows fuzz, PRB, soak and supply chain.
+- Standalone cutover #172: PR #173 removed LegacyProvider bootstrap/MCP/CI helpers, PR #176 removed M01 LegacyProvider provider coupling, PR #179 promoted M02/M03 standalone V2. Protected main 1e118f9763f90e9a1823786f9e399c55efcf3ef4 passed independent new-main full 11/11 #36585621992, including Ubuntu/Windows fuzz, PRB, soak and supply chain.
 - Work Order #180 is the nine-source CORE-D-205 canonical sync and M04 fail-closed re-admission gate, not product execution.
 
 ## COMPLETED
 - Repository/bootstrap foundation approved and promoted.
-- GEF v1.0.0 and HIVE v1.0.0 integration baseline installed.
-- HIVE intelligence plane / CORE action plane boundary accepted.
+- GEF v1.0.0 and LEGACY_PROVIDER v1.0.0 integration baseline installed.
+- LEGACY_PROVIDER intelligence plane / CORE action plane boundary accepted.
 - Headless-only CORE constraint accepted.
-- Standalone + HIVE-enhanced operating model accepted.
+- Standalone + LEGACY_PROVIDER-enhanced operating model accepted.
 - 24-module discovery baseline recorded.
 - Modular delivery rule accepted: architecture/orchestration here, heavy implementation in Codex.
 - M01 Core Runtime & Lifecycle implemented, corrected, exact-head reviewed and promoted.
@@ -156,10 +156,10 @@ Promotion merge: `2556f1d380efe59f0b14cb1392c4aa9fb19efa2d`
 Result: Rounds 1–3 accepted as the M02 discovery baseline. M02 implementation remains unauthorized.
 
 ## Current M02 discovery delta
-Round 1 established M02 as the deterministic Project / Workspace Adapter between local Git/filesystem state and optional HIVE Project Registry identity.
+Round 1 established M02 as the deterministic Project / Workspace Adapter between local Git/filesystem state and optional LEGACY_PROVIDER Project Registry identity.
 
 Accepted direction:
-- no duplicate HIVE Project Registry;
+- no duplicate LEGACY_PROVIDER Project Registry;
 - explicit ProjectBinding / Workspace / Repository / Worktree identities;
 - no ambient current-directory execution;
 - read-only Git/filesystem inspection only;
@@ -184,7 +184,7 @@ M02 remains discovery-only. No crate/file implementation or Work Order is author
 
 
 ## M02 Round 3 discovery delta
-Round 3 added explicit repository/worktree/submodule/nested-repo graph semantics, separated SOURCE versus GIT_METADATA authority, defined a versioned HIVE project-association capability seam, and established the hostile-repository threat model.
+Round 3 added explicit repository/worktree/submodule/nested-repo graph semantics, separated SOURCE versus GIT_METADATA authority, defined a versioned LEGACY_PROVIDER project-association capability seam, and established the hostile-repository threat model.
 
 New technology candidate:
 - WMF Workspace Merkle Forest.
@@ -207,7 +207,7 @@ Accepted direction:
 - repository graph serialization is canonical and order-stable;
 - system Git is the semantic reference oracle for differential provider tests, not an automatic production-backend selection;
 - SPO gates Rust-native/system/hybrid provider promotion on semantic/security/resource evidence;
-- compact fingerprints/deltas/evidence refs are preferred over raw repository inventories for downstream HIVE/LLM token economy;
+- compact fingerprints/deltas/evidence refs are preferred over raw repository inventories for downstream LEGACY_PROVIDER/LLM token economy;
 - exact numeric resource defaults remain benchmark-calibrated rather than fabricated.
 
 New required design mechanisms:
@@ -317,7 +317,7 @@ Round 1 freezes the discovery baseline for:
 - Acceptance Evidence Graph;
 - correction delta classification + fail-closed scope firewall;
 - compact context budget/manifests for token economy;
-- HIVE advisory/context boundary;
+- LEGACY_PROVIDER advisory/context boundary;
 - zero-LLM compiler/validator baseline;
 - initial threat/failure/resource model;
 - candidate mechanisms WOC, SDF, AEG, CBE, WLG, WSF and WPC.
@@ -398,7 +398,7 @@ Status: PROMOTED DISCOVERY BASELINE / IMPLEMENTATION UNAUTHORIZED
 Round 3 freezes:
 - stateless-by-default compiler/admission core;
 - explicit compile/validate/diff/correction/admission/handoff operations;
-- no hidden repository/Git/HIVE/GitHub/network/persistence I/O;
+- no hidden repository/Git/LEGACY_PROVIDER/GitHub/network/persistence I/O;
 - deterministic WorkOrderId allocation direction;
 - external LineageSnapshot + LPC compare-and-set semantics;
 - external Git/GEF persistence boundary;
@@ -476,7 +476,7 @@ Evidence skeleton: .engineering/evidence/CORE-WO-M03-001.json
 Executor handoff: docs/work-orders/CODEX-HANDOFF-M03.md — refuses execution until a separate admission delta activates the lock on canonical main.
 Acceptance graph: 23 blocking criteria, each mapped to future Evidence Requirement IDs.
 Construction packets: A–H, including a rule-only Resource Calibration Gate with no invented production values.
-HIVE planning preflight: read-only HIVE v1.0.0 MCP was reachable, but KayzenRoot/core and its checkpoint did not resolve; canonical Git sources were used in SOLO mode. The future executor must repeat preflight.
+LEGACY_PROVIDER planning preflight: read-only LEGACY_PROVIDER v1.0.0 MCP was reachable, but KayzenRoot/core and its checkpoint did not resolve; canonical Git sources were used in SOLO mode. The future executor must repeat preflight.
 Candidate review: PENDING. No M03 implementation, promotion, merge, release, or completion is authorized.
 
 
@@ -497,7 +497,7 @@ Assurance: ELEVATED
 Authorization in this admission delta is effective only when the exact active Context Lock and synchronized state are present on canonical `origin/main` after the exact-head owner self-audit defined by CORE-D-203 and promotion. A PR branch does not authorize execution. No architecture, dependency, contract, acceptance, calibration, security or M02/M04 boundary semantics are changed by admission.
 
 
-## Archived pre-cutover checkpoint fields (2026-09-29, non-operative)
+## archived pre-cutover checkpoint fields (2026-09-29, non-operative)
 ### Historical STATUS
 M01 COMPLETE / M02 COMPLETE / M03 COMPLETE / M04 PACK A CANDIDATE OPEN
 
@@ -505,7 +505,7 @@ M01 COMPLETE / M02 COMPLETE / M03 COMPLETE / M04 PACK A CANDIDATE OPEN
 3 - M03 Complete / M04 Execution Authorized
 
 ### Historical OBJECTIVE
-Continue building CORE as the headless NexLabs action plane that operates standalone and synchronizes deeply with HIVE without duplicating HIVE-owned intelligence.
+Continue building CORE as the headless NexLabs action plane that operates standalone and synchronizes deeply with LEGACY_PROVIDER without duplicating LEGACY_PROVIDER-owned intelligence.
 
 ### Historical IN PROGRESS
 - M03 canonical closeout was promoted through PR #74 as merge `2fdf595cc6b450d1be0038eb67d0a5160035d9bd` after M03-REVIEW-010 / Issue #75.
@@ -519,7 +519,7 @@ Continue building CORE as the headless NexLabs action plane that operates standa
 - After CORE-D-203 is canonical under normal protected-main checks, perform KayzenRoot's exact-base/exact-head owner self-audit of PR #106. Validate the ACTIVE Context Lock, all nine source fingerprints, the exact Work Order blob, frozen authorized-base ancestry, required CI/security evidence and zero unresolved HIGH/CRITICAL findings. Disclose `NOT INDEPENDENT`; do not require another account or native self-approval.
 - Deep-plan M04 through M24 in dependency order.
 - Freeze each module Requirements/Architecture/DoD/Work Order before implementation authorization.
-- Live local HIVE bootstrap evidence against current main.
+- Live local LEGACY_PROVIDER bootstrap evidence against current main.
 
 ### Historical BLOCKERS
 - No unresolved HIGH/CRITICAL finding is recorded in promoted M03 implementation or M04 planning/admission/synchronization reviews.

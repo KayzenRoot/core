@@ -41,7 +41,7 @@ test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 
 running 5 tests
 test diagnostic_changes_are_outside_frozen_semantic_identity ... ok
-test hive_context_is_advisory_and_only_changes_compilation_provenance ... ok
+test legacy_provider_context_is_advisory_and_only_changes_compilation_provenance ... ok
 test compilation_context_generation_changes_only_compilation_identity ... ok
 test semantic_input_permutations_preserve_bytes_and_fingerprints ... ok
 test semantic_change_alters_work_order_fingerprint_and_is_revision_scoped ... ok

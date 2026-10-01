@@ -6,7 +6,7 @@
 - Authorized scope: `M03_WORK_ORDER_ENGINE`, Packs A–H. No M04 implementation, merge, release, checkpoint promotion, or self-review was performed.
 - Canonical branch base: `6cae77e1d8814121df6646dec48bca1020119226`; Work Order authorized base: `ac90b1f48c5551e65ecadace95c59f7f0647062f`.
 - Product and benchmark head measured: `de6a829bd2f9402214c371446615fc364431f515` (`fix(core): align M03 benchmark fixtures with calibrated caps`).
-- HIVE v1.0.0 returned seven projects but did not resolve `KayzenRoot/core`; the Work Order explicitly permits degraded-safe `SOLO_GIT_CANONICAL`. This report does not claim CORE HIVE evidence.
+- LEGACY_PROVIDER v1.0.0 returned seven projects but did not resolve `KayzenRoot/core`; the Work Order explicitly permits degraded-safe `SOLO_GIT_CANONICAL`. This report does not claim CORE LEGACY_PROVIDER evidence.
 - Benchmark command on both hosts: `cargo bench -p core-work-order --bench m03_work_order`.
 - Harness: `synthetic-core-work-order-v1`; one warmup followed by five samples of ten operations each; synchronous, single-threaded, in-memory. Two runs were captured on each host. Timings are median nanoseconds per operation, converted to microseconds below. Raw logs also retain each sample and its min/median/max.
 - Windows: Windows 11 Pro build 26200; AMD Ryzen 3 4300GE; `rustc 1.98.1 (48a229cea 2026-09-01)`, `cargo 1.98.1 (797e8a9bc 2026-08-05)`.

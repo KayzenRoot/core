@@ -1,4 +1,4 @@
-"""Fail-closed M04 canonical source and old-Hive authorization regression."""
+"""Fail-closed M04 canonical source and old-LegacyProvider authorization regression."""
 import json
 import subprocess
 import unittest
@@ -24,14 +24,14 @@ class StandaloneCanonicalLockTests(unittest.TestCase):
         for p,sha in src.items():
             with self.subTest(path=p): self.assertEqual(sha,git_blob(p))
         self.assertNotEqual(src['docs/modules/M04-RUN-ATTEMPT-STEP-ENGINE.md'],'337db097ec5a7a856d4d7b34f108ebbc149ad04c')
-    def test_old_hive_lock_never_authorizes(self):
+    def test_old_legacy_provider_lock_never_authorizes(self):
         """Keep superseded M04 execution disabled across lock and GEF routing."""
         self.assertEqual(self.lock['status'],'STALE')
         self.assertIs(self.lock['productImplementationAuthorized'],False)
         self.assertEqual(self.lock['executionStatus'],'BLOCKED_RE_ADMISSION')
         self.assertEqual(self.lock['cutoverDecision'],'CORE-D-205')
         self.assertTrue(self.lock['externalV1ConsumersUnknownBlocking'])
-        self.assertNotIn('hive',self.lock['upstream'])
+        self.assertNotIn('legacy_provider',self.lock['upstream'])
         self.assertEqual(self.lock['historicalAuthorization']['authorizedBase'],'f6b422be5465d5a93d0b8fcf4c9507c205663072')
         self.assertIs(self.gef['productImplementationAuthorized'],False)
         self.assertIsNone(self.gef['activeWorkOrder'])

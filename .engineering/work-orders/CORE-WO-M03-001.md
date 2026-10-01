@@ -30,28 +30,28 @@ Do not reopen settled architecture, contract meanings, dependency direction, sec
 
 Rounds 1–4 are accepted planning truth on the required planning base. Round 4 froze public V1 contracts, the pure service boundary, caller-owned resolver seams, the exact one-crate file/dependency map, property/adversarial/fuzz laws, benchmark protocol, and production DoD direction.
 
-The implementation is a semantic compiler/admission boundary, not an executor. Its service operations are synchronous, stateless-by-default, value-driven, deterministic, and zero-LLM. They have no hidden filesystem, cwd, clock, Git, HIVE, GitHub, network, process, database, refresh, retry, or persistence authority. Caller-owned timeout guards discard late results.
+The implementation is a semantic compiler/admission boundary, not an executor. Its service operations are synchronous, stateless-by-default, value-driven, deterministic, and zero-LLM. They have no hidden filesystem, cwd, clock, Git, LEGACY_PROVIDER, GitHub, network, process, database, refresh, retry, or persistence authority. Caller-owned timeout guards discard late results.
 
 WorkOrderFingerprint represents frozen semantic identity. WorkOrderCompilationId binds compiler/canonicalizer/policy/config/security implementation identity and compilation context separately. Frozen Work Orders declare workspace requirements, not live M02 handles. M02 owns workspace/repository/path truth. External Context Lock and governance evidence may be verified for compatibility but M03 cannot mint approval or implementation authority. External LineageSnapshot/LPC supports compare-and-set; M03 never persists, rebases, commits, pushes, promotes a checkpoint, or self-approves.
 
-Scope deny overrides allow; packet scope is intersected with parent scope; ambiguity blocks. Blocking acceptance criteria map to explicit evidence obligations. PCM may deduplicate source references but never obligations, and mandatory context sources cannot be truncated. HIVE references are advisory only. V0.0 has no persistent compile cache; any later L1 memo is optional, derived, disposable, and correctness-independent.
+Scope deny overrides allow; packet scope is intersected with parent scope; ambiguity blocks. Blocking acceptance criteria map to explicit evidence obligations. PCM may deduplicate source references but never obligations, and mandatory context sources cannot be truncated. LEGACY_PROVIDER references are advisory only. V0.0 has no persistent compile cache; any later L1 memo is optional, derived, disposable, and correctness-independent.
 
 The planning history is Round 1 promotion Review 001 / Issue #47 / PR #46; Round 2 Review 002 / Issue #49 / PR #48; Round 3 Review 003 / Issue #53 / PR #52; Round 4 Review 004 / Issue #63 / PR #62. Round 4 exact reviewed head was 8fd3f085f93b342373b06e4471088dc7b843fac4, workflow run 35805683331, and promotion merge 78daa752760ba19b3c36c7e2a7574bb3cfd03501. These are historical planning evidence, not M03 implementation evidence.
 
-## HIVE PREFLIGHT
+## LEGACY_PROVIDER PREFLIGHT
 
 Before future product-code changes, the executor MUST:
 
 1. Resolve the exact repository remote, canonical main, branch, HEAD, and cleanliness.
-2. Verify HIVE v1.0.0 read-only MCP availability and attempt to resolve KayzenRoot/core and its checkpoint.
-3. Record only observed HIVE project, context, and checkpoint results in docs/evidence/M03-PREFLIGHT.md and the Evidence Bundle.
+2. Verify LEGACY_PROVIDER v1.0.0 read-only MCP availability and attempt to resolve KayzenRoot/core and its checkpoint.
+3. Record only observed LEGACY_PROVIDER project, context, and checkpoint results in docs/evidence/M03-PREFLIGHT.md and the Evidence Bundle.
 4. If CORE resolves, use the returned context as an accelerator and record exact provenance/freshness. Canonical Git remains authoritative.
-5. If CORE is absent or HIVE cannot provide the required context, use SOLO mode from the exact locked Git sources below. This Work Order explicitly permits that degraded-safe path; mark HIVE context unresolved/unavailable, never PASS.
-6. Do not treat another HIVE project's status, a stale index, or an unverified memory result as CORE evidence. Never fabricate HIVE registration, checkpoint, freshness, or health.
+5. If CORE is absent or LEGACY_PROVIDER cannot provide the required context, use SOLO mode from the exact locked Git sources below. This Work Order explicitly permits that degraded-safe path; mark LEGACY_PROVIDER context unresolved/unavailable, never PASS.
+6. Do not treat another LEGACY_PROVIDER project's status, a stale index, or an unverified memory result as CORE evidence. Never fabricate LEGACY_PROVIDER registration, checkpoint, freshness, or health.
 
-Planning preflight for this freeze found the HIVE v1.0.0 read-only MCP surface reachable. project.list returned seven projects and did not resolve KayzenRoot/core; the available READY project status was not CORE, and a CORE checkpoint could not be read. This planning candidate therefore used exact Git sources in SOLO mode. The future implementation executor must repeat the check; this observation is not evergreen execution evidence.
+Planning preflight for this freeze found the LEGACY_PROVIDER v1.0.0 read-only MCP surface reachable. project.list returned seven projects and did not resolve KayzenRoot/core; the available READY project status was not CORE, and a CORE checkpoint could not be read. This planning candidate therefore used exact Git sources in SOLO mode. The future implementation executor must repeat the check; this observation is not evergreen execution evidence.
 
-HIVE is an intelligence/context capability only. It cannot grant workspace/path authority, replace canonical source fingerprints, satisfy missing M02 or governance proof, or rewrite frozen Work Order semantics.
+LEGACY_PROVIDER is an intelligence/context capability only. It cannot grant workspace/path authority, replace canonical source fingerprints, satisfy missing M02 or governance proof, or rewrite frozen Work Order semantics.
 
 ## CANONICAL BASIS AND SOURCE HIERARCHY
 
@@ -69,7 +69,7 @@ The required canonical planning basis is origin/main at 786ad33a27d45eb435bc6e63
 | docs/project-brain/11-TEST-PLAN.md | 61be29929f1edc4ca274dd651c23791320be8d5e |
 | docs/modules/M03-WORK-ORDER-ENGINE.md | ceb68fa1c780b6e777d08f4ec16ead4a9e059f3b |
 
-Authority remains governed by .engineering/SOURCE-HIERARCHY.md: Git is repository truth; Checkpoint is project-state authority; Decisions Ledger/ADRs govern decisions; Scope governs scope; Requirements and Architecture govern product contracts; DoD governs completion; this admitted Work Order governs future execution only after admission; Test Plan and exact-head evidence govern validation. GEF/HIVE bridges and summaries are derived views.
+Authority remains governed by .engineering/SOURCE-HIERARCHY.md: Git is repository truth; Checkpoint is project-state authority; Decisions Ledger/ADRs govern decisions; Scope governs scope; Requirements and Architecture govern product contracts; DoD governs completion; this admitted Work Order governs future execution only after admission; Test Plan and exact-head evidence govern validation. GEF/LEGACY_PROVIDER bridges and summaries are derived views.
 
 The future executor must read in this order: Checkpoint, Decisions Ledger, Scope, DoD, Architecture, Requirements, Security, Test Plan, M03 module plan, CORE Modular Planning and Delivery Model, SOURCE-HIERARCHY, GEF-CURRENT, AGENTS, this Work Order, and the exact active Context Lock. M02 Work Order, Context Lock, and handoff may be consulted only for structure, never as M03 requirements or authority.
 
@@ -87,7 +87,7 @@ Implementation is forbidden unless all of the following are true after independe
 - the active lock declares the execution branch feat/m03-work-order-engine and ELEVATED assurance;
 - productImplementationAuthorized is true only in that later admitted canonical lock;
 - the execution branch is created from the post-admission canonical main and the admitted base is its ancestor with only governance/admission metadata between them;
-- Git, HIVE and governance preflight are repeated and recorded.
+- Git, LEGACY_PROVIDER and governance preflight are repeated and recorded.
 
 If any gate is missing, stale, unknown, conflicting, present only on a PR branch, or fails exact-base/source validation, stop and report NOT_AUTHORIZED / STALE. Never alter the pending lock to make execution appear admitted. Any implementation change to source files, Cargo manifests/lockfiles, fuzz manifests, product CI, or runtime crates before those gates is prohibited.
 
@@ -95,7 +95,7 @@ If any gate is missing, stale, unknown, conflicting, present only on a PR branch
 
 Use the canonical source set once as a stable prefix. Preserve settled Round 1–4 contracts as the stable semantic base. Then disclose packet-specific source sections, exact changed files, current fingerprints, and failing evidence as delta context.
 
-Use canonical paths and fingerprints rather than copying whole repositories or source bodies into every packet. Fetch additional source detail only when an explicit Work Order obligation requires it. HIVE may provide compact references only when actually available and current. Deterministic Git/hash/static/test evidence precedes model inference. Context limits may reduce duplicated transport, never a mandatory semantic obligation; no silent truncation is allowed.
+Use canonical paths and fingerprints rather than copying whole repositories or source bodies into every packet. Fetch additional source detail only when an explicit Work Order obligation requires it. LEGACY_PROVIDER may provide compact references only when actually available and current. Deterministic Git/hash/static/test evidence precedes model inference. Context limits may reduce duplicated transport, never a mandatory semantic obligation; no silent truncation is allowed.
 
 ## RISK / ASSURANCE
 
@@ -114,7 +114,7 @@ Implement only CORE-WO-M03-001:
 - one focused crates/core-work-order crate and the exact Round 4 path map below;
 - V1 public contracts, strict envelopes, typed IDs, validation and deterministic logical ID allocation;
 - source manifest and bounded provenance/freshness evidence;
-- narrow M02, Context Lock, governance and optional HIVE value-only evidence boundaries;
+- narrow M02, Context Lock, governance and optional LEGACY_PROVIDER value-only evidence boundaries;
 - synchronous pure parse, compile, validation, semantic diff, correction classification, admission and handoff functions;
 - explicit sorted canonical semantic projection, DCR and separate WorkOrderCompilationId;
 - ScopeEnvelope deny precedence and packet-scope intersection;
@@ -133,7 +133,7 @@ Do not implement or add:
 - any M03 Rust source, crate, Cargo workspace membership, Cargo.lock or fuzz manifest/target in this planning increment;
 - any M04 or later product module;
 - a database, canonical registry, persistence adapter, commit/push/checkpoint update, auto-rebase or self-promotion;
-- direct dependency on core-workspace, core-config, core-contracts, sha2, Tokio, Git libraries, filesystem/network/process/clock APIs, HIVE/GitHub SDKs, databases, graph/regex frameworks, a cache store, proptest, Criterion, or a new cryptography stack;
+- direct dependency on core-workspace, core-config, core-contracts, sha2, Tokio, Git libraries, filesystem/network/process/clock APIs, LEGACY_PROVIDER/GitHub SDKs, databases, graph/regex frameworks, a cache store, proptest, Criterion, or a new cryptography stack;
 - hidden resolver invocation, refresh/retry, ambient cwd/clock/config/client access, or runtime scheduling authority;
 - numeric production resource defaults, measured benchmark claims, or acceptance thresholds before the implementation calibration evidence exists;
 - changes to Round 1–4 architecture/contracts, authority, ownership, dependencies, security invariants, file topology, acceptance meaning, or M02/M04 boundaries;
@@ -194,16 +194,16 @@ Allowed direct internal dependency: core-identity only.
 
 Allowed existing third-party dependencies: serde with derive, serde_json, thiserror. Fuzz-only: existing libfuzzer-sys in the separate fuzz package.
 
-The M03 core MUST NOT directly depend on core-workspace, core-config, core-contracts, sha2, Tokio, Git, HIVE/GitHub SDKs, network/process/filesystem/time APIs, databases, persistent caches, graph or regex frameworks, proptest, Criterion, or a new cryptography crate. Reuse core-identity canonical fingerprinting. A caller-owned outer host may depend on M02 and M03 to translate evidence, but that adapter is outside core-work-order. Any dependency change needs a separate governed admission and exact-head review.
+The M03 core MUST NOT directly depend on core-workspace, core-config, core-contracts, sha2, Tokio, Git, LEGACY_PROVIDER/GitHub SDKs, network/process/filesystem/time APIs, databases, persistent caches, graph or regex frameworks, proptest, Criterion, or a new cryptography crate. Reuse core-identity canonical fingerprinting. A caller-owned outer host may depend on M02 and M03 to translate evidence, but that adapter is outside core-work-order. Any dependency change needs a separate governed admission and exact-head review.
 
 ## REQUIREMENTS
 
 All accepted M03 requirement IDs in CORE-R-112 through CORE-R-228, inclusive, are in scope for the future implementation. This is a contiguous 117-requirement set; none may be silently omitted. Their exact canonical wording is pinned by the Requirements and M03 plan blob IDs above. Coverage is operationalized by Packs A–H and acceptance criteria AC-001 through AC-023.
 
-- Round 1, CORE-R-112 through CORE-R-137: machine-verifiable, deterministic immutable Work Orders; distinct identities; canonical source/provenance and explicit scope; M02/Context Lock/governance bindings; stable packets separate from M04 state; complete AEG and machine-readable stop; correction/staleness safety; compact complete context; advisory HIVE; zero-LLM; finite resource and secret-safe typed failures.
+- Round 1, CORE-R-112 through CORE-R-137: machine-verifiable, deterministic immutable Work Orders; distinct identities; canonical source/provenance and explicit scope; M02/Context Lock/governance bindings; stable packets separate from M04 state; complete AEG and machine-readable stop; correction/staleness safety; compact complete context; advisory LEGACY_PROVIDER; zero-LLM; finite resource and secret-safe typed failures.
 - Round 2, CORE-R-138 through CORE-R-173: strict V1 envelopes/layer separation; immutable semantic revisions and identity; bounded DAG and intersected packet scope; fresh M02 evidence; exact Context Lock and external governance compatibility; immutable non-evergreen receipts and M04 revalidation; deny/dependency isolation; correction-vs-revision separation; complete AEG/StopCondition; no-truncation and governed context expansion; fail-closed staleness; secret-free durable payload; stable obligation IDs and lineage; required WOC/SDF/AEG/CBE/WLG/WSF/WPC; Context Lock anti-circularity.
 - Round 3, CORE-R-174 through CORE-R-207: stateless pure service operations; no hidden I/O; deterministic IDs and external lineage/LPC CAS; monotonic revision; no internal persistence; canonical identity reuse; PCM and DCR; finite resource dimensions with evidence-derived defaults; typed bounded errors/caller-only retry; one-crate acyclic dependency direction; deterministic compile/admission; atomic failure with no partial output.
-- Round 4, CORE-R-208 through CORE-R-228: exact public schema/version/kind and typed IDs; explicit semantic projection vs compilation identity; pure no-I/O/no-clock functions and caller timeout discard; bounded source/M02/lock/governance evidence; DAG/scope and complete AEG/PCM; external lineage CAS; closed error/retry domains; calibrated finite resource limits; property/fuzz law matrix; honest reproducible Windows/Ubuntu calibration; exact-head production evidence traceability; no hidden authority dependencies; secret-safe durable payloads; advisory HIVE; exact one-crate dependency map; review candidate distinct from promotion.
+- Round 4, CORE-R-208 through CORE-R-228: exact public schema/version/kind and typed IDs; explicit semantic projection vs compilation identity; pure no-I/O/no-clock functions and caller timeout discard; bounded source/M02/lock/governance evidence; DAG/scope and complete AEG/PCM; external lineage CAS; closed error/retry domains; calibrated finite resource limits; property/fuzz law matrix; honest reproducible Windows/Ubuntu calibration; exact-head production evidence traceability; no hidden authority dependencies; secret-safe durable payloads; advisory LEGACY_PROVIDER; exact one-crate dependency map; review candidate distinct from promotion.
 
 No requirement grants permission beyond the scope and later Context Lock activation rules below.
 
@@ -212,13 +212,13 @@ No requirement grants permission beyond the scope and later Context Lock activat
 - Preserve the accepted Round 1–4 M03/M02/M04 boundaries and the exact public V1 types, fields, enum domains, service functions, adapter DTOs, error classes, and dependency/file map in docs/modules/M03-WORK-ORDER-ENGINE.md.
 - Implement parse_request, compile, validate_frozen, diff_revision, classify_correction, evaluate_admission, materialize_handoff, and canonical_semantic_bytes as synchronous pure operations over explicit typed values and M03ResourceBudgetV1.
 - Frozen semantic projection includes only the specified immutable Work Order semantics. Sort every unordered collection before core-identity canonical_bytes/fingerprint. WorkOrderFingerprint excludes compiler implementation generations; WorkOrderCompilationId binds compiler/algorithm/policy/config/security and resolved compilation context.
-- No service reads a repository/path/cwd/environment/global client or clock, invokes a resolver, Git/HIVE/GitHub/network/process, persists, refreshes, retries, or mutates a frozen revision. Caller-owned orchestration enforces deadlines and discards late results.
-- Source, M02, Context Lock, governance, HIVE, lineage/LPC, correction, error/retry, diagnostics and admission fields obey the exact Round 4 DTO and freshness rules. UNKNOWN, mismatch, replay, substitution or missing required proof never becomes READY.
+- No service reads a repository/path/cwd/environment/global client or clock, invokes a resolver, Git/LEGACY_PROVIDER/GitHub/network/process, persists, refreshes, retries, or mutates a frozen revision. Caller-owned orchestration enforces deadlines and discards late results.
+- Source, M02, Context Lock, governance, LEGACY_PROVIDER, lineage/LPC, correction, error/retry, diagnostics and admission fields obey the exact Round 4 DTO and freshness rules. UNKNOWN, mismatch, replay, substitution or missing required proof never becomes READY.
 - Packet graphs are bounded DAGs with deterministic topological ordering; deny overrides allow; packet scope is a subset/intersection of parent scope; no scheduling authority is inferred.
 - Every blocking criterion has evidence edges or deterministic N/A semantics; mandatory source reconstruction through PCM equals the independently required source set; no partial output is returned on a core resource error.
 - READY receipts are immutable historical evidence, not evergreen capabilities; M04 must revalidate carried freshness bindings before Run creation.
 - No runtime persistence, database, self-tuning or hidden compile cache. Any separately admitted disposable L1 memo cannot affect correctness.
-- HIVE remains advisory. Zero LLM is mandatory for parsing, compilation, validation, fingerprinting, diff, correction classification and admission.
+- LEGACY_PROVIDER remains advisory. Zero LLM is mandatory for parsing, compilation, validation, fingerprinting, diff, correction classification and admission.
 
 ## CONSTRAINTS
 
@@ -241,7 +241,7 @@ STOP A: public contracts round-trip at V1; unknown schema/version/kind/enum and 
 
 ### Pack B — Canonical sources and external evidence seams
 
-Implement versioned canonical source refs and bounded resolution evidence, freshness/provenance/substitution checks, and value-only M02/Context Lock/governance/HIVE evidence DTOs. Declare caller-owned resolver traits only; the pure core never calls them. HIVE references require an advisory-only marker.
+Implement versioned canonical source refs and bounded resolution evidence, freshness/provenance/substitution checks, and value-only M02/Context Lock/governance/LEGACY_PROVIDER evidence DTOs. Declare caller-owned resolver traits only; the pure core never calls them. LEGACY_PROVIDER references require an advisory-only marker.
 
 STOP B: mismatched, stale, unknown or substituted source evidence is non-current; wrong M02/lock/governance schemas or bindings fail closed; no raw source body, path inventory, secret or live handle is persisted.
 
@@ -293,7 +293,7 @@ The future implementation MUST include a mandatory CALIBRATION_ONLY stage specif
 
 Calibrate every security-sensitive dimension in M03ResourceBudgetV1: request and frozen serialized bytes; string bytes; canonical source references; packet nodes and DAG edges; scope rules; acceptance criteria; evidence requirements and AEG edges; lineage edges; context references; correction rules; semantic diff entries; diagnostics; parser depth; and caller-owned wall-clock deadline policy at the host boundary. Deadlines are not fields read by the pure core.
 
-Use deterministic local synthetic fixtures only. No network, HIVE calls, LLM, real repository contents, secrets or source bodies. Warm once; collect at least five measured iterations per relevant scenario; report median/min/max, exact command and candidate SHA, OS, toolchain, CPU and fixture generator/version. Run relevant scenarios on Windows and Ubuntu. Assert semantic correctness at every candidate value. Exercise measured candidate caps and cap-plus-one failures for each security-sensitive dimension. Mark unsupported scales as skipped/unsupported and give the observed limiting reason; never extrapolate.
+Use deterministic local synthetic fixtures only. No network, LEGACY_PROVIDER calls, LLM, real repository contents, secrets or source bodies. Warm once; collect at least five measured iterations per relevant scenario; report median/min/max, exact command and candidate SHA, OS, toolchain, CPU and fixture generator/version. Run relevant scenarios on Windows and Ubuntu. Assert semantic correctness at every candidate value. Exercise measured candidate caps and cap-plus-one failures for each security-sensitive dimension. Mark unsupported scales as skipped/unsupported and give the observed limiting reason; never extrapolate.
 
 Record fixture families for minimal valid Work Order; source count/bytes/nesting; packet count/width/depth/edges; scope allow/deny and delta fields; criteria/evidence/AEG edges; shared references and PCM reconstruction; lineage edges/revision diffs; admission source/workspace/lock/governance/policy inputs; canonical output size; malformed cycles/dangling references; repeated IDs; near-limit strings; stale admission; and timeout/late-result discard.
 
@@ -324,7 +324,7 @@ Every criterion below is blocking and MUST bind to the listed future Evidence Re
 | AC-015 | All resource dimensions are finite/positive after calibration; cap failures are typed and atomic; caller timeout discards late output. | EV-015, EV-024, EV-019 |
 | AC-016 | Diagnostics are bounded, typed and safe; secret canaries/raw source/prompt/provider payloads are not echoed or persisted. | EV-016, EV-019 |
 | AC-017 | Parsing, compilation, validation, canonicalization, diff, correction and admission use zero LLM inference. | EV-017, EV-018 |
-| AC-018 | Static evidence proves the admitted acyclic dependency set and absence of filesystem/cwd/Git/HIVE/GitHub/network/process/database authority in the pure core. | EV-018 |
+| AC-018 | Static evidence proves the admitted acyclic dependency set and absence of filesystem/cwd/Git/LEGACY_PROVIDER/GitHub/network/process/database authority in the pure core. | EV-018 |
 | AC-019 | Required public API/unit/integration/property/adversarial tests and all seven bounded fuzz surfaces pass without panic, hang, amplification, partial output or secret echo. | EV-019, EV-020 |
 | AC-020 | Relevant exact-head implementation checks pass on Windows and Ubuntu. | EV-021, EV-022 |
 | AC-021 | Advisory, license, dependency provenance and SBOM evidence pass on the exact final head. | EV-023 |
@@ -365,7 +365,7 @@ The future executor must produce:
 
 1. The M03 crate and only the frozen product file map.
 2. Required unit/integration/property/adversarial/fuzz/bench code and synthetic fixtures.
-3. docs/evidence/M03-PREFLIGHT.md with truthful Git/HIVE/governance preflight.
+3. docs/evidence/M03-PREFLIGHT.md with truthful Git/LEGACY_PROVIDER/governance preflight.
 4. docs/evidence/M03-CALIBRATION-REPORT.md with the measured matrix, selected/rejected candidates, finite defaults and environment.
 5. docs/evidence/M03-EXECUTION-REPORT.md mapping AC-001 through AC-023 to exact-head evidence and residual risks.
 6. Updated .engineering/evidence/CORE-WO-M03-001.json with exact authorized base, implementation head, changed files, tests, property/fuzz/security, calibration, CI, risks, corrections and proposed Checkpoint Delta.
@@ -376,7 +376,7 @@ The future executor must produce:
 
 Use .engineering/evidence/CORE-WO-M03-001.json. Record actual:
 - Work Order/increment ID; repository/remote; planning base; later authorized base; final implementation head; all relevant source and Context Lock fingerprints;
-- HIVE availability, CORE project resolution, checkpoint/context evidence or explicit SOLO/unavailable result;
+- LEGACY_PROVIDER availability, CORE project resolution, checkpoint/context evidence or explicit SOLO/unavailable result;
 - changed files, packet progress, tests/commands/results, property/adversarial/fuzz/security/zero-LLM results;
 - dependency graph, advisory/license/provenance and SBOM results;
 - calibration runs, exact commands/environment/fixtures/measurements, candidate selection/rejection, final finite values and unsupported scales;
@@ -395,7 +395,7 @@ A futura resposta executora deve ser em português brasileiro e incluir:
 - base autorizado e head final exatos, fingerprints de fonte/lock;
 - arquivos alterados e resumo dos Packs A–H;
 - contagem de critérios e cobertura AC/EV;
-- preflight HIVE com resultado real ou SOLO/unavailable;
+- preflight LEGACY_PROVIDER com resultado real ou SOLO/unavailable;
 - testes, propriedades, fuzz, segurança, dependências/SBOM e CI por head;
 - relatório de calibração, candidatos selecionados/rejeitados e confirmação de que valores vieram de medições;
 - falhas/correções, riscos residuais e proposta de Checkpoint Delta;
@@ -452,6 +452,6 @@ Assurance: ELEVATED
 
 Authorization in this record is canonical-main gated. It becomes effective only after the exact CORE-M03-ADMIT-001 state is independently reviewed and promoted to canonical `origin/main`. A planning/admission PR branch carrying `status=ACTIVE` is not execution authority.
 
-After admission promotion, the executor MUST create `feat/m03-work-order-engine` from post-admission canonical `origin/main`, prove `ac90b1f48c5551e65ecadace95c59f7f0647062f` is an ancestor, and prove every intervening commit contains governance/admission metadata only. It must then repeat Git/HIVE/governance preflight and validate the exact active Context Lock, Work Order blob and nine canonical source fingerprints before Pack A.
+After admission promotion, the executor MUST create `feat/m03-work-order-engine` from post-admission canonical `origin/main`, prove `ac90b1f48c5551e65ecadace95c59f7f0647062f` is an ancestor, and prove every intervening commit contains governance/admission metadata only. It must then repeat Git/LEGACY_PROVIDER/governance preflight and validate the exact active Context Lock, Work Order blob and nine canonical source fingerprints before Pack A.
 
 This admission changes execution state only. All frozen architecture, scope, dependency, contracts, Packs A-H, AC-001..AC-023, EV-001..EV-025, Calibration Gate, security invariants, file topology, M02/M04 ownership and STOP semantics remain unchanged.

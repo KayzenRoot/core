@@ -66,7 +66,7 @@ Canonical module map: `docs/modules/00-MASTER-MODULE-MAP.md`.
 - M20 Git / GitHub Delivery Engine.
 - M21 CI/CD & Release Engine.
 - M22 Security / Supply-Chain Engine.
-- M23 HIVE Sync & Federation Protocol.
+- M23 LEGACY_PROVIDER Sync & Federation Protocol.
 - M24 Headless Event & Telemetry Spine.
 
 ## Research candidates
@@ -74,9 +74,9 @@ ACS, TSS, EOF, ENS, PCE and NSP are candidates, not implementation claims.
 
 ## External bootstrap follow-up
 - CORE-GOV-001: activate main ruleset when admin mutation is available.
-- CORE-HIVE-001: validate against the user's live local HIVE v1.0.0 runtime.
+- CORE-LEGACY_PROVIDER-001: validate against the user's live local LEGACY_PROVIDER v1.0.0 runtime.
 
 ## Explicitly excluded
 - dashboard/cockpit/web UI;
-- duplicate HIVE RAG/memory/repository-intelligence engines;
-- shared HIVE/CORE database coupling.
+- duplicate LEGACY_PROVIDER RAG/memory/repository-intelligence engines;
+- shared LEGACY_PROVIDER/CORE database coupling.

@@ -1,6 +1,6 @@
 # CORE Architecture
 
-> **CURRENT AUTHORITY (2026-09-29; CORE-D-205, effective on protected-main promotion):** Standalone Git-canonical CORE uses independent M01/M02/M03 V2. HIVE install, MCP, Docker, API, project registry, retrieval or context are not required. Prior conflicting HIVE text below is historical, not operative. Superseded M04 Context Lock is STALE; no implementation admission while #111 external V1 consumers remain UNKNOWN, and PRs #106/#118 remain unmerged.
+> **CURRENT AUTHORITY (2026-09-29; CORE-D-205, effective on protected-main promotion):** Standalone Git-canonical CORE uses independent M01/M02/M03 V2. LEGACY_PROVIDER install, MCP, Docker, API, project registry, retrieval or context are not required. Prior conflicting LEGACY_PROVIDER text below is historical, not operative. Superseded M04 Context Lock is STALE; no implementation admission while #111 external V1 consumers remain UNKNOWN, and PRs #106/#118 remain unmerged.
 
 Status: `PRODUCT_DISCOVERY_ACTIVE`
 
@@ -9,11 +9,11 @@ This document contains the frozen foundation/runtime architecture plus accepted 
 ## Current standalone foundation architecture
 
 - **Git and source authority:** exact tracked repository and verified local checkout are canonical. Existing local docs/project-brain paths belong to CORE, not an external project service.
-- **M01:** independent Rust lifecycle/safety runtime, no Hive provider required.
+- **M01:** independent Rust lifecycle/safety runtime, no LegacyProvider provider required.
 - **M02:** deterministic local Git/filesystem/project identities; local association defaults to NoopAssociationProvider. Optional separately verified generic association is advisory and never grants filesystem/path authority. Standalone V2 rejects old V1 envelopes.
 - **M03:** pure Work Order compiler uses M02 V2 and LocalContextRefV1, locally anchored to canonical source. Unverified context never changes authority; no hidden I/O/MCP/network/LLM dependency inside core compilation. Old V1 envelopes reject strictly.
 - **M04:** remains planning-only. Old historical V1 Pack A/B evidence and previously admitted base are superseded. #111 external V1 consumer inventory UNKNOWN; no source/compatibility decision or new admission yet, no M04 code authorization.
-- **GEF:** local Git-first governance, Context Locks, PR/CI and evidence; no HIVE bootstrap or context server.
+- **GEF:** local Git-first governance, Context Locks, PR/CI and evidence; no LEGACY_PROVIDER bootstrap or context server.
 
 ## Current construction flow
 
@@ -22,7 +22,7 @@ Intent => exact local Git canonical docs => bounded GEF Work Order/source lock =
 ## Historical pre-cutover discovery architecture direction (non-operative where conflicting)
 
 ```text
-HIVE = intelligence plane
+LEGACY_PROVIDER = intelligence plane
 CORE = action plane
 GEF  = governance protocol
 Git/GitHub = source history + governed delivery transport
@@ -30,9 +30,9 @@ Git/GitHub = source history + governed delivery transport
 
 CORE is headless. CLI, APIs, MCP and structured events may be admitted by module planning; visual control surfaces are not part of CORE.
 
-CORE standalone behavior uses only bounded fallback capabilities needed for safe operation. When HIVE is compatible/available, Adaptive Capability Substitution is the candidate pattern for replacing those fallbacks with HIVE-owned intelligence.
+CORE standalone behavior uses only bounded fallback capabilities needed for safe operation. When LEGACY_PROVIDER is compatible/available, Adaptive Capability Substitution is the candidate pattern for replacing those fallbacks with LEGACY_PROVIDER-owned intelligence.
 
-HIVE and CORE must not share canonical database tables. Candidate synchronization uses versioned envelopes, fingerprints and events.
+LEGACY_PROVIDER and CORE must not share canonical database tables. Candidate synchronization uses versioned envelopes, fingerprints and events.
 
 Canonical discovery map: `docs/modules/00-MASTER-MODULE-MAP.md`.
 Planning/execution protocol: `docs/engineering/CORE-MODULAR-DELIVERY-MODEL.md`.
@@ -52,7 +52,7 @@ CORE product runtime is Rust-first:
 - canonical typed machine contracts;
 - no arbitrary dynamic-library plugins.
 
-HIVE remains independently implemented/deployed. CORE communicates with HIVE through versioned external contracts rather than sharing language/runtime/database internals.
+LEGACY_PROVIDER remains independently implemented/deployed. CORE communicates with LEGACY_PROVIDER through versioned external contracts rather than sharing language/runtime/database internals.
 
 
 ## M02 Project / Workspace Adapter architecture direction
@@ -60,7 +60,7 @@ HIVE remains independently implemented/deployed. CORE communicates with HIVE thr
 M02 sits directly above M01 runtime/contracts and below every later module that needs a concrete project checkout.
 
 ```text
-HIVE Project Registry (external intelligence authority)
+LEGACY_PROVIDER Project Registry (external intelligence authority)
           |
           | optional project identity/provenance
           v
@@ -113,7 +113,7 @@ DISCOVERING -> VALIDATING
         |          |
         |          +---- local Git/filesystem evidence
         |          +---- explicit intent/config
-        |          +---- optional HIVE association evidence
+        |          +---- optional LEGACY_PROVIDER association evidence
         v
 WorkspaceBindingReceipt  (durable proof)
         |
@@ -162,7 +162,7 @@ Workspace SOURCE_AUTHORITY
 
 Only SOURCE_AUTHORITY is eligible to become downstream source-path input. Git metadata/object authorities exist solely to interpret repository state and do not transitively grant mutation capability.
 
-HIVE association enters through a versioned `nexlabs.project-association@1`-style capability seam. M23 may later provide a deeper provider while M02 keeps the same consumer contract.
+LEGACY_PROVIDER association enters through a versioned `nexlabs.project-association@1`-style capability seam. M23 may later provide a deeper provider while M02 keeps the same consumer contract.
 
 
 ## M02 evidence/invalidation architecture
@@ -201,7 +201,7 @@ Authority roots are explicit typed records rather than path prefixes. SOURCE, GI
 
 The L1 proof cache is runtime-epoch scoped and disposable. Persistent proof caching remains optional and unapproved until corruption/recovery/security evidence exists.
 
-M02 emits stable fingerprints, component masks and deltas so HIVE and later LLM-facing modules can reuse compact context rather than repeatedly embedding full path inventories or Git status payloads.
+M02 emits stable fingerprints, component masks and deltas so LEGACY_PROVIDER and later LLM-facing modules can reuse compact context rather than repeatedly embedding full path inventories or Git status payloads.
 
 
 ## M02 crate and contract architecture freeze
@@ -243,7 +243,7 @@ human / planner / API intent
           +--> canonical Project Brain / GEF source refs
           +--> M02 WorkspaceHandle / WorkspaceBasis refs
           +--> Context Lock / governance proof refs
-          +--> optional HIVE compact context refs
+          +--> optional LEGACY_PROVIDER compact context refs
           |
           v
      M03 Work Order Compiler
@@ -304,7 +304,7 @@ These are discovery mechanisms, not implementation claims.
 
 ### Token-economy architecture
 
-M03 does not duplicate HIVE retrieval intelligence. It packages canonical references and packet-specific context obligations so HIVE or other context providers can supply detail on demand.
+M03 does not duplicate LEGACY_PROVIDER retrieval intelligence. It packages canonical references and packet-specific context obligations so LEGACY_PROVIDER or other context providers can supply detail on demand.
 
 Stable project context is represented by fingerprints/refs where possible; packet deltas carry only changed or specifically required inputs. Full raw source remains retrievable but is not duplicated into every compiled packet.
 
@@ -457,7 +457,7 @@ A stale precondition cannot be silently rebased.
 
 ### Compiler purity boundary
 
-No hidden repository/network/HIVE/GitHub access exists inside compiler semantics. Adapters resolve inputs first.
+No hidden repository/network/LEGACY_PROVIDER/GitHub access exists inside compiler semantics. Adapters resolve inputs first.
 
 This allows:
 - deterministic tests;
@@ -504,7 +504,7 @@ The core is synchronous and does not require Tokio by default.
 
 The Round 3 candidate dependency direction (`core-contracts + core-identity + core-config + core-workspace -> core-work-order -> future M04`) is refined by the Round 4 dependency disposition below after inspecting the actual workspace graph.
 
-No database/network/Git/HIVE runtime dependency belongs in the compiler core.
+No database/network/Git/LEGACY_PROVIDER runtime dependency belongs in the compiler core.
 
 
 ## M03 Round 4 public-contract and adapter architecture
@@ -514,7 +514,7 @@ Round 4 freezes one versioned public boundary at schema nexlabs.core.work-order 
 The pure synchronous core consumes already-resolved value evidence and emits deterministic contracts:
 
 ~~~text
-caller-owned canonical source / M02 / Context Lock / GEF / optional HIVE adapters
+caller-owned canonical source / M02 / Context Lock / GEF / optional LEGACY_PROVIDER adapters
         | bounded versioned evidence DTOs, fingerprints, provenance and freshness
         v
 core-work-order pure compile / validate / diff / classify / admit / handoff
@@ -523,7 +523,7 @@ core-work-order pure compile / validate / diff / classify / admit / handoff
 external governed persistence / future M04
 ~~~
 
-Resolver interfaces describe caller-owned source, M02 workspace/basis, Context Lock, governance, lineage and optional HIVE seams. No core-work-order service accepts or invokes a resolver. The host calls any needed adapter explicitly, then supplies its bounded evidence. M02 continues to own workspace/path/repository truth; the M03 DTO records only M02 schema/version, stable identities, generation, basis fingerprint, required profile/components and proof provenance. HIVE context remains advisory and cannot satisfy missing canonical, M02 or governance proof. Wall-clock deadlines are also host-owned: the pure core reads no clock; a timed-out invocation is discarded by the caller and cannot become accepted semantic/admission output.
+Resolver interfaces describe caller-owned source, M02 workspace/basis, Context Lock, governance, lineage and optional LEGACY_PROVIDER seams. No core-work-order service accepts or invokes a resolver. The host calls any needed adapter explicitly, then supplies its bounded evidence. M02 continues to own workspace/path/repository truth; the M03 DTO records only M02 schema/version, stable identities, generation, basis fingerprint, required profile/components and proof provenance. LEGACY_PROVIDER context remains advisory and cannot satisfy missing canonical, M02 or governance proof. Wall-clock deadlines are also host-owned: the pure core reads no clock; a timed-out invocation is discarded by the caller and cannot become accepted semantic/admission output.
 
 FrozenWorkOrder semantic identity is an explicit projection. It includes schema/version/kind, semantic mission/scope/dependency policy, required canonical source identity/fingerprint/provenance/freshness, workspace/lock/governance requirements, packet DAG, acceptance/evidence graph, context obligations, correction policy, stop condition and lineage parent. It excludes diagnostic/transport/rendering data, timestamps, wall duration, PR URLs, runtime evidence and M04 state. Unordered collections are sorted before the existing core-identity canonical fingerprint primitive; diagnostics are stored outside the frozen revision.
 
@@ -531,7 +531,7 @@ FrozenWorkOrder semantic identity is an explicit projection. It includes schema/
 
 Cargo metadata at the admitted base shows ten workspace crates and no M03 crate. Existing core-workspace directly enables Tokio filesystem, network and process features for M02 inspection. To keep M03 free of a transitive I/O-capable M02 service surface, V0.0 core-work-order does not directly depend on core-workspace or core-config. The outer adapter/host may depend on both core-workspace and core-work-order and map M02's public evidence to the narrow M03 DTO. This preserves M02 ownership without duplicating its workspace model.
 
-The frozen M03 crate directly uses core-identity for canonical bytes/fingerprints and existing workspace serde, serde_json and thiserror dependencies for V1 contracts, bounded JSON and typed errors. It does not directly add core-contracts, core-config, core-workspace, sha2, Tokio, Git/network/process APIs, HIVE/GitHub SDKs, databases, graph libraries or caches. core-identity's observed transitive closure is core-contracts, serde, serde_json, sha2 and thiserror, with no process/network/database authority.
+The frozen M03 crate directly uses core-identity for canonical bytes/fingerprints and existing workspace serde, serde_json and thiserror dependencies for V1 contracts, bounded JSON and typed errors. It does not directly add core-contracts, core-config, core-workspace, sha2, Tokio, Git/network/process APIs, LEGACY_PROVIDER/GitHub SDKs, databases, graph libraries or caches. core-identity's observed transitive closure is core-contracts, serde, serde_json, sha2 and thiserror, with no process/network/database authority.
 
 Dependency direction remains acyclic: existing M01/M02 crates are unchanged; core-work-order depends downward only on core-identity and serialization/error primitives; the outer host/adapters translate M02 evidence; future M04 consumes the immutable M03 handoff. Any direct M02 type coupling or additional dependency requires a separate architecture/dependency admission and fresh exact-head review.
 
@@ -590,7 +590,7 @@ Snapshots are derived acceleration artifacts bound to a verified journal boundar
 
 V1 exposes explicit request/receipt/result contracts for Run admission, Attempt creation, Step declaration, transitions, cancellation, continuation, replay and bounded reference attachment. Durable envelopes use closed schema/kind registries, typed IDs and machine-readable bounded errors/reason codes.
 
-The deterministic core receives no ambient filesystem, repository, network, process, database, HIVE, GitHub or clock authority. Required external proof arrives as already-resolved bounded values/adapters. Core lifecycle/projection/replay semantics are zero-LLM.
+The deterministic core receives no ambient filesystem, repository, network, process, database, LEGACY_PROVIDER, GitHub or clock authority. Required external proof arrives as already-resolved bounded values/adapters. Core lifecycle/projection/replay semantics are zero-LLM.
 
 ### Canonical identity
 
@@ -619,7 +619,7 @@ This is a planning candidate only. M04 product implementation remains unauthoriz
 
 ### Crate boundary
 
-M04 V0.0 is implemented as a single `core-run-state` crate. The crate contains only deterministic state semantics and versioned contracts. It does not own a database, runtime scheduler, executor, tool runner, Git client, HIVE client or external evidence service.
+M04 V0.0 is implemented as a single `core-run-state` crate. The crate contains only deterministic state semantics and versioned contracts. It does not own a database, runtime scheduler, executor, tool runner, Git client, LEGACY_PROVIDER client or external evidence service.
 
 Direct dependency direction:
 
@@ -627,7 +627,7 @@ Direct dependency direction:
 core-contracts <- core-identity <- core-work-order <- core-run-state
                                       ^              |
                                       |              +--> later M05+ consumers
-caller-owned M01/M02/GEF/HIVE adapters              |
+caller-owned M01/M02/GEF/LEGACY_PROVIDER adapters              |
                                       +--------------+
 ~~~
 
@@ -748,8 +748,8 @@ The Work Order uses the Round 4 pure-core/host-store split unchanged. Packs A-F 
 ## Historical superseded foundation architecture
 ## Foundation planes
 
-### HIVE intelligence plane
-External HIVE v1.0.0 supplies project registry, repository intelligence, retrieval, memory, checkpoint-first context, token optimization and read-only MCP context capabilities.
+### LEGACY_PROVIDER intelligence plane
+External LEGACY_PROVIDER v1.0.0 supplies project registry, repository intelligence, retrieval, memory, checkpoint-first context, token optimization and read-only MCP context capabilities.
 
 ### CORE product plane
 This repository will contain the future CORE operational product. Its runtime architecture is not yet selected.
@@ -765,7 +765,7 @@ Git is canonical source history. GitHub provides hosting, PRs, CI evidence and r
 ```text
 Project intent
   -> Project Brain canonical truth
-  -> HIVE context/retrieval
+  -> LEGACY_PROVIDER context/retrieval
   -> GEF bounded Work Order
   -> executor
   -> tests/evidence
@@ -775,7 +775,7 @@ Project intent
 
 ## Non-duplication invariant
 
-CORE MUST consume stable HIVE capabilities instead of reimplementing HIVE context/memory/retrieval solely for local convenience.
+CORE MUST consume stable LEGACY_PROVIDER capabilities instead of reimplementing LEGACY_PROVIDER context/memory/retrieval solely for local convenience.
 
 ## Product architecture gate
 

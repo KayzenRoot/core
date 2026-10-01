@@ -11,17 +11,17 @@ Work Order: `CORE-WO-M01-001`
 - Frozen base: `fdb4dbe165e74b009c43df3874b6043c9b94710b` is an ancestor of HEAD.
 - Governance validation: `python scripts/validate_governance.py` -> `PASS`.
 
-## Toolchain and HIVE
+## Toolchain and LEGACY_PROVIDER
 
 - Rust stable active; Cargo `1.98.1` on Windows MSVC.
 - Docker Engine available.
-- HIVE v1.0.0 API health: `status=ok`.
-- HIVE project `CORE`, relative path `core`: `READY` after the API read-only mount was corrected to the parent `D:/Projetos Codex`.
+- LEGACY_PROVIDER v1.0.0 API health: `status=ok`.
+- LEGACY_PROVIDER project `CORE`, relative path `core`: `READY` after the API read-only mount was corrected to the parent `D:/Projetos Codex`.
 - Repository index: `COMPLETED`, 67 files at the exact HEAD.
 - Retrieval corpus: `CURRENT`, 115 references.
 
 ## Scope and blockers
 
-M01 is the only admitted product implementation scope. The checkout initially contained planning/governance only; the Rust workspace is being added under the nine frozen responsibility boundaries. No HIVE source, database, provider SDK, UI, network listener or business execution state is introduced.
+M01 is the only admitted product implementation scope. The checkout initially contained planning/governance only; the Rust workspace is being added under the nine frozen responsibility boundaries. No LEGACY_PROVIDER source, database, provider SDK, UI, network listener or business execution state is introduced.
 
-The preflight had no frozen-architecture blocker. HIVE evidence is recorded only from observed API/index responses; no unavailable evidence is inferred.
+The preflight had no frozen-architecture blocker. LEGACY_PROVIDER evidence is recorded only from observed API/index responses; no unavailable evidence is inferred.

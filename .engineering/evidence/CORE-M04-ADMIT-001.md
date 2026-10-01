@@ -43,9 +43,9 @@ No change is made to:
 
 Presence of armed/active metadata on `planning/m04-execution-admission` is not execution authority. Pack A remains forbidden until the exact reviewed admission state is promoted to canonical `origin/main`.
 
-## HIVE observation
+## LEGACY_PROVIDER observation
 
-No direct HIVE MCP/connector is available in this chat environment. This admission uses exact Git canonical truth and does not invent HIVE project/checkpoint evidence. The future executor must repeat the optional HIVE preflight if available.
+No direct LEGACY_PROVIDER MCP/connector is available in this chat environment. This admission uses exact Git canonical truth and does not invent LEGACY_PROVIDER project/checkpoint evidence. The future executor must repeat the optional LEGACY_PROVIDER preflight if available.
 
 ## STOP CONDITION
 

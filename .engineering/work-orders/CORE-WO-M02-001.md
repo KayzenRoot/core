@@ -11,11 +11,11 @@ Product implementation authorization: CLOSED — WORK ORDER COMPLETED
 
 Implement the production-grade M02 Project / Workspace Adapter exactly from the frozen M02 planning basis.
 
-M02 must provide deterministic, zero-LLM workspace attachment, identity, repository/worktree topology, authority/path proof, HIVE association reconciliation, drift detection, bounded incremental revalidation, L1 proof reuse, bounded hashing, and evidence-backed resource calibration.
+M02 must provide deterministic, zero-LLM workspace attachment, identity, repository/worktree topology, authority/path proof, LEGACY_PROVIDER association reconciliation, drift detection, bounded incremental revalidation, L1 proof reuse, bounded hashing, and evidence-backed resource calibration.
 
-Do not redesign settled architecture. Do not duplicate HIVE-owned Project Registry, RAG, memory or repository-intelligence capabilities.
+Do not redesign settled architecture. Do not duplicate LEGACY_PROVIDER-owned Project Registry, RAG, memory or repository-intelligence capabilities.
 
-## HIVE PREFLIGHT
+## LEGACY_PROVIDER PREFLIGHT
 
 Before product-code changes:
 
@@ -23,13 +23,13 @@ Before product-code changes:
 2. verify the admitted Context Lock is current and not STALE;
 3. read canonical sources in the required hierarchy;
 4. run existing governance validation;
-5. detect local HIVE v1.0.0 availability using the repository's existing integration/bootstrap path;
-6. if HIVE is available, resolve CORE/project context through HIVE and record actual evidence;
-7. if HIVE is unavailable, continue in bounded SOLO mode using canonical Git sources and record degraded HIVE state;
-8. never fabricate HIVE health/project/index evidence;
+5. detect local LEGACY_PROVIDER v1.0.0 availability using the repository's existing integration/bootstrap path;
+6. if LEGACY_PROVIDER is available, resolve CORE/project context through LEGACY_PROVIDER and record actual evidence;
+7. if LEGACY_PROVIDER is unavailable, continue in bounded SOLO mode using canonical Git sources and record degraded LEGACY_PROVIDER state;
+8. never fabricate LEGACY_PROVIDER health/project/index evidence;
 9. emit `docs/evidence/M02-PREFLIGHT.md` before Pack A proceeds.
 
-HIVE is intelligence/context only. It cannot grant local path authority or override contradictory local Git/filesystem evidence.
+LEGACY_PROVIDER is intelligence/context only. It cannot grant local path authority or override contradictory local Git/filesystem evidence.
 
 ## CANONICAL BASIS
 
@@ -48,11 +48,11 @@ Load in this order:
 11. this Work Order
 12. admitted `.engineering/context-locks/CORE-WO-M02-001.json`
 
-Canonical Git content outranks HIVE/cache/chat summaries.
+Canonical Git content outranks LEGACY_PROVIDER/cache/chat summaries.
 
 ## CONTEXT
 
-The admitted Context Lock, canonical source hierarchy and exact Git base define executable context. Chat history, HIVE retrieval, caches and derived summaries are advisory accelerators only.
+The admitted Context Lock, canonical source hierarchy and exact Git base define executable context. Chat history, LEGACY_PROVIDER retrieval, caches and derived summaries are advisory accelerators only.
 
 Use the canonical basis once as stable prefix, then progressively disclose only packet-relevant deltas, changed files and failing evidence.
 
@@ -75,7 +75,7 @@ Use progressive disclosure:
 - for Pack B-H, prefer fingerprints, changed files, failing evidence and relevant module subsections;
 - do not repeatedly ingest the whole repository;
 - deterministic Git/AST/hash/test evidence before LLM reasoning;
-- use HIVE delta/context capabilities when genuinely available;
+- use LEGACY_PROVIDER delta/context capabilities when genuinely available;
 - cache/reuse valid independent evidence only when relevant inputs are unchanged.
 
 No LLM inference is allowed in M02 runtime logic, basis computation, calibration or acceptance selection.
@@ -110,7 +110,7 @@ NECESSARY implementation:
 - AuthorityRootV1 + PAF + FSC;
 - RepositoryGraphV1;
 - hardened system-Git `GitInspector` baseline;
-- HIVE association capability seam and SOLO/HIVE reconciliation;
+- LEGACY_PROVIDER association capability seam and SOLO/LEGACY_PROVIDER reconciliation;
 - WorkspaceBasisV1 / WorkspaceBasisDiffV1;
 - BVM freshness profiles;
 - WDG stale-handle behavior;
@@ -130,7 +130,7 @@ Do not implement:
 - Git checkout/reset/branch/commit/merge/push/fetch;
 - repository repair;
 - network access to Git remotes;
-- HIVE RAG/memory/Project Registry duplication;
+- LEGACY_PROVIDER RAG/memory/Project Registry duplication;
 - M11 sandbox enforcement;
 - M20/M21 delivery/release behavior;
 - semantic AST/repository intelligence;
@@ -207,7 +207,7 @@ docs/evidence/
 Permitted existing-file changes:
 - root `Cargo.toml` to add `core-workspace` and only required Tokio `process` / `fs` features;
 - `Cargo.lock` as deterministic consequence;
-- `core-contracts` for cross-crate/versioned HIVE-association and shared receipt/envelope seams only;
+- `core-contracts` for cross-crate/versioned LEGACY_PROVIDER-association and shared receipt/envelope seams only;
 - `core-config` for M02 policy + WorkspaceResourceBudget;
 - `core-cli` only for bounded diagnostic commands required by acceptance;
 - fuzz manifest/targets;
@@ -233,7 +233,7 @@ Forbidden initial dependencies include:
 - `core-health`;
 - `core-cli`;
 - M03+ crates;
-- HIVE source/runtime/database;
+- LEGACY_PROVIDER source/runtime/database;
 - gix;
 - git2;
 - watcher frameworks;
@@ -254,7 +254,7 @@ Mandatory requirement families include:
 - semantic Git basis and repository/worktree graph correctness;
 - explicit untracked/nested/external-object policies;
 - lexical + physical path/authority proof;
-- versioned HIVE association with no local-authority grant;
+- versioned LEGACY_PROVIDER association with no local-authority grant;
 - bounded read-only/no-network Git inspection;
 - conservative filesystem semantics;
 - watcher-independent correctness;
@@ -289,7 +289,7 @@ A requirement cannot be weakened by implementation convenience, benchmark result
 14. Git inspection is read-only, no-network, non-interactive, bounded and cancellation-aware.
 15. Hostile pager/helper/diff/textconv/fsmonitor behavior cannot execute through inspection.
 16. Provider-specific data cannot leak into canonical GitEvidence semantics.
-17. HIVE association cannot grant filesystem authority.
+17. LEGACY_PROVIDER association cannot grant filesystem authority.
 18. WorkspaceBasis component changes create a new WorkspaceGeneration.
 19. Stale handles are never silently revived.
 20. BVM expresses freshness requirements, not action authorization.
@@ -376,8 +376,8 @@ STOP C:
 ### Pack D — Association, reconciliation, basis, BVM and drift
 
 Implement:
-- HIVE association provider capability seam;
-- SOLO/HIVE reconciliation;
+- LEGACY_PROVIDER association provider capability seam;
+- SOLO/LEGACY_PROVIDER reconciliation;
 - Canonical Workspace Basis;
 - BasisDiff;
 - WorkspaceGeneration;
@@ -386,7 +386,7 @@ Implement:
 - durable receipt creation.
 
 STOP D:
-- HIVE cannot override contradictory local evidence;
+- LEGACY_PROVIDER cannot override contradictory local evidence;
 - compatible drift emits new generation;
 - incompatible drift invalidates;
 - required profile masks are deterministic.
@@ -538,7 +538,7 @@ Zero/unlimited sentinel values are forbidden for security-sensitive bounds.
 ## ACCEPTANCE CRITERIA
 
 1. Context Lock remains valid for the implementation basis.
-2. Preflight evidence records Git/governance/HIVE truthfully.
+2. Preflight evidence records Git/governance/LEGACY_PROVIDER truthfully.
 3. `core-workspace` exists at the frozen file boundary.
 4. No forbidden third-party/internal dependency is added.
 5. Public durable M02 contracts use explicit v1 schema/version semantics.
@@ -553,7 +553,7 @@ Zero/unlimited sentinel values are forbidden for security-sensitive bounds.
 14. System Git provider is shell-free, no-network, no-prompt, no-mutation and bounded.
 15. Hostile Git configuration cannot execute external helpers through inspection.
 16. Secret-bearing remote/config data is redacted from canonical/evidence payloads.
-17. HIVE association is versioned and cannot grant local path authority.
+17. LEGACY_PROVIDER association is versioned and cannot grant local path authority.
 18. SOLO mode is fully functional for M02 correctness.
 19. WorkspaceBasis and BasisDiff are deterministic.
 20. Correctness-relevant drift increments generation or invalidates appropriately.
@@ -609,7 +609,7 @@ Produce/update:
 - calibration selected/rejected candidates;
 - dependency/advisory/license/SBOM;
 - zero-LLM proof;
-- HIVE availability/integration evidence only if actually observed;
+- LEGACY_PROVIDER availability/integration evidence only if actually observed;
 - changed-file summary;
 - residual risk list;
 - proposed Checkpoint Delta.
@@ -639,7 +639,7 @@ Final executor report must contain:
 - final head SHA;
 - commits by Pack A-H;
 - files created/changed;
-- HIVE preflight result;
+- LEGACY_PROVIDER preflight result;
 - acceptance criteria 1-41 mapped to evidence;
 - test/property/fuzz/security/supply-chain results;
 - calibration matrix, final budgets and rejected alternatives;
@@ -661,7 +661,7 @@ Codex may:
 Codex may not:
 - expand scope;
 - add unapproved dependencies;
-- move HIVE-owned intelligence into CORE;
+- move LEGACY_PROVIDER-owned intelligence into CORE;
 - weaken security/quality gates;
 - change frozen contract meaning;
 - add WMF/L2/watchers/Rust-native provider;

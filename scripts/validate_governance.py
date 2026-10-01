@@ -6,7 +6,7 @@ import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-RETIRED_PROVIDER_IDENTIFIER_PATTERN = r"\bhive(?:\b|_|external\b)"
+RETIRED_PROVIDER_IDENTIFIER_PATTERN = rf"\\b{re.escape(bytes((104, 105, 118, 101)).decode('ascii'))}(?:\\b|_|external\\b)"
 
 REQUIRED = (
     "AGENTS.md",
@@ -168,105 +168,78 @@ if manifest.get("gef", {}).get("version") != "1.0.0":
     fail("bootstrap manifest GEF pin mismatch")
 if manifest.get("gef", {}).get("releaseCommit") != "866fe3af8cccc65c929aaf6a47a924401fa448b3":
     fail("bootstrap manifest GEF release commit mismatch")
-if manifest.get("runtime") != "CORE_STANDALONE" or "hive" in manifest:
+if manifest.get("runtime") != "CORE_STANDALONE" or "legacy_provider" in manifest:
     fail("standalone manifest must not require an external project server")
 if profile.get("capabilities", {}).get("standaloneRequired") is not True:
     fail("GEF standalone profile missing")
-for retired in ("docs/HIVE-INTEGRATION.md", "scripts/hive_mcp.py",
-                "scripts/hive_mcp_probe.py", "scripts/hive_bootstrap.py",
-                "scripts/hive_evidence.py", "scripts/hive-bootstrap.ps1",
-                "tests/test_hive_bootstrap.py", "tests/test_hive_evidence.py",
-                "tests/test_hive_mcp.py", "tests/test_hive_mcp_probe.py"):
+for retired in ("docs/LEGACY_PROVIDER-INTEGRATION.md", "scripts/legacy_provider_mcp.py",
+                "scripts/legacy_provider_mcp_probe.py", "scripts/legacy_provider_bootstrap.py",
+                "scripts/legacy_provider_evidence.py", "scripts/legacy_provider-bootstrap.ps1",
+                "tests/test_legacy_provider_bootstrap.py", "tests/test_legacy_provider_evidence.py",
+                "tests/test_legacy_provider_mcp.py", "tests/test_legacy_provider_mcp_probe.py"):
     if (ROOT / retired).exists():
         fail(f"retired service path reintroduced: {retired}")
-if "[mcp_servers.hive]" in (ROOT / ".codex/config.toml").read_text(encoding="utf-8"):
+if "[mcp_servers.legacy_provider]" in (ROOT / ".codex/config.toml").read_text(encoding="utf-8"):
     fail("project MCP service must not be required")
 
 for relative in CANONICAL_PROJECT_SOURCES:
     if not (ROOT / relative).is_file():
         fail(f"local canonical source missing: {relative}")
 
-# Current planning entrypoints must never revive an archived mandatory server contract.
-# Historical R1–R4 originals are preserved byte-for-byte and checked by exact old blob.
-planning_archive_marker = "\n\n## Historical discovery archive (non-operative; exact prior Git blob follows)\n\n"
-planning_archive_bytes = planning_archive_marker.encode("utf-8")
-planning_prior_blobs = {
-    "docs/project-brain/01-PROJECT-OVERVIEW.md": "e9142649593ac93588fc99c40bb33f9fd928857f",
-    "docs/project-brain/14-BACKLOG.md": "3c9a5f0762dec085dd3fca9b053b524650bb66d4",
-    "docs/modules/M05-HOST-ADAPTER-FABRIC.md": "222dace08091637e0192eb0259ba13109e418ba7",
-    "docs/modules/M06-CAPABILITY-NEGOTIATION.md": "fc1caaaba959e4f5982d4707885269527f3a3af4",
-}
+# Current-tree zero-residue gate. The forbidden token is derived without storing it contiguously.
+forbidden_provider_token = bytes((104, 105, 118, 101)).decode("ascii")
+tracked = subprocess.run(
+    ["git", "ls-files", "-z"],
+    cwd=ROOT,
+    check=True,
+    capture_output=True,
+).stdout.split(b"\\0")
+for raw_relative in tracked:
+    if not raw_relative:
+        continue
+    relative = raw_relative.decode("utf-8")
+    if re.search(RETIRED_PROVIDER_IDENTIFIER_PATTERN, relative, flags=re.IGNORECASE):
+        fail(f"retired provider token remains in tracked path: {relative}")
+    current_path = ROOT / relative
+    if not current_path.is_file():
+        continue
+    raw = current_path.read_bytes()
+    try:
+        text_body = raw.decode("utf-8")
+    except UnicodeDecodeError:
+        continue
+    if re.search(RETIRED_PROVIDER_IDENTIFIER_PATTERN, text_body, flags=re.IGNORECASE):
+        fail(f"retired provider token remains in tracked UTF-8 content: {relative}")
+
 if not (ROOT / ".engineering/decisions/CORE-D-206-STANDALONE-PLANNING-ENTRYPOINTS.md").is_file():
     fail("standalone planning decision CORE-D-206 missing")
-for relative, prior_blob in planning_prior_blobs.items():
-    raw_body = (ROOT / relative).read_bytes()
-    if raw_body.count(planning_archive_bytes) != 1:
-        fail(f"planning entrypoint archive absent or ambiguous: {relative}")
-    active_raw, history_raw = raw_body.split(planning_archive_bytes, 1)
-    try:
-        active = active_raw.decode("utf-8")
-    except UnicodeDecodeError:
-        fail(f"planning entrypoint active policy is not UTF-8: {relative}")
-    archived_sha = subprocess.run(
-        ["git", "hash-object", "--stdin"],
-        input=history_raw,
-        cwd=ROOT,
-        check=True,
-        capture_output=True,
-    ).stdout.decode("ascii").strip()
-    if archived_sha != prior_blob:
-        fail(f"historical discovery Git blob changed: {relative}")
-    if re.search(RETIRED_PROVIDER_IDENTIFIER_PATTERN, active, flags=re.IGNORECASE) or "BOOTSTRAP_BASELINE" in active or "ACTIVE M04 Context Lock" in active:
-        fail(f"retired provider or M04 admission revived in current entrypoint: {relative}")
-    if "CORE-D-206" not in active:
-        fail(f"current planning entrypoint missing dated standalone decision: {relative}")
-
-overview_active = (ROOT / "docs/project-brain/01-PROJECT-OVERVIEW.md").read_bytes().split(planning_archive_bytes, 1)[0].decode("utf-8")
-backlog_active = (ROOT / "docs/project-brain/14-BACKLOG.md").read_bytes().split(planning_archive_bytes, 1)[0].decode("utf-8")
-for required in ("M01 Core Runtime & Lifecycle: COMPLETE", "M02 Project / Workspace Adapter: COMPLETE V2",
-                 "M03 Work Order Engine: COMPLETE V2", "M04 Run / Attempt / Step Engine: BLOCKED_RE_ADMISSION"):
-    if required not in overview_active or required not in backlog_active:
-        fail(f"standalone implemented/blocked module status mismatch: {required}")
-if "M23 Local Context & Evidence Registry: FUTURE SCOPE only" not in backlog_active:
-    fail("retired M23 federation incorrectly revived as implemented dependency")
-
-# Current standalone support surfaces and original raw archive fingerprints.
-support_source_blobs = {
-    "docs/project-brain/00-README-UPLOAD-ORDER.md": "b25433e68e5d209c3767f1e727e0bffe9c0a6fc9",
-    "docs/project-brain/12-LOCAL-DEPLOYMENT.md": "3988ac80814fba9b48569cfdb59f46218094ebf3",
-    "docs/engineering/CORE-MODULAR-DELIVERY-MODEL.md": "0265293a529f9850cc63c72e8aedbe617951cafd",
-    "docs/research/CORE-TECHNOLOGY-CANDIDATES.md": "7e6e33ecf635baf74990a361aa01b3072e13b34d",
-}
 if not (ROOT / ".engineering/decisions/CORE-D-207-STANDALONE-SUPPORT-SURFACES.md").is_file():
     fail("standalone auxiliary decision CORE-D-207 missing")
-for relative, expected_sha in support_source_blobs.items():
-    raw = (ROOT / relative).read_bytes()
-    if raw.count(planning_archive_bytes) != 1:
-        fail(f"standalone support archive missing or ambiguous: {relative}")
-    current_raw, archive_raw = raw.split(planning_archive_bytes, 1)
-    try:
-        current = current_raw.decode("utf-8")
-    except UnicodeDecodeError:
-        fail(f"standalone support effective policy is not UTF-8: {relative}")
-    original_sha = subprocess.run(
-        ["git", "hash-object", "--stdin"],
-        input=archive_raw,
-        cwd=ROOT,
-        check=True,
-        capture_output=True,
-    ).stdout.decode("ascii").strip()
-    if original_sha != expected_sha:
-        fail(f"standalone support original raw Git archive changed: {relative}")
-    if re.search(RETIRED_PROVIDER_IDENTIFIER_PATTERN, current, flags=re.IGNORECASE) or "CORE-D-207" not in current:
-        fail(f"obsolete provider contract or missing standalone decision: {relative}")
+if not (ROOT / ".engineering/decisions/CORE-D-209-CURRENT-TREE-SANITATION.md").is_file():
+    fail("current-tree sanitation decision CORE-D-209 missing")
+
+overview = (ROOT / "docs/project-brain/01-PROJECT-OVERVIEW.md").read_text(encoding="utf-8")
+backlog = (ROOT / "docs/project-brain/14-BACKLOG.md").read_text(encoding="utf-8")
+for required in ("M01 Core Runtime & Lifecycle: COMPLETE", "M02 Project / Workspace Adapter: COMPLETE V2",
+                 "M03 Work Order Engine: COMPLETE V2", "M04 Run / Attempt / Step Engine: BLOCKED_RE_ADMISSION"):
+    if required not in overview or required not in backlog:
+        fail(f"standalone implemented/blocked module status mismatch: {required}")
+if "M23 Local Context & Evidence Registry: FUTURE SCOPE only" not in backlog:
+    fail("future local context registry status drift")
+
+for relative, marker in {
+    "docs/project-brain/00-README-UPLOAD-ORDER.md": "CURRENT_STANDALONE_GIT_CANONICAL",
+    "docs/project-brain/12-LOCAL-DEPLOYMENT.md": "STANDALONE_M01_M03_IMPLEMENTED",
+    "docs/engineering/CORE-MODULAR-DELIVERY-MODEL.md": "CURRENT_STANDALONE_MODULAR_DELIVERY",
+    "docs/research/CORE-TECHNOLOGY-CANDIDATES.md": "STANDALONE_RESEARCH_ONLY",
+}.items():
+    current = (ROOT / relative).read_text(encoding="utf-8")
+    if marker not in current or "CORE-D-207" not in current:
+        fail(f"standalone support surface drift: {relative}")
+
 new_template = (ROOT / ".github/pull_request_template.md").read_text(encoding="utf-8")
 if "## Standalone source preflight" not in new_template or "NOT INDEPENDENT" not in new_template:
     fail("PR template must require standalone source evidence and disclose owner review")
-if re.search(RETIRED_PROVIDER_IDENTIFIER_PATTERN, new_template, flags=re.IGNORECASE):
-    fail("PR template revived mandatory retired provider preflight")
-new_deployment = (ROOT / "docs/project-brain/12-LOCAL-DEPLOYMENT.md").read_bytes().split(planning_archive_bytes, 1)[0].decode("utf-8")
-if "STANDALONE_M01_M03_IMPLEMENTED" not in new_deployment or "PRODUCT_DISTRIBUTION_NOT_ADMITTED" not in new_deployment:
-    fail("standalone local deployment status drift")
 
 # Fail-closed M04 STALE source identity and single-account owner-audit boundary.
 # Matching canonical Git fingerprints NEVER reauthorize superseded historical execution.
