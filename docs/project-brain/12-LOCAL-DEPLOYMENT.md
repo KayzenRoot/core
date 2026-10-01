@@ -14,7 +14,7 @@ Successful local builds/tests do not establish an installer, packaging for end u
 The original deployment assumptions are retained below as dated, non-operative source history.
 
 
-## Historical discovery archive (non-operative; exact prior Git blob follows)
+## Sanitized historical archive (non-operative; original provenance retained in Git history)
 
 # CORE Deployment
 
