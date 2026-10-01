@@ -24,7 +24,7 @@
   "mergeSha": "e669498558e6f129efd8a8f2e20679f28e8326a7",
   "knownNonBlockingGaps": [
     "GitHub main ruleset target is documented but not enforced because the connected administration surface exposes read-only ruleset access.",
-    "Live execution against the user's local HIVE runtime is separate operator evidence."
+    "Live execution against the user's local LEGACY_PROVIDER runtime is separate operator evidence."
   ],
   "nextLegalAction": "GOVERNED_PRODUCT_DISCOVERY"
 }
