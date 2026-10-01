@@ -83,6 +83,26 @@ class StandaloneModuleDocsDispositionTests(unittest.TestCase):
                 self.assertIn(module_path, decision)
                 self.assertIn(expected["prior_blob"], decision)
 
+    def test_increment_lock_distinguishes_inputs_from_authorized_outputs(self):
+        lock_path = ROOT / ".engineering/context-locks/CORE-STANDALONE-MODULE-DOCS-007.json"
+        self.assertTrue(lock_path.exists(), "increment Context Lock is required")
+        lock = lock_path.read_text(encoding="utf-8")
+        self.assertIn('"sourceFingerprintRole": "AUTHORIZED_INPUT_BASELINES"', lock)
+        self.assertIn('"authorizedBase": "5c2952223395747522576fa46e11063c493ca3a3"', lock)
+        self.assertIn('"productImplementationAuthorized": false', lock)
+        for path in MODULES:
+            with self.subTest(path=path):
+                self.assertIn(f'"{path}"', lock)
+        for path in (
+            "docs/modules/M01-CORE-RUNTIME-LIFECYCLE.md",
+            "docs/modules/M02-PROJECT-WORKSPACE-ADAPTER.md",
+            "docs/modules/M03-WORK-ORDER-ENGINE.md",
+            ".engineering/decisions/CORE-D-208-STANDALONE-MODULE-DOC-DISPOSITION.md",
+            "tests/test_standalone_module_docs_disposition.py",
+        ):
+            with self.subTest(authorized_mutation=path):
+                self.assertIn(f'"{path}"', lock)
+
     def test_m04_stale_lock_is_not_part_of_this_disposition(self):
         lock_path = ROOT / ".engineering/context-locks/CORE-WO-M04-001.json"
         lock = lock_path.read_text(encoding="utf-8")
