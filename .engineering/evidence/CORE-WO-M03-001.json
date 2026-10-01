@@ -127,7 +127,7 @@
         "Clippy with -D warnings and targeted M03 formatting checks passed on Windows and Ubuntu.",
         "Seven bounded fuzz targets passed 1,000 executions each on Ubuntu; details and exact logs are recorded under docs/evidence/fuzz/.",
         "Governance validator: PASS for 27 required artifacts, with GEF/LEGACY_PROVIDER source bridges consistent.",
-        "Exact-base reproduction: cargo test -p core-workspace --test service from an ext4 arclegacy_provider of 6cae77e1d8814121df6646dec48bca1020119226 reproduced the same three named failures; see docs/evidence/M03-WORKSPACE-BASE-H5-UBUNTU.log."
+        "Exact-base reproduction: cargo test -p core-workspace --test service from an ext4 archive of 6cae77e1d8814121df6646dec48bca1020119226 reproduced the same three named failures; see docs/evidence/M03-WORKSPACE-BASE-H5-UBUNTU.log."
       ]
     },
     "propertyAdversarialFuzz": {
