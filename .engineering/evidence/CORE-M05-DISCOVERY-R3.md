@@ -15,7 +15,7 @@ Exact initial protected-main basis: d02462309f47632e409d0d3a7d6b265809b5dcb4
 
 Round 3 compares reuse of existing first-party OS-local IPC, separately governed stdio/MCP candidates and deferred remote transports. The proposed one-crate file map is unimplemented and may change after later measured tests/admission. It specifies calibration **dimensions and reproducibility requirements, not numerical defaults, actual M05 tests or performance gains**. In particular, accepting the CR1 header proves only syntactic protocol validity, not host identity, M06 feature compatibility or M10/M11/M12 execution authority.
 
-Nothing here changes the current ACTIVE M04 Context Lock, frozen source hierarchy, Project Brain, Work Order or HIVE runtime. External historic M04 prior-V1 consumers and retained state remain UNKNOWN under issue #111; draft source PR #118 and unmerged product PR #106 remain blocked with all 23 EV-M04 PENDING. Actual owner-local HIVE v1.0.0 Docker/Codex proof issue #4 remains OPEN. No private owner inventory supplied.
+Nothing here changes the current ACTIVE M04 Context Lock, frozen source hierarchy, Project Brain, Work Order or LEGACY_PROVIDER runtime. External historic M04 prior-V1 consumers and retained state remain UNKNOWN under issue #111; draft source PR #118 and unmerged product PR #106 remain blocked with all 23 EV-M04 PENDING. Actual owner-local LEGACY_PROVIDER v1.0.0 Docker/Codex proof issue #4 remains OPEN. No private owner inventory supplied.
 
 ## Assurance STOP
 
