@@ -18,7 +18,7 @@
 | Worktree | clean; `origin/main...HEAD` = `0 0` |
 | Ancestor chain | authorized base `ac90b1f48c5551e65ecadace95c59f7f0647062f` -> admission merge `abe21ed4564978d24b2f41bca13b6f052daa3b17` -> synchronization merge / current main `6cae77e1d8814121df6646dec48bca1020119226` |
 | Intervening delta | exactly the two governed admission/state-synchronization commits; diff `abe21..6cae77` is seven governance/evidence/checkpoint/lock files, with no M03 product code, Cargo change, or fuzz target |
-| Prior v1 attempt | preserved without applying its stale-base evidence: local branch `arclegacy_provider/m03-work-order-engine-pre-v2` remains at `abe21...`; stash `74104122eddc4b0ea9918d694fdb39dc23cf7e78` retains the blocked preflight files |
+| Prior v1 attempt | preserved without applying its stale-base evidence: local branch `archive/m03-work-order-engine-pre-v2` remains at `abe21...`; stash `74104122eddc4b0ea9918d694fdb39dc23cf7e78` retains the blocked preflight files |
 | Other checkout | `D:\Projects\core` remains on its existing `main` checkout with pre-existing `M AGENTS.md` and `?? .gitattributes`; both were left untouched |
 | Governance preflight | `python scripts/validate_governance.py` -> PASS at base HEAD `6cae77e1d8814121df6646dec48bca1020119226` after recording the preflight artifacts |
 
