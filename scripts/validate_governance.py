@@ -198,7 +198,7 @@ for raw_relative in tracked:
     if not raw_relative:
         continue
     relative = raw_relative.decode("utf-8")
-    if forbidden_provider_token.casefold() in relative.casefold():
+    if re.search(RETIRED_PROVIDER_IDENTIFIER_PATTERN, relative, flags=re.IGNORECASE):
         fail(f"retired provider token remains in tracked path: {relative}")
     current_path = ROOT / relative
     if not current_path.is_file():
@@ -208,7 +208,7 @@ for raw_relative in tracked:
         text_body = raw.decode("utf-8")
     except UnicodeDecodeError:
         continue
-    if forbidden_provider_token.casefold() in text_body.casefold():
+    if re.search(RETIRED_PROVIDER_IDENTIFIER_PATTERN, text_body, flags=re.IGNORECASE):
         fail(f"retired provider token remains in tracked UTF-8 content: {relative}")
 
 if not (ROOT / ".engineering/decisions/CORE-D-206-STANDALONE-PLANNING-ENTRYPOINTS.md").is_file():
