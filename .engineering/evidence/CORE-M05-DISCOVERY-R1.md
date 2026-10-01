@@ -17,7 +17,7 @@ Initial base: 3b7d184ad50ef22320d57572dfade965a98fbad4
 
 ## Reviewed exclusion and evidence limitations
 
-M05 Round 1 is non-authoritative early discovery. No M05 code, dependency or public DTO has been admitted. No M04 canonical source, ACTIVE lock, Work Order, checkpoint, product branch, #118 draft or HIVE runtime was edited. Real local HIVE/Codex runtime issue #4 and external previous-V1 consumer/retained-state issue #111 remain OPEN. Proposed EV-M05-D01..D14 are candidate future evidence nodes; no actual M05 implementation tests/benchmarks are claimed; all 23 global EV-M04 remain pending.
+M05 Round 1 is non-authoritative early discovery. No M05 code, dependency or public DTO has been admitted. No M04 canonical source, ACTIVE lock, Work Order, checkpoint, product branch, #118 draft or LEGACY_PROVIDER runtime was edited. Real local LEGACY_PROVIDER/Codex runtime issue #4 and external previous-V1 consumer/retained-state issue #111 remain OPEN. Proposed EV-M05-D01..D14 are candidate future evidence nodes; no actual M05 implementation tests/benchmarks are claimed; all 23 global EV-M04 remain pending.
 
 ## Verification and STOP
 
