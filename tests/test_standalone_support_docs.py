@@ -53,15 +53,17 @@ class StandaloneSupportDocsTests(unittest.TestCase):
         for path in PRIOR:
             with self.subTest(path=path):
                 active, _ = archive_parts(path)
-                self.assertIsNone(re.search(r"\bhive", active, flags=re.IGNORECASE))
+                self.assertIsNone(re.search(r"\bhive(?:\b|_|external\b)", active, flags=re.IGNORECASE))
                 self.assertIn("CORE-D-207", active)
 
     def test_prefixed_retired_provider_name_is_rejected(self):
         """Reject HIVE_PROJECTS_ROOT rather than checking only the isolated vendor word."""
-        pattern = r"\bhive"
+        pattern = r"\bhive(?:\b|_|external\b)"
         self.assertIsNotNone(re.search(pattern, "HIVE_PROJECTS_ROOT required", flags=re.IGNORECASE))
         self.assertIsNotNone(re.search(pattern, "HiveExternal must start", flags=re.IGNORECASE))
         self.assertIsNone(re.search(pattern, "archive contains old evidence", flags=re.IGNORECASE))
+        self.assertIsNone(re.search(pattern, "hived data remains historical", flags=re.IGNORECASE))
+        self.assertIsNone(re.search(pattern, "hiver process", flags=re.IGNORECASE))
         for path in PRIOR:
             with self.subTest(path=path):
                 effective, _ = archive_parts(path)
@@ -98,7 +100,7 @@ class StandaloneSupportDocsTests(unittest.TestCase):
         self.assertIn("## Standalone source preflight", template)
         self.assertIn("Separate ACTUAL new-main", template)
         self.assertIn("NOT INDEPENDENT", template)
-        self.assertIsNone(re.search(r"\bhive", template, flags=re.IGNORECASE))
+        self.assertIsNone(re.search(r"\bhive(?:\b|_|external\b)", template, flags=re.IGNORECASE))
 
     def test_decision_records_exact_prior_git_shas(self):
         """Ensure dated decision carries every original provenance identity."""

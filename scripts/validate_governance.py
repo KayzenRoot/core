@@ -215,7 +215,7 @@ for relative, prior_blob in planning_prior_blobs.items():
     ).stdout.decode("ascii").strip()
     if archived_sha != prior_blob:
         fail(f"historical discovery Git blob changed: {relative}")
-    if re.search(r"\bhive", active, flags=re.IGNORECASE) or "BOOTSTRAP_BASELINE" in active or "ACTIVE M04 Context Lock" in active:
+    if re.search(r"\bhive(?:\b|_|external\b)", active, flags=re.IGNORECASE) or "BOOTSTRAP_BASELINE" in active or "ACTIVE M04 Context Lock" in active:
         fail(f"retired provider or M04 admission revived in current entrypoint: {relative}")
     if "CORE-D-206" not in active:
         fail(f"current planning entrypoint missing dated standalone decision: {relative}")
@@ -256,12 +256,12 @@ for relative, expected_sha in support_source_blobs.items():
     ).stdout.decode("ascii").strip()
     if original_sha != expected_sha:
         fail(f"standalone support original raw Git archive changed: {relative}")
-    if re.search(r"\bhive", current, flags=re.IGNORECASE) or "CORE-D-207" not in current:
+    if re.search(r"\bhive(?:\b|_|external\b)", current, flags=re.IGNORECASE) or "CORE-D-207" not in current:
         fail(f"obsolete provider contract or missing standalone decision: {relative}")
 new_template = (ROOT / ".github/pull_request_template.md").read_text(encoding="utf-8")
 if "## Standalone source preflight" not in new_template or "NOT INDEPENDENT" not in new_template:
     fail("PR template must require standalone source evidence and disclose owner review")
-if re.search(r"\bhive", new_template, flags=re.IGNORECASE):
+if re.search(r"\bhive(?:\b|_|external\b)", new_template, flags=re.IGNORECASE):
     fail("PR template revived mandatory retired provider preflight")
 new_deployment = (ROOT / "docs/project-brain/12-LOCAL-DEPLOYMENT.md").read_bytes().split(planning_archive_bytes, 1)[0].decode("utf-8")
 if "STANDALONE_M01_M03_IMPLEMENTED" not in new_deployment or "PRODUCT_DISTRIBUTION_NOT_ADMITTED" not in new_deployment:
