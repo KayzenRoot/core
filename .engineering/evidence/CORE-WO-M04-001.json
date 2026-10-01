@@ -17,23 +17,23 @@
   "sourceCheck": {
     "candidateCanonicalSourceBlobShaKind": "git_blob_sha1",
     "candidateCanonicalSourceBlobShas": {
-      "docs/project-brain/13-CHECKPOINT.md": "18943c69e054218e13d516851454c2711211d015",
-      "docs/project-brain/16-DECISIONS-LEDGER.md": "300914170b769304b3374ac42deb5e5ac2a34dc7",
-      "docs/project-brain/03-SCOPE.md": "c4cfb0a375a911569ef02124048d35e51e0dffb3",
-      "docs/project-brain/15-DEFINITION-OF-DONE.md": "7d4b41810dab00d9848a5df1eab8025b4ac8696b",
-      "docs/project-brain/04-ARCHITECTURE.md": "f475383e002958115de878434e1ebbb725210460",
-      "docs/project-brain/02-REQUIREMENTS.md": "bab69e4147e132ca672351acdaa4aba0f5bf8443",
-      "docs/project-brain/10-SECURITY-GOVERNANCE.md": "f32078d23e3334e9fc7c05e0471da6f0fd9347ba",
-      "docs/project-brain/11-TEST-PLAN.md": "e448d23ea86179415866a5a5b777740af43a49d9",
-      "docs/modules/M04-RUN-ATTEMPT-STEP-ENGINE.md": "e42c7e2a1c1b2741b63481d674378db7cf5e0c80"
+      "docs/project-brain/13-CHECKPOINT.md": "4ff78a49585fc802602f9f641d96bb24331d8c60",
+      "docs/project-brain/16-DECISIONS-LEDGER.md": "2f4f27ebed29cde7abbd99c979e7e672df3329b5",
+      "docs/project-brain/03-SCOPE.md": "3f41e7aabd4d20f87a9bf80e57f55fa456091bd8",
+      "docs/project-brain/15-DEFINITION-OF-DONE.md": "af2ce4f1329434b0f33a8428fae20d19160f2598",
+      "docs/project-brain/04-ARCHITECTURE.md": "316d48fbf2d4b6b5b39c2eca9ff3aed5f9b7b0ff",
+      "docs/project-brain/02-REQUIREMENTS.md": "86ce174738458e479b9d740f7e6bf7ccd243f906",
+      "docs/project-brain/10-SECURITY-GOVERNANCE.md": "9a4dd6bc182729ae9401d1e40ebdf0c97570aa88",
+      "docs/project-brain/11-TEST-PLAN.md": "f746ef6e9273cd7b328c8623599178d5d5e27091",
+      "docs/modules/M04-RUN-ATTEMPT-STEP-ENGINE.md": "c4956af3fdea58aade98e1032afe586374ca6a30"
     },
-    "workOrderBlobSha": "b4db2843b08eef170ea980b849077249350e401f",
+    "workOrderBlobSha": "2d14df0d5ee62599465600c085e1a044ab50e569",
     "reviewPolicyBlobSha": "4b28ffbbf1f42445906eb260c5618e0cbe320be7"
   },
   "contextLock": {
     "path": ".engineering/context-locks/CORE-WO-M04-001.json",
     "status": "STALE",
-    "blobSha": "01788b129facb22a2fd163a767914b64617d2c0b",
+    "blobSha": "fb2d85c5bb326123dbaa3d9164cfdaa5e252e33c",
     "authorizedBase": null,
     "productImplementationAuthorized": false,
     "executionStatus": "BLOCKED_RE_ADMISSION"
@@ -167,7 +167,7 @@
     },
     "EV-M04-016": {
       "acceptanceCriterion": "AC-M04-016",
-      "obligation": "No hidden filesystem/network/process/database/HIVE/GitHub I/O",
+      "obligation": "No hidden filesystem/network/process/database/LEGACY_PROVIDER/GitHub I/O",
       "status": "PENDING",
       "owner": "FUTURE_EXECUTOR",
       "artifacts": []
@@ -232,7 +232,7 @@
   },
   "executorHandoff": {
     "path": "docs/work-orders/CODEX-HANDOFF-M04.md",
-    "blobSha": "850c41edee19b5e98387f326a5d60ad7fd399568",
+    "blobSha": "2479ef5ad810fdc59f772cdd2939d22cb8df028c",
     "status": "PACK_A_CANDIDATE_OPEN / OWNER_SELF_AUDIT_PENDING"
   },
   "executionAdmission": {
@@ -294,12 +294,12 @@
     "authorizedBaseIsAncestor": true,
     "workOrderBlobSha": "8beffbc19e73a60f49a1e4d7797427391680d5e3",
     "sourceFingerprintsVerifiedAtPreflight": 9,
-    "hive": {
+    "legacy_provider": {
       "availability": "UNAVAILABLE",
       "classification": "ADVISORY",
       "observedProjectList": "OFFLINE",
       "observedCheckpointRead": "source_not_current",
-      "observationSource": "Prior SYNC-006 attempt; current prompt directs no repeated HIVE calls.",
+      "observationSource": "Prior SYNC-006 attempt; current prompt directs no repeated LEGACY_PROVIDER calls.",
       "callsRepeated": false,
       "modeUsed": "SOLO_GIT_CANONICAL"
     },
@@ -314,7 +314,7 @@
     },
     "candidateHeadSha": "2721b89598998dad08c19f581fe650be53d3c882",
     "candidateHeadShaSource": "GitHub PR head metadata after branch push; also recorded in the PR body.",
-    "risk": "HIVE checkpoint context remains unavailable/currentness unresolved; it is advisory and Git canonical is authoritative for this state correction. The frozen Work Order table retains the SYNC-005 checkpoint snapshot while current active lock/evidence bind the SYNC-006 checkpoint blob; this exact distinction is disclosed for the owner self-audit (`NOT INDEPENDENT`). M04 remains ACTIVE on canonical main; the Pack A candidate is open on PR #106 and has not been promoted.",
+    "risk": "LEGACY_PROVIDER checkpoint context remains unavailable/currentness unresolved; it is advisory and Git canonical is authoritative for this state correction. The frozen Work Order table retains the SYNC-005 checkpoint snapshot while current active lock/evidence bind the SYNC-006 checkpoint blob; this exact distinction is disclosed for the owner self-audit (`NOT INDEPENDENT`). M04 remains ACTIVE on canonical main; the Pack A candidate is open on PR #106 and has not been promoted.",
     "frozenWorkOrderSourceSnapshot": {
       "workOrderBlobSha": "8beffbc19e73a60f49a1e4d7797427391680d5e3",
       "checkpointBlobInFrozenSync005WorkOrderTable": "ff4709465f9247b44c96572c6dfa60373a20ac05",
@@ -332,7 +332,7 @@
     ],
     "validationResults": {
       "pythonJsonParse": "PASS (four changed machine-readable governance JSON files parse)",
-      "governanceValidator": "PASS: python scripts/validate_governance.py; GEF/HIVE bridges consistent; 27 required artifacts present",
+      "governanceValidator": "PASS: python scripts/validate_governance.py; GEF/LEGACY_PROVIDER bridges consistent; 27 required artifacts present",
       "currentCanonicalSources": "PASS: nine current source blobs match ACTIVE Context Lock and Evidence Bundle",
       "workOrderBlob": "PASS: frozen Work Order blob remains 8beffbc19e73a60f49a1e4d7797427391680d5e3 in the active lock and Evidence Bundle",
       "authorizedBaseAncestry": "PASS: f6b422be5465d5a93d0b8fcf4c9507c205663072 is an ancestor of base/head 251f15495b82df8270ebc12fa93807ffaa15fba4",
@@ -374,13 +374,19 @@
     "status": "UNKNOWN_BLOCKING",
     "negativeAttestationAvailable": false
   },
-  "historicalPlanningHiveObservation": {
-    "directHiveConnectorAvailable": true,
+  "historicalPlanningLegacyProviderObservation": {
+    "directLegacyProviderConnectorAvailable": true,
     "coreProjectResolved": "2a5fb7e6-209a-4cd7-ac3b-137ca3b312bc",
     "coreCheckpointRead": "STALE_SOURCE_NOT_CURRENT",
     "modeUsed": "SOLO_GIT_CANONICAL",
     "implementationPreflightStatus": "OWNER_SELF_AUDIT_PENDING_ON_CORE_PR_106",
-    "note": "At this synchronization preflight, read-only HIVE v1.0.0 resolves CORE at D:/Projects/core, branch main, HEAD fdb4dbe165e74b009c43df3874b6043c9b94710b, dirty; checkpoint.read returned stale/source_not_current. Canonical Git origin/main at b2ac8e0db72a2145948e7773295b1b252c5e4eab is authority for this state update. Repeat HIVE and Git preflight after CORE-M04-SYNC-005 promotion and before Pack A."
+    "note": "At this synchronization preflight, read-only LEGACY_PROVIDER v1.0.0 resolves CORE at D:/Projects/core, branch main, HEAD fdb4dbe165e74b009c43df3874b6043c9b94710b, dirty; checkpoint.read returned stale/source_not_current. Canonical Git origin/main at b2ac8e0db72a2145948e7773295b1b252c5e4eab is authority for this state update. Repeat LEGACY_PROVIDER and Git preflight after CORE-M04-SYNC-005 promotion and before Pack A."
   },
-  "historicalEvidenceDisclaimer": "Old CI, old nine-source sourceCheck and original admission recorded under earlier governance are historic facts; any embedded PASS/ACTIVE statement in archival validationResults was accurate only for the named historical candidate, not this exact standalone V2 source cutover."
+  "historicalEvidenceDisclaimer": "Old CI, old nine-source sourceCheck and original admission recorded under earlier governance are historic facts; any embedded PASS/ACTIVE statement in archival validationResults was accurate only for the named historical candidate, not this exact standalone V2 source cutover.",
+  "currentTreeSanitation": {
+    "decision": "CORE-D-209",
+    "scope": "provider-specific textual/path residue only",
+    "m04ReAdmissionAuthorized": false,
+    "provenance": "exact prior payloads remain in Git history"
+  }
 }
