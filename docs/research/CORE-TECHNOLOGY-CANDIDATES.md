@@ -12,7 +12,7 @@ The former named provider-specific NSP and bidirectional federation plan are `NO
 The original research list, former provider split and protocol sketches are preserved byte-for-byte below as non-operative dated design history.
 
 
-## Historical discovery arclegacy_provider (non-operative; exact prior Git blob follows)
+## Historical discovery archive (non-operative; exact prior Git blob follows)
 
 # CORE Technology Candidates
 
