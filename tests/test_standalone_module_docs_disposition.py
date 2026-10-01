@@ -53,12 +53,13 @@ class StandaloneModuleDocsDispositionTests(unittest.TestCase):
         for path, expected in MODULES.items():
             with self.subTest(path=path):
                 active, _ = active_and_prior(path)
-                self.assertTrue(active.startswith("> **CURRENT STANDALONE AUTHORITY (2026-10-01; CORE-D-208):**"))
+                self.assertTrue(active.startswith("> **CURRENT STANDALONE AMENDMENT; CORE-D-208 OVERLAY PENDING PROMOTION (2026-10-01):**"))
                 self.assertIn(expected["revision"], active)
                 if expected["extra"]:
                     self.assertIn(expected["extra"], active)
                 self.assertIn("provider-neutral", active.lower())
                 self.assertIn("non-operative for new execution", active.lower())
+                self.assertIn("core-d-208 overlay is not canonical until the required promotion conditions are complete", active.lower())
                 self.assertIsNone(RETIRED_PROVIDER_IDENTIFIER.search(active))
 
     def test_prior_module_records_are_byte_exact_git_blobs(self):
