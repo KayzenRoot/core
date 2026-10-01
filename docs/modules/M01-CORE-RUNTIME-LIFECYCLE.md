@@ -1,3 +1,17 @@
+> **CURRENT STANDALONE AMENDMENT; CORE-D-208 OVERLAY PENDING PROMOTION (2026-10-01):**
+>
+> Work Order: #187; parent #172. The preserved record below contains the separately promoted standalone revision **Owner-directed standalone architecture amendment (2026-09-28)**; that revision remains authoritative for new CORE execution independently of CORE-D-208. The CORE-D-208 overlay is not canonical until the required promotion conditions are complete.
+>
+> Provider-neutral safety, determinism, ownership and module invariants in the prior accepted record remain part of the module contract unless explicitly superseded by a later governed decision.
+>
+> Retired-provider-specific identities, preferences, services, context fields, preflights and runtime assumptions in the prior accepted record are **non-operative for new execution** unless a later standalone decision explicitly re-admits them through provider-neutral contracts.
+>
+> Current executable authority remains the already-promoted M01 implementation and its standalone amendment.
+>
+> Exact prior Git blob preserved below: `46851bb0dfd2f00ee36f790a64e3b6ba8971d2a9`.
+
+## Prior accepted module record (exact prior Git blob follows)
+
 # M01 - Core Runtime & Lifecycle
 
 Status: `COMPLETED_APPROVED`
