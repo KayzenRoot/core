@@ -1,6 +1,6 @@
-> **CURRENT STANDALONE AMENDMENT; CORE-D-208 OVERLAY PENDING PROMOTION (2026-10-01):**
+> **CURRENT STANDALONE AUTHORITY (CORE-D-208 promoted; current-tree sanitation governed by CORE-D-209):**
 >
-> Work Order: #187; parent #172. The preserved record below contains the separately promoted standalone revision **Owner-directed standalone contract revision (2026-09-28)**; that revision remains authoritative for new CORE execution independently of CORE-D-208. The CORE-D-208 overlay is not canonical until the required promotion conditions are complete.
+> Work Order: #187; parent #172. The preserved record below contains the separately promoted standalone revision **Owner-directed standalone contract revision (2026-09-28)**; that revision remains authoritative for new CORE execution independently of CORE-D-208. CORE-D-208 is promoted and remains part of current authority.
 >
 > Provider-neutral safety, determinism, ownership and module invariants in the prior accepted record remain part of the module contract unless explicitly superseded by a later governed decision.
 >
