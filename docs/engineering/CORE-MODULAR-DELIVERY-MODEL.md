@@ -19,7 +19,7 @@ Prefer one coherent bounded module Work Order when its frozen contracts and full
 Current accepted product baseline is M01–M03 V2. M04 remains BLOCKED pending #111 and new admission; M05/M06 remain planning, M23 unimplemented local context/evidence. Optional independently admitted generic providers never grant Git/path/execution authority. Original mandatory provider-first/Codex-only instructions are preserved below solely as historical evidence.
 
 
-## Historical discovery arclegacy_provider (non-operative; exact prior Git blob follows)
+## Historical discovery archive (non-operative; exact prior Git blob follows)
 
 # CORE Modular Planning and Delivery Model
 
