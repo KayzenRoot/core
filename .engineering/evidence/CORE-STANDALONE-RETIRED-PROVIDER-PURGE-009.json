@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "core-evidence-bundle-v1",
+  "increment": "CORE-STANDALONE-RETIRED-PROVIDER-PURGE-009",
+  "issue": 191,
+  "parentIssue": 172,
+  "repository": "KayzenRoot/core",
+  "status": "GREEN_CANDIDATE",
+  "authorizedBase": "9d03bba3bf35b242bf0468f5fa7737980364c8e5",
+  "red": {
+    "head": "5842ffdf37ce139fa4c97f0049fb93ac1d088e24",
+    "workflowRun": 36939339062,
+    "governanceConclusion": "failure",
+    "intendedFailures": 2,
+    "trackedPathOffenders": 2,
+    "trackedUtf8ContentOffenders": 108
+  },
+  "target": {
+    "trackedPathOffenders": 0,
+    "trackedUtf8ContentOffenders": 0
+  },
+  "provenancePolicy": "Exact superseded provider-specific payloads remain in Git history and are not duplicated in the sanitized current tree.",
+  "m04": {
+    "status": "STALE",
+    "executionStatus": "BLOCKED_RE_ADMISSION",
+    "productImplementationAuthorized": false
+  },
+  "externalV1Consumers": {
+    "issue": 111,
+    "status": "UNKNOWN_BLOCKING"
+  },
+  "ownerSelfAudit": {
+    "required": true,
+    "independent": false,
+    "status": "PENDING"
+  }
+}
