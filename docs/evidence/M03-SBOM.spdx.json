@@ -35,7 +35,7 @@
           "referenceLocator": "pkg:cargo/block-buffer@0.10.4"
         }
       ],
-      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package archive."
+      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package arclegacy_provider."
     },
     {
       "name": "cfg-if",
@@ -60,7 +60,7 @@
           "referenceLocator": "pkg:cargo/cfg-if@1.0.5"
         }
       ],
-      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package archive."
+      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package arclegacy_provider."
     },
     {
       "name": "core-contracts",
@@ -145,7 +145,7 @@
           "referenceLocator": "pkg:cargo/cpufeatures@0.2.17"
         }
       ],
-      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package archive."
+      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package arclegacy_provider."
     },
     {
       "name": "crypto-common",
@@ -170,7 +170,7 @@
           "referenceLocator": "pkg:cargo/crypto-common@0.1.7"
         }
       ],
-      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package archive."
+      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package arclegacy_provider."
     },
     {
       "name": "digest",
@@ -195,7 +195,7 @@
           "referenceLocator": "pkg:cargo/digest@0.10.7"
         }
       ],
-      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package archive."
+      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package arclegacy_provider."
     },
     {
       "name": "generic-array",
@@ -220,7 +220,7 @@
           "referenceLocator": "pkg:cargo/generic-array@0.14.7"
         }
       ],
-      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package archive."
+      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package arclegacy_provider."
     },
     {
       "name": "itoa",
@@ -245,7 +245,7 @@
           "referenceLocator": "pkg:cargo/itoa@1.0.18"
         }
       ],
-      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package archive."
+      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package arclegacy_provider."
     },
     {
       "name": "libc",
@@ -270,7 +270,7 @@
           "referenceLocator": "pkg:cargo/libc@0.2.189"
         }
       ],
-      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package archive."
+      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package arclegacy_provider."
     },
     {
       "name": "memchr",
@@ -295,7 +295,7 @@
           "referenceLocator": "pkg:cargo/memchr@2.8.3"
         }
       ],
-      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package archive."
+      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package arclegacy_provider."
     },
     {
       "name": "proc-macro2",
@@ -320,7 +320,7 @@
           "referenceLocator": "pkg:cargo/proc-macro2@1.0.107"
         }
       ],
-      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package archive."
+      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package arclegacy_provider."
     },
     {
       "name": "quote",
@@ -345,7 +345,7 @@
           "referenceLocator": "pkg:cargo/quote@1.0.47"
         }
       ],
-      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package archive."
+      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package arclegacy_provider."
     },
     {
       "name": "serde",
@@ -370,7 +370,7 @@
           "referenceLocator": "pkg:cargo/serde@1.0.229"
         }
       ],
-      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package archive."
+      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package arclegacy_provider."
     },
     {
       "name": "serde_core",
@@ -395,7 +395,7 @@
           "referenceLocator": "pkg:cargo/serde_core@1.0.229"
         }
       ],
-      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package archive."
+      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package arclegacy_provider."
     },
     {
       "name": "serde_derive",
@@ -420,7 +420,7 @@
           "referenceLocator": "pkg:cargo/serde_derive@1.0.229"
         }
       ],
-      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package archive."
+      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package arclegacy_provider."
     },
     {
       "name": "serde_json",
@@ -445,7 +445,7 @@
           "referenceLocator": "pkg:cargo/serde_json@1.0.151"
         }
       ],
-      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package archive."
+      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package arclegacy_provider."
     },
     {
       "name": "sha2",
@@ -470,7 +470,7 @@
           "referenceLocator": "pkg:cargo/sha2@0.10.9"
         }
       ],
-      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package archive."
+      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package arclegacy_provider."
     },
     {
       "name": "syn",
@@ -495,7 +495,7 @@
           "referenceLocator": "pkg:cargo/syn@3.0.6"
         }
       ],
-      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package archive."
+      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package arclegacy_provider."
     },
     {
       "name": "thiserror",
@@ -520,7 +520,7 @@
           "referenceLocator": "pkg:cargo/thiserror@2.0.20"
         }
       ],
-      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package archive."
+      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package arclegacy_provider."
     },
     {
       "name": "thiserror-impl",
@@ -545,7 +545,7 @@
           "referenceLocator": "pkg:cargo/thiserror-impl@2.0.20"
         }
       ],
-      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package archive."
+      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package arclegacy_provider."
     },
     {
       "name": "typenum",
@@ -570,7 +570,7 @@
           "referenceLocator": "pkg:cargo/typenum@1.20.1"
         }
       ],
-      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package archive."
+      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package arclegacy_provider."
     },
     {
       "name": "unicode-ident",
@@ -595,7 +595,7 @@
           "referenceLocator": "pkg:cargo/unicode-ident@1.0.26"
         }
       ],
-      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package archive."
+      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package arclegacy_provider."
     },
     {
       "name": "version_check",
@@ -620,7 +620,7 @@
           "referenceLocator": "pkg:cargo/version_check@0.9.5"
         }
       ],
-      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package archive."
+      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package arclegacy_provider."
     },
     {
       "name": "zmij",
@@ -645,7 +645,7 @@
           "referenceLocator": "pkg:cargo/zmij@1.0.23"
         }
       ],
-      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package archive."
+      "sourceInfo": "Cargo source: registry+https://github.com/rust-lang/crates.io-index; Cargo.lock checksum binds the package arclegacy_provider."
     }
   ],
   "relationships": [
