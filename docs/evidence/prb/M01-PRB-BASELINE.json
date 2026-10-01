@@ -27,7 +27,7 @@
     "workload_class": {
       "capability_graph": [],
       "configuration": "standalone-defaults",
-      "hive": "disabled",
+      "legacy_provider": "disabled",
       "journal": "append-only-runtime-safety-v1",
       "module_graph": [],
       "suite": "M01_BOOT"
