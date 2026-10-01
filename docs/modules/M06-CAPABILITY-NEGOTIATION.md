@@ -19,7 +19,7 @@ M04 old execution authority is STALE and remains BLOCKED_RE_ADMISSION. Prior-V1 
 The retained R1–R4 study contains former provider-specific origin preference, obsolete #4 live-proof and M23 federation proposals. Those are **historical only** and cannot amend the operative standalone constraints above. All original 28 EV-M06-D01..D28 proposals remain PENDING until a distinct governed, measured, executable Work Order and evidence exist.
 
 
-## Historical discovery archive (non-operative; exact prior Git blob follows)
+## Sanitized historical archive (non-operative; original provenance retained in Git history)
 
 # M06 Capability Negotiation — Round 1 discovery candidate
 
