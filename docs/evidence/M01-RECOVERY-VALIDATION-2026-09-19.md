@@ -24,13 +24,13 @@ Work Order: `CORE-WO-M01-001`
 - BOOT benchmark: 25 samples; WNF `3e70c0176fa97ef4c43e95976b5c95b13fa205e8cceb4740bf361f74fa666127`; p50 `77.2245 ms`, p95 `107.5072 ms`, p99 `121.5817 ms`. The policy remains baseline-relative and WNF/hardware-bound.
 - First-party unsafe inventory: no unsafe block found; the only textual match is a safe configuration error message containing the word `unsafe`.
 
-## HIVE synchronization observed in this recovery
+## LEGACY_PROVIDER synchronization observed in this recovery
 
-- HIVE health: `status=ok`, version `1.0.0`.
+- LEGACY_PROVIDER health: `status=ok`, version `1.0.0`.
 - CORE inspection: `READY` at `44bca1be92ff35192fbfbd20957d1ba5043be9c9`.
 - Repository index run `137b9872-27bb-4b0a-bc9d-2054a22a8323`: `COMPLETED`; 92 discovered, 92 reused, 0 changed, 0 added.
 - Retrieval corpus run `92687f5a-2ea2-42f5-8ef1-6b3e38f26af2`: `COMPLETED`; 177 current references, 177 reused, 0 new, 0 removed.
-- HIVE's container-side inspection reported `working_tree_clean=false`; host Git showed a clean tracked working tree. This discrepancy is retained as an integration residual rather than suppressed.
+- LEGACY_PROVIDER's container-side inspection reported `working_tree_clean=false`; host Git showed a clean tracked working tree. This discrepancy is retained as an integration residual rather than suppressed.
 
 ## Remaining governed gates
 
