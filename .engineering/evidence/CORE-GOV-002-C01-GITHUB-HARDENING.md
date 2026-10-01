@@ -9,7 +9,7 @@
 - Product scope: no M03 implementation or product-source change
 - GitHub account used: `KayzenRoot`
 - GitHub CLI: `gh version 2.101.0 (2026-09-15)`
-- Bootstrap: existing user-scoped GitHub CLI package was upgraded through `winget` with the official `GitHub.cli` package; the installer reported successful archive hash verification. The executable was validated at `C:\Users\csn19\AppData\Local\Microsoft\WinGet\Packages\GitHub.cli_Microsoft.Winget.Source_8wekyb3d8bbwe\bin\gh.exe`.
+- Bootstrap: existing user-scoped GitHub CLI package was upgraded through `winget` with the official `GitHub.cli` package; the installer reported successful arclegacy_provider hash verification. The executable was validated at `C:\Users\csn19\AppData\Local\Microsoft\WinGet\Packages\GitHub.cli_Microsoft.Winget.Source_8wekyb3d8bbwe\bin\gh.exe`.
 - Authentication: `gh auth status -h github.com` succeeded for active account `KayzenRoot`; no token value was recorded.
 - Repository permission readback: `admin=true`, `maintain=true`, `push=true`, `pull=true`, `triage=true`.
 
