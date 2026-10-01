@@ -14,7 +14,7 @@ python scripts/m04_legacy_inventory.py --template
 
 Copy the neutral JSON template into a private local JSON file and review these **three independent findings**:
 
-1. exported_v1_build_or_api: inspect V1 branch exports, compiled binaries, arclegacy_providers/packages and any published or internal V1 public-API consumers, including forks and other accounts;
+1. exported_v1_build_or_api: inspect V1 branch exports, compiled binaries, archives/packages and any published or internal V1 public-API consumers, including forks and other accounts;
 2. retained_v1_journal_or_snapshot: inspect existing records, backups, test-to-live transfers, manually exported journals and snapshots outside this Git repository;
 3. downstream_consumer_or_deployment: inspect client services, test deployments, external integrations and other locations that might still read or produce M04 V1 data.
 
