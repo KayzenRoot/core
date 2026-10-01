@@ -22,8 +22,8 @@ Before writing product code:
    - `docs/modules/M01-CORE-RUNTIME-LIFECYCLE.md`
    - `docs/work-orders/CORE-WO-M01-001.md`
 5. Run existing governance validation before implementation.
-6. If local HIVE v1.0.0 is available, use its existing integration/bootstrap path for context. If unavailable, continue in bounded standalone mode and record that fact. Never fabricate HIVE evidence.
-7. Produce a short preflight report: exact HEAD, toolchain availability, HIVE availability, governance result, blockers.
+6. If local LEGACY_PROVIDER v1.0.0 is available, use its existing integration/bootstrap path for context. If unavailable, continue in bounded standalone mode and record that fact. Never fabricate LEGACY_PROVIDER evidence.
+7. Produce a short preflight report: exact HEAD, toolchain availability, LEGACY_PROVIDER availability, governance result, blockers.
 8. If no blocker, execute Packets A through H in order.
 
 ## Execution behavior
@@ -49,7 +49,7 @@ Return:
 - benchmark baseline and WNF/PRB evidence;
 - supply-chain/security/SBOM/unsafe evidence;
 - zero-LLM lifecycle proof;
-- HIVE integration status/evidence if actually available;
+- LEGACY_PROVIDER integration status/evidence if actually available;
 - residual risks;
 - explicit mapping of all 21 acceptance criteria to evidence;
 - final verdict: READY_FOR_REVIEW or BLOCKED.
