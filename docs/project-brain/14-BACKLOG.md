@@ -17,7 +17,7 @@ Canonical module map: `docs/modules/00-MASTER-MODULE-MAP.md`.
 
 ## Discovery and planning only
 
-- M05 Host Adapter Fabric: historical R1–R4 candidates retained as arclegacy_provider; standalone rebaseline required before any public contract, Work Order admission or product code.
+- M05 Host Adapter Fabric: historical R1–R4 candidates retained as archive; standalone rebaseline required before any public contract, Work Order admission or product code.
 - M06 Capability Negotiation: historical R1–R4 planning promoted only; pure read-only limited-v0 scope remains a candidate, not a released public API, admitted host or executable product module.
 - M07 Specialist Registry; M08 Sequential Agent Orchestrator; M09 Model & Effort Router; M10 Execution Policy Engine; M11 Capability Lease & Sandbox; M12 Tool / Command Execution Fabric; M13 Change & Mutation Engine; M14 Verification Planner; M15 Evidence & Proof Engine; M16 Review & Assurance Engine; M17 Defect / Correction Engine; M18 Recovery & Resume Engine; M19 Resource / Cost / Quota Governor; M20 Git / GitHub Delivery Engine; M21 CI/CD & Release Engine; M22 Security / Supply-Chain Engine; M24 Headless Event & Telemetry Spine: PLANNED, not implemented by this document.
 - M23 Local Context & Evidence Registry: FUTURE SCOPE only. A separately governed Work Order would be needed before any durable context/index/memory code; existing local Git fingerprints and canonical files remain current context.
@@ -34,7 +34,7 @@ Canonical module map: `docs/modules/00-MASTER-MODULE-MAP.md`.
 ACS, TSS, EOF, ENS, PCE and NSP are unadmitted research candidates; none counts as an implemented module.
 
 
-## Historical discovery arclegacy_provider (non-operative; exact prior Git blob follows)
+## Historical discovery archive (non-operative; exact prior Git blob follows)
 
 # CORE Backlog
 
