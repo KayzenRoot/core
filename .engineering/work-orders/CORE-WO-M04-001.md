@@ -9,7 +9,7 @@ Evidence: .engineering/evidence/CORE-WO-M04-001.json — BLOCKED_RE_ADMISSION
 Historical authorizedBase: f6b422be5465d5a93d0b8fcf4c9507c205663072 (NOT current authority)
 
 ## CURRENT STOP / RE-ADMISSION GATE — 2026-09-29
-Do not execute this historical V1 Work Order or resume #106/#118. Prior nine-source identity and ACTIVE admission were superseded by standalone M02/M03 V2 and CORE-D-205. External previous-V1 consumer inventory is UNKNOWN/BLOCKING (#111). New standalone M04 source/version/arclegacy_provider disposition and a separate protected-main exact-source Work Order/lock admission are mandatory before any Pack A-H. Historic approvals/source SHA matrix and frozen semantics below are preserved as archival facts, not operative instructions.
+Do not execute this historical V1 Work Order or resume #106/#118. Prior nine-source identity and ACTIVE admission were superseded by standalone M02/M03 V2 and CORE-D-205. External previous-V1 consumer inventory is UNKNOWN/BLOCKING (#111). New standalone M04 source/version/archive disposition and a separate protected-main exact-source Work Order/lock admission are mandatory before any Pack A-H. Historic approvals/source SHA matrix and frozen semantics below are preserved as archival facts, not operative instructions.
 
 ## Historical pre-cutover execution header (non-operative)
 Status: ACTIVE / IMPLEMENTATION_AUTHORIZED
@@ -133,7 +133,7 @@ Implement only CORE-WO-M04-001:
 
 Do not implement/add:
 - a concrete production database/persistence backend;
-- destructive canonical journal compaction/arclegacy_provider;
+- destructive canonical journal compaction/archive;
 - distributed replication/consensus;
 - persistent snapshot cache;
 - runtime self-tuning;
