@@ -1,11 +1,11 @@
 # CORE Test & Evidence Plan
 
-> **CURRENT AUTHORITY (2026-09-29; CORE-D-205, effective on protected-main promotion):** Standalone Git-canonical CORE uses independent M01/M02/M03 V2. HIVE install, MCP, Docker, API, project registry, retrieval or context are not required. Prior conflicting HIVE text below is historical, not operative. Superseded M04 Context Lock is STALE; no implementation admission while #111 external V1 consumers remain UNKNOWN, and PRs #106/#118 remain unmerged.
+> **CURRENT AUTHORITY (2026-09-29; CORE-D-205, effective on protected-main promotion):** Standalone Git-canonical CORE uses independent M01/M02/M03 V2. LEGACY_PROVIDER install, MCP, Docker, API, project registry, retrieval or context are not required. Prior conflicting LEGACY_PROVIDER text below is historical, not operative. Superseded M04 Context Lock is STALE; no implementation admission while #111 external V1 consumers remain UNKNOWN, and PRs #106/#118 remain unmerged.
 
 Status: `PRODUCT_DISCOVERY_ACTIVE`
 
 ## Current standalone proof ladder (CORE-D-205)
-1. Python governance validator and full Python unit tests; no retired Hive bootstrap scripts invoked.
+1. Python governance validator and full Python unit tests; no retired LegacyProvider bootstrap scripts invoked.
 2. Rehash all nine current M04 canonical Git sources and verify Context Lock/Work Order/evidence binding. Negative stale, old nine-source, old-prior-V1 and old-authority cases must fail closed; M04 lock STALE and implementation false.
 3. Hosted Ubuntu/Windows Rust M01/M02/M03 V2 and unsupported-old-V1 rejection; bounded fuzz, advisory/supply-chain/SBOM, M01 PRB and soak in exact-head full 11/11 CI.
 4. Scoped owner audit with exact base/head and NOT INDEPENDENT disclosure, guarded protected squash and independent new-main FULL 11/11 before source checkpoint promotion.
@@ -82,7 +82,7 @@ Planning validation must cover:
 - stable packet identity/order semantics;
 - acceptance criterion to evidence requirement coverage;
 - Context Lock + M02 basis binding;
-- HIVE advisory boundary;
+- LEGACY_PROVIDER advisory boundary;
 - zero-LLM compiler/validator direction;
 - compact context/token-economy semantics;
 - initial threat/failure taxonomy.
@@ -167,7 +167,7 @@ Later implementation evidence MUST include:
 - PCM packet reconstruction equivalence;
 - request/source/packet/criteria cardinality limit cases;
 - compile/validate/diff/admission deadline/resource failures;
-- no hidden network/Git/HIVE/process invocation from core-work-order;
+- no hidden network/Git/LEGACY_PROVIDER/process invocation from core-work-order;
 - safe diagnostics secret canaries;
 - fuzz/property tests for canonicalizer, packet DAG, delta classifier, lineage/LPC and admission inputs;
 - benchmark scaling for sources/packets/edges/criteria/lineage/context/diffs.
@@ -314,15 +314,15 @@ The final implementation PR may report only `READY_FOR_OWNER_AUDIT` or `BLOCKED`
 
 ## Historical superseded bootstrap test plan
 ## Bootstrap proof ladder
-1. Python syntax compilation for governance/HIVE bootstrap tooling.
+1. Python syntax compilation for governance/LEGACY_PROVIDER bootstrap tooling.
 2. Deterministic source/governance validation.
-3. Unit tests for HIVE project identity resolution and fail-closed collision handling.
+3. Unit tests for LEGACY_PROVIDER project identity resolution and fail-closed collision handling.
 4. Hosted GitHub Actions evidence on the exact candidate head.
 5. Semantic exact-head audit against Work Order, Scope, Architecture, Requirements and DoD.
 
 ## Current required bootstrap commands
 ```text
-python -m py_compile scripts/validate_governance.py scripts/hive_bootstrap.py
+python -m py_compile scripts/validate_governance.py scripts/legacy_provider_bootstrap.py
 python scripts/validate_governance.py
 python -m unittest discover -s tests -p "test_*.py" -v
 ```
