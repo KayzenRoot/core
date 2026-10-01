@@ -1,6 +1,7 @@
 """No-network regression for M01/M02/M03 standalone authority disposition."""
 
 import hashlib
+import json
 import re
 import unittest
 from pathlib import Path
@@ -86,23 +87,22 @@ class StandaloneModuleDocsDispositionTests(unittest.TestCase):
     def test_increment_lock_distinguishes_inputs_from_authorized_outputs(self):
         lock_path = ROOT / ".engineering/context-locks/CORE-STANDALONE-MODULE-DOCS-007.json"
         self.assertTrue(lock_path.exists(), "increment Context Lock is required")
-        lock = lock_path.read_text(encoding="utf-8")
-        self.assertIn('"sourceFingerprintRole": "AUTHORIZED_INPUT_BASELINES"', lock)
-        self.assertIn('"authorizedBase": "5c2952223395747522576fa46e11063c493ca3a3"', lock)
-        self.assertIn('"productImplementationAuthorized": false', lock)
-        for path in MODULES:
+        lock = json.loads(lock_path.read_text(encoding="utf-8"))
+        self.assertEqual(lock["sourceFingerprintRole"], "AUTHORIZED_INPUT_BASELINES")
+        self.assertEqual(lock["authorizedBase"], "5c2952223395747522576fa46e11063c493ca3a3")
+        self.assertFalse(lock["productImplementationAuthorized"])
+        for path, expected in MODULES.items():
             with self.subTest(path=path):
-                self.assertIn(f'"{path}"', lock)
-        for path in (
+                self.assertEqual(lock["canonicalSources"][path], expected["prior_blob"])
+        expected_mutations = [
             "docs/modules/M01-CORE-RUNTIME-LIFECYCLE.md",
             "docs/modules/M02-PROJECT-WORKSPACE-ADAPTER.md",
             "docs/modules/M03-WORK-ORDER-ENGINE.md",
             ".engineering/decisions/CORE-D-208-STANDALONE-MODULE-DOC-DISPOSITION.md",
             ".engineering/context-locks/CORE-STANDALONE-MODULE-DOCS-007.json",
             "tests/test_standalone_module_docs_disposition.py",
-        ):
-            with self.subTest(authorized_mutation=path):
-                self.assertIn(f'"{path}"', lock)
+        ]
+        self.assertEqual(lock["authorizedMutationPaths"], expected_mutations)
 
     def test_m04_stale_lock_is_not_part_of_this_disposition(self):
         lock_path = ROOT / ".engineering/context-locks/CORE-WO-M04-001.json"
