@@ -10,15 +10,15 @@
   "assuranceMode": "ELEVATED",
   "productImplementationAuthorized": false,
   "canonicalSources": {
-    "docs/project-brain/13-CHECKPOINT.md": "4ff78a49585fc802602f9f641d96bb24331d8c60",
-    "docs/project-brain/16-DECISIONS-LEDGER.md": "2f4f27ebed29cde7abbd99c979e7e672df3329b5",
-    "docs/project-brain/03-SCOPE.md": "3f41e7aabd4d20f87a9bf80e57f55fa456091bd8",
-    "docs/project-brain/15-DEFINITION-OF-DONE.md": "af2ce4f1329434b0f33a8428fae20d19160f2598",
+    "docs/project-brain/13-CHECKPOINT.md": "f975b457d8133d2a74e99cc9a67aaa92444b43f6",
+    "docs/project-brain/16-DECISIONS-LEDGER.md": "a2f70cb7ef3cb7378b08e5675e59281a0e608d6c",
+    "docs/project-brain/03-SCOPE.md": "8115de6cc24d98057826c4c985b93c5e2dc4bcae",
+    "docs/project-brain/15-DEFINITION-OF-DONE.md": "b34ee3a6543cda3d674e2e4bc64e2815518fdc89",
     "docs/project-brain/04-ARCHITECTURE.md": "316d48fbf2d4b6b5b39c2eca9ff3aed5f9b7b0ff",
-    "docs/project-brain/02-REQUIREMENTS.md": "86ce174738458e479b9d740f7e6bf7ccd243f906",
+    "docs/project-brain/02-REQUIREMENTS.md": "d8134934ed6ecf8b13092b3f870e3bd3b6e00627",
     "docs/project-brain/10-SECURITY-GOVERNANCE.md": "9a4dd6bc182729ae9401d1e40ebdf0c97570aa88",
     "docs/project-brain/11-TEST-PLAN.md": "f746ef6e9273cd7b328c8623599178d5d5e27091",
-    "docs/modules/M04-RUN-ATTEMPT-STEP-ENGINE.md": "c4956af3fdea58aade98e1032afe586374ca6a30"
+    "docs/modules/M04-RUN-ATTEMPT-STEP-ENGINE.md": "dbcf9a0959731619b9716115f78c6d64f72703e5"
   },
   "upstream": {
     "gef": {
@@ -30,7 +30,7 @@
   "promotionRule": "Historical M04 admission/sync approvals remain provenance only. #111 external old-V1 consumer inventory is UNKNOWN/BLOCKING; a new governed standalone M04 admission is required.",
   "workOrderSource": {
     "path": ".engineering/work-orders/CORE-WO-M04-001.md",
-    "blobSha": "2d14df0d5ee62599465600c085e1a044ab50e569"
+    "blobSha": "b3a93ef1b0cba7cb151b4f0b20404635ca55bf27"
   },
   "authorizationEffectiveOnlyOnCanonicalMain": false,
   "canonicalMain": "origin/main",
