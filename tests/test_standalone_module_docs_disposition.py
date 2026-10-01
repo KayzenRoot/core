@@ -31,11 +31,13 @@ MODULES = {
 
 
 def git_blob_sha(payload: bytes) -> str:
+    """Return the exact Git blob SHA-1 for raw bytes."""
     header = b"blob " + str(len(payload)).encode("ascii") + b"\0"
     return hashlib.sha1(header + payload).hexdigest()
 
 
 def active_and_prior(path: str) -> tuple[str, bytes]:
+    """Split current authority text from the byte-exact predecessor record."""
     raw = (ROOT / path).read_bytes()
     if raw.count(MARKER_BYTES) != 1:
         raise AssertionError(f"missing/ambiguous module-record marker: {path}")
@@ -47,6 +49,7 @@ class StandaloneModuleDocsDispositionTests(unittest.TestCase):
     """Keep current authority explicit while retaining accepted prior bytes."""
 
     def test_each_module_has_current_standalone_authority_overlay(self):
+        """Require a provider-neutral current-authority overlay on every module."""
         for path, expected in MODULES.items():
             with self.subTest(path=path):
                 active, _ = active_and_prior(path)
@@ -59,12 +62,14 @@ class StandaloneModuleDocsDispositionTests(unittest.TestCase):
                 self.assertIsNone(RETIRED_PROVIDER_IDENTIFIER.search(active))
 
     def test_prior_module_records_are_byte_exact_git_blobs(self):
+        """Prove the preserved predecessor payloads retain exact Git identities."""
         for path, expected in MODULES.items():
             with self.subTest(path=path):
                 _, prior = active_and_prior(path)
                 self.assertEqual(git_blob_sha(prior), expected["prior_blob"])
 
     def test_line_ending_mutation_breaks_provenance(self):
+        """Reject newline normalization that would rewrite historical bytes."""
         for path, expected in MODULES.items():
             with self.subTest(path=path):
                 _, prior = active_and_prior(path)
@@ -73,6 +78,7 @@ class StandaloneModuleDocsDispositionTests(unittest.TestCase):
                 self.assertNotEqual(git_blob_sha(mutated), expected["prior_blob"])
 
     def test_decision_records_bounded_precedence_and_exact_blobs(self):
+        """Bind CORE-D-208 to the Work Order and exact predecessor identities."""
         path = ROOT / ".engineering/decisions/CORE-D-208-STANDALONE-MODULE-DOC-DISPOSITION.md"
         self.assertTrue(path.exists(), "CORE-D-208 decision is required")
         decision = path.read_text(encoding="utf-8")
@@ -85,6 +91,7 @@ class StandaloneModuleDocsDispositionTests(unittest.TestCase):
                 self.assertIn(expected["prior_blob"], decision)
 
     def test_increment_lock_distinguishes_inputs_from_authorized_outputs(self):
+        """Keep frozen inputs distinct from the exact authorized output set."""
         lock_path = ROOT / ".engineering/context-locks/CORE-STANDALONE-MODULE-DOCS-007.json"
         self.assertTrue(lock_path.exists(), "increment Context Lock is required")
         lock = json.loads(lock_path.read_text(encoding="utf-8"))
@@ -105,6 +112,7 @@ class StandaloneModuleDocsDispositionTests(unittest.TestCase):
         self.assertEqual(lock["authorizedMutationPaths"], expected_mutations)
 
     def test_m04_stale_lock_is_not_part_of_this_disposition(self):
+        """Ensure this document increment cannot reactivate or rewrite M04."""
         lock_path = ROOT / ".engineering/context-locks/CORE-WO-M04-001.json"
         lock = lock_path.read_text(encoding="utf-8")
         self.assertIn('"status": "STALE"', lock)
