@@ -10,7 +10,7 @@ The frozen `replay(request: &ReplayRequestV1, limits: &M04ResourceLimitsV1) -> R
 - `ReplayRequestV1` currently supplies `run_id`, `events`, and `expected_boundary`, but not the complete origin BRC.
 - The frozen `EventPayloadV1::RunCreated` supplies a Work Order identity reference and boundary fingerprint, not the BRC or its admitted M03 handoff/revalidation values.
 - `RunProjectionV1.boundary` is a **complete** `BoundaryRevalidationCapsuleV1`; neither a fingerprint nor `JournalBoundaryV1` can be inverted to reconstruct it.
-- Fabricating a BRC, fetching it implicitly from an ambient store/HIVE/M03, or dropping the field violates pure replay, causal provenance or the frozen output contract.
+- Fabricating a BRC, fetching it implicitly from an ambient store/LEGACY_PROVIDER/M03, or dropping the field violates pure replay, causal provenance or the frozen output contract.
 
 Scope of this design gate: reconstruct *historical state truth*, not choose a retry winner, activate a stale M03 authority, fetch external artifact bodies, invent a backend, or change the acceptance count.
 
@@ -28,7 +28,7 @@ The BRC issue and this idempotency provenance issue are separate. Supplying gene
 
 ## 2. Candidate resolution (subject to separate freeze)
 
-**Propose caller-supplied genesis BRC as an explicit, required replay input.** The host retrieves the original durable BRC through an explicit `M04StateStoreV1` port, outside the pure state engine, and passes its immutable value together with the canonical journal. Replay validates the supplied capsule and its binding to `RunCreated` before it constructs `RunProjectionV1.boundary`. No internal M03/HIVE/network/file/process lookup is permitted.
+**Propose caller-supplied genesis BRC as an explicit, required replay input.** The host retrieves the original durable BRC through an explicit `M04StateStoreV1` port, outside the pure state engine, and passes its immutable value together with the canonical journal. Replay validates the supplied capsule and its binding to `RunCreated` before it constructs `RunProjectionV1.boundary`. No internal M03/LEGACY_PROVIDER/network/file/process lookup is permitted.
 
 Possible implementation-level shape, **illustrative only and not an approved API**:
 
@@ -59,7 +59,7 @@ The caller's separate store contract must durably retain and atomically associat
 
 ## 4. Threat, budget, no-hidden-I/O and migration rules
 
-- No direct M04 dependency on Tokio, core-runtime, core-workspace, host filesystem, Git/GitHub, HIVE, network SDK, database driver, cache or ambient time. Existing direct crate production dependencies stay within the frozen allow-list.
+- No direct M04 dependency on Tokio, core-runtime, core-workspace, host filesystem, Git/GitHub, LEGACY_PROVIDER, network SDK, database driver, cache or ambient time. Existing direct crate production dependencies stay within the frozen allow-list.
 - Bound BRC size, replay depth, canonical event bytes, event count and diagnostic output using the later measured `M04ResourceLimitsV1`; cap+1 must fail atomically. Do not choose numeric defaults without Pack H calibration evidence.
 - Any compatibility rule for old V1 serialized requests must be explicit and fail closed: unavailable genesis BRC is a real missing precondition, not a permissible downgrade. Document whether pre-release V1 can change or a new V2 contract/domain is required. Regenerate golden vectors **only after** a governing decision authorizes the affected exact shapes and schema.
 - Keep the current 23 AC-M04 / EV-M04 nodes one-to-one. Proposed affected evidence is especially AC/EV-007 replay equivalence, 008 integrity rejection, 009 M03 BRC stale/substitution, 012 cross-platform canonical vectors, 013 resource bounds, 014 snapshots, 016 no hidden I/O and 021/022 exact-head platform CI. Do not mark any EV PASS in this proposal.
