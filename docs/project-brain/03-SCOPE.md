@@ -1,11 +1,11 @@
 # CORE Scope
 
-> **CURRENT AUTHORITY (2026-09-29; CORE-D-205, effective on protected-main promotion):** CORE is built, governed and run independently from canonical Git and CORE-owned local standalone M01/M02/M03 V2 contracts. No HIVE install, MCP, Docker, API, registry, retrieval or memory service is a prerequisite. Older contradictory Hive-specific sections are dated historical evidence. M04 old ACTIVE authorization is superseded: new source lock STALE, implementation forbidden, #111 external V1 consumers UNKNOWN. Old PRs #106/#118 remain unmerged.
+> **CURRENT AUTHORITY (2026-09-29; CORE-D-205, effective on protected-main promotion):** CORE is built, governed and run independently from canonical Git and CORE-owned local standalone M01/M02/M03 V2 contracts. No LEGACY_PROVIDER install, MCP, Docker, API, registry, retrieval or memory service is a prerequisite. Older contradictory LegacyProvider-specific sections are dated historical evidence. M04 old ACTIVE authorization is superseded: new source lock STALE, implementation forbidden, #111 external V1 consumers UNKNOWN. Old PRs #106/#118 remain unmerged.
 
 Status: `PRODUCT_DISCOVERY_ACTIVE`
 
 ## Current necessary standalone foundation
-- Existing docs/project-brain source paths are CORE-owned local Git files; retaining those paths does not imply Hive service compatibility or a dependency.
+- Existing docs/project-brain source paths are CORE-owned local Git files; retaining those paths does not imply LegacyProvider service compatibility or a dependency.
 - GEF v1 governance, exact source fingerprints, bounded Work Orders and protected exact-head PR/CI remain.
 - M01/M02/M03 standalone V2 require no project context server, registry or MCP.
 - M04 remains BLOCKED_RE_ADMISSION until #111, separately governed source/compatibility review and new exact-source execution admission.
@@ -24,7 +24,7 @@ To be classified during governed discovery. No future capability is admitted mer
 ## OUT OF SCOPE - bootstrap
 
 - Product runtime implementation.
-- Duplicating HIVE context, memory or retrieval runtime.
+- Duplicating LEGACY_PROVIDER context, memory or retrieval runtime.
 - Replacing Git as canonical source history.
 - Claiming autonomous production behavior before architecture and verification are frozen.
 - Selecting a final application stack before product architecture requires it.
@@ -33,7 +33,7 @@ To be classified during governed discovery. No future capability is admitted mer
 ## ACCEPTED DISCOVERY CONSTRAINTS
 
 - CORE is a headless action/execution plane; dashboard/cockpit/web UI are OUT OF SCOPE.
-- CORE must build, govern and run without HIVE or project MCP.
+- CORE must build, govern and run without LEGACY_PROVIDER or project MCP.
 - Optional generic association/context providers need separate proof and never grant local path/source authority.
 - Default delivery granularity is one complete planned module per bounded Codex Work Order when safe.
 - Product planning must provide executor-ready file maps, contracts, invariants and tests before implementation.
@@ -48,7 +48,7 @@ To be classified during governed discovery. No future capability is admitted mer
 - typed SOURCE/GIT_METADATA/EXTERNAL_OBJECT/TEMP authority roots;
 - path containment/escape proof before later action modules;
 - workspace drift detection and action-boundary freshness validation;
-- standalone operation with explicit HIVE reconciliation when available;
+- standalone operation with explicit LEGACY_PROVIDER reconciliation when available;
 - canonical WorkspaceBasis fingerprints/diffs and compact binding receipts;
 - bounded zero-LLM evidence, hashing and revalidation;
 - deterministic invalidation and proof-cache semantics.
@@ -58,7 +58,7 @@ To be classified during governed discovery. No future capability is admitted mer
 - L1 proof reuse/coalescing;
 - differential GitInspector provider evaluation;
 - WMF/DWS acceleration where equivalence is proven;
-- compact evidence surfaces that reduce HIVE/LLM downstream context.
+- compact evidence surfaces that reduce LEGACY_PROVIDER/LLM downstream context.
 
 ### FUTURE / CONDITIONAL
 - persistent L2 proof cache after recovery/corruption/secret-safety design;
@@ -70,7 +70,7 @@ To be classified during governed discovery. No future capability is admitted mer
 - Git checkout/reset/branch/commit/merge/push/fetch;
 - repository repair;
 - network access to Git remotes;
-- HIVE RAG/memory/repository-intelligence duplication;
+- LEGACY_PROVIDER RAG/memory/repository-intelligence duplication;
 - runtime sandbox enforcement owned by M11;
 - Git/GitHub delivery owned by M20/M21;
 - semantic AST/repository analysis;
@@ -172,7 +172,7 @@ To be classified during governed discovery. No future capability is admitted mer
 ### OUT OF SCOPE
 - hidden repository scans;
 - Git commits/pushes;
-- HIVE/network calls inside core compiler;
+- LEGACY_PROVIDER/network calls inside core compiler;
 - Run scheduler/state;
 - tool/source execution;
 - final evidence/review engines.
@@ -201,7 +201,7 @@ To be classified during governed discovery. No future capability is admitted mer
 
 ### FUTURE / CONDITIONAL
 - persistent storage backend selection/optimization;
-- archive/retention/compaction policy beyond active proof history;
+- arclegacy_provider/retention/compaction policy beyond active proof history;
 - distributed multi-writer state stores or replication;
 - performance accelerators that preserve ASF/RJR equivalence.
 
@@ -214,7 +214,7 @@ To be classified during governed discovery. No future capability is admitted mer
 - quota/cost policy;
 - Git/GitHub delivery/release actions;
 - security-policy engines;
-- HIVE federation intelligence;
+- LEGACY_PROVIDER federation intelligence;
 - verification/evidence/review verdict ownership;
 - telemetry transport/observability spine.
 
@@ -244,7 +244,7 @@ At the end of M04 Rounds 1-3, implementation remained unauthorized pending the f
 
 ### FUTURE / CONDITIONAL
 - concrete persistent backend;
-- event archive/retention service;
+- event arclegacy_provider/retention service;
 - distributed store replication/consensus;
 - persistent snapshot/projection cache;
 - runtime adaptive tuning.
@@ -283,8 +283,8 @@ Round 5 promotion freezes planning truth only. Execution still requires a separa
 ## NECESSARY - bootstrap
 
 - Materialize GEF v1.0.0 new-project governance.
-- Materialize a HIVE v1.0.0 compatible Project Brain.
+- Materialize a LEGACY_PROVIDER v1.0.0 compatible Project Brain.
 - Provide deterministic governance validation.
-- Provide local scripts to register, inspect, index and retrieval-sync CORE in HIVE.
+- Provide local scripts to register, inspect, index and retrieval-sync CORE in LEGACY_PROVIDER.
 - Provide GitHub PR, Work Order and evidence scaffolding.
 - Keep product planning separate from bootstrap installation.
