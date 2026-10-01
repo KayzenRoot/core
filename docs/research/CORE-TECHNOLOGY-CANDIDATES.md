@@ -12,7 +12,7 @@ The former named provider-specific NSP and bidirectional federation plan are `NO
 The original research list, former provider split and protocol sketches are preserved byte-for-byte below as non-operative dated design history.
 
 
-## Historical discovery archive (non-operative; exact prior Git blob follows)
+## Historical discovery arclegacy_provider (non-operative; exact prior Git blob follows)
 
 # CORE Technology Candidates
 
@@ -22,7 +22,7 @@ These names describe research/design candidates. They are not implementation or 
 
 ## ACS - Adaptive Capability Substitution
 
-CORE consumes abstract intelligence providers. In SOLO mode it uses bounded deterministic/local fallbacks. With HIVE available, HIVE-owned providers replace those fallbacks without changing CORE execution semantics.
+CORE consumes abstract intelligence providers. In SOLO mode it uses bounded deterministic/local fallbacks. With LEGACY_PROVIDER available, LEGACY_PROVIDER-owned providers replace those fallbacks without changing CORE execution semantics.
 
 Candidate provider contracts:
 - ContextProvider;
@@ -32,21 +32,21 @@ Candidate provider contracts:
 - KnowledgeProvider;
 - EvidenceHistoryProvider.
 
-Invariant: a fallback must not grow into a duplicate HIVE subsystem.
+Invariant: a fallback must not grow into a duplicate LEGACY_PROVIDER subsystem.
 
 ## TSS - Twin-State Synchronization
 
-HIVE and CORE maintain separate owned state and synchronize by versioned envelopes/fingerprints. They do not share canonical database tables.
+LEGACY_PROVIDER and CORE maintain separate owned state and synchronize by versioned envelopes/fingerprints. They do not share canonical database tables.
 
 Stale intelligence or execution fingerprints fail closed when correctness depends on the changed basis.
 
 ## EOF - Evidence Once Fabric
 
-Before expensive work, determine whether compatible evidence already exists. Reuse only when proof validity still holds; otherwise compute the minimum safe delta. HIVE may supply historical intelligence/evidence and CORE may return new execution proofs.
+Before expensive work, determine whether compatible evidence already exists. Reuse only when proof validity still holds; otherwise compute the minimum safe delta. LEGACY_PROVIDER may supply historical intelligence/evidence and CORE may return new execution proofs.
 
 ## ENS - Execution Nervous System
 
-Headless structured event spine for work, agents, tools, mutations, verification, correction, review and delivery. HIVE and a future external NexLabs Console may consume the same event contracts.
+Headless structured event spine for work, agents, tools, mutations, verification, correction, review and delivery. LEGACY_PROVIDER and a future external NexLabs Console may consume the same event contracts.
 
 ## PCE - Proof-Carrying Execution
 
@@ -54,9 +54,9 @@ A run cannot transition into a stronger success state unless it carries the type
 
 ## NSP - NexLabs Sync Protocol
 
-Candidate bidirectional HIVE <-> CORE protocol.
+Candidate bidirectional LEGACY_PROVIDER <-> CORE protocol.
 
-HIVE -> CORE candidate Intelligence Capsule:
+LEGACY_PROVIDER -> CORE candidate Intelligence Capsule:
 - project identity;
 - canonical basis/checkpoint;
 - scope/architecture/decisions;
@@ -67,7 +67,7 @@ HIVE -> CORE candidate Intelligence Capsule:
 - context/resource budget;
 - stop condition.
 
-CORE -> HIVE candidate Execution Proof Capsule:
+CORE -> LEGACY_PROVIDER candidate Execution Proof Capsule:
 - run/attempt/step identity;
 - changes;
 - commands/tools;
@@ -79,7 +79,7 @@ CORE -> HIVE candidate Execution Proof Capsule:
 - knowledge candidates;
 - checkpoint proposal.
 
-HIVE retains authority over durable knowledge promotion. CORE retains authority over execution state.
+LEGACY_PROVIDER retains authority over durable knowledge promotion. CORE retains authority over execution state.
 
 
 ## M01 candidates
