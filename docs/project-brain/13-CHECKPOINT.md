@@ -50,7 +50,7 @@ Continue the independent headless CORE action plane with Git-canonical local M01
 - No M04 implementation or CORE V0.0 release completion is claimed.
 
 ## NEXT STEP
-After #180 is protected-main promoted and independent new-main 11/11 CI passes, separately resolve #111 previous-V1 consumer inventory; govern standalone M04 V2/arclegacy_provider source disposition and issue a NEW exact-source M04 Work Order/Context Lock. Never resume PR #106/#118 or Pack C from historical CI.
+After #180 is protected-main promoted and independent new-main 11/11 CI passes, separately resolve #111 previous-V1 consumer inventory; govern standalone M04 V2/archive source disposition and issue a NEW exact-source M04 Work Order/Context Lock. Never resume PR #106/#118 or Pack C from historical CI.
 
 ## EVIDENCE
 - M04 execution admission Review 008 / Issue #95 — APPROVED; PR #94; exact head `f29dcb6b327c5fdceda31fe306e52d506c1eae72`; workflow `35992752646`; promotion merge `bb6f631284361fae29479c66f62ca88bebf3d79c`; 10/10 hosted jobs SUCCESS.
@@ -497,7 +497,7 @@ Assurance: ELEVATED
 Authorization in this admission delta is effective only when the exact active Context Lock and synchronized state are present on canonical `origin/main` after the exact-head owner self-audit defined by CORE-D-203 and promotion. A PR branch does not authorize execution. No architecture, dependency, contract, acceptance, calibration, security or M02/M04 boundary semantics are changed by admission.
 
 
-## Arclegacy_providerd pre-cutover checkpoint fields (2026-09-29, non-operative)
+## archived pre-cutover checkpoint fields (2026-09-29, non-operative)
 ### Historical STATUS
 M01 COMPLETE / M02 COMPLETE / M03 COMPLETE / M04 PACK A CANDIDATE OPEN
 
