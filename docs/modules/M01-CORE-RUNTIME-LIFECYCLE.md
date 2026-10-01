@@ -8,9 +8,9 @@
 >
 > Current executable authority remains the already-promoted M01 implementation and its standalone amendment.
 >
-> Exact prior Git blob preserved below: `46851bb0dfd2f00ee36f790a64e3b6ba8971d2a9`.
+> Original predecessor payload remains available in Git history; the current-tree historical copy is sanitized.
 
-## Prior accepted module record (exact prior Git blob follows)
+## Sanitized prior module record (non-operative; original exact payload retained in Git history)
 
 # M01 - Core Runtime & Lifecycle
 
@@ -18,7 +18,7 @@ Status: `COMPLETED_APPROVED`
 
 ## Mission
 
-Define the durable headless runtime substrate that all later CORE modules can depend on without embedding HIVE-owned intelligence. CORE is planned as one complete product rather than an MVP ladder; accepted M01 capabilities are construction commitments.
+Define the durable headless runtime substrate that all later CORE modules can depend on without embedding LEGACY_PROVIDER-owned intelligence. CORE is planned as one complete product rather than an MVP ladder; accepted M01 capabilities are construction commitments.
 
 ## Ownership
 
@@ -60,17 +60,17 @@ READY/DEGRADED -> FAILED
 
 Exact transitions remain to be frozen during M01 planning.
 
-## HIVE relationship
+## LEGACY_PROVIDER relationship
 
-M01 must not require HIVE to start.
+M01 must not require LEGACY_PROVIDER to start.
 
-It exposes a provider/capability seam so M02/M23 can later attach compatible HIVE capabilities.
+It exposes a provider/capability seam so M02/M23 can later attach compatible LEGACY_PROVIDER capabilities.
 
-HIVE absence is not itself runtime failure. A module that explicitly requires a HIVE-owned capability may become unavailable/degraded while standalone-safe modules remain operational.
+LEGACY_PROVIDER absence is not itself runtime failure. A module that explicitly requires a LEGACY_PROVIDER-owned capability may become unavailable/degraded while standalone-safe modules remain operational.
 
 ## ACS implications
 
-M01 should establish the neutral capability registry/resolution primitive used later by Adaptive Capability Substitution, but MUST NOT implement HIVE-specific providers in M01.
+M01 should establish the neutral capability registry/resolution primitive used later by Adaptive Capability Substitution, but MUST NOT implement LEGACY_PROVIDER-specific providers in M01.
 
 ## Candidate file map
 
@@ -120,7 +120,7 @@ Closed transition table. Illegal transitions fail explicitly. No prose-only stat
 Registers CORE modules by stable ID/version/capabilities/dependencies. Duplicate IDs and dependency cycles fail closed.
 
 ### capability-registry
-Resolves capability contracts and provenance. It must distinguish native CORE, standalone fallback and external/HIVE provider origins.
+Resolves capability contracts and provenance. It must distinguish native CORE, standalone fallback and external/LEGACY_PROVIDER provider origins.
 
 ### config
 Typed configuration with precedence and provenance. Secrets must not be serialized into diagnostics/events.
@@ -137,8 +137,8 @@ Stable machine-readable error taxonomy with causal wrapping and redaction.
 ## Initial invariants
 
 - headless only;
-- no HIVE dependency for base startup;
-- no shared HIVE database;
+- no LEGACY_PROVIDER dependency for base startup;
+- no shared LEGACY_PROVIDER database;
 - deterministic lifecycle transitions;
 - explicit degraded capability state;
 - stable machine-readable errors;
@@ -202,7 +202,7 @@ M01 does not require Kubernetes, service mesh, distributed consensus or RPC betw
 Machine-verifiable transition rules combine current state, transition intent, blocking invariants, capability availability, active leases/work and shutdown budget. Every accepted transition emits a typed receipt.
 
 ### CPG - Capability Provenance Graph
-Tracks contract/version, provider, origin (CORE_NATIVE | CORE_FALLBACK | HIVE_EXTERNAL | OTHER_EXTERNAL), compatibility, health, trust, activation generation and supersession.
+Tracks contract/version, provider, origin (CORE_NATIVE | CORE_FALLBACK | LEGACY_PROVIDER_EXTERNAL | OTHER_EXTERNAL), compatibility, health, trust, activation generation and supersession.
 
 ### RSG - Runtime Safety Genome
 Secret-free deterministic fingerprint over runtime version, module manifests, capability contracts, configuration schema and safety-critical policy versions.
@@ -224,7 +224,7 @@ startup stages -> BLOCKED
 READY/DEGRADED -> DRAINING -> STOPPED
 non-recoverable invariant violation -> FAILED
 ```
-SYNCHRONIZING does not make HIVE mandatory. BLOCKED exposes diagnostics. DEGRADED enumerates capability loss through DCM.
+SYNCHRONIZING does not make LEGACY_PROVIDER mandatory. BLOCKED exposes diagnostics. DEGRADED enumerates capability loss through DCM.
 
 ## Configuration direction
 Precedence: compiled safe defaults < repository config < machine/user config < environment < explicit process arguments.
@@ -320,7 +320,7 @@ Portable envelope for context/input, output, retry/escalation, cache preference,
 Canonical serialization determinism; irrelevant-metadata fingerprint stability; relevant-change fingerprint mutation; targeted CAG invalidation; stable-prefix benchmark; generation-churn benchmark; capability lookup p50/p95/p99; bootstrap at 10/100/1000 synthetic modules; idle CPU/RAM; cancellation under load; cache-receipt overhead; proof that lifecycle performs zero LLM calls.
 
 ## Stack evaluation matrix
-Rust, Python and TypeScript/Node will be scored for supervision/async cancellation, predictable performance/memory, safe concurrency, startup overhead, cross-platform packaging, IPC/streaming, schemas/serialization, adapter ergonomics, observability, fuzz/property testing, HIVE integration, Codex/CLI integration, implementation velocity, maintainability and deterministic/cache-stable representations.
+Rust, Python and TypeScript/Node will be scored for supervision/async cancellation, predictable performance/memory, safe concurrency, startup overhead, cross-platform packaging, IPC/streaming, schemas/serialization, adapter ergonomics, observability, fuzz/property testing, LEGACY_PROVIDER integration, Codex/CLI integration, implementation velocity, maintainability and deterministic/cache-stable representations.
 
 Architectures to compare:
 A. TypeScript/Node supervisor + workers;
@@ -352,11 +352,11 @@ Python/TypeScript are adapter/SDK languages only when an external integration ju
 - strong type system for lifecycle/capability/evidence invariants;
 - mature property/fuzz testing ecosystem;
 - deterministic data structures/serialization can be enforced;
-- isolates HIVE language choice from CORE runtime;
+- isolates LEGACY_PROVIDER language choice from CORE runtime;
 - avoids requiring Node/Python merely to keep CORE alive.
 
 ### Why not Python as CORE kernel
-Python remains excellent for HIVE/data/AI integration but would duplicate HIVE's language/runtime coupling, has weaker isolation from blocking work and less predictable CPU/concurrency behavior for the action plane.
+Python remains excellent for LEGACY_PROVIDER/data/AI integration but would duplicate LEGACY_PROVIDER's language/runtime coupling, has weaker isolation from blocking work and less predictable CPU/concurrency behavior for the action plane.
 
 ### Why not Node/TypeScript as CORE kernel
 TypeScript has excellent orchestration ergonomics, but CORE's long-lived supervisor, process control, resource governance, sandbox preparation and low-overhead headless operation benefit more from Rust. TypeScript remains suitable for future SDKs/adapters.
@@ -562,7 +562,7 @@ REJECTED:
 ### Separation invariant
 A **module** is a deployable/runtime participant. A **capability** is a versioned behavior contract. Consumers depend on capabilities, not provider module identities, unless an explicit policy requires a named provider.
 
-This separation is foundational for ACS, HIVE substitution, testing and cache-safe provider changes.
+This separation is foundational for ACS, LEGACY_PROVIDER substitution, testing and cache-safe provider changes.
 
 ## Module Registry
 
@@ -631,9 +631,9 @@ Deterministic ordering:
 
 No LLM chooses a provider in M01.
 
-For HIVE-owned intelligence capability, default preference when HIVE is compatible and healthy:
+For LEGACY_PROVIDER-owned intelligence capability, default preference when LEGACY_PROVIDER is compatible and healthy:
 ```text
-HIVE_EXTERNAL > CORE_FALLBACK
+LEGACY_PROVIDER_EXTERNAL > CORE_FALLBACK
 ```
 unless an explicit safety/policy constraint requires otherwise.
 
@@ -668,7 +668,7 @@ This prevents a long operation from unknowingly using provider A for half the wo
 
 Expected benefits:
 - deterministic execution;
-- safer HIVE connect/disconnect;
+- safer LEGACY_PROVIDER connect/disconnect;
 - cleaner cache identity;
 - reproducible evidence.
 
@@ -699,11 +699,11 @@ This gives later execution/evidence systems proof of which implementation actual
 Standalone fallbacks are explicitly constrained implementations with:
 - declared quality/feature ceiling;
 - no hidden durable organizational memory;
-- no silent expansion into HIVE-owned responsibility;
+- no silent expansion into LEGACY_PROVIDER-owned responsibility;
 - test vectors shared with the full capability contract;
 - visible fallback provenance.
 
-Purpose: CORE remains useful standalone without accidentally rebuilding HIVE.
+Purpose: CORE remains useful standalone without accidentally rebuilding LEGACY_PROVIDER.
 
 ## Cache-aware provider substitution
 
@@ -717,9 +717,9 @@ Cache identity distinguishes:
 
 CAG + SIR determine affected entries. A provider substitution only invalidates dependencies whose correctness identity includes that provider/binding generation.
 
-## HIVE disconnect behavior
+## LEGACY_PROVIDER disconnect behavior
 
-Unexpected HIVE loss:
+Unexpected LEGACY_PROVIDER loss:
 1. mark affected provider bindings UNAVAILABLE;
 2. revoke or drain leases according to capability policy;
 3. compute SIR;
@@ -732,7 +732,7 @@ No silent fallback is allowed when fallback quality is below the operation's dec
 
 ## Anti-flapping policy
 
-Provider health changes must not cause rapid HIVE<->fallback oscillation.
+Provider health changes must not cause rapid LEGACY_PROVIDER<->fallback oscillation.
 
 Candidate rules:
 - health hysteresis;
@@ -756,7 +756,7 @@ Candidate rules:
 - module discovery grants zero authority;
 - provider cannot self-assert higher trust;
 - capability contract cannot grant tool/filesystem/network authority implicitly;
-- external/HIVE provider identity must be authenticated by later integration layer;
+- external/LEGACY_PROVIDER provider identity must be authenticated by later integration layer;
 - authority escalation requires policy decision;
 - quarantined providers cannot receive new leases;
 - manifest/config provenance included in admission evidence.
@@ -771,7 +771,7 @@ Property/fuzz:
 - deterministic tie-break;
 - substitution races;
 - lease/revocation races;
-- HIVE disconnect during active lease;
+- LEGACY_PROVIDER disconnect during active lease;
 - provider flapping;
 - fallback below quality floor;
 - targeted cache invalidation;
@@ -1018,8 +1018,8 @@ Required:
 - checksum corruption;
 - stale worker message from previous epoch;
 - worker crash loop;
-- HIVE disconnect during SYNCHRONIZING;
-- HIVE disconnect during active capability lease;
+- LEGACY_PROVIDER disconnect during SYNCHRONIZING;
+- LEGACY_PROVIDER disconnect during active capability lease;
 - config generation changes during bootstrap;
 - shutdown with hung in-process task;
 - shutdown with unresponsive child worker;
@@ -1097,7 +1097,7 @@ Health aggregation stores a causal root plus affected dependents instead of repe
 
 Example:
 ```text
-ROOT: HIVE provider unavailable
+ROOT: LEGACY_PROVIDER provider unavailable
 AFFECTS: context.full, memory.verified, decision.fabric
 DERIVED: M14 verification enrichment degraded
 ```
@@ -1149,7 +1149,7 @@ Concurrent equivalent health/capability probes share one in-flight deterministic
 
 Expected effect:
 - less network/CPU;
-- fewer HIVE/provider calls;
+- fewer LEGACY_PROVIDER/provider calls;
 - lower cascading load during incidents;
 - lower duplicated diagnostic work.
 
@@ -1187,7 +1187,7 @@ M01 now has sufficient architectural direction for runtime, lifecycle, capabilit
 
 ## Round 7 - Construction boundaries
 
-M01 Rust workspace is frozen into nine responsibility boundaries: core-contracts, core-identity, core-config, core-registry, core-journal, core-ipc, core-health, core-runtime and core-cli. The dependency graph MUST remain acyclic, with contracts/identity below orchestration. No M01 crate may depend on HIVE source, LLM provider SDKs, GitHub SDKs, Redis/database servers, UI frameworks, Kubernetes or arbitrary dynamic plugin loaders.
+M01 Rust workspace is frozen into nine responsibility boundaries: core-contracts, core-identity, core-config, core-registry, core-journal, core-ipc, core-health, core-runtime and core-cli. The dependency graph MUST remain acyclic, with contracts/identity below orchestration. No M01 crate may depend on LEGACY_PROVIDER source, LLM provider SDKs, GitHub SDKs, Redis/database servers, UI frameworks, Kubernetes or arbitrary dynamic plugin loaders.
 
 Public M01 CLI: `core start`, `core status --json`, `core validate --json`, `core doctor --json`, `core version --json`. Machine output is schema-versioned; human output is never canonical evidence.
 
@@ -1348,7 +1348,7 @@ Safe Rust is default. Any `unsafe` block in first-party M01 code requires:
 - clean bootstrap to READY;
 - valid degraded bootstrap;
 - blocked bootstrap;
-- HIVE absent standalone path;
+- LEGACY_PROVIDER absent standalone path;
 - external provider attach/detach simulation;
 - atomic substitution under concurrent readers;
 - active lease across provider change;
@@ -1384,7 +1384,7 @@ M01 is complete only when:
 2. exact lifecycle/RLC transitions are machine-enforced;
 3. BSR prevents false READY;
 4. module/capability registries support deterministic atomic bindings and leases;
-5. standalone fallback/HIVE-external provenance is represented without HIVE source dependency;
+5. standalone fallback/LEGACY_PROVIDER-external provenance is represented without LEGACY_PROVIDER source dependency;
 6. DCS/generation/fingerprint golden vectors pass;
 7. Runtime Journal survives tested interruption/corruption scenarios or fails closed;
 8. SBR/EEB prevent stale prior-epoch mutation and blind replay;
@@ -1559,7 +1559,7 @@ REFERENCES/HANDLES
   large canonical docs/evidence not needed inline
 ```
 
-This structure is mandatory input to future HIVE/CORE prompt-cache optimization.
+This structure is mandatory input to future LEGACY_PROVIDER/CORE prompt-cache optimization.
 
 ## M01 planning freeze readiness
 The module can enter PLANNING_FREEZE after:
@@ -1575,6 +1575,6 @@ M01 was implemented under `CORE-WO-M01-001`, passed the final governed Review 01
 
 ## Owner-directed standalone architecture amendment (2026-09-28)
 
-**Work Order:** [#175](https://github.com/KayzenRoot/core/issues/175), parent [#172](https://github.com/KayzenRoot/core/issues/172). This explicit dated amendment supersedes older HIVE-specific expectations **for future CORE execution**; previous accepted evidence is preserved as historic source truth.
+**Work Order:** [#175](https://github.com/KayzenRoot/core/issues/175), parent [#172](https://github.com/KayzenRoot/core/issues/172). This explicit dated amendment supersedes older LEGACY_PROVIDER-specific expectations **for future CORE execution**; previous accepted evidence is preserved as historic source truth.
 
-CORE must bootstrap from local Git/GEF canonical sources without Docker, a project-specific MCP handshake or an external memory/index service. The deprecated `require_hive` file field, `CORE_REQUIRE_HIVE` environment key and CLI override are no longer accepted: a stale explicit `CORE_` environment key is rejected by the existing fail-closed safety configuration parser and should be removed from the machine's environment. The only admitted provider origin variants are `CoreNative`, `CoreFallback` and `OtherExternal`; CORE-owned capabilities prefer native and then explicit local fallback, with generic external providers only by separate contract/policy/quality/security admission. The bounded soak now verifies *local* native/fallback health transitions, unchanged generation and prior lease coherence, and no hidden inference calls. This amendment is not a V2 public protocol release, an M04 previous-V1 compatibility decision, M02/M03 serialized-contract migration, or a claim of real owner-local PC cleanup; those have distinct gates under #172.
+CORE must bootstrap from local Git/GEF canonical sources without Docker, a project-specific MCP handshake or an external memory/index service. The deprecated `require_legacy_provider` file field, `CORE_REQUIRE_LEGACY_PROVIDER` environment key and CLI override are no longer accepted: a stale explicit `CORE_` environment key is rejected by the existing fail-closed safety configuration parser and should be removed from the machine's environment. The only admitted provider origin variants are `CoreNative`, `CoreFallback` and `OtherExternal`; CORE-owned capabilities prefer native and then explicit local fallback, with generic external providers only by separate contract/policy/quality/security admission. The bounded soak now verifies *local* native/fallback health transitions, unchanged generation and prior lease coherence, and no hidden inference calls. This amendment is not a V2 public protocol release, an M04 previous-V1 compatibility decision, M02/M03 serialized-contract migration, or a claim of real owner-local PC cleanup; those have distinct gates under #172.
