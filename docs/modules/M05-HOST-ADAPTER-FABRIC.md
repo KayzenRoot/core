@@ -17,7 +17,7 @@ CORE starts and operates with only its local Git-canonical M01–M03 V2 baseline
 The following retained R1–R4 material is dated prior planning, including retired pinned-provider assertions and the superseded old M04 lock wording. It cannot establish a live external provider, mandatory provider preference, former #4 runtime proof or M23 federation. All listed historical EV-M05 discovery candidates are PENDING, not passed executable tests. No crate, public DTO, numeric budget, SDK dependency, executable Work Order, Context Lock or product authorization is created here.
 
 
-## Historical discovery archive (non-operative; exact prior Git blob follows)
+## Historical discovery arclegacy_provider (non-operative; exact prior Git blob follows)
 
 # M05 Host Adapter Fabric — Round 1 discovery candidate
 
@@ -26,7 +26,7 @@ Base: 3b7d184ad50ef22320d57572dfade965a98fbad4
 Work Order: https://github.com/KayzenRoot/core/issues/133  
 Public contract frozen: NO | Product implementation authorized: NO | M04 contract decision: BLOCKED_EXTERNALLY
 
-This planning document is a source-grounded candidate, not a final M05 interface, Work Order execution admission, or claim that M04/real local HIVE has passed. It may advance independently while M04 issue #111 waits for dated owner evidence. Nothing here updates the canonical Project Brain checkpoint or the ACTIVE M04 Context Lock.
+This planning document is a source-grounded candidate, not a final M05 interface, Work Order execution admission, or claim that M04/real local LEGACY_PROVIDER has passed. It may advance independently while M04 issue #111 waits for dated owner evidence. Nothing here updates the canonical Project Brain checkpoint or the ACTIVE M04 Context Lock.
 
 ## 1. Mission
 
@@ -42,17 +42,17 @@ M05 will mediate between CORE's previously admitted, versioned host-invocation r
 - **M07/M08/M09 own** specialist, sequential agent and model/effort routing. M05 does not choose the agent or model.
 - **M10/M11/M12/M13 own** execution policy, isolation/leases, actual command/tool execution and mutations. M05 only transports requests after those owners admit them; process availability never authorizes shell, filesystem, network, repo write or arbitrary provider action.
 - **M14–M19 own** verification, evidence, review, corrections, recovery, cost/resource policy. M05 observations alone cannot prove a tool effect succeeded or grant retry/recovery.
-- **M20–M24 own** Git/GitHub delivery, CI/release, security/supply-chain, HIVE federation and telemetry spine. M05 is not a Git client, security policy engine, HIVE RAG clone or second durable telemetry system.
+- **M20–M24 own** Git/GitHub delivery, CI/release, security/supply-chain, LEGACY_PROVIDER federation and telemetry spine. M05 is not a Git client, security policy engine, LEGACY_PROVIDER RAG clone or second durable telemetry system.
 
 The canonical planning order is M04 -> M05 -> M06. M05 may conduct discovery now, but binding an implementation DTO to M04 event/BRC/replay contracts must wait for issue #111's independent compatibility disposition.
 
-## 3. SOLO, HIVE-connected and transport candidate boundaries
+## 3. SOLO, LEGACY_PROVIDER-connected and transport candidate boundaries
 
-CORE SOLO must work without HIVE or remote network. A trusted compiled module may use M01's existing in-process paths; isolation-demanding first-party workers must reuse M01's length-framed local Unix-domain sockets/Windows named pipes, **not** default localhost TCP. M01's worker supervisor owns actual process creation/reaping and parent cancellation. Arbitrary dynamic libraries remain rejected.
+CORE SOLO must work without LEGACY_PROVIDER or remote network. A trusted compiled module may use M01's existing in-process paths; isolation-demanding first-party workers must reuse M01's length-framed local Unix-domain sockets/Windows named pipes, **not** default localhost TCP. M01's worker supervisor owns actual process creation/reaping and parent cancellation. Arbitrary dynamic libraries remain rejected.
 
 Possible future separately admitted host transports: versioned child process/stdio, MCP client, first-party local IPC, and an optional authenticated remote API adapter. No transport, SDK, auth backend, network listener or added crate is frozen by this Round 1. Remote/TLS credentials, sandbox enforcement and network authority require M11/M22 review, not a convenient M05 default.
 
-HIVE remains a separately installed v1.0.0-pinned intelligence plane; any optional read-only MCP context session is a truthful observation, not proof of HIVE's release (protocol version differs from release tag), its live local corpus or the separately configured Codex client. HIVE's memory/retrieval ownership stays under HIVE and M23.
+LEGACY_PROVIDER remains a separately installed v1.0.0-pinned intelligence plane; any optional read-only MCP context session is a truthful observation, not proof of LEGACY_PROVIDER's release (protocol version differs from release tag), its live local corpus or the separately configured Codex client. LEGACY_PROVIDER's memory/retrieval ownership stays under LEGACY_PROVIDER and M23.
 
 ## 4. Proposed candidate contracts (not frozen public APIs)
 
@@ -72,7 +72,7 @@ Round 2 may evaluate `DISCOVERED -> CONFIG_VALIDATED -> HANDSHAKING -> READY -> 
 4. Use caller-owned immutable operation identity and explicit idempotency contract; transport-level resend must not replay a possibly non-idempotent external effect.
 5. Cancellation and deadlines are **observational**. A host may have performed an action despite timeout or connection loss; respond EXTERNAL_EFFECT_UNKNOWN and hand off reconciliation to the effect owner/M18 rather than guessing failure or blind retry.
 6. M01 shutdown drives bounded draining, cleanup and worker reaping; quarantined/lost adapters receive no new invocations. An in-flight M04 durable state transition must remain M04's sole responsibility.
-7. Timestamps, stdout, host text, MCP tools/list and HIVE-derived context are untrusted diagnostics, never ordering authority or source of permissions.
+7. Timestamps, stdout, host text, MCP tools/list and LEGACY_PROVIDER-derived context are untrusted diagnostics, never ordering authority or source of permissions.
 8. The protocol/parser/handshake path is deterministic and zero-LLM. No model decides protocol compatibility or trust.
 
 ## 6. Threat/failure model for Round 2
@@ -91,7 +91,7 @@ A future event should carry stable error code, runtime epoch, adapter generation
 
 - EV-M05-D01: M01 supervisor/registry reuse and acyclic dependencies.
 - EV-M05-D02: no assumption that pending M04 V1 changes are canonical; no M04 reverse dependency.
-- EV-M05-D03: SOLO/no-HIVE behavior, missing host/provider typed errors, truthful degradation.
+- EV-M05-D03: SOLO/no-LEGACY_PROVIDER behavior, missing host/provider typed errors, truthful degradation.
 - EV-M05-D04: endpoint/provenance, runtime epoch and adapter-generation spoof rejection.
 - EV-M05-D05: protocol version/feature downgrade and unknown critical field fail-closed fixtures.
 - EV-M05-D06: malformed/fragmented/oversized/deep/unsolicited frame fuzz with hard caps.
@@ -108,9 +108,9 @@ These are **only discovery IDs**, not a frozen M05 AEG, not completed tests and 
 
 ## 9. Planning coverage and exclusions
 
-Round 1 proposes mission/ownership; SOLO versus HIVE substitution; ephemeral session versus durable M04 state; tentative lifecycle, failure and security boundaries; dimensional resource/telemetry requirements; candidate tests; compatibility conditions and explicit STOP. The exact versioned public/internal DTOs, exports, crate/file map, dependency/transport admission, approved host types, security policy, calibrated numeric resource caps, migration and final acceptance/DoD **remain UNFROZEN** for later rounds. Prefer one bounded module Work Order after final freeze, not speculative implementation here.
+Round 1 proposes mission/ownership; SOLO versus LEGACY_PROVIDER substitution; ephemeral session versus durable M04 state; tentative lifecycle, failure and security boundaries; dimensional resource/telemetry requirements; candidate tests; compatibility conditions and explicit STOP. The exact versioned public/internal DTOs, exports, crate/file map, dependency/transport admission, approved host types, security policy, calibrated numeric resource caps, migration and final acceptance/DoD **remain UNFROZEN** for later rounds. Prefer one bounded module Work Order after final freeze, not speculative implementation here.
 
-OUT OF SCOPE: Rust code, direct host invocation, installing credentials/providers, selecting model/tool/policy, remote listener, full MCP SDK, database, HIVE memory/RAG, M04 source or product contract amendment, synthetic external compatibility proof, checkpoint promotion, numeric performance claims.
+OUT OF SCOPE: Rust code, direct host invocation, installing credentials/providers, selecting model/tool/policy, remote listener, full MCP SDK, database, LEGACY_PROVIDER memory/RAG, M04 source or product contract amendment, synthetic external compatibility proof, checkpoint promotion, numeric performance claims.
 
 ## 10. Next legal increment and STOP
 
@@ -163,7 +163,7 @@ This sequence is a **candidate**, not an admitted public method, complete state 
 - **Pure transport outcome:** M05 observations cannot call `M04StateStoreV1.compare_and_commit`, mint M03 admission, select M06 provider, execute an M12 command or mutate files. Later code must not wire a known-new V1 journal request field before M04 issue #111 resolves.
 - **Streams:** enforce finite header/body size, bounded per-session pending messages, bounded diagnostic bytes and read/write/cancellation deadlines. If resource evidence is incomplete, return a typed blocked/degraded outcome, not a successful truncated result. Values require later reproducible calibration; no provisional cap is an accepted production threshold.
 - **Untrusted data:** keep raw host text, stdout/stderr, model prompts, env vars, authentication headers, local paths, peer IDs and M04 journal contents out of durable public evidence. Use bounded, typed reason codes and redacted counters. Future LLM consumers must treat host text as untrusted input.
-- **HIVE:** HIVE MCP protocol `mcp-core-surface-v1` is not a Git release tag or proof that HIVE v1.0.0 is running on the owner's machine; local HIVE issue #4 and M23 integration authority are separate.
+- **LEGACY_PROVIDER:** LEGACY_PROVIDER MCP protocol `mcp-core-surface-v1` is not a Git release tag or proof that LEGACY_PROVIDER v1.0.0 is running on the owner's machine; local LEGACY_PROVIDER issue #4 and M23 integration authority are separate.
 
 ### R2.5 — Candidate typed failure/ambiguity matrix (names not frozen)
 
@@ -190,7 +190,7 @@ All **future** tests below are PENDING, not claimed to have executed on M05:
 5. Invalid/expired/revoked binding generation and lease; provider fingerprint computed from false metadata must not be misrepresented as authenticated trust.
 6. Cross-session/cross-epoch/duplicate correlation, unsolicited notification flood, max+1 bytes, partial stream, crash after request delivery and cancellation/late reply races.
 7. Header or stdout containing private filesystem path, prompt text, token/credential or provider-supplied instructions must never enter public receipts/logs or become permissions.
-8. SOLO mode works with missing HIVE/remote endpoint and does not require a model, GitHub token or privileged OS operation.
+8. SOLO mode works with missing LEGACY_PROVIDER/remote endpoint and does not require a model, GitHub token or privileged OS operation.
 9. Later admitted Linux/Windows exact-head tests, bounded fuzz/property coverage, benchmark-calibrated ceilings, supply-chain/SBOM and NOT INDEPENDENT owner audit; no future evidence result is inferred from this Round 2 doc-only CI.
 
 ### R2.7 — Deferred decisions / explicit non-admission
@@ -215,9 +215,9 @@ Round 3 identifies an incremental and verifiable **technology direction**, not a
 
 | Candidate | Source basis and SOLO behavior | Unresolved trust/security and cost | Round 3 disposition |
 | --- | --- | --- | --- |
-| Reuse first-party `core-ipc` Unix socket/Windows local-only named pipe | Existing M01 `Frame`, `Handshake`, current CR1 header/version/epoch/limit checks and already implemented platform adapters. First-party isolated worker remains independent of HIVE or remote service. | M01 supervisor owns launch/drain; M11/M22 still must verify executable/OS peer, path/ACL and effective authority. `negotiate` does not verify required features/quality or third-party identity. No separate M05 framing codec. | **Reuse the existing admitted M01 primitive**, with M05 as a candidate session/mediation wrapper only. This is not an additional transport selection or M05 code approval. |
+| Reuse first-party `core-ipc` Unix socket/Windows local-only named pipe | Existing M01 `Frame`, `Handshake`, current CR1 header/version/epoch/limit checks and already implemented platform adapters. First-party isolated worker remains independent of LEGACY_PROVIDER or remote service. | M01 supervisor owns launch/drain; M11/M22 still must verify executable/OS peer, path/ACL and effective authority. `negotiate` does not verify required features/quality or third-party identity. No separate M05 framing codec. | **Reuse the existing admitted M01 primitive**, with M05 as a candidate session/mediation wrapper only. This is not an additional transport selection or M05 code approval. |
 | Child process with separate stdio streams | Candidate narrow external adapter when a tool/host already supports a versioned framed/line protocol. Avoids remote network prerequisite but requires an independently governed subprocess boundary. | A hostile executable, malformed stdout/notification floods, mixed log/control output, deadlock on full stderr pipe, process-tree cleanup, leaked environment and ambiguous external effects. M01 supervises and M11/M12/M22 admit process execution. | **Evaluate**, not required or selected until executable provenance, framing and sandbox tests support it. Do not repurpose stdio diagnostic output as trusted semantics. |
-| MCP client/protocol bridge | Candidate for tools served by a separately configured process or endpoint. The existing HIVE read-only MCP surface is an optional context-provider example, **not** proof of installed v1.0.0 on the owner's machine. | MCP protocol release/version and server software release are distinct; tools/list is untrusted data, server prompts/resources can contain hostile instructions, and transport can be stdio or remote with different trust models. Policy/lease/auth is not defined by MCP discovery. | **Evaluate as an external protocol adapter after separate admission**. Do not fork the HIVE retrieval/memory implementation or silently require an MCP SDK dependency. |
+| MCP client/protocol bridge | Candidate for tools served by a separately configured process or endpoint. The existing LEGACY_PROVIDER read-only MCP surface is an optional context-provider example, **not** proof of installed v1.0.0 on the owner's machine. | MCP protocol release/version and server software release are distinct; tools/list is untrusted data, server prompts/resources can contain hostile instructions, and transport can be stdio or remote with different trust models. Policy/lease/auth is not defined by MCP discovery. | **Evaluate as an external protocol adapter after separate admission**. Do not fork the LEGACY_PROVIDER retrieval/memory implementation or silently require an MCP SDK dependency. |
 | Authenticated remote API transport | Not needed for first SOLO/local-first M05 implementation; later service providers may require a network path. | TLS/identity/credential lifecycle, replay protection, egress policy, revocation, remote quota, tool/result trust and distributed ambiguous effects remain unfrozen M11/M19/M22/M23 responsibilities. | **DEFER to explicit future dependency/security admission**; no remote listener or network package is authorized by this discovery. |
 | Arbitrary in-process dynamic/plugin libraries | Conflicts with accepted M01 process-isolation and no-arbitrary-dynamic-loading policy. | Foreign memory safety/privilege crossings and unbounded side effects; would bypass host and sandbox boundary. | **Excluded** unless a later full architecture/security Change Request explicitly supersedes M01 policy. |
 
@@ -265,7 +265,7 @@ For each knob, later implementation must demonstrate `cap-1/cap/cap+1` behavior,
 
 ### R3.5 — Gate ownership, compatibility and next Round
 
-This appendix makes **no** change to M01, its accepted IPC wire protocol or single-account GEF rules. No M05 public request/receipt, crate, dependency, external command, network listener, HIVE client or numeric threshold is frozen. The ephemeral host-session proposal remains acyclic: M01 provides runtime/codec/registry, M05 observes mediated transport; M06 selects, M10/M11/M12 authorize and perform effects, M04 alone commits durable Run state, M18 reconciles unknown side effects, M22 sets security policy, M23 federates HIVE. The pending M04 external prior-V1 journal/binary/consumer inventory #111 and local HIVE/Docker/Codex issue #4 cannot be replaced by GitHub-only source proof.
+This appendix makes **no** change to M01, its accepted IPC wire protocol or single-account GEF rules. No M05 public request/receipt, crate, dependency, external command, network listener, LEGACY_PROVIDER client or numeric threshold is frozen. The ephemeral host-session proposal remains acyclic: M01 provides runtime/codec/registry, M05 observes mediated transport; M06 selects, M10/M11/M12 authorize and perform effects, M04 alone commits durable Run state, M18 reconciles unknown side effects, M22 sets security policy, M23 federates LEGACY_PROVIDER. The pending M04 external prior-V1 journal/binary/consumer inventory #111 and local LEGACY_PROVIDER/Docker/Codex issue #4 cannot be replaced by GitHub-only source proof.
 
 **Round 3 STOP CONDITION:** promote this source-grounded **planning** appendix plus separate evidence record only after exact-head docs-only CI, bounded logical owner self-audit NOT INDEPENDENT with zero unresolved HIGH/CRITICAL, protected squash merge and full real main-push validation. Round 4 may propose a candidate semantic contract/acceptance graph only if it does not freeze M04-bound DTOs or silently choose unadmitted transport/dependency/numeric limits. Final planning freeze and a separate Work Order execution admission are still prerequisites for M05 code.
 
@@ -279,7 +279,7 @@ Work Order: https://github.com/KayzenRoot/core/issues/145
 Exact initial R4 basis: fe4330b4abf772d9bb5f24615b5a3ffe05f13744  
 Public M05 schemas, resource defaults, dependency set, execution admission: ALL UNFROZEN
 
-Round 4 makes the **M04-independent** portion of the future adapter/session contract testable at the planning level while explicitly denying any product code or premature durable-M04 binding. The prior R1–R3 boundaries remain unchanged. Real old-M04-V1 external consumption is UNKNOWN under issue #111; proposed M04 V1 source PR #118 is DRAFT and implementation PR #106 has not been promoted. Consequently all invocation fields that embed M04 durable Run/BRC/ICF/idempotency bytes remain BLOCKED and cannot be guessed here. HIVE local v1.0.0/Codex proof issue #4 is separate.
+Round 4 makes the **M04-independent** portion of the future adapter/session contract testable at the planning level while explicitly denying any product code or premature durable-M04 binding. The prior R1–R3 boundaries remain unchanged. Real old-M04-V1 external consumption is UNKNOWN under issue #111; proposed M04 V1 source PR #118 is DRAFT and implementation PR #106 has not been promoted. Consequently all invocation fields that embed M04 durable Run/BRC/ICF/idempotency bytes remain BLOCKED and cannot be guessed here. LEGACY_PROVIDER local v1.0.0/Codex proof issue #4 is separate.
 
 ### R4.1 — Boundary DTO *concepts*, not frozen public types
 
@@ -323,7 +323,7 @@ An optional future provider idempotency token is a **provider contract claim**, 
 
 Threat inputs: fake host executable/process ID, forged peer certificate/manifest, symlink/pipe-path substitution, Windows local-pipe impersonation, Unix socket permissions, valid CR1 bytes from an unauthorized peer, version/minor downgrade, untrusted stdout/MCP tool descriptions, oversized or partial streams, stale capability lease, cancellation/host restart, prompt injection and poisoned evidence references.
 
-All independently verifiable trust claims must come from M11/M22 policy-provenance sources, not the external host's self-authored metadata. Capability compatibility/binding remains M06, actual action permission and sandbox M10/M11/M12, external retry M18, secret lifecycle M22, costs M19 and HIVE intelligence/federation M23. Any stdout/stderr/MCP resource text is tainted; no content from it may silently become canonical Work Order edits, executable shell argv, authority, verification verdict or privileged Git operation. A headless SOLO checkout must remain usable without HIVE/remote process and truthful when an optional adapter is absent.
+All independently verifiable trust claims must come from M11/M22 policy-provenance sources, not the external host's self-authored metadata. Capability compatibility/binding remains M06, actual action permission and sandbox M10/M11/M12, external retry M18, secret lifecycle M22, costs M19 and LEGACY_PROVIDER intelligence/federation M23. Any stdout/stderr/MCP resource text is tainted; no content from it may silently become canonical Work Order edits, executable shell argv, authority, verification verdict or privileged Git operation. A headless SOLO checkout must remain usable without LEGACY_PROVIDER/remote process and truthful when an optional adapter is absent.
 
 All limits and deadlines must be finite/validated as per R3 dimensions **before product acceptance**, but R4 invents no numeric defaults and publishes no unmeasured performance improvement. Windows and Unix need separate peer/security, cancellation/drain and IPC fixtures; successful identical payload frames are not proof of identical OS privilege behavior.
 
@@ -352,8 +352,8 @@ The below is a **future** traceability candidate. It neither creates a final fro
 | EV-M05-017 | Cancel/timeout/crash between before-send/possible-delivery/after-reply with mandatory UNKNOWN classification. |
 | EV-M05-018 | Caller-owned idempotency, duplicate/late result refusal and no automatic ambiguous-effect replay. |
 | EV-M05-019 | M01 process/worker crash, restart, quarantine, drain and prior-epoch reply revocation. |
-| EV-M05-020 | SOLO local-first operation and explicit absence of optional host/HIVE dependencies. |
-| EV-M05-021 | Optional HIVE read-only context bridge: actual owner-host runtime/client proof separately captured if claimed, never inferred from Git tags or protocol identity. |
+| EV-M05-020 | SOLO local-first operation and explicit absence of optional host/LEGACY_PROVIDER dependencies. |
+| EV-M05-021 | Optional LEGACY_PROVIDER read-only context bridge: actual owner-host runtime/client proof separately captured if claimed, never inferred from Git tags or protocol identity. |
 | EV-M05-022 | Secret/credential/host text/path/diagnostic redaction, prompt-injection taint and bounded receipt payloads. |
 | EV-M05-023 | Zero-LLM deterministic transport/session core and no hidden Git/network/process/database mutation outside admitted host ports. |
 | EV-M05-024 | Reproducible same-platform M01-baseline comparisons, resource calibration and selected/rejected finite budget evidence. |
@@ -368,10 +368,10 @@ The R1/R2 discovery identifiers `EV-M05-D01..D14` and R3 fixture directions are 
 
 The R3 **candidate** `crates/core-host-adapter` single-crate map remains conditional. The eventual contract/session/provenance/budget/outcome modules should have pure/fake-port law tests that exercise most EV-M05-001..013 and 017..023 with no actual process or M04 store. OS-local `core-ipc` wrapper fixtures exercise EV-M05-004/006/007/025/026. Any future stdio/MCP/remote adapter must receive separate path/dependency, sandbox, optionality and negative fixture admission, not be declared mandatory by the candidate file table. The executable final file map, exact Cargo dependencies, public crate exports, M04 lineage DTOs and transport selection remain UNFROZEN.
 
-Current planning dimension coverage: mission/ownership and HIVE non-duplication documented R1; SOLO/optional HIVE, trust and failure bounds R1–R2; candidate transport/dependency/file map plus calibration protocol R3; provisional contract laws/AEG, STOP and security/DoD traceability this R4. **Pending for final freeze:** authoritative M04 V1 or V2 compatibility disposition and admitted immutable source/lock; exact M06/M10/M11/M12 action-admission and peer-provenance port contracts; selected host types and their SDK/dependency threat review; measured finite numeric budget defaults and regression floors; admitted final crate/file map/trait API; immutable Work Order+Context Lock handoff; actual local HIVE evidence only if such integration is claimed; reviewer-admitted implementation DoD and redacted Evidence Bundle. No missing dimension is silently represented as complete.
+Current planning dimension coverage: mission/ownership and LEGACY_PROVIDER non-duplication documented R1; SOLO/optional LEGACY_PROVIDER, trust and failure bounds R1–R2; candidate transport/dependency/file map plus calibration protocol R3; provisional contract laws/AEG, STOP and security/DoD traceability this R4. **Pending for final freeze:** authoritative M04 V1 or V2 compatibility disposition and admitted immutable source/lock; exact M06/M10/M11/M12 action-admission and peer-provenance port contracts; selected host types and their SDK/dependency threat review; measured finite numeric budget defaults and regression floors; admitted final crate/file map/trait API; immutable Work Order+Context Lock handoff; actual local LEGACY_PROVIDER evidence only if such integration is claimed; reviewer-admitted implementation DoD and redacted Evidence Bundle. No missing dimension is silently represented as complete.
 
 ### R4.7 — Round 5 entry gate and STOP
 
 **Round 4 STOP:** this appendix and separate source-bound evidence record pass exact-head docs-only Governance and required successful status contexts; a separate bounded logical owner audit `OWNER_SELF_AUDIT_APPROVED / NOT INDEPENDENT` records source/lock binding, zero unresolved HIGH/CRITICAL and zero review threads; protected squash merge is followed by **real full** main-push CI 11/11. Closure means R4 planning **candidate documented only**, never admission of a public API, M05 code, a new transport, arbitrary host authority, numeric resource values or M04 durable-contract version.
 
-**Round 5 prerequisite:** after real external M04 consumer inventory issue #111 yields an owner/source-governed V1-no-legacy or separate versioned V2 archival/migration disposition, explicitly reconcile accepted M04 handoff with M05's caller-owned opaque effect references; obtain separately admitted M06/M10/M11/M12/M22 trust/authority contract details, transport/dependency candidate acceptance and measured calibration. Only then compile a final proposed M05 Work Order, pending Context Lock, source/criteria/evidence graph and executor handoff. A distinct reviewed/promoted execution-admission delta remains required before product code, and HIVE #4 is never auto-proven by this planning work.
+**Round 5 prerequisite:** after real external M04 consumer inventory issue #111 yields an owner/source-governed V1-no-legacy or separate versioned V2 archival/migration disposition, explicitly reconcile accepted M04 handoff with M05's caller-owned opaque effect references; obtain separately admitted M06/M10/M11/M12/M22 trust/authority contract details, transport/dependency candidate acceptance and measured calibration. Only then compile a final proposed M05 Work Order, pending Context Lock, source/criteria/evidence graph and executor handoff. A distinct reviewed/promoted execution-admission delta remains required before product code, and LEGACY_PROVIDER #4 is never auto-proven by this planning work.
