@@ -10,15 +10,15 @@
   "assuranceMode": "ELEVATED",
   "productImplementationAuthorized": false,
   "canonicalSources": {
-    "docs/project-brain/13-CHECKPOINT.md": "18943c69e054218e13d516851454c2711211d015",
-    "docs/project-brain/16-DECISIONS-LEDGER.md": "300914170b769304b3374ac42deb5e5ac2a34dc7",
-    "docs/project-brain/03-SCOPE.md": "c4cfb0a375a911569ef02124048d35e51e0dffb3",
-    "docs/project-brain/15-DEFINITION-OF-DONE.md": "7d4b41810dab00d9848a5df1eab8025b4ac8696b",
-    "docs/project-brain/04-ARCHITECTURE.md": "f475383e002958115de878434e1ebbb725210460",
-    "docs/project-brain/02-REQUIREMENTS.md": "bab69e4147e132ca672351acdaa4aba0f5bf8443",
-    "docs/project-brain/10-SECURITY-GOVERNANCE.md": "f32078d23e3334e9fc7c05e0471da6f0fd9347ba",
-    "docs/project-brain/11-TEST-PLAN.md": "e448d23ea86179415866a5a5b777740af43a49d9",
-    "docs/modules/M04-RUN-ATTEMPT-STEP-ENGINE.md": "e42c7e2a1c1b2741b63481d674378db7cf5e0c80"
+    "docs/project-brain/13-CHECKPOINT.md": "4ff78a49585fc802602f9f641d96bb24331d8c60",
+    "docs/project-brain/16-DECISIONS-LEDGER.md": "2f4f27ebed29cde7abbd99c979e7e672df3329b5",
+    "docs/project-brain/03-SCOPE.md": "3f41e7aabd4d20f87a9bf80e57f55fa456091bd8",
+    "docs/project-brain/15-DEFINITION-OF-DONE.md": "af2ce4f1329434b0f33a8428fae20d19160f2598",
+    "docs/project-brain/04-ARCHITECTURE.md": "316d48fbf2d4b6b5b39c2eca9ff3aed5f9b7b0ff",
+    "docs/project-brain/02-REQUIREMENTS.md": "86ce174738458e479b9d740f7e6bf7ccd243f906",
+    "docs/project-brain/10-SECURITY-GOVERNANCE.md": "9a4dd6bc182729ae9401d1e40ebdf0c97570aa88",
+    "docs/project-brain/11-TEST-PLAN.md": "f746ef6e9273cd7b328c8623599178d5d5e27091",
+    "docs/modules/M04-RUN-ATTEMPT-STEP-ENGINE.md": "c4956af3fdea58aade98e1032afe586374ca6a30"
   },
   "upstream": {
     "gef": {
@@ -26,11 +26,11 @@
       "commit": "866fe3af8cccc65c929aaf6a47a924401fa448b3"
     }
   },
-  "stalenessRule": "This source lock is STALE from CORE-D-205 irrespective of matching nine-source new Git blob IDs; matching fingerprints cannot reactivate old V1 execution. Any further source/Work Order/review-policy drift also fails closed.",
-  "promotionRule": "Historical M04 admission/sync approvals retained only as provenance; #111 external old V1 consumer inventory UNKNOWN/BLOCKING. Require new governed standalone M04 source/compatibility decision and distinct Work Order admission.",
+  "stalenessRule": "This source lock remains STALE from CORE-D-205. Current-tree sanitation changed provider-specific text and corresponding fingerprints only; matching fingerprints cannot reactivate historical execution authority.",
+  "promotionRule": "Historical M04 admission/sync approvals remain provenance only. #111 external old-V1 consumer inventory is UNKNOWN/BLOCKING; a new governed standalone M04 admission is required.",
   "workOrderSource": {
     "path": ".engineering/work-orders/CORE-WO-M04-001.md",
-    "blobSha": "b4db2843b08eef170ea980b849077249350e401f"
+    "blobSha": "2d14df0d5ee62599465600c085e1a044ab50e569"
   },
   "authorizationEffectiveOnlyOnCanonicalMain": false,
   "canonicalMain": "origin/main",
@@ -122,7 +122,7 @@
     },
     "notCurrentAuthority": true
   },
-  "historicalUpstreamHive": {
+  "historicalUpstreamLegacyProvider": {
     "version": "1.0.0",
     "commit": "a53b5b9fcf55c32a5696180fb1b1ef80ccd1edcf"
   }
