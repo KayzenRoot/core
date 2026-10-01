@@ -4,11 +4,11 @@ CORE is a standalone Rust engineering runtime governed by GEF, not by an install
 
 ## Authority
 
-Read exact local Git HEAD and `.engineering/SOURCE-HIERARCHY.md`, canonical Project Brain checkpoint, decisions/scope/DoD, the admitted Work Order and applicable Context Lock. Historical HIVE-bound M04 source and lock must be separately re-admitted under cutover #172 before product implementation; do not silently rewrite them.
+Read exact local Git HEAD and `.engineering/SOURCE-HIERARCHY.md`, canonical Project Brain checkpoint, decisions/scope/DoD, the admitted Work Order and applicable Context Lock. Historical LEGACY_PROVIDER-bound M04 source and lock must be separately re-admitted under cutover #172 before product implementation; do not silently rewrite them.
 
 ## Standalone preflight
 
-Inspect local Git paths, source hashes, branch/HEAD and exact-source dependencies. Use the smallest sufficient checked-in context and deterministic source/AST evidence before model inference. No Docker, local HIVE installation, project MCP handshake, external memory/index service or remote corpus access is a prerequisite. The Git+GEF source/Work Order and full existing tests remain authoritative.
+Inspect local Git paths, source hashes, branch/HEAD and exact-source dependencies. Use the smallest sufficient checked-in context and deterministic source/AST evidence before model inference. No Docker, local LEGACY_PROVIDER installation, project MCP handshake, external memory/index service or remote corpus access is a prerequisite. The Git+GEF source/Work Order and full existing tests remain authoritative.
 
 ## GEF lifecycle
 
