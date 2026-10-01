@@ -14,7 +14,7 @@ Successful local builds/tests do not establish an installer, packaging for end u
 The original deployment assumptions are retained below as dated, non-operative source history.
 
 
-## Historical discovery archive (non-operative; exact prior Git blob follows)
+## Historical discovery arclegacy_provider (non-operative; exact prior Git blob follows)
 
 # CORE Deployment
 
@@ -23,8 +23,8 @@ Status: `PRODUCT_DEPLOYMENT_PENDING_DISCOVERY`
 ## Bootstrap state
 CORE currently has no product runtime to deploy. No VPS, container topology, cloud service or local daemon is selected by this bootstrap.
 
-## HIVE dependency boundary
-HIVE v1.0.0 is deployed separately using HIVE's supported Docker Compose distribution. CORE is exposed to HIVE only as a read-only project below the configured `HIVE_PROJECTS_ROOT`.
+## LEGACY_PROVIDER dependency boundary
+LEGACY_PROVIDER v1.0.0 is deployed separately using LEGACY_PROVIDER's supported Docker Compose distribution. CORE is exposed to LEGACY_PROVIDER only as a read-only project below the configured `LEGACY_PROVIDER_PROJECTS_ROOT`.
 
 ## Product deployment
 Supported operating systems, packaging, local/cloud topology, persistence, upgrade/rollback and release channels will be selected only after CORE product architecture is frozen.
