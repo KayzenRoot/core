@@ -19,7 +19,7 @@ Retain governed 01 overview, 10 security, 11 tests, 12 deployment and 14 backlog
 The old upload-order and pinned-provider compatibility instructions are preserved below verbatim but are not operative.
 
 
-## Historical discovery archive (non-operative; exact prior Git blob follows)
+## Sanitized historical archive (non-operative; original provenance retained in Git history)
 
 # CORE Project Brain
 
