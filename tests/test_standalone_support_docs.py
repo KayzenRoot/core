@@ -127,5 +127,19 @@ class StandaloneSupportDocsTests(unittest.TestCase):
         self.assertIn("ff569cdd20be8bab3579e595905930d8277fe650", decision)
 
 
+    def test_decision_records_original_and_reconciled_bases(self):
+        """Keep original admission provenance distinct from the current reconciled protected base."""
+        decision = (ROOT / ".engineering/decisions/CORE-D-207-STANDALONE-SUPPORT-SURFACES.md").read_text(encoding="utf-8")
+        self.assertIn(
+            "Original authorized protected-main base: `f27e3a3f1be64d2dfedc762dea30dd1dce7cab17`.",
+            decision,
+        )
+        self.assertIn(
+            "Reconciled protected-main base after GEF v1.1.1 adoption: `7593644c04725ad6a75fcda5cf2e59fad04c1a81`.",
+            decision,
+        )
+        self.assertIn("PR #186", decision)
+
+
 if __name__ == "__main__":
     unittest.main()
