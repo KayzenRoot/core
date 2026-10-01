@@ -8,9 +8,9 @@
 >
 > Current serialized authority is V2 with provider-neutral association semantics.
 >
-> Exact prior Git blob preserved below: `3690e81e50f6fed1a28dea56bd22e0c83383b33d`.
+> Original predecessor payload remains available in Git history; the current-tree historical copy is sanitized.
 
-## Prior accepted module record (exact prior Git blob follows)
+## Sanitized prior module record (non-operative; original exact payload retained in Git history)
 
 # M02 - Project / Workspace Adapter
 
@@ -20,9 +20,9 @@ Status: `DISCOVERY_IN_PROGRESS`
 
 M02 binds the CORE action plane to a concrete local project/workspace safely and deterministically.
 
-It converts ambiguous human notions such as "this project", "this checkout" or "this repository" into typed, versioned, machine-verifiable workspace handles that later CORE modules can execute against without guessing paths, repository identity, Git basis, worktree state or HIVE project association.
+It converts ambiguous human notions such as "this project", "this checkout" or "this repository" into typed, versioned, machine-verifiable workspace handles that later CORE modules can execute against without guessing paths, repository identity, Git basis, worktree state or LEGACY_PROVIDER project association.
 
-M02 is an adapter and authority boundary. It is not a second HIVE Project Registry, not a repository-intelligence engine and not a mutation/delivery engine.
+M02 is an adapter and authority boundary. It is not a second LEGACY_PROVIDER Project Registry, not a repository-intelligence engine and not a mutation/delivery engine.
 
 ## Ownership boundary
 
@@ -35,15 +35,15 @@ M02 is an adapter and authority boundary. It is not a second HIVE Project Regist
 - read-only Git/worktree inspection needed to establish execution basis;
 - workspace generation/fingerprint calculation;
 - detection of relevant workspace drift after a basis was established;
-- standalone project binding when HIVE is unavailable;
-- HIVE project-binding reconciliation when HIVE is available;
+- standalone project binding when LEGACY_PROVIDER is unavailable;
+- LEGACY_PROVIDER project-binding reconciliation when LEGACY_PROVIDER is available;
 - machine-readable workspace readiness/degradation receipts;
 - workspace handles consumed by later execution modules;
 - deterministic workspace metadata needed for cache/evidence invalidation.
 
 ### M02 does NOT own
 
-- HIVE Project Registry canonical project truth;
+- LEGACY_PROVIDER Project Registry canonical project truth;
 - semantic repository intelligence, AST/symbol indexing, RAG or retrieval;
 - durable organizational memory;
 - arbitrary filesystem sandboxing or capability enforcement, which belongs to M11;
@@ -72,15 +72,15 @@ M02 derives the local project/workspace binding from deterministic local evidenc
 - canonical configuration;
 - stable path identity.
 
-Standalone mode must remain useful without HIVE and must not synthesize HIVE identifiers.
+Standalone mode must remain useful without LEGACY_PROVIDER and must not synthesize LEGACY_PROVIDER identifiers.
 
-### HIVE-enhanced mode
+### LEGACY_PROVIDER-enhanced mode
 
-When HIVE is compatible and available:
-- M02 resolves or receives the HIVE project identity through the existing external HIVE contract;
+When LEGACY_PROVIDER is compatible and available:
+- M02 resolves or receives the LEGACY_PROVIDER project identity through the existing external LEGACY_PROVIDER contract;
 - local workspace evidence is reconciled against that project association;
-- HIVE project identity may enrich the binding;
-- HIVE remains canonical for its Project Registry identity;
+- LEGACY_PROVIDER project identity may enrich the binding;
+- LEGACY_PROVIDER remains canonical for its Project Registry identity;
 - Git/filesystem state remains canonical for the actual local checkout;
 - disagreement is explicit and cannot be silently merged.
 
@@ -114,7 +114,7 @@ M02 must distinguish these identities rather than collapse them:
 
 1. `ProjectBindingId`
    - CORE action-plane binding identity.
-   - May reference a HIVE project ID but is not itself HIVE's canonical registry.
+   - May reference a LEGACY_PROVIDER project ID but is not itself LEGACY_PROVIDER's canonical registry.
 
 2. `WorkspaceId`
    - stable identity for the attached local workspace authority root.
@@ -138,7 +138,7 @@ Physical absolute paths are attributes, not the only identity.
 A workspace basis may include:
 - schema version;
 - ProjectBindingId;
-- optional HIVE project reference + provenance;
+- optional LEGACY_PROVIDER project reference + provenance;
 - workspace root canonical path identity;
 - repository set and boundary graph;
 - primary repository/worktree identity;
@@ -197,7 +197,7 @@ A workspace basis may include:
 
 ### BRL - Basis Reconciliation Layer
 
-**Problem:** HIVE project identity, explicit config, Git roots and current checkout can disagree.
+**Problem:** LEGACY_PROVIDER project identity, explicit config, Git roots and current checkout can disagree.
 
 **Mechanism:** deterministic evidence precedence and reconciliation receipts with explicit MATCH / PARTIAL / CONFLICT / UNKNOWN states.
 
@@ -249,7 +249,7 @@ A workspace basis may include:
 
 **Mechanism:** stable basis + deterministic delta set for changed repository/workspace facts.
 
-**Expected benefit:** lower I/O, faster revalidation, cache-friendly HIVE/CORE context and less repeated evidence.
+**Expected benefit:** lower I/O, faster revalidation, cache-friendly LEGACY_PROVIDER/CORE context and less repeated evidence.
 
 **Primary risk:** missed invalidation.
 
@@ -279,7 +279,7 @@ Design priorities:
 2. Stable canonical identity with volatile diagnostics excluded.
 3. Content/delta handles rather than embedding large file lists.
 4. Incremental/delta basis recomputation where correctness allows.
-5. No semantic repository analysis that belongs to HIVE.
+5. No semantic repository analysis that belongs to LEGACY_PROVIDER.
 6. Machine-readable reasons for cache hit/miss/bypass/invalidation.
 7. Cross-platform normalization without converting every path to expensive content reads.
 8. Reuse M01 DCS/DIF/generation primitives instead of inventing a second fingerprint stack.
@@ -292,7 +292,7 @@ Design priorities:
 - REPOSITORY_NOT_FOUND
 - REPOSITORY_BOUNDARY_CONFLICT
 - GIT_METADATA_INVALID
-- HIVE_PROJECT_BINDING_CONFLICT
+- LEGACY_PROVIDER_PROJECT_BINDING_CONFLICT
 - WORKSPACE_BASIS_STALE
 - WORKSPACE_DRIFT_DETECTED
 - PATH_NORMALIZATION_FAILED
@@ -332,11 +332,11 @@ Errors must remain typed, stable and redacted.
 - reserved/device path rejection where applicable;
 - race-aware revalidation at use boundary.
 
-### HIVE reconciliation
-- HIVE unavailable -> bounded standalone binding;
-- HIVE matches local evidence -> enriched binding;
-- HIVE project conflicts with local repo evidence -> explicit conflict;
-- stale HIVE project/workspace association -> no silent success.
+### LEGACY_PROVIDER reconciliation
+- LEGACY_PROVIDER unavailable -> bounded standalone binding;
+- LEGACY_PROVIDER matches local evidence -> enriched binding;
+- LEGACY_PROVIDER project conflicts with local repo evidence -> explicit conflict;
+- stale LEGACY_PROVIDER project/workspace association -> no silent success.
 
 ### Drift
 - HEAD changed;
@@ -366,8 +366,8 @@ First implementation establishes compatible hardware/platform baselines. Do not 
 ## M02 planning STOP CONDITION
 
 M02 planning is not frozen until all of the following are explicit:
-- final ownership vs HIVE/M11/M13/M20;
-- standalone and HIVE-enhanced behavior;
+- final ownership vs LEGACY_PROVIDER/M11/M13/M20;
+- standalone and LEGACY_PROVIDER-enhanced behavior;
 - exact state model;
 - identity and canonical basis contracts;
 - path-authority semantics;
@@ -432,7 +432,7 @@ Rules:
 - only BOUND may issue a current WorkspaceHandle;
 - DRIFTED immediately makes the prior handle stale for correctness-relevant action;
 - REVALIDATING never silently revives an old handle; success emits a new generation/handle;
-- DETACHING revokes the local attachment view but does not mutate repositories or HIVE.
+- DETACHING revokes the local attachment view but does not mutate repositories or LEGACY_PROVIDER.
 
 ### Handle versus durable receipt
 
@@ -458,7 +458,7 @@ Required fields:
 - explicit workspace locator/root;
 - optional expected ProjectBindingId;
 - optional expected repository/worktree selector;
-- optional expected HIVE project reference;
+- optional expected LEGACY_PROVIDER project reference;
 - authority policy;
 - repository discovery policy;
 - untracked-file policy;
@@ -467,7 +467,7 @@ Required fields:
 - configuration generation.
 
 #### ProjectBindingId
-CORE-local action-plane binding identity. It remains stable across temporary HIVE availability changes for the same local workspace binding. A different HIVE association changes binding generation/reconciliation evidence but does not rewrite WorkspaceId.
+CORE-local action-plane binding identity. It remains stable across temporary LEGACY_PROVIDER availability changes for the same local workspace binding. A different LEGACY_PROVIDER association changes binding generation/reconciliation evidence but does not rewrite WorkspaceId.
 
 #### WorkspaceId
 Identity of the local workspace authority root after platform-aware canonicalization. Harmless aliases resolving to the same governed root must converge; distinct governed roots must not.
@@ -518,7 +518,7 @@ Typed old/new delta:
 #### ProjectAssociationEvidence
 External project-association statement with:
 - provider origin;
-- HIVE project reference when present;
+- LEGACY_PROVIDER project reference when present;
 - provider/contract version;
 - evidence freshness/generation;
 - asserted repository/workspace hints;
@@ -526,7 +526,7 @@ External project-association statement with:
 - no local authority grant.
 
 #### ReconciliationReceipt
-Result of comparing user/config intent, local filesystem/Git evidence and optional HIVE evidence.
+Result of comparing user/config intent, local filesystem/Git evidence and optional LEGACY_PROVIDER evidence.
 
 Candidate statuses:
 - CONSISTENT;
@@ -535,7 +535,7 @@ Candidate statuses:
 - CONFLICT;
 - INSUFFICIENT.
 
-HIVE association has an orthogonal status:
+LEGACY_PROVIDER association has an orthogonal status:
 - MATCH;
 - STALE;
 - CONFLICT;
@@ -628,10 +628,10 @@ Examples:
 Effect: old handle stale; revalidation emits new generation if still bindable.
 
 #### ASSOCIATION_DRIFT
-HIVE/external project association changed, became stale or conflicts.
+LEGACY_PROVIDER/external project association changed, became stale or conflicts.
 
 Effect:
-- HIVE-required assurance -> block/revalidate;
+- LEGACY_PROVIDER-required assurance -> block/revalidate;
 - standalone-safe operation -> local binding may remain valid but association assurance degrades explicitly.
 
 #### DIAGNOSTIC_DRIFT
@@ -654,11 +654,11 @@ M02 does not use one global "source priority" list.
 Instead:
 - explicit user/config input expresses intended target;
 - filesystem/Git evidence proves the concrete local checkout;
-- HIVE proves its own registered project association;
+- LEGACY_PROVIDER proves its own registered project association;
 - security policy decides minimum assurance.
 
-A local checkout cannot be transformed into another checkout because HIVE says so.
-A HIVE project association cannot be fabricated because local paths look similar.
+A local checkout cannot be transformed into another checkout because LEGACY_PROVIDER says so.
+A LEGACY_PROVIDER project association cannot be fabricated because local paths look similar.
 A user-supplied path cannot override a physical authority escape.
 
 ### Path authority algorithm
@@ -778,9 +778,9 @@ Promotion criterion:
 - raw index stat-only churn does not change semantic index fingerprint;
 - staged-content change does change index fingerprint;
 - untracked content change invalidates CONTENT_HASHED basis;
-- HIVE outage does not fabricate/change WorkspaceId;
-- HIVE conflict blocks HIVE-required assurance;
-- standalone binding stays explicit when HIVE unavailable;
+- LEGACY_PROVIDER outage does not fabricate/change WorkspaceId;
+- LEGACY_PROVIDER conflict blocks LEGACY_PROVIDER-required assurance;
+- standalone binding stays explicit when LEGACY_PROVIDER unavailable;
 - lexical path escape rejected;
 - physical symlink/junction escape rejected;
 - non-existing target requires use-time revalidation;
@@ -799,7 +799,7 @@ Still to freeze:
 - large/untracked-file hashing resource budgets;
 - file watcher/event optimization versus on-demand revalidation;
 - exact BVM operation classes;
-- HIVE association adapter contract placement relative to M23;
+- LEGACY_PROVIDER association adapter contract placement relative to M23;
 - final threat model/fuzz corpus;
 - benchmark seed policy and M02 DoD.
 
@@ -917,9 +917,9 @@ A bare repository may be bound for operations whose Basis Validity Matrix does n
 
 It cannot satisfy a source-worktree operation merely because Git metadata exists.
 
-### HIVE project association capability seam
+### LEGACY_PROVIDER project association capability seam
 
-M02 consumes project association through a versioned capability rather than importing HIVE code.
+M02 consumes project association through a versioned capability rather than importing LEGACY_PROVIDER code.
 
 Candidate capability identity:
 `nexlabs.project-association@1`
@@ -927,13 +927,13 @@ Candidate capability identity:
 Request fields:
 - local WorkspaceId;
 - repository/worktree evidence summary;
-- optional configured HIVE project reference;
+- optional configured LEGACY_PROVIDER project reference;
 - local basis/provenance fingerprint;
 - required freshness/assurance.
 
 Response fields:
 - provider origin/version;
-- HIVE project reference when available;
+- LEGACY_PROVIDER project reference when available;
 - asserted repository/workspace hints;
 - association generation/fingerprint;
 - freshness metadata;
@@ -944,19 +944,19 @@ Rules:
 - provider unavailable -> explicit UNAVAILABLE;
 - response cannot grant local path authority;
 - response cannot mutate local WorkspaceId;
-- conflicting HIVE/local evidence produces reconciliation conflict under policy;
+- conflicting LEGACY_PROVIDER/local evidence produces reconciliation conflict under policy;
 - M23 may later provide a deeper federation implementation without changing the M02 consumer contract.
 
-### HIVE disconnect/reconnect semantics
+### LEGACY_PROVIDER disconnect/reconnect semantics
 
-Temporary HIVE provider loss does not change WorkspaceId or RepositoryId.
+Temporary LEGACY_PROVIDER provider loss does not change WorkspaceId or RepositoryId.
 
 If the current handle only requires standalone assurance:
 - local binding may remain BOUND;
 - project association health becomes UNAVAILABLE/STALE;
 - the binding receipt/health view reflects degradation.
 
-If an operation requires HIVE_RECONCILED assurance:
+If an operation requires LEGACY_PROVIDER_RECONCILED assurance:
 - existing local handle may remain structurally valid;
 - operation admission is blocked until fresh association evidence returns.
 
@@ -1055,14 +1055,14 @@ Control:
 - detect repository alternates where possible;
 - explicit EXTERNAL_OBJECT_AUTHORITY policy/provenance.
 
-#### T10 HIVE stale/conflicting association
+#### T10 LEGACY_PROVIDER stale/conflicting association
 Attack/failure:
-- stale HIVE record points at another project/repository.
+- stale LEGACY_PROVIDER record points at another project/repository.
 
 Control:
 - BRL reconciliation;
 - freshness generation;
-- no HIVE overwrite of local facts.
+- no LEGACY_PROVIDER overwrite of local facts.
 
 #### T11 Concurrent workspace drift
 Attack/failure:
@@ -1184,7 +1184,7 @@ Discovery-only initial classes:
 - EXECUTE_TOOL_READONLY;
 - MUTATE_SOURCE;
 - GIT_DELIVERY;
-- HIVE_RECONCILED_OPERATION.
+- LEGACY_PROVIDER_RECONCILED_OPERATION.
 
 M02 does not own these actions. BVM only defines which basis components later modules must prove fresh before those actions.
 
@@ -1193,7 +1193,7 @@ Example direction:
 - READ_SOURCE requires source/path/security basis;
 - MUTATE_SOURCE requires authority + Git/source basis + use-time path revalidation;
 - GIT_DELIVERY additionally requires HEAD/index/worktree/ref basis;
-- HIVE_RECONCILED_OPERATION additionally requires fresh project association evidence.
+- LEGACY_PROVIDER_RECONCILED_OPERATION additionally requires fresh project association evidence.
 
 Masks remain discovery candidates until downstream M03/M11/M13/M20 contract review.
 
@@ -1225,11 +1225,11 @@ Fixtures:
 - repo config with fsmonitor/external diff canaries;
 - huge command output / path-count cap;
 - case-collision fixtures on supported platforms;
-- HIVE association reconnect same/different/conflict.
+- LEGACY_PROVIDER association reconnect same/different/conflict.
 
 Properties:
 - source authority never expands from metadata authority;
-- HIVE evidence never grants path authority;
+- LEGACY_PROVIDER evidence never grants path authority;
 - no Git backend command has network/mutation classification;
 - bounded parser rejects over-policy output without partial success;
 - WMF/DWS root equals full canonical basis semantics;
@@ -1285,7 +1285,7 @@ deterministic revalidation
       +--> GitInspector
       +--> Path/FSC proof
       +--> bounded content hashing
-      +--> optional HIVE association refresh
+      +--> optional LEGACY_PROVIDER association refresh
       |
       v
 CWB / WorkspaceBasisDiff
@@ -1349,7 +1349,7 @@ Example edges:
 - authority-root hint -> AUTHORITY_ROOTS + FILESYSTEM_SEMANTICS + security hard invalidation;
 - configuration generation -> CONFIG_GENERATION;
 - security policy generation -> SECURITY_POLICY;
-- HIVE provider generation -> PROJECT_ASSOCIATION.
+- LEGACY_PROVIDER provider generation -> PROJECT_ASSOCIATION.
 
 CIG output is a component mask plus reason/provenance. It never produces ALLOW directly.
 
@@ -1583,7 +1583,7 @@ Downstream context should prefer:
 
 Large path inventories, Git status payloads and raw watcher streams stay out of normal model context unless explicitly requested.
 
-This creates a stable cacheable prefix for later HIVE/CORE planning and lets downstream systems request only changed evidence.
+This creates a stable cacheable prefix for later LEGACY_PROVIDER/CORE planning and lets downstream systems request only changed evidence.
 
 ### ResourceBudget contract
 
@@ -1725,7 +1725,7 @@ Rules:
 
 ### Frozen identity contracts
 
-- `ProjectBindingId`: CORE action-plane binding identity; never a HIVE ID alias.
+- `ProjectBindingId`: CORE action-plane binding identity; never a LEGACY_PROVIDER ID alias.
 - `WorkspaceId`: admitted local source authority + physical root identity.
 - `RepositoryId`: local repository boundary/common-dir/object-format identity; remotes excluded.
 - `WorktreeId`: concrete checkout identity, distinct from RepositoryId.
@@ -1743,9 +1743,9 @@ All deterministic hashes reuse `core_identity::fingerprint`; M02 does not introd
 - nested-repository policy;
 - external-object policy;
 - resource-budget profile id;
-- optional HIVE association expectation.
+- optional LEGACY_PROVIDER association expectation.
 
-**Historical V1-only field:** for current execution, use the optional provider-neutral `association_reference` and the standalone/default `NoopAssociationProvider` defined in the 2026-09-28 revision below. No HIVE connection is required.
+**Historical V1-only field:** for current execution, use the optional provider-neutral `association_reference` and the standalone/default `NoopAssociationProvider` defined in the 2026-09-28 revision below. No LEGACY_PROVIDER connection is required.
 
 Ambient current working directory is never implicit authority.
 
@@ -1838,7 +1838,7 @@ PLAN_WORK + fresh AUTHORITY/FILESYSTEM_SEMANTICS + fresh TRACKED/UNTRACKED basis
 GIT_DELIVERY:
 IDENTITY + AUTHORITY + REPOSITORY_GRAPH + HEAD_STATE + INDEX_STATE + TRACKED_WORKTREE_STATE + UNTRACKED_WORKTREE_STATE + CONFIG_GENERATION + SECURITY_POLICY.
 
-HIVE_RECONCILED is an assurance overlay requiring PROJECT_ASSOCIATION. BVM expresses freshness only, never permission.
+LEGACY_PROVIDER_RECONCILED is an assurance overlay requiring PROJECT_ASSOCIATION. BVM expresses freshness only, never permission.
 
 ### FSC v1 probing freeze
 
@@ -1964,7 +1964,7 @@ core-identity     core-config
        later modules
 ```
 
-`core-workspace` MUST NOT depend on core-runtime, core-cli, core-health, M03+ crates or HIVE code. Runtime epoch/generation data crosses through core-contracts.
+`core-workspace` MUST NOT depend on core-runtime, core-cli, core-health, M03+ crates or LEGACY_PROVIDER code. Runtime epoch/generation data crosses through core-contracts.
 
 ### Round 5 unresolved items at Round 5 close
 
@@ -2238,7 +2238,7 @@ Frozen execution artifacts:
 The Work Order contains:
 - one-module implementation authority boundary;
 - eight ordered construction packets A-H;
-- HIVE preflight and SOLO degradation behavior;
+- LEGACY_PROVIDER preflight and SOLO degradation behavior;
 - exact initial file/dependency map;
 - 41 acceptance criteria;
 - mandatory adversarial/property/fuzz/security/supply-chain/Windows/Ubuntu evidence;
