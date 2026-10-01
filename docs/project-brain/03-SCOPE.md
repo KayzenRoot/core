@@ -201,7 +201,7 @@ To be classified during governed discovery. No future capability is admitted mer
 
 ### FUTURE / CONDITIONAL
 - persistent storage backend selection/optimization;
-- arclegacy_provider/retention/compaction policy beyond active proof history;
+- archive/retention/compaction policy beyond active proof history;
 - distributed multi-writer state stores or replication;
 - performance accelerators that preserve ASF/RJR equivalence.
 
@@ -244,7 +244,7 @@ At the end of M04 Rounds 1-3, implementation remained unauthorized pending the f
 
 ### FUTURE / CONDITIONAL
 - concrete persistent backend;
-- event arclegacy_provider/retention service;
+- event archive/retention service;
 - distributed store replication/consensus;
 - persistent snapshot/projection cache;
 - runtime adaptive tuning.
