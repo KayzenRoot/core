@@ -7,7 +7,7 @@ Implementation: `NOT_AUTHORIZED`
 Assurance: `ELEVATED`
 
 ## Current M04 hard stop (CORE-D-205)
-Old frozen V1 M04 planning and exact-head historical reviews below remain arclegacy_providerd evidence, not standalone V2 authority. Prior ACTIVE lock is superseded; current Work Order BLOCKED_RE_ADMISSION, lock STALE, implementation forbidden. External prior-V1 consumers UNKNOWN (#111). Old PRs #106/#118 remain stale and unmerged. No M04 Pack A-H or compatibility assertion until separately governed standalone source/version/arclegacy_provider decision and NEW exact-source admitted Work Order/lock. No LegacyProvider or hidden I/O dependency is admitted.
+Old frozen V1 M04 planning and exact-head historical reviews below remain archived evidence, not standalone V2 authority. Prior ACTIVE lock is superseded; current Work Order BLOCKED_RE_ADMISSION, lock STALE, implementation forbidden. External prior-V1 consumers UNKNOWN (#111). Old PRs #106/#118 remain stale and unmerged. No M04 Pack A-H or compatibility assertion until separately governed standalone source/version/archive decision and NEW exact-source admitted Work Order/lock. No LegacyProvider or hidden I/O dependency is admitted.
 
 ## Mission
 
@@ -281,7 +281,7 @@ Terminal/block/skip/interruption records use versioned reason-code namespaces. V
 
 The canonical journal remains authoritative. A snapshot is a derived acceleration artifact binding RunId, source generation, last event sequence and journal root plus a canonical projection fingerprint.
 
-Loading a snapshot requires verification against the journal boundary. A snapshot cannot authorize state absent from the journal. Compaction may discard only independently reproducible derived/cache material; V1 does not permit destructive deletion of canonical events needed to prove the active bounded Run history. Arclegacy_provider/retention policy belongs outside M04.
+Loading a snapshot requires verification against the journal boundary. A snapshot cannot authorize state absent from the journal. Compaction may discard only independently reproducible derived/cache material; V1 does not permit destructive deletion of canonical events needed to prove the active bounded Run history. archive/retention policy belongs outside M04.
 
 ### External outcome/evidence references
 
@@ -549,7 +549,7 @@ They are semantic mechanisms inside `core-run-state`, not separately deployable 
 
 Deferred:
 - persistent backend selection;
-- destructive journal compaction/arclegacy_provider;
+- destructive journal compaction/archive;
 - distributed replication/consensus;
 - persistent snapshot cache;
 - runtime self-tuning.
